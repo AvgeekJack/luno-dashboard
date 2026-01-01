@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import process from 'node:process';
 
-export async function GET(_req: NextRequest, { params }: { params: { guildId: string } }) {
+export async function GET(_req: NextRequest, { params }: { params: Promise<{ guildId: string }> }) {
   const session = await getServerSession(authOptions);
   if (!session || !session.accessToken) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -14,7 +14,7 @@ export async function GET(_req: NextRequest, { params }: { params: { guildId: st
     return NextResponse.json({ error: 'Bot token not configured' }, { status: 500 });
   }
 
-  const guildId = params.guildId;
+  const { guildId } = await params;
 
   try {
     const guildRes = await fetch(`https://discord.com/api/guilds/${guildId}?with_counts=true`, {
