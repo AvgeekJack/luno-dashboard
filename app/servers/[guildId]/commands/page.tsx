@@ -5,32 +5,51 @@ import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
-const CATEGORIES = ['Moderator', 'Info', 'Fun', 'Utility', 'Admin'];
+const CATEGORIES = [
+  'Moderation',
+  'Automod',
+  'Anti-Raid',
+  'Logging',
+  'Role Management',
+  'Member Management',
+  'Announcements',
+  'Tickets',
+  'Notifications',
+  'Custom Commands',
+  'Fun',
+  'Music',
+  'Server Info',
+  'Utilities',
+  'Settings/Config',
+  'Audit & Compliance',
+  'Security',
+  'Scheduler',
+  'Analytics',
+  'Message Searching',
+];
 
 const COMMANDS: Record<string, { category: string; description: string }> = {
-  // Moderator
-  warn: { category: 'Moderator', description: 'Warn a user with a message' },
-  ban: { category: 'Moderator', description: 'Ban a user from the server' },
-  clear: { category: 'Moderator', description: 'Delete bulk messages from a channel' },
-  kick: { category: 'Moderator', description: 'Kick a user from the server' },
-  lock: { category: 'Moderator', description: 'Lock a channel from posting' },
-  modlog: { category: 'Moderator', description: 'View or manage moderation logs' },
-  mute: { category: 'Moderator', description: 'Mute a user in the server' },
-  slowmode: { category: 'Moderator', description: 'Set slowmode for a channel' },
-  softban: { category: 'Moderator', description: 'Ban and then unban a user' },
-  tempmute: { category: 'Moderator', description: 'Temporarily mute a user' },
-  timeout: { category: 'Moderator', description: 'Timeout a user for a duration' },
-  unban: { category: 'Moderator', description: 'Unban a previously banned user' },
-  unlock: { category: 'Moderator', description: 'Unlock a locked channel' },
-  unmute: { category: 'Moderator', description: 'Unmute a muted user' },
-  untimeout: { category: 'Moderator', description: 'Remove timeout from a user' },
-  warnings: { category: 'Moderator', description: 'View warnings for a user' },
-  // Info
-  userinfo: { category: 'Info', description: 'Display information about a user' },
-  // Fun
+  // Moderation family
+  warn: { category: 'Moderation', description: 'Warn a user with a message' },
+  ban: { category: 'Moderation', description: 'Ban a user from the server' },
+  clear: { category: 'Moderation', description: 'Delete bulk messages from a channel' },
+  kick: { category: 'Moderation', description: 'Kick a user from the server' },
+  lock: { category: 'Security', description: 'Lock a channel from posting' },
+  modlog: { category: 'Logging', description: 'View or manage moderation logs' },
+  mute: { category: 'Moderation', description: 'Mute a user in the server' },
+  slowmode: { category: 'Anti-Raid', description: 'Set slowmode for a channel' },
+  softban: { category: 'Moderation', description: 'Ban and then unban a user' },
+  tempmute: { category: 'Moderation', description: 'Temporarily mute a user' },
+  timeout: { category: 'Moderation', description: 'Timeout a user for a duration' },
+  unban: { category: 'Moderation', description: 'Unban a previously banned user' },
+  unlock: { category: 'Security', description: 'Unlock a locked channel' },
+  unmute: { category: 'Moderation', description: 'Unmute a muted user' },
+  untimeout: { category: 'Moderation', description: 'Remove timeout from a user' },
+  warnings: { category: 'Audit & Compliance', description: 'View warnings for a user' },
+  // Info / Utility / Fun
+  userinfo: { category: 'Server Info', description: 'Display information about a user' },
   eightball: { category: 'Fun', description: 'Ask the magic 8ball a question' },
-  // Utility
-  ping: { category: 'Utility', description: 'Check the bot\'s response time' },
+  ping: { category: 'Utilities', description: "Check the bot's response time" },
 };
 
 interface Channel {
@@ -52,7 +71,7 @@ export default function CommandsPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const { guildId } = useParams();
-  const [activeCategory, setActiveCategory] = useState('Moderator');
+  const [activeCategory, setActiveCategory] = useState('Moderation');
   const [commandStates, setCommandStates] = useState<CommandState>({});
   const [showSettings, setShowSettings] = useState(false);
   const [channels, setChannels] = useState<Channel[]>([]);
