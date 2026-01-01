@@ -6,6 +6,7 @@ declare module 'next-auth' {
     guilds?: any[];
     user?: {
       id?: string;
+      username?: string;
     } & DefaultSession['user'];
   }
 }
