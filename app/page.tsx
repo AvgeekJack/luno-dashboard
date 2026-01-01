@@ -46,7 +46,7 @@ export default function Home() {
             ) : (
               <button
                 onClick={() => signIn('discord')}
-                className="bg-slate-900 text-white px-6 py-2 rounded-full text-sm font-semibold shadow hover:bg-slate-800 transition-colors"
+                className="bg-slate-900 text-white px-8 py-3 rounded-xl text-sm font-semibold shadow-md hover:bg-slate-800 transition-colors"
               >
                 Login with Discord
               </button>
