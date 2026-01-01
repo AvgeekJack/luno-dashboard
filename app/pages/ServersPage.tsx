@@ -45,7 +45,7 @@ export default function ServersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white text-[#0f172a] pt-28 pb-16 px-6">
+    <div className="min-h-screen bg-white text-[#0f172a] pt-36 pb-16 px-6 md:px-10">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12 space-y-3">
           <p className="text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">Servers</p>
