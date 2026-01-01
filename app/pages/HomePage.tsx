@@ -40,7 +40,7 @@ export default function HomePage() {
 
       <main className="w-full flex flex-col items-center flex-1">
         {/* Hero Section */}
-        <section className="w-full pt-[420px] pb-20 px-6 bg-gradient-to-b from-orange-50 via-white to-white flex justify-center">
+        <section className="w-full min-h-[90vh] pt-32 pb-24 px-6 bg-gradient-to-b from-orange-50 via-white to-white flex items-center justify-center">
           <div className="w-full max-w-6xl mx-auto">
             <div className="text-center max-w-4xl mx-auto mb-14">
               <h1 className="text-5xl md:text-6xl font-bold mb-6 text-[#0f172a] leading-tight">
