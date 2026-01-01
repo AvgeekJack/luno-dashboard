@@ -175,6 +175,8 @@ export default function ServerSettings() {
               </div>
             </div>
 
+            <div className="h-2" aria-hidden />
+
             <div className="rounded-xl border border-orange-100 bg-orange-50/60 p-5 shadow-sm space-y-4">
               <div className="flex items-center justify-between flex-wrap gap-3">
                 <div>
