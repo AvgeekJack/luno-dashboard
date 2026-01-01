@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import process from 'node:process';
 
 export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -21,6 +22,25 @@ export async function GET(req: NextRequest) {
 
   const guilds = await response.json();
 
+  // Optionally fetch guilds the bot is in to mark membership
+  const botGuildIds = new Set<string>();
+  const botToken = process.env.DISCORD_BOT_TOKEN;
+  if (botToken) {
+    try {
+      const botRes = await fetch('https://discord.com/api/users/@me/guilds', {
+        headers: { Authorization: `Bot ${botToken}` },
+      });
+      if (botRes.ok) {
+        const botGuilds = await botRes.json();
+        for (const g of botGuilds) {
+          if (g.id) botGuildIds.add(g.id);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to fetch bot guilds', err);
+    }
+  }
+
   // Filter guilds where user has manage permissions
   const managedGuilds = guilds.filter((guild: any) => {
     const permissions = BigInt(guild.permissions);
@@ -29,5 +49,10 @@ export async function GET(req: NextRequest) {
     return guild.owner || (permissions & manageGuild) || (permissions & administrator);
   });
 
-  return NextResponse.json(managedGuilds);
+  const guildsWithMembership = managedGuilds.map((guild: any) => ({
+    ...guild,
+    inBot: botGuildIds.size > 0 ? botGuildIds.has(guild.id) : undefined,
+  }));
+
+  return NextResponse.json(guildsWithMembership);
 }

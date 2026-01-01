@@ -8,6 +8,7 @@ interface Guild {
   id: string;
   name: string;
   icon: string | null;
+  inBot?: boolean;
 }
 
 export default function ServersPage() {
@@ -44,17 +45,19 @@ export default function ServersPage() {
     );
   }
 
-  return (
-    <div className="min-h-screen bg-white text-[#0f172a] pt-36 pb-16 px-6 md:px-10">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-12 space-y-3">
-          <p className="text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">Servers</p>
-          <h1 className="text-4xl font-bold">Your connected Discord servers</h1>
-          <p className="text-slate-600">Select a server to manage settings and automation.</p>
-        </div>
+  const botGuilds = guilds.filter(g => g.inBot);
+  const notInBot = guilds.filter(g => g.inBot === false || g.inBot === undefined);
 
+  const renderSection = (title: string, items: Guild[], emptyText: string) => (
+    <div className="space-y-4">
+      <div className="text-left">
+        <h2 className="text-2xl font-bold text-[#0f172a]">{title}</h2>
+      </div>
+      {items.length === 0 ? (
+        <div className="text-slate-500 text-sm">{emptyText}</div>
+      ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {guilds.map(guild => (
+          {items.map(guild => (
             <Link key={guild.id} href={`/servers/${guild.id}`}>
               <div className="bg-white p-6 rounded-xl border border-orange-100 hover:border-orange-300 transition-colors shadow-sm hover:shadow cursor-pointer text-center">
                 {guild.icon ? (
@@ -73,12 +76,21 @@ export default function ServersPage() {
             </Link>
           ))}
         </div>
+      )}
+    </div>
+  );
 
-        {guilds.length === 0 && (
-          <div className="text-center text-slate-500 mt-10">
-            No servers found. Make sure Luno is added to your Discord servers.
-          </div>
-        )}
+  return (
+    <div className="min-h-screen bg-white text-[#0f172a] pt-36 pb-16 px-6 md:px-10">
+      <div className="max-w-6xl mx-auto space-y-12">
+        <div className="text-center space-y-3">
+          <p className="text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">Servers</p>
+          <h1 className="text-4xl font-bold">Your connected Discord servers</h1>
+          <p className="text-slate-600">Select a server to manage settings and automation.</p>
+        </div>
+
+        {renderSection('Servers Luno is In', botGuilds, 'Luno is not in any of your manageable servers yet.')}
+        {renderSection('Servers Luno is Not In', notInBot, 'Invite Luno to these servers to manage them here.')}
       </div>
     </div>
   );
