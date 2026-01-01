@@ -68,103 +68,121 @@ export default function ServerSettings() {
   };
 
   if (loading) {
-    return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
+    return <div className="flex min-h-screen items-center justify-center text-[#0f172a]">Loading...</div>;
   }
 
   if (!settings) {
-    return <div className="flex min-h-screen items-center justify-center">Server not found</div>;
+    return <div className="flex min-h-screen items-center justify-center text-[#0f172a]">Server not found</div>;
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 p-8">
-      <div className="max-w-2xl mx-auto">
-        <div className="mb-8">
-          <Link href="/" className="text-blue-600 hover:underline">← Back to Servers</Link>
-          <h1 className="text-3xl font-semibold mt-4">Server Settings</h1>
+    <div className="min-h-screen bg-orange-50 text-[#0f172a] py-16 px-6 md:px-10">
+      <div className="max-w-3xl mx-auto">
+        <div className="mb-8 text-center md:text-left space-y-2">
+          <Link href="/servers" className="text-orange-600 font-semibold hover:text-orange-700 transition-colors">← Back to Servers</Link>
+          <div>
+            <p className="text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">Settings</p>
+            <h1 className="text-3xl font-bold">Server Preferences</h1>
+            <p className="text-slate-600">Adjust moderation, welcome flow, and bot prefix for this server.</p>
+          </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow">
-          <div className="mb-6">
-            <label className="block text-sm font-medium mb-2">Bot Prefix</label>
+        <div className="bg-white border border-orange-100 rounded-2xl shadow-sm p-6 md:p-8 space-y-8">
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-[#0f172a]">Bot Prefix</label>
             <input
               type="text"
               value={settings.prefix}
               onChange={(e) => setSettings({ ...settings, prefix: e.target.value })}
-              className="w-full p-2 border rounded"
+              className="w-full rounded-xl border border-orange-100 bg-white px-4 py-3 text-[#0f172a] shadow-sm focus:border-orange-300 focus:outline-none focus:ring-2 focus:ring-orange-200"
+              placeholder="!"
             />
           </div>
 
-          <div className="mb-6">
-            <h2 className="text-xl font-medium mb-4">Moderation</h2>
-            <label className="flex items-center mb-2">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-semibold text-[#0f172a]">Moderation</h2>
+              <label className="inline-flex items-center gap-2 text-sm font-medium text-[#0f172a]">
+                <input
+                  type="checkbox"
+                  checked={settings.moderation.enabled}
+                  onChange={(e) => setSettings({
+                    ...settings,
+                    moderation: { ...settings.moderation, enabled: e.target.checked }
+                  })}
+                  className="h-4 w-4 rounded border-orange-200 accent-orange-500"
+                />
+                Enable
+              </label>
+            </div>
+            <div className="space-y-2">
+              <label className="block text-sm font-semibold text-[#0f172a]">Log Channel ID</label>
               <input
-                type="checkbox"
-                checked={settings.moderation.enabled}
+                type="text"
+                value={settings.moderation.logChannel || ''}
                 onChange={(e) => setSettings({
                   ...settings,
-                  moderation: { ...settings.moderation, enabled: e.target.checked }
+                  moderation: { ...settings.moderation, logChannel: e.target.value || null }
                 })}
-                className="mr-2"
+                className="w-full rounded-xl border border-orange-100 bg-white px-4 py-3 text-[#0f172a] shadow-sm focus:border-orange-300 focus:outline-none focus:ring-2 focus:ring-orange-200"
+                placeholder="Channel ID for logs"
               />
-              Enable Moderation
-            </label>
-            <label className="block text-sm font-medium mb-2">Log Channel ID</label>
-            <input
-              type="text"
-              value={settings.moderation.logChannel || ''}
-              onChange={(e) => setSettings({
-                ...settings,
-                moderation: { ...settings.moderation, logChannel: e.target.value || null }
-              })}
-              className="w-full p-2 border rounded"
-              placeholder="Channel ID for logs"
-            />
+            </div>
           </div>
 
-          <div className="mb-6">
-            <h2 className="text-xl font-medium mb-4">Welcome Messages</h2>
-            <label className="flex items-center mb-2">
-              <input
-                type="checkbox"
-                checked={settings.welcome.enabled}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-semibold text-[#0f172a]">Welcome Messages</h2>
+              <label className="inline-flex items-center gap-2 text-sm font-medium text-[#0f172a]">
+                <input
+                  type="checkbox"
+                  checked={settings.welcome.enabled}
+                  onChange={(e) => setSettings({
+                    ...settings,
+                    welcome: { ...settings.welcome, enabled: e.target.checked }
+                  })}
+                  className="h-4 w-4 rounded border-orange-200 accent-orange-500"
+                />
+                Enable
+              </label>
+            </div>
+            <div className="space-y-2">
+              <label className="block text-sm font-semibold text-[#0f172a]">Welcome Message</label>
+              <textarea
+                value={settings.welcome.message}
                 onChange={(e) => setSettings({
                   ...settings,
-                  welcome: { ...settings.welcome, enabled: e.target.checked }
+                  welcome: { ...settings.welcome, message: e.target.value }
                 })}
-                className="mr-2"
+                className="w-full rounded-xl border border-orange-100 bg-white px-4 py-3 text-[#0f172a] shadow-sm focus:border-orange-300 focus:outline-none focus:ring-2 focus:ring-orange-200"
+                rows={3}
+                placeholder="Welcome to the server!"
               />
-              Enable Welcome Messages
-            </label>
-            <label className="block text-sm font-medium mb-2">Welcome Message</label>
-            <textarea
-              value={settings.welcome.message}
-              onChange={(e) => setSettings({
-                ...settings,
-                welcome: { ...settings.welcome, message: e.target.value }
-              })}
-              className="w-full p-2 border rounded"
-              rows={3}
-            />
-            <label className="block text-sm font-medium mb-2 mt-2">Welcome Channel ID</label>
-            <input
-              type="text"
-              value={settings.welcome.channel || ''}
-              onChange={(e) => setSettings({
-                ...settings,
-                welcome: { ...settings.welcome, channel: e.target.value || null }
-              })}
-              className="w-full p-2 border rounded"
-              placeholder="Channel ID for welcomes"
-            />
+            </div>
+            <div className="space-y-2">
+              <label className="block text-sm font-semibold text-[#0f172a]">Welcome Channel ID</label>
+              <input
+                type="text"
+                value={settings.welcome.channel || ''}
+                onChange={(e) => setSettings({
+                  ...settings,
+                  welcome: { ...settings.welcome, channel: e.target.value || null }
+                })}
+                className="w-full rounded-xl border border-orange-100 bg-white px-4 py-3 text-[#0f172a] shadow-sm focus:border-orange-300 focus:outline-none focus:ring-2 focus:ring-orange-200"
+                placeholder="Channel ID for welcomes"
+              />
+            </div>
           </div>
 
-          <button
-            onClick={handleSave}
-            disabled={saving}
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50"
-          >
-            {saving ? 'Saving...' : 'Save Settings'}
-          </button>
+          <div className="flex justify-end">
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              className="bg-orange-500 text-white px-6 py-3 rounded-xl font-semibold shadow hover:bg-orange-600 transition-colors disabled:opacity-60"
+            >
+              {saving ? 'Saving...' : 'Save Settings'}
+            </button>
+          </div>
         </div>
       </div>
     </div>
