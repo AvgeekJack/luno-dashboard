@@ -13,6 +13,7 @@ export default function CommandsPage() {
   const { guildId } = useParams();
   const [activeCategory, setActiveCategory] = useState('Moderator');
   const [botOnline, setBotOnline] = useState(true);
+  const [warnEnabled, setWarnEnabled] = useState(true);
 
   useEffect(() => {
     if (status === 'loading') return;
@@ -128,10 +129,19 @@ export default function CommandsPage() {
                       <h3 className="text-lg font-bold text-[#0f172a]">warn</h3>
                       <p className="text-sm text-slate-600">Warn a user with a message</p>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="h-3 w-3 rounded-full bg-green-500" aria-hidden />
-                      <span className="text-xs font-semibold text-green-600">Enabled</span>
-                    </div>
+                    <button
+                      onClick={() => setWarnEnabled(!warnEnabled)}
+                      className={`relative inline-flex h-6 w-11 rounded-full transition-colors flex-shrink-0 ${
+                        warnEnabled ? 'bg-orange-500' : 'bg-slate-400'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
+                          warnEnabled ? 'translate-x-5' : 'translate-x-1'
+                        }`}
+                        style={{ marginTop: '2px' }}
+                      />
+                    </button>
                   </div>
                   <div className="flex gap-2">
                     <button className="flex-1 rounded-lg bg-orange-500 text-white px-3 py-2 text-sm font-semibold hover:bg-orange-600 transition-colors">
