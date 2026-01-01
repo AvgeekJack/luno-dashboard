@@ -209,7 +209,10 @@ export default function CommandsPage() {
                 <label className="block text-sm font-semibold text-[#0f172a]">Allowed Channels</label>
                 <div className="relative">
                   <div
-                    onClick={() => setDropdownOpen(dropdownOpen === 'allowedChannels' ? null : 'allowedChannels')}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setDropdownOpen(dropdownOpen === 'allowedChannels' ? null : 'allowedChannels');
+                    }}
                     className="w-full rounded-lg bg-orange-50 border border-orange-200 text-[#0f172a] px-3 py-3 focus:border-orange-500 focus:outline-none cursor-pointer flex flex-wrap gap-2 items-center min-h-12"
                   >
                     {settings.allowedChannels.length === 0 ? (
@@ -278,7 +281,10 @@ export default function CommandsPage() {
                 <label className="block text-sm font-semibold text-[#0f172a]">Ignored Channels</label>
                 <div className="relative">
                   <div
-                    onClick={() => setDropdownOpen(dropdownOpen === 'ignoredChannels' ? null : 'ignoredChannels')}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setDropdownOpen(dropdownOpen === 'ignoredChannels' ? null : 'ignoredChannels');
+                    }}
                     className="w-full rounded-lg bg-orange-50 border border-orange-200 text-[#0f172a] px-3 py-3 focus:border-orange-500 focus:outline-none cursor-pointer flex flex-wrap gap-2 items-center min-h-12"
                   >
                     {settings.ignoredChannels.length === 0 ? (
@@ -347,7 +353,10 @@ export default function CommandsPage() {
                 <label className="block text-sm font-semibold text-[#0f172a]">Allowed Roles</label>
                 <div className="relative">
                   <div
-                    onClick={() => setDropdownOpen(dropdownOpen === 'allowedRoles' ? null : 'allowedRoles')}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setDropdownOpen(dropdownOpen === 'allowedRoles' ? null : 'allowedRoles');
+                    }}
                     className="w-full rounded-lg bg-orange-50 border border-orange-200 text-[#0f172a] px-3 py-3 focus:border-orange-500 focus:outline-none cursor-pointer flex flex-wrap gap-2 items-center min-h-12"
                   >
                     {settings.allowedRoles.length === 0 ? (
@@ -416,7 +425,10 @@ export default function CommandsPage() {
                 <label className="block text-sm font-semibold text-[#0f172a]">Ignored Roles</label>
                 <div className="relative">
                   <div
-                    onClick={() => setDropdownOpen(dropdownOpen === 'ignoredRoles' ? null : 'ignoredRoles')}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setDropdownOpen(dropdownOpen === 'ignoredRoles' ? null : 'ignoredRoles');
+                    }}
                     className="w-full rounded-lg bg-orange-50 border border-orange-200 text-[#0f172a] px-3 py-3 focus:border-orange-500 focus:outline-none cursor-pointer flex flex-wrap gap-2 items-center min-h-12"
                   >
                     {settings.ignoredRoles.length === 0 ? (
