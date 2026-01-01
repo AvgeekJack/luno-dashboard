@@ -43,12 +43,22 @@ export default function LogsPage() {
 
   return (
     <div className="min-h-screen bg-orange-50 text-[#0f172a] flex">
-      <aside className="fixed left-0 top-0 h-screen w-64 bg-white/90 border-r border-orange-100 shadow-sm p-4 overflow-y-auto flex flex-col">
-          <div className="space-y-1">
-            <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Server</p>
-            <Link href="/servers" className="text-orange-600 font-semibold hover:text-orange-700 transition-colors text-sm">← Back to Servers</Link>
+      <aside className="fixed left-0 top-0 h-screen w-64 bg-white/90 border-r border-orange-100 shadow-sm overflow-y-auto flex flex-col">
+          <div className="p-6 border-b border-orange-100">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-bold text-lg">
+                L
+              </div>
+              <span className="text-xl font-bold text-[#0f172a]">Luno</span>
+            </div>
           </div>
-          <nav className="flex-1 flex flex-col justify-evenly text-sm font-semibold text-slate-700 py-8">
+          
+          <div className="px-4 py-4 space-y-1">
+            <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold px-3">Server</p>
+            <Link href="/servers" className="text-orange-600 font-semibold hover:text-orange-700 transition-colors text-sm px-3">← Back to Servers</Link>
+          </div>
+          
+          <nav className="px-4 space-y-2 text-sm font-semibold text-slate-700">
             <Link href={`/servers/${guildId}`} className="flex items-center gap-3 rounded-xl px-3 py-4 hover:bg-orange-50 transition-colors">
               <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
               Dashboard
