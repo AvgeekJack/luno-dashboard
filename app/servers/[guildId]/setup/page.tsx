@@ -30,6 +30,8 @@ export default function SetupPage() {
   const [goodbyeMessage, setGoodbyeMessage] = useState('Goodbye {user}, thanks for being part of {server}!');
   const [defaultRoles, setDefaultRoles] = useState<string[]>([]);
   const [modRoles, setModRoles] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [saved, setSaved] = useState(false);
 
   useEffect(() => {
     if (status === 'loading') return;
@@ -46,7 +48,51 @@ export default function SetupPage() {
         setRoles(data.roles || []);
       })
       .catch(err => console.error(err));
+
+    // Fetch existing setup configuration
+    fetch(`/api/servers/${guildId}/setup`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.moderation?.logChannel) setModLogChannel(data.moderation.logChannel);
+        if (data.welcome?.channel) setWelcomeChannel(data.welcome.channel);
+        if (data.welcome?.message) setWelcomeMessage(data.welcome.message);
+        if (data.goodbye?.channel) setGoodbyeChannel(data.goodbye.channel);
+        if (data.goodbye?.message) setGoodbyeMessage(data.goodbye.message);
+        if (data.roles?.defaultRoles) setDefaultRoles(data.roles.defaultRoles);
+        if (data.roles?.modRoles) setModRoles(data.roles.modRoles);
+      })
+      .catch(err => console.error(err));
   }, [session, status, router, guildId]);
+
+  const handleSave = async () => {
+    setLoading(true);
+    setSaved(false);
+
+    try {
+      const response = await fetch(`/api/servers/${guildId}/setup`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          modLogChannel,
+          welcomeChannel,
+          welcomeMessage,
+          goodbyeChannel,
+          goodbyeMessage,
+          defaultRoles,
+          modRoles,
+        }),
+      });
+
+      if (response.ok) {
+        setSaved(true);
+        setTimeout(() => setSaved(false), 3000);
+      }
+    } catch (error) {
+      console.error('Error saving setup:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (status === 'loading') {
     return <div className="flex min-h-screen items-center justify-center text-[#0f172a]">Loading...</div>;
@@ -297,8 +343,12 @@ export default function SetupPage() {
 
             {/* Save Button */}
             <div className="border-t border-orange-100 pt-6">
-              <button className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg font-semibold transition-colors">
-                Save Setup Configuration
+              <button 
+                onClick={handleSave}
+                disabled={loading}
+                className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? 'Saving...' : saved ? '✓ Saved Successfully!' : 'Save Setup Configuration'}
               </button>
             </div>
           </div>

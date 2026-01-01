@@ -40,6 +40,7 @@ export default function CommandsPage() {
   });
   const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [currentCommand, setCurrentCommand] = useState('');
 
   useEffect(() => {
     if (status === 'loading') return;
@@ -57,6 +58,32 @@ export default function CommandsPage() {
       })
       .catch(err => console.error(err));
   }, [session, status, router, guildId]);
+
+  const handleSaveCommandSettings = async () => {
+    try {
+      await fetch(`/api/servers/${guildId}/commands/${currentCommand}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          enabled: currentCommand === 'warn' ? warnEnabled : 
+                   currentCommand === 'kick' ? kickEnabled :
+                   currentCommand === 'ban' ? banEnabled :
+                   currentCommand === 'userinfo' ? userinfoEnabled :
+                   currentCommand === 'eightball' ? eightballEnabled :
+                   pingEnabled,
+          ...settings,
+        }),
+      });
+      setShowSettings(false);
+    } catch (error) {
+      console.error('Error saving command settings:', error);
+    }
+  };
+
+  const openSettings = (command: string) => {
+    setCurrentCommand(command);
+    setShowSettings(true);
+  };
 
   if (status === 'loading') {
     return <div className="flex min-h-screen items-center justify-center text-[#0f172a]">Loading...</div>;
@@ -163,7 +190,7 @@ export default function CommandsPage() {
                         </button>
                       </div>
                       <div className="flex gap-2">
-                        <button onClick={() => setShowSettings(true)} className="flex-1 rounded-lg bg-orange-500 text-white px-3 py-2 text-sm font-semibold hover:bg-orange-600 transition-colors">
+                        <button onClick={() => openSettings('warn')} className="flex-1 rounded-lg bg-orange-500 text-white px-3 py-2 text-sm font-semibold hover:bg-orange-600 transition-colors">
                           Settings
                         </button>
                         <button className="flex-1 rounded-lg bg-orange-100 text-orange-700 px-3 py-2 text-sm font-semibold hover:bg-orange-200 transition-colors">
@@ -345,7 +372,7 @@ export default function CommandsPage() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setDropdownOpen(null)}>
           <div className="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-orange-100" onClick={() => setDropdownOpen(null)}>
             <div className="sticky top-0 bg-white border-b border-orange-100 flex items-center justify-between p-6">
-              <h2 className="text-xl font-bold text-[#0f172a]">Additional Permissions (warn)</h2>
+              <h2 className="text-xl font-bold text-[#0f172a]">Additional Permissions ({currentCommand})</h2>
               <button
                 onClick={() => setShowSettings(false)}
                 className="text-slate-400 hover:text-[#0f172a] transition-colors text-2xl leading-none"
@@ -644,7 +671,7 @@ export default function CommandsPage() {
               </div>
 
               <button
-                onClick={() => setShowSettings(false)}
+                onClick={handleSaveCommandSettings}
                 className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg font-semibold transition-colors"
               >
                 Save
