@@ -26,6 +26,7 @@ export default function ServerSettings() {
   const [settings, setSettings] = useState<Settings | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [serverName, setServerName] = useState<string | null>(null);
 
   useEffect(() => {
     if (status === 'loading') return;
@@ -43,6 +44,16 @@ export default function ServerSettings() {
       .catch(err => {
         console.error(err);
         setLoading(false);
+      });
+
+    fetch('/api/servers')
+      .then(res => res.json())
+      .then((data) => {
+        const match = Array.isArray(data) ? data.find((g: any) => String(g.id) === String(guildId)) : null;
+        setServerName(match?.name ?? null);
+      })
+      .catch((err) => {
+        console.error(err);
       });
   }, [session, status, guildId, router]);
 
@@ -81,33 +92,37 @@ export default function ServerSettings() {
         <aside className="w-64 bg-white/90 border border-orange-100 rounded-2xl shadow-sm p-4 h-fit sticky top-6">
           <div className="mb-6 space-y-1">
             <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Server</p>
-            <h2 className="text-xl font-bold truncate">{String(guildId)}</h2>
             <Link href="/servers" className="text-orange-600 font-semibold hover:text-orange-700 transition-colors text-sm">← Back to Servers</Link>
           </div>
           <nav className="space-y-1 text-sm font-semibold text-slate-700">
             <Link href={`/servers/${guildId}`} className="flex items-center gap-3 rounded-xl px-3 py-2 bg-orange-100 text-orange-700">
-              <span>🏠</span> Dashboard
+              <span className="h-5 w-5 rounded-md bg-orange-100" aria-hidden />
+              Dashboard
             </Link>
             <button className="flex w-full items-center gap-3 rounded-xl px-3 py-2 hover:bg-orange-50 transition-colors text-left">
-              <span>🧩</span> Modules
+              <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
+              Modules
             </button>
             <button className="flex w-full items-center gap-3 rounded-xl px-3 py-2 hover:bg-orange-50 transition-colors text-left">
-              <span>⌨️</span> Commands
+              <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
+              Commands
             </button>
             <button className="flex w-full items-center gap-3 rounded-xl px-3 py-2 hover:bg-orange-50 transition-colors text-left">
-              <span>📃</span> Server Listing
-            </button>
-            <button className="flex w-full items-center gap-3 rounded-xl px-3 py-2 hover:bg-orange-50 transition-colors text-left">
-              <span>📜</span> Logs
+              <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
+              Logs
             </button>
           </nav>
         </aside>
 
-        <main className="flex-1 space-y-6">
+        <main className="flex-1 space-y-4 md:space-y-6">
+          <div className="space-y-1">
+            <p className="text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">Settings</p>
+            <h1 className="text-3xl font-bold">{serverName ?? 'Server'}</h1>
+          </div>
+
           <div className="bg-white border border-orange-100 rounded-2xl shadow-sm p-6 md:p-8 space-y-8">
             <div className="space-y-1">
-              <p className="text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">Settings</p>
-              <h1 className="text-3xl font-bold">Server Preferences</h1>
+              <h2 className="text-xl font-semibold text-[#0f172a]">Server Preferences</h2>
               <p className="text-slate-600">Adjust moderation, welcome flow, and bot prefix for this server.</p>
             </div>
 
