@@ -5,6 +5,14 @@ import connectDB from '@/lib/mongoose';
 import ServerSettings from '@/lib/models/ServerSettings';
 import { logAction } from '@/lib/audit';
 
+const MODULE_LIST = [
+  'moderation', 'automod', 'antiRaid', 'logging', 'roleManagement',
+  'memberManagement', 'announcements', 'tickets', 'notifications',
+  'customCommands', 'fun', 'music', 'serverInfo', 'utilities',
+  'settingsConfig', 'auditCompliance', 'security', 'scheduler',
+  'analytics', 'messageSearching',
+];
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ guildId: string }> }
@@ -24,14 +32,12 @@ export async function GET(
       settings = await ServerSettings.create({ guildId });
     }
 
-    return NextResponse.json({
-      moderation: {
-        enabled: settings.moderation?.enabled ?? true,
-        warnEnabled: settings.commands?.warn?.enabled ?? true,
-        kickEnabled: settings.commands?.kick?.enabled ?? true,
-        banEnabled: settings.commands?.ban?.enabled ?? true,
-      },
+    const modules: Record<string, boolean> = {};
+    MODULE_LIST.forEach(m => {
+      modules[m] = (settings.modules as any)?.[m] ?? false;
     });
+
+    return NextResponse.json({ modules });
   } catch (error) {
     console.error('Error fetching modules:', error);
     return NextResponse.json(
@@ -58,18 +64,11 @@ export async function PUT(
 
     const updates: Record<string, any> = {};
 
-    if (typeof body.moderationEnabled === 'boolean') {
-      updates['moderation.enabled'] = body.moderationEnabled;
-    }
-    if (typeof body.warnEnabled === 'boolean') {
-      updates['commands.warn.enabled'] = body.warnEnabled;
-    }
-    if (typeof body.kickEnabled === 'boolean') {
-      updates['commands.kick.enabled'] = body.kickEnabled;
-    }
-    if (typeof body.banEnabled === 'boolean') {
-      updates['commands.ban.enabled'] = body.banEnabled;
-    }
+    MODULE_LIST.forEach(m => {
+      if (typeof body[m] === 'boolean') {
+        updates[`modules.${m}`] = body[m];
+      }
+    });
 
     const updated = await ServerSettings.findOneAndUpdate(
       { guildId },
@@ -81,17 +80,15 @@ export async function PUT(
       guildId,
       userId: session.user?.id as string | undefined,
       userName: session.user?.name as string | undefined,
-      action: 'Updated moderation module settings',
+      action: 'Updated module settings',
     });
 
-    return NextResponse.json({
-      moderation: {
-        enabled: updated.moderation?.enabled ?? true,
-        warnEnabled: updated.commands?.warn?.enabled ?? true,
-        kickEnabled: updated.commands?.kick?.enabled ?? true,
-        banEnabled: updated.commands?.ban?.enabled ?? true,
-      },
+    const modules: Record<string, boolean> = {};
+    MODULE_LIST.forEach(m => {
+      modules[m] = (updated.modules as any)?.[m] ?? false;
     });
+
+    return NextResponse.json({ modules });
   } catch (error) {
     console.error('Error updating modules:', error);
     return NextResponse.json(
@@ -100,3 +97,4 @@ export async function PUT(
     );
   }
 }
+

@@ -11,15 +11,33 @@ export default function ModulesPage() {
   const { guildId } = useParams();
   const gid = Array.isArray(guildId) ? guildId[0] : guildId;
 
-  const [moderation, setModeration] = useState({
-    enabled: true,
-    warnEnabled: true,
-    kickEnabled: true,
-    banEnabled: true,
-  });
+  const [modules, setModules] = useState<Record<string, boolean>>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [feedback, setFeedback] = useState<'idle' | 'saved' | 'error'>('idle');
+
+  const moduleList = [
+    { key: 'moderation', label: 'Moderation' },
+    { key: 'automod', label: 'Automod' },
+    { key: 'antiRaid', label: 'Anti-Raid' },
+    { key: 'logging', label: 'Logging' },
+    { key: 'roleManagement', label: 'Role Management' },
+    { key: 'memberManagement', label: 'Member Management' },
+    { key: 'announcements', label: 'Announcements' },
+    { key: 'tickets', label: 'Tickets' },
+    { key: 'notifications', label: 'Notifications' },
+    { key: 'customCommands', label: 'Custom Commands' },
+    { key: 'fun', label: 'Fun' },
+    { key: 'music', label: 'Music' },
+    { key: 'serverInfo', label: 'Server Info' },
+    { key: 'utilities', label: 'Utilities' },
+    { key: 'settingsConfig', label: 'Settings / Config' },
+    { key: 'auditCompliance', label: 'Audit & Compliance' },
+    { key: 'security', label: 'Security' },
+    { key: 'scheduler', label: 'Scheduler Module' },
+    { key: 'analytics', label: 'Analytics' },
+    { key: 'messageSearching', label: 'Message Searching' },
+  ];
 
   useEffect(() => {
     if (status === 'loading') return;
@@ -33,7 +51,7 @@ export default function ModulesPage() {
         const res = await fetch(`/api/servers/${gid}/modules`);
         if (!res.ok) throw new Error('Failed to load modules');
         const data = await res.json();
-        setModeration(data.moderation);
+        setModules(data.modules);
       } catch (err) {
         console.error(err);
       } finally {
@@ -44,6 +62,10 @@ export default function ModulesPage() {
     loadModules();
   }, [session, status, router, gid]);
 
+  const handleToggle = (moduleKey: string) => {
+    setModules(prev => ({ ...prev, [moduleKey]: !prev[moduleKey] }));
+  };
+
   const handleSave = async () => {
     setSaving(true);
     setFeedback('idle');
@@ -51,12 +73,7 @@ export default function ModulesPage() {
       const res = await fetch(`/api/servers/${gid}/modules`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          moderationEnabled: moderation.enabled,
-          warnEnabled: moderation.warnEnabled,
-          kickEnabled: moderation.kickEnabled,
-          banEnabled: moderation.banEnabled,
-        }),
+        body: JSON.stringify(modules),
       });
 
       if (!res.ok) {
@@ -66,7 +83,7 @@ export default function ModulesPage() {
       }
 
       const data = await res.json();
-      setModeration(data.moderation);
+      setModules(data.modules);
       setFeedback('saved');
     } catch (err) {
       console.error(err);
@@ -140,74 +157,21 @@ export default function ModulesPage() {
             </div>
 
             <div className="space-y-6 border-t border-orange-100 pt-6">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between rounded-xl border border-orange-100 bg-orange-50/50 px-4 py-3">
-                  <div>
-                    <p className="font-semibold text-slate-800">Moderation Module</p>
-                    <p className="text-sm text-slate-600">Enable or disable all moderation features.</p>
+              <div className="grid gap-3 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                {moduleList.map(module => (
+                  <div key={module.key} className="flex items-center justify-between rounded-lg border border-orange-100 bg-white px-3 py-2">
+                    <p className="font-semibold text-slate-800 text-sm">{module.label}</p>
+                    <button
+                      type="button"
+                      onClick={() => handleToggle(module.key)}
+                      className={`${modules[module.key] ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition`}
+                    >
+                      <span
+                        className={`${modules[module.key] ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`}
+                      />
+                    </button>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => setModeration(prev => ({ ...prev, enabled: !prev.enabled }))}
-                    className={`${moderation.enabled ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-6 w-11 items-center rounded-full transition`}
-                  >
-                    <span
-                      className={`${moderation.enabled ? 'translate-x-6' : 'translate-x-1'} inline-block h-4 w-4 transform rounded-full bg-white transition`}
-                    />
-                  </button>
-                </div>
-
-                {moderation.enabled && (
-                  <div className="space-y-3 pl-4 border-l-2 border-orange-200">
-                    <div className="flex items-center justify-between rounded-lg border border-orange-100 bg-white px-3 py-2">
-                      <div>
-                        <p className="font-semibold text-slate-800">Warn Command</p>
-                        <p className="text-xs text-slate-600">Enable users to warn others.</p>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => setModeration(prev => ({ ...prev, warnEnabled: !prev.warnEnabled }))}
-                        className={`${moderation.warnEnabled ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition`}
-                      >
-                        <span
-                          className={`${moderation.warnEnabled ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`}
-                        />
-                      </button>
-                    </div>
-
-                    <div className="flex items-center justify-between rounded-lg border border-orange-100 bg-white px-3 py-2">
-                      <div>
-                        <p className="font-semibold text-slate-800">Kick Command</p>
-                        <p className="text-xs text-slate-600">Enable users to kick members.</p>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => setModeration(prev => ({ ...prev, kickEnabled: !prev.kickEnabled }))}
-                        className={`${moderation.kickEnabled ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition`}
-                      >
-                        <span
-                          className={`${moderation.kickEnabled ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`}
-                        />
-                      </button>
-                    </div>
-
-                    <div className="flex items-center justify-between rounded-lg border border-orange-100 bg-white px-3 py-2">
-                      <div>
-                        <p className="font-semibold text-slate-800">Ban Command</p>
-                        <p className="text-xs text-slate-600">Enable users to ban members.</p>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => setModeration(prev => ({ ...prev, banEnabled: !prev.banEnabled }))}
-                        className={`${moderation.banEnabled ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition`}
-                      >
-                        <span
-                          className={`${moderation.banEnabled ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`}
-                        />
-                      </button>
-                    </div>
-                  </div>
-                )}
+                ))}
               </div>
 
               <div className="flex items-center gap-3">
