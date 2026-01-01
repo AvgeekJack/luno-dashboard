@@ -177,43 +177,42 @@ export default function ServerSettings() {
           </div>
 
           <div className="rounded-xl border border-orange-100 bg-orange-50/60 p-5 shadow-sm space-y-4">
-              <div className="flex items-center justify-between flex-wrap gap-3">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Server Info</p>
-                  <p className="text-sm text-slate-700">Guild ID: {String(guildId)}</p>
-                </div>
+            <div className="flex items-center justify-between flex-wrap gap-3">
+              <div>
+                <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Server Info</p>
+                <p className="text-sm text-slate-700">Guild ID: {String(guildId)}</p>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-sm text-slate-700">
-                <div className="rounded-lg bg-white border border-orange-100 p-4 shadow-sm">
-                  <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Members</p>
-                  <p className="text-xl font-bold text-[#0f172a]">{stats?.members ?? '—'}</p>
-                  <p className="text-xs text-slate-600">Total members</p>
-                </div>
-                <div className="rounded-lg bg-white border border-orange-100 p-4 shadow-sm">
-                  <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Presences</p>
-                  <p className="text-xl font-bold text-[#0f172a]">{stats?.presences ?? '—'}</p>
-                  <p className="text-xs text-slate-600">Online/active</p>
-                </div>
-                <div className="rounded-lg bg-white border border-orange-100 p-4 shadow-sm">
-                  <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Text Channels</p>
-                  <p className="text-xl font-bold text-[#0f172a]">{stats?.textChannels ?? '—'}</p>
-                  <p className="text-xs text-slate-600">Channel count</p>
-                </div>
-                <div className="rounded-lg bg-white border border-orange-100 p-4 shadow-sm">
-                  <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Voice Channels</p>
-                  <p className="text-xl font-bold text-[#0f172a]">{stats?.voiceChannels ?? '—'}</p>
-                  <p className="text-xs text-slate-600">Channel count</p>
-                </div>
-                <div className="rounded-lg bg-white border border-orange-100 p-4 shadow-sm">
-                  <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Categories</p>
-                  <p className="text-xl font-bold text-[#0f172a]">{stats?.categories ?? '—'}</p>
-                  <p className="text-xs text-slate-600">Organizers</p>
-                </div>
-                <div className="rounded-lg bg-white border border-orange-100 p-4 shadow-sm">
-                  <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Roles</p>
-                  <p className="text-xl font-bold text-[#0f172a]">{stats?.roles ?? '—'}</p>
-                  <p className="text-xs text-slate-600">Configured roles</p>
-                </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-sm text-slate-700">
+              <div className="rounded-lg bg-white border border-orange-100 p-4 shadow-sm">
+                <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Members</p>
+                <p className="text-xl font-bold text-[#0f172a]">{stats?.members ?? '—'}</p>
+                <p className="text-xs text-slate-600">Total members</p>
+              </div>
+              <div className="rounded-lg bg-white border border-orange-100 p-4 shadow-sm">
+                <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Presences</p>
+                <p className="text-xl font-bold text-[#0f172a]">{stats?.presences ?? '—'}</p>
+                <p className="text-xs text-slate-600">Online/active</p>
+              </div>
+              <div className="rounded-lg bg-white border border-orange-100 p-4 shadow-sm">
+                <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Text Channels</p>
+                <p className="text-xl font-bold text-[#0f172a]">{stats?.textChannels ?? '—'}</p>
+                <p className="text-xs text-slate-600">Channel count</p>
+              </div>
+              <div className="rounded-lg bg-white border border-orange-100 p-4 shadow-sm">
+                <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Voice Channels</p>
+                <p className="text-xl font-bold text-[#0f172a]">{stats?.voiceChannels ?? '—'}</p>
+                <p className="text-xs text-slate-600">Channel count</p>
+              </div>
+              <div className="rounded-lg bg-white border border-orange-100 p-4 shadow-sm">
+                <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Categories</p>
+                <p className="text-xl font-bold text-[#0f172a]">{stats?.categories ?? '—'}</p>
+                <p className="text-xs text-slate-600">Organizers</p>
+              </div>
+              <div className="rounded-lg bg-white border border-orange-100 p-4 shadow-sm">
+                <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Roles</p>
+                <p className="text-xl font-bold text-[#0f172a]">{stats?.roles ?? '—'}</p>
+                <p className="text-xs text-slate-600">Configured roles</p>
               </div>
             </div>
           </div>
