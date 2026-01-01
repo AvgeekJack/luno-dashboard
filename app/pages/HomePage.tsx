@@ -1,27 +1,10 @@
 "use client";
 
 import { useSession, signIn } from 'next-auth/react';
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
-
-interface Guild {
-  id: string;
-  name: string;
-  icon: string | null;
-}
 
 export default function HomePage() {
   const { data: session } = useSession();
-  const [guilds, setGuilds] = useState<Guild[]>([]);
-
-  useEffect(() => {
-    if (session) {
-      fetch('/api/servers')
-        .then(res => res.json())
-        .then(data => setGuilds(data))
-        .catch(err => console.error(err));
-    }
-  }, [session]);
 
   return (
     <div className="min-h-screen bg-white text-[#0f172a] flex flex-col items-center">
@@ -80,55 +63,6 @@ export default function HomePage() {
               <p className="text-sm text-slate-500 mt-6">
                 Luno powers millions of servers—join in and make moderation effortless.
               </p>
-            </div>
-
-            {/* Dashboard Mockup */}
-            <div className="relative max-w-5xl mx-auto">
-              <div className="absolute inset-0 bg-gradient-to-r from-orange-400 to-amber-300 rounded-3xl blur-3xl opacity-25"></div>
-              <div className="relative bg-white rounded-2xl border border-orange-100 p-8 shadow-2xl">
-                <div className="bg-slate-50 rounded-xl overflow-hidden border border-orange-100">
-                  <div className="flex items-center space-x-2 bg-white px-4 py-3 border-b border-orange-100">
-                    <div className="w-3 h-3 rounded-full bg-red-400"></div>
-                    <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
-                    <div className="w-3 h-3 rounded-full bg-green-400"></div>
-                  </div>
-                  <div className="p-8 min-h-[380px] flex items-center justify-center">
-                    {session && guilds.length > 0 ? (
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
-                        {guilds.slice(0, 6).map(guild => (
-                          <Link key={guild.id} href={`/servers/${guild.id}`}>
-                            <div className="bg-white p-6 rounded-xl border border-orange-100 hover:border-orange-300 transition-colors shadow-sm hover:shadow cursor-pointer text-center">
-                              {guild.icon ? (
-                                <img
-                                  src={`https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`}
-                                  alt={guild.name}
-                                  className="w-16 h-16 rounded-full mx-auto mb-4"
-                                />
-                              ) : (
-                                <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-amber-400 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-bold text-white">
-                                  {guild.name.charAt(0)}
-                                </div>
-                              )}
-                              <h3 className="text-lg font-semibold text-slate-800">{guild.name}</h3>
-                            </div>
-                          </Link>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="text-center">
-                        <div className="w-20 h-20 bg-gradient-to-br from-orange-500 to-amber-400 rounded-full mx-auto mb-4 flex items-center justify-center text-white">
-                          <svg className="w-10 h-10" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                            <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
-                          </svg>
-                        </div>
-                        <h3 className="text-2xl font-semibold text-slate-800 mb-2">Dashboard Preview</h3>
-                        <p className="text-slate-500">Login to view your servers</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </section>
