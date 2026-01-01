@@ -38,7 +38,7 @@ export default function HomePage() {
         </div>
       </nav>
 
-      <main className="w-full flex flex-col items-center">
+      <main className="w-full flex flex-col items-center flex-1">
         {/* Hero Section */}
         <section className="w-full pt-36 pb-20 px-6 bg-gradient-to-b from-orange-50 via-white to-white flex justify-center">
           <div className="w-full max-w-6xl">
@@ -105,9 +105,9 @@ export default function HomePage() {
         </section>
 
         {/* Footer */}
-        <footer className="w-full py-16 px-6 bg-white border-t border-orange-100 flex justify-center">
+        <footer className="w-full py-8 px-6 bg-white border-t border-orange-100 flex justify-center">
           <div className="w-full max-w-6xl">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8 text-center">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6 text-center">
               <div className="space-y-3">
                 <div className="flex items-center justify-center gap-3">
                   <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-amber-400 rounded-xl shadow-md"></div>
