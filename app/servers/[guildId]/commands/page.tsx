@@ -7,6 +7,17 @@ import { useEffect, useState } from 'react';
 
 const CATEGORIES = ['Moderator', 'Info', 'Fun', 'Utility', 'Admin'];
 
+interface Channel {
+  id: string;
+  name: string;
+  type: number;
+}
+
+interface Role {
+  id: string;
+  name: string;
+}
+
 export default function CommandsPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -14,13 +25,32 @@ export default function CommandsPage() {
   const [activeCategory, setActiveCategory] = useState('Moderator');
   const [botOnline, setBotOnline] = useState(true);
   const [warnEnabled, setWarnEnabled] = useState(true);
+  const [showSettings, setShowSettings] = useState(false);
+  const [channels, setChannels] = useState<Channel[]>([]);
+  const [roles, setRoles] = useState<Role[]>([]);
+  const [settings, setSettings] = useState({
+    allowedChannels: '',
+    ignoredChannels: '',
+    allowedRoles: '',
+    ignoredRoles: '',
+  });
 
   useEffect(() => {
     if (status === 'loading') return;
     if (!session) {
       router.push('/');
+      return;
     }
-  }, [session, status, router]);
+
+    // Fetch channels and roles
+    fetch(`/api/servers/${guildId}/channels-and-roles`)
+      .then(res => res.json())
+      .then(data => {
+        setChannels(data.channels || []);
+        setRoles(data.roles || []);
+      })
+      .catch(err => console.error(err));
+  }, [session, status, router, guildId]);
 
   if (status === 'loading') {
     return <div className="flex min-h-screen items-center justify-center text-[#0f172a]">Loading...</div>;
@@ -144,7 +174,7 @@ export default function CommandsPage() {
                     </button>
                   </div>
                   <div className="flex gap-2">
-                    <button className="flex-1 rounded-lg bg-orange-500 text-white px-3 py-2 text-sm font-semibold hover:bg-orange-600 transition-colors">
+                    <button onClick={() => setShowSettings(true)} className="flex-1 rounded-lg bg-orange-500 text-white px-3 py-2 text-sm font-semibold hover:bg-orange-600 transition-colors">
                       Settings
                     </button>
                     <button className="flex-1 rounded-lg bg-orange-100 text-orange-700 px-3 py-2 text-sm font-semibold hover:bg-orange-200 transition-colors">
@@ -157,6 +187,87 @@ export default function CommandsPage() {
           </div>
         </main>
       </div>
+
+      {showSettings && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-slate-800 rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto border border-slate-700">
+            <div className="sticky top-0 bg-slate-800 border-b border-slate-700 flex items-center justify-between p-6">
+              <h2 className="text-xl font-bold text-white">Additional Permissions (warn)</h2>
+              <button
+                onClick={() => setShowSettings(false)}
+                className="text-slate-400 hover:text-white transition-colors text-2xl leading-none"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="p-6 space-y-6">
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-white">Allowed Channels</label>
+                <select
+                  value={settings.allowedChannels}
+                  onChange={(e) => setSettings({ ...settings, allowedChannels: e.target.value })}
+                  className="w-full rounded-lg bg-slate-700 border border-slate-600 text-white px-3 py-2 focus:border-orange-500 focus:outline-none"
+                >
+                  <option value="">Select...</option>
+                  {channels.map(ch => (
+                    <option key={ch.id} value={ch.id}>{ch.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-white">Ignored Channels</label>
+                <select
+                  value={settings.ignoredChannels}
+                  onChange={(e) => setSettings({ ...settings, ignoredChannels: e.target.value })}
+                  className="w-full rounded-lg bg-slate-700 border border-slate-600 text-white px-3 py-2 focus:border-orange-500 focus:outline-none"
+                >
+                  <option value="">Select...</option>
+                  {channels.map(ch => (
+                    <option key={ch.id} value={ch.id}>{ch.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-white">Allowed Roles</label>
+                <select
+                  value={settings.allowedRoles}
+                  onChange={(e) => setSettings({ ...settings, allowedRoles: e.target.value })}
+                  className="w-full rounded-lg bg-slate-700 border border-slate-600 text-white px-3 py-2 focus:border-orange-500 focus:outline-none"
+                >
+                  <option value="">Select...</option>
+                  {roles.map(r => (
+                    <option key={r.id} value={r.id}>{r.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-white">Ignored Roles</label>
+                <select
+                  value={settings.ignoredRoles}
+                  onChange={(e) => setSettings({ ...settings, ignoredRoles: e.target.value })}
+                  className="w-full rounded-lg bg-slate-700 border border-slate-600 text-white px-3 py-2 focus:border-orange-500 focus:outline-none"
+                >
+                  <option value="">Select...</option>
+                  {roles.map(r => (
+                    <option key={r.id} value={r.id}>{r.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              <button
+                onClick={() => setShowSettings(false)}
+                className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold transition-colors"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
