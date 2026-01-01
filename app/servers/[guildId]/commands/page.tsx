@@ -3,12 +3,15 @@
 import { useSession } from 'next-auth/react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+
+const CATEGORIES = ['Moderator', 'Info', 'Fun', 'Utility', 'Admin'];
 
 export default function CommandsPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const { guildId } = useParams();
+  const [activeCategory, setActiveCategory] = useState('Moderator');
 
   useEffect(() => {
     if (status === 'loading') return;
@@ -80,8 +83,45 @@ export default function CommandsPage() {
               <p className="text-slate-600">Configure and manage commands for this server.</p>
             </div>
 
-            <div className="space-y-4 border-t border-orange-100 pt-6">
-              <p className="text-slate-600">Commands coming soon...</p>
+            <div className="border-t border-orange-100 pt-6 space-y-6">
+              <div className="flex gap-2 overflow-x-auto pb-2">
+                {CATEGORIES.map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => setActiveCategory(cat)}
+                    className={`px-4 py-2 rounded-lg font-semibold whitespace-nowrap transition-colors ${
+                      activeCategory === cat
+                        ? 'bg-orange-500 text-white'
+                        : 'bg-orange-50 text-slate-700 border border-orange-100 hover:bg-orange-100'
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="rounded-xl border border-orange-100 bg-slate-50 p-5 shadow-sm space-y-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex-1">
+                      <h3 className="text-lg font-bold text-[#0f172a]">warn</h3>
+                      <p className="text-sm text-slate-600">Warn a user with a message</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="h-3 w-3 rounded-full bg-green-500" aria-hidden />
+                      <span className="text-xs font-semibold text-green-600">Enabled</span>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <button className="flex-1 rounded-lg bg-orange-500 text-white px-3 py-2 text-sm font-semibold hover:bg-orange-600 transition-colors">
+                      Settings
+                    </button>
+                    <button className="flex-1 rounded-lg bg-orange-100 text-orange-700 px-3 py-2 text-sm font-semibold hover:bg-orange-200 transition-colors">
+                      Help
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </main>
