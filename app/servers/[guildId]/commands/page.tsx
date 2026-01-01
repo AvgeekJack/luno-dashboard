@@ -12,6 +12,7 @@ export default function CommandsPage() {
   const router = useRouter();
   const { guildId } = useParams();
   const [activeCategory, setActiveCategory] = useState('Moderator');
+  const [botOnline, setBotOnline] = useState(true);
 
   useEffect(() => {
     if (status === 'loading') return;
@@ -83,7 +84,27 @@ export default function CommandsPage() {
               <p className="text-slate-600">Configure and manage commands for this server.</p>
             </div>
 
-            <div className="border-t border-orange-100 pt-6 space-y-6">
+            <div className="flex items-center justify-between border-t border-orange-100 pt-6">
+              <div className="flex items-center gap-3">
+                <span className="text-sm font-semibold text-slate-700">Bot Status</span>
+                <button
+                  onClick={() => setBotOnline(!botOnline)}
+                  className={`relative inline-flex h-7 w-12 rounded-full transition-colors ${
+                    botOnline ? 'bg-orange-500' : 'bg-slate-400'
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform ${
+                      botOnline ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                    style={{ marginTop: '2px' }}
+                  />
+                </button>
+                <span className="text-sm font-medium text-slate-600">{botOnline ? 'Online' : 'Offline'}</span>
+              </div>
+            </div>
+
+            <div className="space-y-6">
               <div className="flex gap-2 overflow-x-auto pb-2">
                 {CATEGORIES.map((cat) => (
                   <button
