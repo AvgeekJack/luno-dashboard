@@ -99,6 +99,29 @@ export default function ServerSettings() {
               <span className="h-5 w-5 rounded-md bg-orange-100" aria-hidden />
               Dashboard
             </Link>
+            <details className="rounded-xl border border-orange-100 bg-orange-50/60 text-slate-800">
+              <summary className="flex items-center justify-between px-3 py-2 cursor-pointer select-none rounded-xl">
+                <span className="flex items-center gap-3">
+                  <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
+                  Settings
+                </span>
+                <span className="text-xs text-orange-600">▾</span>
+              </summary>
+              <div className="border-t border-orange-100 px-2 py-1 space-y-1">
+                <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left">
+                  <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
+                  General
+                </button>
+                <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left">
+                  <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
+                  Setup
+                </button>
+                <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left">
+                  <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
+                  Commands
+                </button>
+              </div>
+            </details>
             <button className="flex w-full items-center gap-3 rounded-xl px-3 py-2 hover:bg-orange-50 transition-colors text-left">
               <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
               Modules
