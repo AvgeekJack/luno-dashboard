@@ -209,7 +209,7 @@ export default function ModerationPage() {
             </div>
 
             <div className="space-y-6 border-t border-orange-100 pt-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {MODERATION_COMMANDS.map((command) => (
                   <div key={command.name} className="rounded-xl border border-orange-100 bg-slate-50 p-5 shadow-sm space-y-4">
                     <div className="flex items-start justify-between gap-3">
