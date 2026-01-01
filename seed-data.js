@@ -1,0 +1,97 @@
+const { MongoClient } = require('mongodb');
+
+const MONGODB_URI = 'mongodb+srv://jrichmondgates10_db_user:CL2cnJTz0Csyhzct@lumo.5rgfd1e.mongodb.net/lumo-bot?appName=Lumo';
+const client = new MongoClient(MONGODB_URI);
+
+async function seedData() {
+  try {
+    await client.connect();
+    const db = client.db();
+    const collection = db.collection('serversettings');
+
+    // Sample test data
+    const testData = [
+      {
+        guildId: '123456789012345678',
+        prefix: '!',
+        moderation: {
+          enabled: true,
+          logChannel: '987654321098765432',
+        },
+        welcome: {
+          enabled: true,
+          message: 'Welcome to the server! Please read the rules.',
+          channel: '111111111111111111',
+        },
+        goodbye: {
+          enabled: true,
+          message: 'Goodbye! Hope to see you again!',
+          channel: '111111111111111111',
+        },
+        roles: {
+          defaultRoles: ['222222222222222222', '333333333333333333'],
+          modRoles: ['444444444444444444'],
+        },
+        commands: {
+          warn: {
+            enabled: true,
+            allowedChannels: [],
+            ignoredChannels: ['555555555555555555'],
+            allowedRoles: ['444444444444444444'],
+            ignoredRoles: [],
+          },
+          kick: {
+            enabled: true,
+            allowedChannels: [],
+            ignoredChannels: [],
+            allowedRoles: ['444444444444444444'],
+            ignoredRoles: [],
+          },
+          ban: {
+            enabled: true,
+            allowedChannels: [],
+            ignoredChannels: [],
+            allowedRoles: ['444444444444444444'],
+            ignoredRoles: [],
+          },
+          userinfo: {
+            enabled: true,
+            allowedChannels: [],
+            ignoredChannels: [],
+            allowedRoles: [],
+            ignoredRoles: [],
+          },
+          eightball: {
+            enabled: true,
+            allowedChannels: [],
+            ignoredChannels: [],
+            allowedRoles: [],
+            ignoredRoles: [],
+          },
+          ping: {
+            enabled: true,
+            allowedChannels: [],
+            ignoredChannels: [],
+            allowedRoles: [],
+            ignoredRoles: [],
+          },
+        },
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ];
+
+    // Insert test data
+    const result = await collection.insertMany(testData);
+    console.log(`✓ Inserted ${result.insertedCount} test server(s)`);
+    console.log('Test Guild ID: 123456789012345678');
+    console.log('\nYou can now use this guildId in your dashboard to test the settings.');
+    
+  } catch (error) {
+    console.error('Error seeding data:', error);
+  } finally {
+    await client.close();
+  }
+}
+
+seedData();
