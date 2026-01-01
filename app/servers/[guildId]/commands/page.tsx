@@ -7,8 +7,6 @@ import { useEffect, useState } from 'react';
 
 const CATEGORIES = [
   'Moderation',
-  'Automod',
-  'Anti-Raid',
   'Logging',
   'Role Management',
   'Member Management',
@@ -37,7 +35,7 @@ const COMMANDS: Record<string, { category: string; description: string }> = {
   lock: { category: 'Security', description: 'Lock a channel from posting' },
   modlog: { category: 'Logging', description: 'View or manage moderation logs' },
   mute: { category: 'Moderation', description: 'Mute a user in the server' },
-  slowmode: { category: 'Anti-Raid', description: 'Set slowmode for a channel' },
+  slowmode: { category: 'Moderation', description: 'Set slowmode for a channel' },
   softban: { category: 'Moderation', description: 'Ban and then unban a user' },
   tempmute: { category: 'Moderation', description: 'Temporarily mute a user' },
   timeout: { category: 'Moderation', description: 'Timeout a user for a duration' },
