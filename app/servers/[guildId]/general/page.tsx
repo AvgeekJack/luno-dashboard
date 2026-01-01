@@ -12,7 +12,6 @@ export default function GeneralPage() {
   const gid = Array.isArray(guildId) ? guildId[0] : guildId;
 
   const [prefix, setPrefix] = useState('!');
-  const [moderationEnabled, setModerationEnabled] = useState(true);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [feedback, setFeedback] = useState<'idle' | 'saved' | 'error'>('idle');
@@ -30,7 +29,6 @@ export default function GeneralPage() {
         if (!res.ok) throw new Error('Failed to load settings');
         const data = await res.json();
         setPrefix(data.prefix || '!');
-        setModerationEnabled(data.moderationEnabled ?? true);
       } catch (err) {
         console.error(err);
       } finally {
@@ -57,7 +55,7 @@ export default function GeneralPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           prefix: trimmed,
-          moderationEnabled,
+          moderationEnabled: true,
         }),
       });
 
@@ -140,34 +138,29 @@ export default function GeneralPage() {
             </div>
 
             <div className="space-y-6 border-t border-orange-100 pt-6">
-              <div className="space-y-2">
-                <label className="block text-sm font-semibold text-slate-800">Command Prefix</label>
-                <div className="flex flex-col gap-2">
-                  <input
-                    value={prefix}
-                    onChange={(e) => setPrefix(e.target.value)}
-                    maxLength={5}
-                    className="w-full rounded-xl border border-orange-100 bg-white px-3 py-2 text-slate-800 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 outline-none transition"
-                    placeholder="!"
-                  />
-                  <p className="text-xs text-slate-500">1-5 characters. This is what users will type before commands.</p>
+              <div className="grid gap-6 md:grid-cols-2">
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold text-slate-800">Command Prefix</label>
+                  <div className="flex flex-col gap-2">
+                    <input
+                      value={prefix}
+                      onChange={(e) => setPrefix(e.target.value)}
+                      maxLength={5}
+                      className="w-full rounded-xl border border-orange-100 bg-white px-3 py-2 text-slate-800 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 outline-none transition"
+                      placeholder="!"
+                    />
+                    <p className="text-xs text-slate-500">1-5 characters. Users type this before commands (e.g., !help).</p>
+                  </div>
                 </div>
-              </div>
 
-              <div className="flex items-center justify-between rounded-xl border border-orange-100 bg-orange-50/50 px-4 py-3">
-                <div>
-                  <p className="font-semibold text-slate-800">Moderation Module</p>
-                  <p className="text-sm text-slate-600">Enable or disable moderation features for this server.</p>
+                <div className="rounded-xl border border-orange-100 bg-orange-50/50 p-4 space-y-2">
+                  <p className="text-sm font-semibold text-slate-800">Tips</p>
+                  <ul className="text-sm text-slate-600 space-y-1 list-disc list-inside">
+                    <li>Keep the prefix short and easy to remember.</li>
+                    <li>Update Commands/Setup pages for channel/role rules.</li>
+                    <li>Bot picks up changes immediately—no restart needed.</li>
+                  </ul>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setModerationEnabled((prev) => !prev)}
-                  className={`${moderationEnabled ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-6 w-11 items-center rounded-full transition`}
-                >
-                  <span
-                    className={`${moderationEnabled ? 'translate-x-6' : 'translate-x-1'} inline-block h-4 w-4 transform rounded-full bg-white transition`}
-                  />
-                </button>
               </div>
 
               <div className="flex items-center gap-3">
@@ -180,6 +173,14 @@ export default function GeneralPage() {
                 </button>
                 {feedback === 'saved' && <span className="text-sm text-green-600">Saved!</span>}
                 {feedback === 'error' && <span className="text-sm text-red-600">Could not save. Check prefix length.</span>}
+              </div>
+
+              <div className="rounded-xl border border-orange-100 bg-white/80 p-4 shadow-sm">
+                <p className="text-sm font-semibold text-slate-800">Notes</p>
+                <ul className="text-sm text-slate-600 space-y-1 list-disc list-inside">
+                  <li>Prefix changes apply immediately; the bot reads live from MongoDB.</li>
+                  <li>Use the sidebar to jump to Commands, Modules, or Setup for deeper config.</li>
+                </ul>
               </div>
             </div>
           </div>
