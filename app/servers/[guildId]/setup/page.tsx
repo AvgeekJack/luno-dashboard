@@ -3,19 +3,50 @@
 import { useSession } from 'next-auth/react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+
+interface Channel {
+  id: string;
+  name: string;
+}
+
+interface Role {
+  id: string;
+  name: string;
+}
 
 export default function SetupPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const { guildId } = useParams();
 
+  const [channels, setChannels] = useState<Channel[]>([]);
+  const [roles, setRoles] = useState<Role[]>([]);
+  
+  const [modLogChannel, setModLogChannel] = useState('');
+  const [welcomeChannel, setWelcomeChannel] = useState('');
+  const [welcomeMessage, setWelcomeMessage] = useState('Welcome {user} to {server}!');
+  const [goodbyeChannel, setGoodbyeChannel] = useState('');
+  const [goodbyeMessage, setGoodbyeMessage] = useState('Goodbye {user}, thanks for being part of {server}!');
+  const [defaultRoles, setDefaultRoles] = useState<string[]>([]);
+  const [modRoles, setModRoles] = useState<string[]>([]);
+
   useEffect(() => {
     if (status === 'loading') return;
     if (!session) {
       router.push('/');
+      return;
     }
-  }, [session, status, router]);
+
+    // Fetch channels and roles
+    fetch(`/api/servers/${guildId}/channels-and-roles`)
+      .then(res => res.json())
+      .then(data => {
+        setChannels(data.channels || []);
+        setRoles(data.roles || []);
+      })
+      .catch(err => console.error(err));
+  }, [session, status, router, guildId]);
 
   if (status === 'loading') {
     return <div className="flex min-h-screen items-center justify-center text-[#0f172a]">Loading...</div>;
@@ -74,14 +105,201 @@ export default function SetupPage() {
             <h1 className="text-3xl font-bold">Setup</h1>
           </div>
 
-          <div className="bg-white border border-orange-100 rounded-2xl shadow-sm p-6 md:p-8 space-y-6">
-            <div className="space-y-1">
-              <h2 className="text-xl font-semibold text-[#0f172a]">Setup</h2>
-              <p className="text-slate-600">Set up initial bot configuration for this server.</p>
+          <div className="bg-white border border-orange-100 rounded-2xl shadow-sm p-6 md:p-8 space-y-8">
+            {/* Section 1/4 - Moderation Log */}
+            <div className="space-y-4">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded">1/4</span>
+                  <h2 className="text-xl font-semibold text-[#0f172a]">Moderation Log</h2>
+                </div>
+                <p className="text-slate-600">Configure where moderation actions will be logged.</p>
+              </div>
+              <div className="space-y-3 border-t border-orange-100 pt-4">
+                <label className="block text-sm font-semibold text-[#0f172a]">Log Channel</label>
+                <select
+                  value={modLogChannel}
+                  onChange={(e) => setModLogChannel(e.target.value)}
+                  className="w-full rounded-lg bg-orange-50 border border-orange-200 text-[#0f172a] px-4 py-3 focus:border-orange-500 focus:outline-none"
+                >
+                  <option value="">Select a channel...</option>
+                  {channels.map(ch => (
+                    <option key={ch.id} value={ch.id}># {ch.name}</option>
+                  ))}
+                  <option value="create-new">+ Create New Channel</option>
+                </select>
+                <p className="text-xs text-slate-500">All moderation actions (warns, kicks, bans) will be logged here. Only visible to moderators.</p>
+              </div>
             </div>
 
-            <div className="space-y-4 border-t border-orange-100 pt-6">
-              <p className="text-slate-600">Setup coming soon...</p>
+            {/* Section 2/4 - Welcome Messages */}
+            <div className="space-y-4 border-t border-orange-100 pt-8">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded">2/4</span>
+                  <h2 className="text-xl font-semibold text-[#0f172a]">Welcome Messages</h2>
+                </div>
+                <p className="text-slate-600">Configure welcome messages for new members.</p>
+              </div>
+              <div className="space-y-4 border-t border-orange-100 pt-4">
+                <div className="space-y-3">
+                  <label className="block text-sm font-semibold text-[#0f172a]">Welcome Channel</label>
+                  <select
+                    value={welcomeChannel}
+                    onChange={(e) => setWelcomeChannel(e.target.value)}
+                    className="w-full rounded-lg bg-orange-50 border border-orange-200 text-[#0f172a] px-4 py-3 focus:border-orange-500 focus:outline-none"
+                  >
+                    <option value="">Select a channel...</option>
+                    {channels.map(ch => (
+                      <option key={ch.id} value={ch.id}># {ch.name}</option>
+                    ))}
+                    <option value="create-new">+ Create New Channel</option>
+                  </select>
+                </div>
+                <div className="space-y-3">
+                  <label className="block text-sm font-semibold text-[#0f172a]">Welcome Message</label>
+                  <textarea
+                    value={welcomeMessage}
+                    onChange={(e) => setWelcomeMessage(e.target.value)}
+                    rows={3}
+                    className="w-full rounded-lg bg-orange-50 border border-orange-200 text-[#0f172a] px-4 py-3 focus:border-orange-500 focus:outline-none resize-none"
+                    placeholder="Welcome {user} to {server}!"
+                  />
+                  <p className="text-xs text-slate-500">Use {'{user}'} for the member's name and {'{server}'} for the server name.</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Section 3/4 - Goodbye Messages */}
+            <div className="space-y-4 border-t border-orange-100 pt-8">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded">3/4</span>
+                  <h2 className="text-xl font-semibold text-[#0f172a]">Goodbye Messages</h2>
+                </div>
+                <p className="text-slate-600">Configure goodbye messages when members leave.</p>
+              </div>
+              <div className="space-y-4 border-t border-orange-100 pt-4">
+                <div className="space-y-3">
+                  <label className="block text-sm font-semibold text-[#0f172a]">Goodbye Channel</label>
+                  <select
+                    value={goodbyeChannel}
+                    onChange={(e) => setGoodbyeChannel(e.target.value)}
+                    className="w-full rounded-lg bg-orange-50 border border-orange-200 text-[#0f172a] px-4 py-3 focus:border-orange-500 focus:outline-none"
+                  >
+                    <option value="">Select a channel...</option>
+                    {channels.map(ch => (
+                      <option key={ch.id} value={ch.id}># {ch.name}</option>
+                    ))}
+                    <option value="create-new">+ Create New Channel</option>
+                  </select>
+                </div>
+                <div className="space-y-3">
+                  <label className="block text-sm font-semibold text-[#0f172a]">Goodbye Message</label>
+                  <textarea
+                    value={goodbyeMessage}
+                    onChange={(e) => setGoodbyeMessage(e.target.value)}
+                    rows={3}
+                    className="w-full rounded-lg bg-orange-50 border border-orange-200 text-[#0f172a] px-4 py-3 focus:border-orange-500 focus:outline-none resize-none"
+                    placeholder="Goodbye {user}, thanks for being part of {server}!"
+                  />
+                  <p className="text-xs text-slate-500">Use {'{user}'} for the member's name and {'{server}'} for the server name.</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Section 4/4 - Roles */}
+            <div className="space-y-4 border-t border-orange-100 pt-8">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded">4/4</span>
+                  <h2 className="text-xl font-semibold text-[#0f172a]">Roles</h2>
+                </div>
+                <p className="text-slate-600">Configure default and moderator roles.</p>
+              </div>
+              <div className="space-y-4 border-t border-orange-100 pt-4">
+                <div className="space-y-3">
+                  <label className="block text-sm font-semibold text-[#0f172a]">Default Member Roles</label>
+                  <select
+                    className="w-full rounded-lg bg-orange-50 border border-orange-200 text-[#0f172a] px-4 py-3 focus:border-orange-500 focus:outline-none"
+                    onChange={(e) => {
+                      if (e.target.value && !defaultRoles.includes(e.target.value)) {
+                        setDefaultRoles([...defaultRoles, e.target.value]);
+                        e.target.value = '';
+                      }
+                    }}
+                  >
+                    <option value="">Select roles to add...</option>
+                    {roles.filter(r => !defaultRoles.includes(r.id)).map(r => (
+                      <option key={r.id} value={r.id}>@ {r.name}</option>
+                    ))}
+                    <option value="create-new">+ Create New Role</option>
+                  </select>
+                  {defaultRoles.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {defaultRoles.map(roleId => {
+                        const role = roles.find(r => r.id === roleId);
+                        return (
+                          <span key={roleId} className="bg-orange-500 text-white px-3 py-1 rounded-full text-sm flex items-center gap-2">
+                            {role?.name}
+                            <button
+                              onClick={() => setDefaultRoles(defaultRoles.filter(r => r !== roleId))}
+                              className="hover:text-orange-200"
+                            >
+                              ✕
+                            </button>
+                          </span>
+                        );
+                      })}
+                    </div>
+                  )}
+                  <p className="text-xs text-slate-500">These roles will be automatically assigned to new members when they join.</p>
+                </div>
+                <div className="space-y-3">
+                  <label className="block text-sm font-semibold text-[#0f172a]">Moderator Roles</label>
+                  <select
+                    className="w-full rounded-lg bg-orange-50 border border-orange-200 text-[#0f172a] px-4 py-3 focus:border-orange-500 focus:outline-none"
+                    onChange={(e) => {
+                      if (e.target.value && !modRoles.includes(e.target.value)) {
+                        setModRoles([...modRoles, e.target.value]);
+                        e.target.value = '';
+                      }
+                    }}
+                  >
+                    <option value="">Select roles to add...</option>
+                    {roles.filter(r => !modRoles.includes(r.id)).map(r => (
+                      <option key={r.id} value={r.id}>@ {r.name}</option>
+                    ))}
+                    <option value="create-new">+ Create New Role</option>
+                  </select>
+                  {modRoles.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {modRoles.map(roleId => {
+                        const role = roles.find(r => r.id === roleId);
+                        return (
+                          <span key={roleId} className="bg-orange-500 text-white px-3 py-1 rounded-full text-sm flex items-center gap-2">
+                            {role?.name}
+                            <button
+                              onClick={() => setModRoles(modRoles.filter(r => r !== roleId))}
+                              className="hover:text-orange-200"
+                            >
+                              ✕
+                            </button>
+                          </span>
+                        );
+                      })}
+                    </div>
+                  )}
+                  <p className="text-xs text-slate-500">Members with these roles will have access to moderation commands and features.</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Save Button */}
+            <div className="border-t border-orange-100 pt-6">
+              <button className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg font-semibold transition-colors">
+                Save Setup Configuration
+              </button>
             </div>
           </div>
         </main>
