@@ -100,7 +100,7 @@ export default function LogsPage() {
               <p className="text-slate-600">See who changed what on this server.</p>
             </div>
 
-            <div className="space-y-4 border-t border-orange-100 pt-6">
+            <div className="space-y-4 border-t border-orange-100 pt-6 px-6">
               {logs.length === 0 ? (
                 <p className="text-slate-600">No changes yet.</p>
               ) : (
