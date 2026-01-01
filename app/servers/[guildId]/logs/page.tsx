@@ -53,8 +53,7 @@ export default function LogsPage() {
             </div>
           </div>
           
-          <div className="px-4 py-4 space-y-1">
-            <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold px-3">Server</p>
+          <div className="px-4 py-4">
             <Link href="/servers" className="text-orange-600 font-semibold hover:text-orange-700 transition-colors text-sm px-3">← Back to Servers</Link>
           </div>
           
