@@ -3,21 +3,41 @@
 import { useSession } from 'next-auth/react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function LogsPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const { guildId } = useParams();
+  const gid = Array.isArray(guildId) ? guildId[0] : guildId;
+
+  const [logs, setLogs] = useState<Array<{ _id: string; userName: string; userId: string; action: string; createdAt: string }>>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (status === 'loading') return;
     if (!session) {
       router.push('/');
+      return;
     }
-  }, [session, status, router]);
 
-  if (status === 'loading') {
+    const loadLogs = async () => {
+      try {
+        const res = await fetch(`/api/servers/${gid}/logs`);
+        if (!res.ok) throw new Error('Failed to load logs');
+        const data = await res.json();
+        setLogs(data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadLogs();
+  }, [session, status, router, gid]);
+
+  if (status === 'loading' || loading) {
     return <div className="flex min-h-screen items-center justify-center text-[#0f172a]">Loading...</div>;
   }
 
@@ -71,17 +91,40 @@ export default function LogsPage() {
         <main className="flex-1 space-y-4 md:space-y-6">
           <div className="space-y-1">
             <p className="text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">Logs</p>
-            <h1 className="text-3xl font-bold">Logs</h1>
+            <h1 className="text-3xl font-bold">Audit Log</h1>
           </div>
 
           <div className="bg-white border border-orange-100 rounded-2xl shadow-sm p-6 md:p-8 space-y-6">
             <div className="space-y-1">
-              <h2 className="text-xl font-semibold text-[#0f172a]">Logs</h2>
-              <p className="text-slate-600">View bot activity logs for this server.</p>
+              <h2 className="text-xl font-semibold text-[#0f172a]">Audit Log</h2>
+              <p className="text-slate-600">See who changed what on this server.</p>
             </div>
 
             <div className="space-y-4 border-t border-orange-100 pt-6">
-              <p className="text-slate-600">Logs coming soon...</p>
+              {logs.length === 0 ? (
+                <p className="text-slate-600">No changes yet.</p>
+              ) : (
+                <div className="overflow-hidden rounded-xl border border-orange-100 bg-orange-50/50">
+                  <div className="grid grid-cols-12 bg-orange-100/60 px-4 py-2 text-xs font-semibold text-orange-700 uppercase tracking-wide">
+                    <div className="col-span-4">User</div>
+                    <div className="col-span-2">User ID</div>
+                    <div className="col-span-4">Action</div>
+                    <div className="col-span-2 text-right">Time</div>
+                  </div>
+                  <div className="divide-y divide-orange-100 bg-white">
+                    {logs.map((log) => (
+                      <div key={log._id} className="grid grid-cols-12 px-4 py-3 text-sm text-slate-800">
+                        <div className="col-span-4 truncate" title={log.userName}>{log.userName}</div>
+                        <div className="col-span-2 truncate text-slate-500" title={log.userId}>{log.userId}</div>
+                        <div className="col-span-4 text-slate-700" title={log.action}>{log.action}</div>
+                        <div className="col-span-2 text-right text-slate-500" title={new Date(log.createdAt).toLocaleString()}>
+                          {new Date(log.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </main>

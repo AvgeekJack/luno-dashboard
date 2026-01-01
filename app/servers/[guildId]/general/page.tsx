@@ -174,14 +174,6 @@ export default function GeneralPage() {
                 {feedback === 'saved' && <span className="text-sm text-green-600">Saved!</span>}
                 {feedback === 'error' && <span className="text-sm text-red-600">Could not save. Check prefix length.</span>}
               </div>
-
-              <div className="rounded-xl border border-orange-100 bg-white/80 p-4 shadow-sm">
-                <p className="text-sm font-semibold text-slate-800">Notes</p>
-                <ul className="text-sm text-slate-600 space-y-1 list-disc list-inside">
-                  <li>Prefix changes apply immediately; the bot reads live from MongoDB.</li>
-                  <li>Use the sidebar to jump to Commands, Modules, or Setup for deeper config.</li>
-                </ul>
-              </div>
             </div>
           </div>
         </main>
