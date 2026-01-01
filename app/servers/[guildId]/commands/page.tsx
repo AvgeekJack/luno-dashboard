@@ -85,22 +85,22 @@ export default function CommandsPage() {
             </div>
 
             <div className="flex items-center justify-between border-t border-orange-100 pt-6">
+              <span className="text-sm font-semibold text-slate-700">Bot Status</span>
               <div className="flex items-center gap-3">
-                <span className="text-sm font-semibold text-slate-700">Bot Status</span>
                 <button
                   onClick={() => setBotOnline(!botOnline)}
-                  className={`relative inline-flex h-7 w-12 rounded-full transition-colors ${
+                  className={`relative inline-flex h-6 w-11 rounded-full transition-colors ${
                     botOnline ? 'bg-orange-500' : 'bg-slate-400'
                   }`}
                 >
                   <span
-                    className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform ${
-                      botOnline ? 'translate-x-6' : 'translate-x-1'
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
+                      botOnline ? 'translate-x-5' : 'translate-x-1'
                     }`}
                     style={{ marginTop: '2px' }}
                   />
                 </button>
-                <span className="text-sm font-medium text-slate-600">{botOnline ? 'Online' : 'Offline'}</span>
+                <span className="text-sm font-semibold text-slate-700">{botOnline ? 'Online' : 'Offline'}</span>
               </div>
             </div>
 
