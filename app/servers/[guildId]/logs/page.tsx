@@ -43,18 +43,18 @@ export default function LogsPage() {
 
   return (
     <div className="min-h-screen bg-orange-50 text-[#0f172a] flex">
-      <aside className="fixed left-0 top-0 h-screen w-64 bg-white/90 border-r border-orange-100 shadow-sm p-4 overflow-y-auto">
-          <div className="mb-6 space-y-1">
+      <aside className="fixed left-0 top-0 h-screen w-64 bg-white/90 border-r border-orange-100 shadow-sm p-4 overflow-y-auto flex flex-col">
+          <div className="space-y-1">
             <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Server</p>
             <Link href="/servers" className="text-orange-600 font-semibold hover:text-orange-700 transition-colors text-sm">← Back to Servers</Link>
           </div>
-          <nav className="space-y-1 text-sm font-semibold text-slate-700">
-            <Link href={`/servers/${guildId}`} className="flex items-center gap-3 rounded-xl px-3 py-2 hover:bg-orange-50 transition-colors">
+          <nav className="flex-1 flex flex-col justify-evenly text-sm font-semibold text-slate-700 py-8">
+            <Link href={`/servers/${guildId}`} className="flex items-center gap-3 rounded-xl px-3 py-4 hover:bg-orange-50 transition-colors">
               <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
               Dashboard
             </Link>
             <details className="rounded-xl border border-orange-100 bg-orange-50/60 text-slate-800">
-              <summary className="flex items-center justify-between px-3 py-2 cursor-pointer select-none rounded-xl">
+              <summary className="flex items-center justify-between px-3 py-4 cursor-pointer select-none rounded-xl">
                 <span className="flex items-center gap-3">
                   <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
                   Settings
@@ -76,11 +76,11 @@ export default function LogsPage() {
                 </Link>
               </div>
             </details>
-            <Link href={`/servers/${guildId}/modules`} className="flex w-full items-center gap-3 rounded-xl px-3 py-2 hover:bg-orange-50 transition-colors text-left">
+            <Link href={`/servers/${guildId}/modules`} className="flex w-full items-center gap-3 rounded-xl px-3 py-4 hover:bg-orange-50 transition-colors text-left">
               <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
               Modules
             </Link>
-            <Link href={`/servers/${guildId}/logs`} className="flex w-full items-center gap-3 rounded-xl px-3 py-2 bg-orange-100 text-orange-700 transition-colors text-left">
+            <Link href={`/servers/${guildId}/logs`} className="flex w-full items-center gap-3 rounded-xl px-3 py-4 bg-orange-100 text-orange-700 transition-colors text-left">
               <span className="h-5 w-5 rounded-md bg-orange-100" aria-hidden />
               Logs
             </Link>
