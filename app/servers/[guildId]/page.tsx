@@ -137,85 +137,8 @@ export default function ServerSettings() {
         </nav>
       </aside>
 
-      <main className="flex-1 ml-64 space-y-4 md:space-y-6 py-12 px-4 md:px-8">
-          <div className="space-y-1">
-            <p className="text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">Settings</p>
-            <h1 className="text-3xl font-bold">{serverName ?? 'Server'}</h1>
-          </div>
-
-          <div className="bg-white border border-orange-100 rounded-2xl shadow-sm p-6 md:p-8 space-y-8">
-            <div className="flex items-center justify-between flex-wrap gap-3">
-              <div className="space-y-1">
-                <h2 className="text-xl font-semibold text-[#0f172a]">Dashboard</h2>
-                <p className="text-slate-600">At-a-glance view of your bot configuration.</p>
-              </div>
-              <div className="flex items-center gap-3 text-sm font-semibold text-slate-700">
-                <span className="flex items-center gap-2 rounded-full bg-orange-50 px-3 py-1 border border-orange-100">
-                  <span className="h-2 w-2 rounded-full bg-green-500" aria-hidden /> Bot Online
-                </span>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="rounded-xl border border-orange-100 bg-orange-50/50 p-4 shadow-sm">
-                <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Prefix</p>
-                <p className="text-2xl font-bold text-[#0f172a]">{settings.prefix || '!'}</p>
-                <p className="text-xs text-slate-600">Current command prefix</p>
-              </div>
-              <div className="rounded-xl border border-orange-100 bg-white p-4 shadow-sm">
-                <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Moderation</p>
-                <p className="text-lg font-semibold text-[#0f172a]">{settings.moderation.enabled ? 'Enabled' : 'Disabled'}</p>
-                <p className="text-xs text-slate-600">Log channel: {settings.moderation.logChannel || 'Not set'}</p>
-              </div>
-              <div className="rounded-xl border border-orange-100 bg-white p-4 shadow-sm">
-                <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Welcome</p>
-                <p className="text-lg font-semibold text-[#0f172a]">{settings.welcome.enabled ? 'Enabled' : 'Disabled'}</p>
-                <p className="text-xs text-slate-600">Channel: {settings.welcome.channel || 'Not set'}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-xl border border-orange-100 bg-orange-50/60 p-5 shadow-sm space-y-4">
-            <div className="flex items-center justify-between flex-wrap gap-3">
-              <div>
-                <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Server Info</p>
-                <p className="text-sm text-slate-700">Guild ID: {String(guildId)}</p>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-sm text-slate-700">
-              <div className="rounded-lg bg-white border border-orange-100 p-4 shadow-sm">
-                <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Members</p>
-                <p className="text-xl font-bold text-[#0f172a]">{stats?.members ?? '—'}</p>
-                <p className="text-xs text-slate-600">Total members</p>
-              </div>
-              <div className="rounded-lg bg-white border border-orange-100 p-4 shadow-sm">
-                <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Presences</p>
-                <p className="text-xl font-bold text-[#0f172a]">{stats?.presences ?? '—'}</p>
-                <p className="text-xs text-slate-600">Online/active</p>
-              </div>
-              <div className="rounded-lg bg-white border border-orange-100 p-4 shadow-sm">
-                <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Text Channels</p>
-                <p className="text-xl font-bold text-[#0f172a]">{stats?.textChannels ?? '—'}</p>
-                <p className="text-xs text-slate-600">Channel count</p>
-              </div>
-              <div className="rounded-lg bg-white border border-orange-100 p-4 shadow-sm">
-                <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Voice Channels</p>
-                <p className="text-xl font-bold text-[#0f172a]">{stats?.voiceChannels ?? '—'}</p>
-                <p className="text-xs text-slate-600">Channel count</p>
-              </div>
-              <div className="rounded-lg bg-white border border-orange-100 p-4 shadow-sm">
-                <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Categories</p>
-                <p className="text-xl font-bold text-[#0f172a]">{stats?.categories ?? '—'}</p>
-                <p className="text-xs text-slate-600">Organizers</p>
-              </div>
-              <div className="rounded-lg bg-white border border-orange-100 p-4 shadow-sm">
-                <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Roles</p>
-                <p className="text-xl font-bold text-[#0f172a]">{stats?.roles ?? '—'}</p>
-                <p className="text-xs text-slate-600">Configured roles</p>
-              </div>
-            </div>
-          </div>
-        <div className="max-w-6xl mx-auto space-y-4 md:space-y-6">
+      <main className="flex-1 ml-64 py-12 px-4 md:px-8 flex justify-center">
+        <div className="w-full max-w-6xl space-y-4 md:space-y-6">
           <div className="space-y-1">
             <p className="text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">Settings</p>
             <h1 className="text-3xl font-bold">{serverName ?? 'Server'}</h1>
@@ -294,7 +217,7 @@ export default function ServerSettings() {
             </div>
           </div>
         </div>
-        </main>
+      </main>
     </div>
   );
 }
