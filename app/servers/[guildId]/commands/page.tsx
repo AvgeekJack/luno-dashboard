@@ -192,7 +192,7 @@ export default function CommandsPage() {
 
       {showSettings && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-orange-100" onClick={() => setDropdownOpen(null)}>
+          <div className="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-orange-100" onClick={(e) => e.stopPropagation()}>
             <div className="sticky top-0 bg-white border-b border-orange-100 flex items-center justify-between p-6">
               <h2 className="text-xl font-bold text-[#0f172a]">Additional Permissions (warn)</h2>
               <button
@@ -238,8 +238,8 @@ export default function CommandsPage() {
                     )}
                   </div>
                   {dropdownOpen === 'allowedChannels' && (
-                    <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-orange-200 rounded-lg shadow-lg z-10 max-h-48 overflow-y-auto">
-                      <div className="sticky top-0 bg-white border-b border-orange-100 p-2">
+                    <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-orange-200 rounded-lg shadow-lg z-10 max-h-48 overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+                      <div className="sticky top-0 bg-white border-b border-orange-100 p-2" onClick={(e) => e.stopPropagation()}>
                         <input
                           type="text"
                           placeholder="Search channels..."
@@ -307,8 +307,8 @@ export default function CommandsPage() {
                     )}
                   </div>
                   {dropdownOpen === 'ignoredChannels' && (
-                    <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-orange-200 rounded-lg shadow-lg z-10 max-h-48 overflow-y-auto">
-                      <div className="sticky top-0 bg-white border-b border-orange-100 p-2">
+                    <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-orange-200 rounded-lg shadow-lg z-10 max-h-48 overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+                      <div className="sticky top-0 bg-white border-b border-orange-100 p-2" onClick={(e) => e.stopPropagation()}>
                         <input
                           type="text"
                           placeholder="Search channels..."
@@ -376,8 +376,8 @@ export default function CommandsPage() {
                     )}
                   </div>
                   {dropdownOpen === 'allowedRoles' && (
-                    <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-orange-200 rounded-lg shadow-lg z-10 max-h-48 overflow-y-auto">
-                      <div className="sticky top-0 bg-white border-b border-orange-100 p-2">
+                    <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-orange-200 rounded-lg shadow-lg z-10 max-h-48 overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+                      <div className="sticky top-0 bg-white border-b border-orange-100 p-2" onClick={(e) => e.stopPropagation()}>
                         <input
                           type="text"
                           placeholder="Search roles..."
@@ -445,8 +445,8 @@ export default function CommandsPage() {
                     )}
                   </div>
                   {dropdownOpen === 'ignoredRoles' && (
-                    <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-orange-200 rounded-lg shadow-lg z-10 max-h-48 overflow-y-auto">
-                      <div className="sticky top-0 bg-white border-b border-orange-100 p-2">
+                    <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-orange-200 rounded-lg shadow-lg z-10 max-h-48 overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+                      <div className="sticky top-0 bg-white border-b border-orange-100 p-2" onClick={(e) => e.stopPropagation()}>
                         <input
                           type="text"
                           placeholder="Search roles..."
