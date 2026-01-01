@@ -14,6 +14,13 @@ interface Guild {
 export default function ServersPage() {
   const { data: session, status } = useSession();
   const [guilds, setGuilds] = useState<Guild[]>([]);
+  const inviteBase = process.env.NEXT_PUBLIC_DISCORD_INVITE_URL || '#';
+
+  const inviteUrl = (guildId: string) => {
+    if (inviteBase === '#') return '#';
+    const joiner = inviteBase.includes('?') ? '&' : '?';
+    return `${inviteBase}${joiner}guild_id=${guildId}`;
+  };
 
   useEffect(() => {
     if (session) {
@@ -48,7 +55,7 @@ export default function ServersPage() {
   const botGuilds = guilds.filter(g => g.inBot);
   const notInBot = guilds.filter(g => g.inBot === false || g.inBot === undefined);
 
-  const renderSection = (title: string, items: Guild[], emptyText: string) => (
+  const renderInBot = (title: string, items: Guild[], emptyText: string) => (
     <div className="space-y-4">
       <div className="text-left">
         <h2 className="text-2xl font-bold text-[#0f172a]">{title}</h2>
@@ -80,6 +87,44 @@ export default function ServersPage() {
     </div>
   );
 
+  const renderNotInBot = (title: string, items: Guild[], emptyText: string) => (
+    <div className="space-y-4">
+      <div className="text-left">
+        <h2 className="text-2xl font-bold text-[#0f172a]">{title}</h2>
+      </div>
+      {items.length === 0 ? (
+        <div className="text-slate-500 text-sm">{emptyText}</div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {items.map(guild => (
+            <div key={guild.id} className="bg-white p-6 rounded-xl border border-orange-100 hover:border-orange-300 transition-colors shadow-sm hover:shadow text-center space-y-3">
+              {guild.icon ? (
+                <img
+                  src={`https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`}
+                  alt={guild.name}
+                  className="w-16 h-16 rounded-full mx-auto"
+                />
+              ) : (
+                <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-amber-400 rounded-full mx-auto flex items-center justify-center text-2xl font-bold text-white">
+                  {guild.name.charAt(0)}
+                </div>
+              )}
+              <h3 className="text-lg font-semibold text-slate-800">{guild.name}</h3>
+              <a
+                href={inviteUrl(guild.id)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center w-full bg-orange-500 text-white px-4 py-2 rounded-lg font-semibold shadow hover:bg-orange-600 transition-colors disabled:opacity-60"
+              >
+                Add to Server
+              </a>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-white text-[#0f172a] pt-36 pb-16 px-6 md:px-10">
       <div className="max-w-6xl mx-auto space-y-12">
@@ -89,8 +134,8 @@ export default function ServersPage() {
           <p className="text-slate-600">Select a server to manage settings and automation.</p>
         </div>
 
-        {renderSection('Servers Luno is In', botGuilds, 'Luno is not in any of your manageable servers yet.')}
-        {renderSection('Servers Luno is Not In', notInBot, 'Invite Luno to these servers to manage them here.')}
+        {renderInBot('Servers Luno is In', botGuilds, 'Luno is not in any of your manageable servers yet.')}
+        {renderNotInBot('Servers Luno is Not In', notInBot, 'Invite Luno to these servers to manage them here.')}
       </div>
     </div>
   );
