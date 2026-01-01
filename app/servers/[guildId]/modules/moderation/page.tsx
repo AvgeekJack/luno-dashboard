@@ -195,8 +195,8 @@ export default function ModerationPage() {
           </nav>
       </aside>
 
-      <main className="flex-1 ml-64 py-12 px-4 md:px-8 flex justify-center">
-        <div className="max-w-6xl space-y-4 md:space-y-6">
+      <main className="flex-1 ml-64 py-12 px-4 md:px-8">
+        <div className="w-full space-y-4 md:space-y-6">
           <div className="space-y-1">
             <p className="text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">Modules</p>
             <h1 className="text-3xl font-bold">Moderation</h1>
@@ -209,7 +209,7 @@ export default function ModerationPage() {
             </div>
 
             <div className="space-y-6 border-t border-orange-100 pt-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {MODERATION_COMMANDS.map((command) => (
                   <div key={command.name} className="rounded-xl border border-orange-100 bg-slate-50 p-5 shadow-sm space-y-4">
                     <div className="flex items-start justify-between gap-3">
