@@ -29,11 +29,13 @@ export default function CommandsPage() {
   const [channels, setChannels] = useState<Channel[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
   const [settings, setSettings] = useState({
-    allowedChannels: '',
-    ignoredChannels: '',
-    allowedRoles: '',
-    ignoredRoles: '',
+    allowedChannels: [] as string[],
+    ignoredChannels: [] as string[],
+    allowedRoles: [] as string[],
+    ignoredRoles: [] as string[],
   });
+  const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     if (status === 'loading') return;
@@ -189,78 +191,298 @@ export default function CommandsPage() {
       </div>
 
       {showSettings && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-slate-800 rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto border border-slate-700">
-            <div className="sticky top-0 bg-slate-800 border-b border-slate-700 flex items-center justify-between p-6">
-              <h2 className="text-xl font-bold text-white">Additional Permissions (warn)</h2>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setShowSettings(false)}>
+          <div className="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-orange-100" onClick={(e) => e.stopPropagation()}>
+            <div className="sticky top-0 bg-white border-b border-orange-100 flex items-center justify-between p-6">
+              <h2 className="text-xl font-bold text-[#0f172a]">Additional Permissions (warn)</h2>
               <button
                 onClick={() => setShowSettings(false)}
-                className="text-slate-400 hover:text-white transition-colors text-2xl leading-none"
+                className="text-slate-400 hover:text-[#0f172a] transition-colors text-2xl leading-none"
               >
                 ✕
               </button>
             </div>
 
             <div className="p-6 space-y-6">
-              <div className="space-y-2">
-                <label className="block text-sm font-semibold text-white">Allowed Channels</label>
-                <select
-                  value={settings.allowedChannels}
-                  onChange={(e) => setSettings({ ...settings, allowedChannels: e.target.value })}
-                  className="w-full rounded-lg bg-slate-700 border border-slate-600 text-white px-3 py-2 focus:border-orange-500 focus:outline-none"
-                >
-                  <option value="">Select...</option>
-                  {channels.map(ch => (
-                    <option key={ch.id} value={ch.id}>{ch.name}</option>
-                  ))}
-                </select>
+              {/* Allowed Channels */}
+              <div className="space-y-3">
+                <label className="block text-sm font-semibold text-[#0f172a]">Allowed Channels</label>
+                <div className="relative">
+                  <div
+                    onClick={() => setDropdownOpen(dropdownOpen === 'allowedChannels' ? null : 'allowedChannels')}
+                    className="w-full rounded-lg bg-orange-50 border border-orange-200 text-[#0f172a] px-3 py-3 focus:border-orange-500 focus:outline-none cursor-pointer flex flex-wrap gap-2 items-center min-h-12"
+                  >
+                    {settings.allowedChannels.length === 0 ? (
+                      <span className="text-slate-500 text-sm">Select channels...</span>
+                    ) : (
+                      settings.allowedChannels.map(id => {
+                        const channel = channels.find(c => c.id === id);
+                        return (
+                          <span key={id} className="bg-orange-500 text-white px-3 py-1 rounded-full text-sm flex items-center gap-2">
+                            {channel?.name}
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSettings({
+                                  ...settings,
+                                  allowedChannels: settings.allowedChannels.filter(c => c !== id)
+                                });
+                              }}
+                              className="hover:text-orange-200"
+                            >
+                              ✕
+                            </button>
+                          </span>
+                        );
+                      })
+                    )}
+                  </div>
+                  {dropdownOpen === 'allowedChannels' && (
+                    <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-orange-200 rounded-lg shadow-lg z-10 max-h-48 overflow-y-auto">
+                      <div className="sticky top-0 bg-white border-b border-orange-100 p-2">
+                        <input
+                          type="text"
+                          placeholder="Search channels..."
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm focus:border-orange-500 focus:outline-none"
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                      </div>
+                      <div className="p-2 space-y-1">
+                        {channels
+                          .filter(ch => !settings.allowedChannels.includes(ch.id) && ch.name.toLowerCase().includes(searchQuery.toLowerCase()))
+                          .map(ch => (
+                            <button
+                              key={ch.id}
+                              onClick={() => {
+                                setSettings({
+                                  ...settings,
+                                  allowedChannels: [...settings.allowedChannels, ch.id]
+                                });
+                                setSearchQuery('');
+                              }}
+                              className="w-full text-left px-3 py-2 rounded-lg hover:bg-orange-50 transition-colors text-sm text-[#0f172a]"
+                            >
+                              # {ch.name}
+                            </button>
+                          ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="block text-sm font-semibold text-white">Ignored Channels</label>
-                <select
-                  value={settings.ignoredChannels}
-                  onChange={(e) => setSettings({ ...settings, ignoredChannels: e.target.value })}
-                  className="w-full rounded-lg bg-slate-700 border border-slate-600 text-white px-3 py-2 focus:border-orange-500 focus:outline-none"
-                >
-                  <option value="">Select...</option>
-                  {channels.map(ch => (
-                    <option key={ch.id} value={ch.id}>{ch.name}</option>
-                  ))}
-                </select>
+              {/* Ignored Channels */}
+              <div className="space-y-3">
+                <label className="block text-sm font-semibold text-[#0f172a]">Ignored Channels</label>
+                <div className="relative">
+                  <div
+                    onClick={() => setDropdownOpen(dropdownOpen === 'ignoredChannels' ? null : 'ignoredChannels')}
+                    className="w-full rounded-lg bg-orange-50 border border-orange-200 text-[#0f172a] px-3 py-3 focus:border-orange-500 focus:outline-none cursor-pointer flex flex-wrap gap-2 items-center min-h-12"
+                  >
+                    {settings.ignoredChannels.length === 0 ? (
+                      <span className="text-slate-500 text-sm">Select channels...</span>
+                    ) : (
+                      settings.ignoredChannels.map(id => {
+                        const channel = channels.find(c => c.id === id);
+                        return (
+                          <span key={id} className="bg-orange-500 text-white px-3 py-1 rounded-full text-sm flex items-center gap-2">
+                            {channel?.name}
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSettings({
+                                  ...settings,
+                                  ignoredChannels: settings.ignoredChannels.filter(c => c !== id)
+                                });
+                              }}
+                              className="hover:text-orange-200"
+                            >
+                              ✕
+                            </button>
+                          </span>
+                        );
+                      })
+                    )}
+                  </div>
+                  {dropdownOpen === 'ignoredChannels' && (
+                    <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-orange-200 rounded-lg shadow-lg z-10 max-h-48 overflow-y-auto">
+                      <div className="sticky top-0 bg-white border-b border-orange-100 p-2">
+                        <input
+                          type="text"
+                          placeholder="Search channels..."
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm focus:border-orange-500 focus:outline-none"
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                      </div>
+                      <div className="p-2 space-y-1">
+                        {channels
+                          .filter(ch => !settings.ignoredChannels.includes(ch.id) && ch.name.toLowerCase().includes(searchQuery.toLowerCase()))
+                          .map(ch => (
+                            <button
+                              key={ch.id}
+                              onClick={() => {
+                                setSettings({
+                                  ...settings,
+                                  ignoredChannels: [...settings.ignoredChannels, ch.id]
+                                });
+                                setSearchQuery('');
+                              }}
+                              className="w-full text-left px-3 py-2 rounded-lg hover:bg-orange-50 transition-colors text-sm text-[#0f172a]"
+                            >
+                              # {ch.name}
+                            </button>
+                          ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="block text-sm font-semibold text-white">Allowed Roles</label>
-                <select
-                  value={settings.allowedRoles}
-                  onChange={(e) => setSettings({ ...settings, allowedRoles: e.target.value })}
-                  className="w-full rounded-lg bg-slate-700 border border-slate-600 text-white px-3 py-2 focus:border-orange-500 focus:outline-none"
-                >
-                  <option value="">Select...</option>
-                  {roles.map(r => (
-                    <option key={r.id} value={r.id}>{r.name}</option>
-                  ))}
-                </select>
+              {/* Allowed Roles */}
+              <div className="space-y-3">
+                <label className="block text-sm font-semibold text-[#0f172a]">Allowed Roles</label>
+                <div className="relative">
+                  <div
+                    onClick={() => setDropdownOpen(dropdownOpen === 'allowedRoles' ? null : 'allowedRoles')}
+                    className="w-full rounded-lg bg-orange-50 border border-orange-200 text-[#0f172a] px-3 py-3 focus:border-orange-500 focus:outline-none cursor-pointer flex flex-wrap gap-2 items-center min-h-12"
+                  >
+                    {settings.allowedRoles.length === 0 ? (
+                      <span className="text-slate-500 text-sm">Select roles...</span>
+                    ) : (
+                      settings.allowedRoles.map(id => {
+                        const role = roles.find(r => r.id === id);
+                        return (
+                          <span key={id} className="bg-orange-500 text-white px-3 py-1 rounded-full text-sm flex items-center gap-2">
+                            {role?.name}
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSettings({
+                                  ...settings,
+                                  allowedRoles: settings.allowedRoles.filter(r => r !== id)
+                                });
+                              }}
+                              className="hover:text-orange-200"
+                            >
+                              ✕
+                            </button>
+                          </span>
+                        );
+                      })
+                    )}
+                  </div>
+                  {dropdownOpen === 'allowedRoles' && (
+                    <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-orange-200 rounded-lg shadow-lg z-10 max-h-48 overflow-y-auto">
+                      <div className="sticky top-0 bg-white border-b border-orange-100 p-2">
+                        <input
+                          type="text"
+                          placeholder="Search roles..."
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm focus:border-orange-500 focus:outline-none"
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                      </div>
+                      <div className="p-2 space-y-1">
+                        {roles
+                          .filter(r => !settings.allowedRoles.includes(r.id) && r.name.toLowerCase().includes(searchQuery.toLowerCase()))
+                          .map(r => (
+                            <button
+                              key={r.id}
+                              onClick={() => {
+                                setSettings({
+                                  ...settings,
+                                  allowedRoles: [...settings.allowedRoles, r.id]
+                                });
+                                setSearchQuery('');
+                              }}
+                              className="w-full text-left px-3 py-2 rounded-lg hover:bg-orange-50 transition-colors text-sm text-[#0f172a]"
+                            >
+                              @ {r.name}
+                            </button>
+                          ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="block text-sm font-semibold text-white">Ignored Roles</label>
-                <select
-                  value={settings.ignoredRoles}
-                  onChange={(e) => setSettings({ ...settings, ignoredRoles: e.target.value })}
-                  className="w-full rounded-lg bg-slate-700 border border-slate-600 text-white px-3 py-2 focus:border-orange-500 focus:outline-none"
-                >
-                  <option value="">Select...</option>
-                  {roles.map(r => (
-                    <option key={r.id} value={r.id}>{r.name}</option>
-                  ))}
-                </select>
+              {/* Ignored Roles */}
+              <div className="space-y-3">
+                <label className="block text-sm font-semibold text-[#0f172a]">Ignored Roles</label>
+                <div className="relative">
+                  <div
+                    onClick={() => setDropdownOpen(dropdownOpen === 'ignoredRoles' ? null : 'ignoredRoles')}
+                    className="w-full rounded-lg bg-orange-50 border border-orange-200 text-[#0f172a] px-3 py-3 focus:border-orange-500 focus:outline-none cursor-pointer flex flex-wrap gap-2 items-center min-h-12"
+                  >
+                    {settings.ignoredRoles.length === 0 ? (
+                      <span className="text-slate-500 text-sm">Select roles...</span>
+                    ) : (
+                      settings.ignoredRoles.map(id => {
+                        const role = roles.find(r => r.id === id);
+                        return (
+                          <span key={id} className="bg-orange-500 text-white px-3 py-1 rounded-full text-sm flex items-center gap-2">
+                            {role?.name}
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSettings({
+                                  ...settings,
+                                  ignoredRoles: settings.ignoredRoles.filter(r => r !== id)
+                                });
+                              }}
+                              className="hover:text-orange-200"
+                            >
+                              ✕
+                            </button>
+                          </span>
+                        );
+                      })
+                    )}
+                  </div>
+                  {dropdownOpen === 'ignoredRoles' && (
+                    <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-orange-200 rounded-lg shadow-lg z-10 max-h-48 overflow-y-auto">
+                      <div className="sticky top-0 bg-white border-b border-orange-100 p-2">
+                        <input
+                          type="text"
+                          placeholder="Search roles..."
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm focus:border-orange-500 focus:outline-none"
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                      </div>
+                      <div className="p-2 space-y-1">
+                        {roles
+                          .filter(r => !settings.ignoredRoles.includes(r.id) && r.name.toLowerCase().includes(searchQuery.toLowerCase()))
+                          .map(r => (
+                            <button
+                              key={r.id}
+                              onClick={() => {
+                                setSettings({
+                                  ...settings,
+                                  ignoredRoles: [...settings.ignoredRoles, r.id]
+                                });
+                                setSearchQuery('');
+                              }}
+                              className="w-full text-left px-3 py-2 rounded-lg hover:bg-orange-50 transition-colors text-sm text-[#0f172a]"
+                            >
+                              @ {r.name}
+                            </button>
+                          ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
 
               <button
                 onClick={() => setShowSettings(false)}
-                className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold transition-colors"
+                className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg font-semibold transition-colors"
               >
                 Save
               </button>
