@@ -114,8 +114,13 @@ export default function ServersPage() {
               <h3 className="text-lg font-semibold text-slate-800">{guild.name}</h3>
               <button
                 onClick={() => {
-                  window.open(inviteUrl(guild.id), '_blank', 'noopener,noreferrer');
-                  router.push(`/servers/${guild.id}`);
+                  const url = inviteUrl(guild.id);
+                  if (url !== '#') {
+                    window.open(url, '_blank', 'noopener,noreferrer');
+                  }
+                  setTimeout(() => {
+                    router.push(`/servers/${guild.id}`);
+                  }, 300);
                 }}
                 className="inline-flex items-center justify-center w-full bg-orange-500 text-white px-4 py-2 rounded-lg font-semibold shadow hover:bg-orange-600 transition-colors disabled:opacity-60"
               >
