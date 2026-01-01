@@ -5,19 +5,85 @@ import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
+const MODERATION_COMMANDS = [
+  { name: 'ban', description: 'Ban a user from the server' },
+  { name: 'softban', description: 'Ban and then unban a user' },
+  { name: 'unban', description: 'Unban a previously banned user' },
+  { name: 'kick', description: 'Kick a user from the server' },
+  { name: 'mute', description: 'Mute a user in the server' },
+  { name: 'unmute', description: 'Unmute a muted user' },
+  { name: 'tempmute', description: 'Temporarily mute a user' },
+  { name: 'timeout', description: 'Timeout a user for a duration' },
+  { name: 'untimeout', description: 'Remove timeout from a user' },
+  { name: 'warn', description: 'Warn a user with a message' },
+  { name: 'warnings', description: 'View warnings for a user' },
+  { name: 'clearwarnings', description: 'Clear warnings for a user' },
+  { name: 'clear', description: 'Delete bulk messages from a channel' },
+  { name: 'slowmode', description: 'Set slowmode for a channel' },
+  { name: 'lock', description: 'Lock a channel from posting' },
+  { name: 'unlock', description: 'Unlock a locked channel' },
+  { name: 'automod enable', description: 'Enable automod features' },
+  { name: 'automod disable', description: 'Disable automod features' },
+  { name: 'antilink', description: 'Block invite links' },
+  { name: 'antiinvite', description: 'Block server invites' },
+  { name: 'antispam', description: 'Filter spam messages' },
+  { name: 'antimention', description: 'Filter mass mentions' },
+  { name: 'antizalgo', description: 'Filter zalgo text' },
+  { name: 'antiswear', description: 'Filter swear words' },
+  { name: 'antiflood', description: 'Prevent message flooding' },
+  { name: 'capsfilter', description: 'Filter excessive caps' },
+  { name: 'duplicatefilter', description: 'Filter duplicate messages' },
+  { name: 'regexfilter', description: 'Filter by regex patterns' },
+  { name: 'automod logs', description: 'View automod logs' },
+  { name: 'antiraid enable', description: 'Enable raid protection' },
+  { name: 'antiraid disable', description: 'Disable raid protection' },
+  { name: 'antiraid level', description: 'Set raid protection level' },
+  { name: 'joinrate', description: 'Set join rate limits' },
+  { name: 'verification enable', description: 'Enable membership verification' },
+  { name: 'verification disable', description: 'Disable membership verification' },
+  { name: 'lockdown', description: 'Lockdown the server' },
+  { name: 'unlockdown', description: 'End server lockdown' },
+  { name: 'modlog enable', description: 'Enable moderation logs' },
+  { name: 'modlog disable', description: 'Disable moderation logs' },
+  { name: 'message log', description: 'Log message activity' },
+  { name: 'edit log', description: 'Log message edits' },
+  { name: 'delete log', description: 'Log message deletions' },
+  { name: 'join log', description: 'Log user joins' },
+  { name: 'leave log', description: 'Log user leaves' },
+  { name: 'voice log', description: 'Log voice channel activity' },
+  { name: 'role log', description: 'Log role changes' },
+  { name: 'nickname log', description: 'Log nickname changes' },
+];
+
 export default function ModerationPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const { guildId } = useParams();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [modulesOpen, setModulesOpen] = useState(false);
+  const [commandStates, setCommandStates] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     if (status === 'loading') return;
     if (!session) {
       router.push('/');
+      return;
     }
+
+    // Initialize all command states as enabled
+    const initialStates: Record<string, boolean> = {};
+    MODERATION_COMMANDS.forEach(cmd => {
+      initialStates[cmd.name] = true;
+    });
+    setCommandStates(initialStates);
   }, [session, status, router]);
+
+  const handleToggleCommand = (commandName: string) => {
+    setCommandStates(prev => ({
+      ...prev,
+      [commandName]: !prev[commandName]
+    }));
+  };
 
   if (status === 'loading') {
     return <div className="flex min-h-screen items-center justify-center text-[#0f172a]">Loading...</div>;
@@ -138,12 +204,44 @@ export default function ModerationPage() {
 
           <div className="bg-white border border-orange-100 rounded-lg shadow-sm p-6 space-y-6">
             <div className="space-y-1">
-              <h2 className="text-xl font-semibold text-[#0f172a]">Moderation Settings</h2>
-              <p className="text-slate-600">Configure moderation tools and features for your server.</p>
+              <h2 className="text-xl font-semibold text-[#0f172a]">Moderation Commands</h2>
+              <p className="text-slate-600">Configure and manage moderation commands for your server.</p>
             </div>
 
-            <div className="space-y-4 border-t border-orange-100 pt-6 px-6">
-              <p className="text-slate-600">Moderation module configuration coming soon.</p>
+            <div className="space-y-6 border-t border-orange-100 pt-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {MODERATION_COMMANDS.map((command) => (
+                  <div key={command.name} className="rounded-xl border border-orange-100 bg-slate-50 p-5 shadow-sm space-y-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1">
+                        <h3 className="text-lg font-bold text-[#0f172a] capitalize">{command.name}</h3>
+                        <p className="text-sm text-slate-600">{command.description}</p>
+                      </div>
+                      <button
+                        onClick={() => handleToggleCommand(command.name)}
+                        className={`relative inline-flex h-6 w-11 rounded-full transition-colors flex-shrink-0 ${
+                          commandStates[command.name] ? 'bg-orange-500' : 'bg-slate-400'
+                        }`}
+                      >
+                        <span
+                          className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
+                            commandStates[command.name] ? 'translate-x-5' : 'translate-x-1'
+                          }`}
+                          style={{ marginTop: '2px' }}
+                        />
+                      </button>
+                    </div>
+                    <div className="flex gap-2">
+                      <button className="flex-1 rounded-lg bg-orange-500 text-white px-3 py-2 text-sm font-semibold hover:bg-orange-600 transition-colors">
+                        Settings
+                      </button>
+                      <button className="flex-1 rounded-lg bg-orange-100 text-orange-700 px-3 py-2 text-sm font-semibold hover:bg-orange-200 transition-colors">
+                        Help
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
