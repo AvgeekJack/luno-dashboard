@@ -143,7 +143,7 @@ export default function ServersPage() {
         </div>
 
         {renderInBot('Servers Luno is In', botGuilds, 'Luno is not in any of your manageable servers yet.')}
-        <div className="w-full border-t border-orange-100" />
+        <div className="w-full border-t-[5px] border-orange-200 my-12" />
         {renderNotInBot('Servers Luno is Not In', notInBot, 'Invite Luno to these servers to manage them here.')}
       </div>
     </div>
