@@ -79,9 +79,8 @@ export default function GeneralPage() {
   }
 
   return (
-    <div className="min-h-screen bg-orange-50 text-[#0f172a] py-12 px-4 md:px-8">
-      <div className="max-w-6xl mx-auto flex gap-6">
-        <aside className="w-64 bg-white/90 border border-orange-100 rounded-2xl shadow-sm p-4 h-fit sticky top-6">
+    <div className="min-h-screen bg-orange-50 text-[#0f172a] flex">
+      <aside className="fixed left-0 top-0 h-screen w-64 bg-white/90 border-r border-orange-100 shadow-sm p-4 overflow-y-auto">
           <div className="mb-6 space-y-1">
             <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Server</p>
             <Link href="/servers" className="text-orange-600 font-semibold hover:text-orange-700 transition-colors text-sm">← Back to Servers</Link>
@@ -123,9 +122,10 @@ export default function GeneralPage() {
               Logs
             </Link>
           </nav>
-        </aside>
+      </aside>
 
-        <main className="flex-1 space-y-4 md:space-y-6">
+      <main className="flex-1 ml-64 py-12 px-4 md:px-8 flex justify-center">
+        <div className="max-w-6xl space-y-4 md:space-y-6">
           <div className="space-y-1">
             <p className="text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">Settings</p>
             <h1 className="text-3xl font-bold">General</h1>
@@ -176,8 +176,8 @@ export default function GeneralPage() {
               </div>
             </div>
           </div>
-        </main>
-      </div>
+        </div>
+      </main>
     </div>
   );
 }
