@@ -222,7 +222,7 @@ export default function CommandsPage() {
             </div>
 
             <div className="space-y-6 border-t border-orange-100 pt-6">
-              <div className="flex gap-2 overflow-x-auto pb-2">
+              <div className="flex gap-2 pb-2 overflow-x-auto md:flex-wrap md:overflow-visible">
                 {CATEGORIES.map((cat) => (
                   <button
                     key={cat}
