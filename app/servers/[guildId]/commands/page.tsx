@@ -23,8 +23,12 @@ export default function CommandsPage() {
   const router = useRouter();
   const { guildId } = useParams();
   const [activeCategory, setActiveCategory] = useState('Moderator');
-  const [botOnline, setBotOnline] = useState(true);
   const [warnEnabled, setWarnEnabled] = useState(true);
+  const [kickEnabled, setKickEnabled] = useState(true);
+  const [userinfoEnabled, setUserinfoEnabled] = useState(true);
+  const [eightballEnabled, setEightballEnabled] = useState(true);
+  const [pingEnabled, setPingEnabled] = useState(true);
+  const [banEnabled, setBanEnabled] = useState(true);
   const [showSettings, setShowSettings] = useState(false);
   const [channels, setChannels] = useState<Channel[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
@@ -117,27 +121,7 @@ export default function CommandsPage() {
               <p className="text-slate-600">Configure and manage commands for this server.</p>
             </div>
 
-            <div className="flex items-center justify-between border-t border-orange-100 pt-6">
-              <span className="text-sm font-semibold text-slate-700">Bot Status</span>
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={() => setBotOnline(!botOnline)}
-                  className={`relative inline-flex h-6 w-11 rounded-full transition-colors ${
-                    botOnline ? 'bg-orange-500' : 'bg-slate-400'
-                  }`}
-                >
-                  <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
-                      botOnline ? 'translate-x-5' : 'translate-x-1'
-                    }`}
-                    style={{ marginTop: '2px' }}
-                  />
-                </button>
-                <span className="text-sm font-semibold text-slate-700">{botOnline ? 'Online' : 'Offline'}</span>
-              </div>
-            </div>
-
-            <div className="space-y-6">
+            <div className="space-y-6 border-t border-orange-100 pt-6">
               <div className="flex gap-2 overflow-x-auto pb-2">
                 {CATEGORIES.map((cat) => (
                   <button
@@ -155,35 +139,202 @@ export default function CommandsPage() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="rounded-xl border border-orange-100 bg-slate-50 p-5 shadow-sm space-y-4">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex-1">
-                      <h3 className="text-lg font-bold text-[#0f172a]">warn</h3>
-                      <p className="text-sm text-slate-600">Warn a user with a message</p>
+                {/* Moderator - warn */}
+                {activeCategory === 'Moderator' && (
+                  <>
+                    <div className="rounded-xl border border-orange-100 bg-slate-50 p-5 shadow-sm space-y-4">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex-1">
+                          <h3 className="text-lg font-bold text-[#0f172a]">warn</h3>
+                          <p className="text-sm text-slate-600">Warn a user with a message</p>
+                        </div>
+                        <button
+                          onClick={() => setWarnEnabled(!warnEnabled)}
+                          className={`relative inline-flex h-6 w-11 rounded-full transition-colors flex-shrink-0 ${
+                            warnEnabled ? 'bg-orange-500' : 'bg-slate-400'
+                          }`}
+                        >
+                          <span
+                            className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
+                              warnEnabled ? 'translate-x-5' : 'translate-x-1'
+                            }`}
+                            style={{ marginTop: '2px' }}
+                          />
+                        </button>
+                      </div>
+                      <div className="flex gap-2">
+                        <button onClick={() => setShowSettings(true)} className="flex-1 rounded-lg bg-orange-500 text-white px-3 py-2 text-sm font-semibold hover:bg-orange-600 transition-colors">
+                          Settings
+                        </button>
+                        <button className="flex-1 rounded-lg bg-orange-100 text-orange-700 px-3 py-2 text-sm font-semibold hover:bg-orange-200 transition-colors">
+                          Help
+                        </button>
+                      </div>
                     </div>
-                    <button
-                      onClick={() => setWarnEnabled(!warnEnabled)}
-                      className={`relative inline-flex h-6 w-11 rounded-full transition-colors flex-shrink-0 ${
-                        warnEnabled ? 'bg-orange-500' : 'bg-slate-400'
-                      }`}
-                    >
-                      <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
-                          warnEnabled ? 'translate-x-5' : 'translate-x-1'
+
+                    <div className="rounded-xl border border-orange-100 bg-slate-50 p-5 shadow-sm space-y-4">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex-1">
+                          <h3 className="text-lg font-bold text-[#0f172a]">kick</h3>
+                          <p className="text-sm text-slate-600">Kick a user from the server</p>
+                        </div>
+                        <button
+                          onClick={() => setKickEnabled(!kickEnabled)}
+                          className={`relative inline-flex h-6 w-11 rounded-full transition-colors flex-shrink-0 ${
+                            kickEnabled ? 'bg-orange-500' : 'bg-slate-400'
+                          }`}
+                        >
+                          <span
+                            className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
+                              kickEnabled ? 'translate-x-5' : 'translate-x-1'
+                            }`}
+                            style={{ marginTop: '2px' }}
+                          />
+                        </button>
+                      </div>
+                      <div className="flex gap-2">
+                        <button className="flex-1 rounded-lg bg-orange-500 text-white px-3 py-2 text-sm font-semibold hover:bg-orange-600 transition-colors">
+                          Settings
+                        </button>
+                        <button className="flex-1 rounded-lg bg-orange-100 text-orange-700 px-3 py-2 text-sm font-semibold hover:bg-orange-200 transition-colors">
+                          Help
+                        </button>
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {/* Info - userinfo */}
+                {activeCategory === 'Info' && (
+                  <div className="rounded-xl border border-orange-100 bg-slate-50 p-5 shadow-sm space-y-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1">
+                        <h3 className="text-lg font-bold text-[#0f172a]">userinfo</h3>
+                        <p className="text-sm text-slate-600">Display information about a user</p>
+                      </div>
+                      <button
+                        onClick={() => setUserinfoEnabled(!userinfoEnabled)}
+                        className={`relative inline-flex h-6 w-11 rounded-full transition-colors flex-shrink-0 ${
+                          userinfoEnabled ? 'bg-orange-500' : 'bg-slate-400'
                         }`}
-                        style={{ marginTop: '2px' }}
-                      />
-                    </button>
+                      >
+                        <span
+                          className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
+                            userinfoEnabled ? 'translate-x-5' : 'translate-x-1'
+                          }`}
+                          style={{ marginTop: '2px' }}
+                        />
+                      </button>
+                    </div>
+                    <div className="flex gap-2">
+                      <button className="flex-1 rounded-lg bg-orange-500 text-white px-3 py-2 text-sm font-semibold hover:bg-orange-600 transition-colors">
+                        Settings
+                      </button>
+                      <button className="flex-1 rounded-lg bg-orange-100 text-orange-700 px-3 py-2 text-sm font-semibold hover:bg-orange-200 transition-colors">
+                        Help
+                      </button>
+                    </div>
                   </div>
-                  <div className="flex gap-2">
-                    <button onClick={() => setShowSettings(true)} className="flex-1 rounded-lg bg-orange-500 text-white px-3 py-2 text-sm font-semibold hover:bg-orange-600 transition-colors">
-                      Settings
-                    </button>
-                    <button className="flex-1 rounded-lg bg-orange-100 text-orange-700 px-3 py-2 text-sm font-semibold hover:bg-orange-200 transition-colors">
-                      Help
-                    </button>
+                )}
+
+                {/* Fun - 8ball */}
+                {activeCategory === 'Fun' && (
+                  <div className="rounded-xl border border-orange-100 bg-slate-50 p-5 shadow-sm space-y-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1">
+                        <h3 className="text-lg font-bold text-[#0f172a]">8ball</h3>
+                        <p className="text-sm text-slate-600">Ask the magic 8ball a question</p>
+                      </div>
+                      <button
+                        onClick={() => setEightballEnabled(!eightballEnabled)}
+                        className={`relative inline-flex h-6 w-11 rounded-full transition-colors flex-shrink-0 ${
+                          eightballEnabled ? 'bg-orange-500' : 'bg-slate-400'
+                        }`}
+                      >
+                        <span
+                          className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
+                            eightballEnabled ? 'translate-x-5' : 'translate-x-1'
+                          }`}
+                          style={{ marginTop: '2px' }}
+                        />
+                      </button>
+                    </div>
+                    <div className="flex gap-2">
+                      <button className="flex-1 rounded-lg bg-orange-500 text-white px-3 py-2 text-sm font-semibold hover:bg-orange-600 transition-colors">
+                        Settings
+                      </button>
+                      <button className="flex-1 rounded-lg bg-orange-100 text-orange-700 px-3 py-2 text-sm font-semibold hover:bg-orange-200 transition-colors">
+                        Help
+                      </button>
+                    </div>
                   </div>
-                </div>
+                )}
+
+                {/* Utility - ping */}
+                {activeCategory === 'Utility' && (
+                  <div className="rounded-xl border border-orange-100 bg-slate-50 p-5 shadow-sm space-y-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1">
+                        <h3 className="text-lg font-bold text-[#0f172a]">ping</h3>
+                        <p className="text-sm text-slate-600">Check the bot's response time</p>
+                      </div>
+                      <button
+                        onClick={() => setPingEnabled(!pingEnabled)}
+                        className={`relative inline-flex h-6 w-11 rounded-full transition-colors flex-shrink-0 ${
+                          pingEnabled ? 'bg-orange-500' : 'bg-slate-400'
+                        }`}
+                      >
+                        <span
+                          className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
+                            pingEnabled ? 'translate-x-5' : 'translate-x-1'
+                          }`}
+                          style={{ marginTop: '2px' }}
+                        />
+                      </button>
+                    </div>
+                    <div className="flex gap-2">
+                      <button className="flex-1 rounded-lg bg-orange-500 text-white px-3 py-2 text-sm font-semibold hover:bg-orange-600 transition-colors">
+                        Settings
+                      </button>
+                      <button className="flex-1 rounded-lg bg-orange-100 text-orange-700 px-3 py-2 text-sm font-semibold hover:bg-orange-200 transition-colors">
+                        Help
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Admin - ban */}
+                {activeCategory === 'Admin' && (
+                  <div className="rounded-xl border border-orange-100 bg-slate-50 p-5 shadow-sm space-y-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1">
+                        <h3 className="text-lg font-bold text-[#0f172a]">ban</h3>
+                        <p className="text-sm text-slate-600">Ban a user from the server</p>
+                      </div>
+                      <button
+                        onClick={() => setBanEnabled(!banEnabled)}
+                        className={`relative inline-flex h-6 w-11 rounded-full transition-colors flex-shrink-0 ${
+                          banEnabled ? 'bg-orange-500' : 'bg-slate-400'
+                        }`}
+                      >
+                        <span
+                          className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
+                            banEnabled ? 'translate-x-5' : 'translate-x-1'
+                          }`}
+                          style={{ marginTop: '2px' }}
+                        />
+                      </button>
+                    </div>
+                    <div className="flex gap-2">
+                      <button className="flex-1 rounded-lg bg-orange-500 text-white px-3 py-2 text-sm font-semibold hover:bg-orange-600 transition-colors">
+                        Settings
+                      </button>
+                      <button className="flex-1 rounded-lg bg-orange-100 text-orange-700 px-3 py-2 text-sm font-semibold hover:bg-orange-200 transition-colors">
+                        Help
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
