@@ -326,8 +326,8 @@ export default function CommandsPage() {
     </div>
 
       {showSettings && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setDropdownOpen(null)}>
-          <div className="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-orange-100" onClick={() => setDropdownOpen(null)}>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setShowSettings(false)}>
+          <div className="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-orange-100" onClick={(e) => e.stopPropagation()}>
             <div className="sticky top-0 bg-white border-b border-orange-100 flex items-center justify-between p-6">
               <h2 className="text-xl font-bold text-[#0f172a]">Additional Permissions ({currentCommand})</h2>
               <button
