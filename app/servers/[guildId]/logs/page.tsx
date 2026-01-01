@@ -94,7 +94,7 @@ export default function LogsPage() {
             <h1 className="text-3xl font-bold">Audit Log</h1>
           </div>
 
-          <div className="bg-white border border-orange-100 rounded-lg shadow-sm p-6 md:p-8 space-y-6">
+          <div className="bg-white border border-orange-100 rounded-lg shadow-sm p-6 space-y-6">
             <div className="space-y-1">
               <h2 className="text-xl font-semibold text-[#0f172a]">Audit Log</h2>
               <p className="text-slate-600">See who changed what on this server.</p>
