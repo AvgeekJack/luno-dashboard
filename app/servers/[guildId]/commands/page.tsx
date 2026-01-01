@@ -213,11 +213,11 @@ export default function CommandsPage() {
   return (
     <div className="min-h-screen bg-orange-50 text-[#0f172a] flex">
       <aside className="fixed left-0 top-0 h-screen w-64 bg-white/90 border-r border-orange-100 shadow-sm p-4 overflow-y-auto">
-          <div className="mb-6 space-y-1">
-            <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Server</p>
-            <Link href="/servers" className="text-orange-600 font-semibold hover:text-orange-700 transition-colors text-sm">← Back to Servers</Link>
-          </div>
-          <nav className="space-y-1 text-sm font-semibold text-slate-700">
+        <div className="mb-6 space-y-1">
+          <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Server</p>
+          <Link href="/servers" className="text-orange-600 font-semibold hover:text-orange-700 transition-colors text-sm">← Back to Servers</Link>
+        </div>
+        <nav className="space-y-1 text-sm font-semibold text-slate-700">
             <Link href={`/servers/${guildId}`} className="flex items-center gap-3 rounded-xl px-3 py-2 hover:bg-orange-50 transition-colors">
               <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
               Dashboard
@@ -254,7 +254,7 @@ export default function CommandsPage() {
               Logs
             </Link>
           </nav>
-      </aside>
+        </aside>
 
       <main className="flex-1 ml-64 py-12 px-4 md:px-8 flex justify-center">
         <div className="max-w-6xl space-y-4 md:space-y-6">
