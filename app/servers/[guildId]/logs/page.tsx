@@ -98,21 +98,41 @@ export default function LogsPage() {
                   <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
                   Moderation
                 </Link>
-                <Link href={`/servers/${guildId}/modules/automod`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left">
+                <Link href={`/servers/${guildId}/modules/role-management`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left">
                   <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
-                  Auto-Moderation
+                  Role Management
                 </Link>
-                <Link href={`/servers/${guildId}/modules/welcome`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left">
+                <Link href={`/servers/${guildId}/modules/member-management`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left">
                   <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
-                  Welcome
+                  Member Management
                 </Link>
-                <Link href={`/servers/${guildId}/modules/logging`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left">
+                <Link href={`/servers/${guildId}/modules/announcements`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left">
                   <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
-                  Logging
+                  Announcements
                 </Link>
-                <Link href={`/servers/${guildId}/modules/autoroles`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left">
+                <Link href={`/servers/${guildId}/modules/tickets`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left">
                   <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
-                  Auto Roles
+                  Tickets
+                </Link>
+                <Link href={`/servers/${guildId}/modules/notifications`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left">
+                  <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
+                  Notifications
+                </Link>
+                <Link href={`/servers/${guildId}/modules/custom-commands`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left">
+                  <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
+                  Custom Commands
+                </Link>
+                <Link href={`/servers/${guildId}/modules/fun`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left">
+                  <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
+                  Fun
+                </Link>
+                <Link href={`/servers/${guildId}/modules/utilities`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left">
+                  <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
+                  Utilities
+                </Link>
+                <Link href={`/servers/${guildId}/modules/security`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left">
+                  <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
+                  Security
                 </Link>
               </div>
             </details>
