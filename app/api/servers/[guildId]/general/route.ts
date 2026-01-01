@@ -6,10 +6,10 @@ import ServerSettings from '@/lib/models/ServerSettings';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ guildId: string }> }
+  { params }: { params: { guildId: string } }
 ) {
   const session = await getServerSession(authOptions);
-  const { guildId } = await params;
+  const { guildId } = params;
 
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -38,10 +38,10 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: Promise<{ guildId: string }> }
+  { params }: { params: { guildId: string } }
 ) {
   const session = await getServerSession(authOptions);
-  const { guildId } = await params;
+  const { guildId } = params;
 
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
