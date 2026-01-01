@@ -65,12 +65,21 @@ interface CommandState {
   [key: string]: boolean;
 }
 
+interface CommandConfig {
+  enabled: boolean;
+  allowedChannels: string[];
+  ignoredChannels: string[];
+  allowedRoles: string[];
+  ignoredRoles: string[];
+}
+
 export default function CommandsPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const { guildId } = useParams();
   const [activeCategory, setActiveCategory] = useState('Moderation');
   const [commandStates, setCommandStates] = useState<CommandState>({});
+  const [commandConfigs, setCommandConfigs] = useState<Record<string, CommandConfig>>({});
   const [showSettings, setShowSettings] = useState(false);
   const [channels, setChannels] = useState<Channel[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
@@ -83,15 +92,6 @@ export default function CommandsPage() {
   const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentCommand, setCurrentCommand] = useState('');
-
-  // Initialize all commands to enabled
-  useEffect(() => {
-    const initialStates: CommandState = {};
-    Object.keys(COMMANDS).forEach(cmd => {
-      initialStates[cmd] = true;
-    });
-    setCommandStates(initialStates);
-  }, []);
 
   useEffect(() => {
     if (status === 'loading') return;
@@ -108,6 +108,29 @@ export default function CommandsPage() {
         setRoles(data.roles || []);
       })
       .catch(err => console.error(err));
+
+    // Fetch existing command settings
+    fetch(`/api/servers/${guildId}/settings`)
+      .then(res => res.json())
+      .then(data => {
+        const existingCommands = data?.commands || {};
+        const nextStates: CommandState = {};
+        const nextConfigs: Record<string, CommandConfig> = {};
+        Object.keys(COMMANDS).forEach(cmd => {
+          const cfg = existingCommands[cmd] || {};
+          nextStates[cmd] = cfg.enabled !== undefined ? cfg.enabled : true;
+          nextConfigs[cmd] = {
+            enabled: cfg.enabled !== undefined ? cfg.enabled : true,
+            allowedChannels: cfg.allowedChannels || [],
+            ignoredChannels: cfg.ignoredChannels || [],
+            allowedRoles: cfg.allowedRoles || [],
+            ignoredRoles: cfg.ignoredRoles || [],
+          };
+        });
+        setCommandStates(nextStates);
+        setCommandConfigs(nextConfigs);
+      })
+      .catch(err => console.error(err));
   }, [session, status, router, guildId]);
 
   const handleToggleCommand = (command: string) => {
@@ -115,7 +138,16 @@ export default function CommandsPage() {
       ...prev,
       [command]: !prev[command]
     }));
-    // Optionally save immediately
+    setCommandConfigs(prev => ({
+      ...prev,
+      [command]: {
+        enabled: !commandStates[command],
+        allowedChannels: prev[command]?.allowedChannels || [],
+        ignoredChannels: prev[command]?.ignoredChannels || [],
+        allowedRoles: prev[command]?.allowedRoles || [],
+        ignoredRoles: prev[command]?.ignoredRoles || [],
+      }
+    }));
     saveCommandToggle(command, !commandStates[command]);
   };
 
@@ -141,6 +173,17 @@ export default function CommandsPage() {
           ...settings,
         }),
       });
+
+      setCommandConfigs(prev => ({
+        ...prev,
+        [currentCommand]: {
+          enabled: commandStates[currentCommand],
+          allowedChannels: settings.allowedChannels,
+          ignoredChannels: settings.ignoredChannels,
+          allowedRoles: settings.allowedRoles,
+          ignoredRoles: settings.ignoredRoles,
+        },
+      }));
       setShowSettings(false);
     } catch (error) {
       console.error('Error saving command settings:', error);
@@ -149,6 +192,13 @@ export default function CommandsPage() {
 
   const openSettings = (command: string) => {
     setCurrentCommand(command);
+    const cfg = commandConfigs[command];
+    setSettings({
+      allowedChannels: cfg?.allowedChannels || [],
+      ignoredChannels: cfg?.ignoredChannels || [],
+      allowedRoles: cfg?.allowedRoles || [],
+      ignoredRoles: cfg?.ignoredRoles || [],
+    });
     setShowSettings(true);
   };
 
