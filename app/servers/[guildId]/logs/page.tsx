@@ -93,44 +93,44 @@ export default function LogsPage() {
                 </span>
                 <span className="text-xs text-orange-600">▾</span>
               </summary>
-              <div className="border-t border-orange-100 px-2 py-1 space-y-1">
-                <Link href={`/servers/${guildId}/modules/moderation`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left">
+              <div className="border-t border-orange-100 px-2 py-1 space-y-1 animate-fade-in">
+                <Link href={`/servers/${guildId}/modules/moderation`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left animate-fade-in-item" style={{animationDelay: '0ms'}}>
                   <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
                   Moderation
                 </Link>
-                <Link href={`/servers/${guildId}/modules/role-management`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left">
+                <Link href={`/servers/${guildId}/modules/role-management`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left animate-fade-in-item" style={{animationDelay: '50ms'}}>
                   <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
                   Role Management
                 </Link>
-                <Link href={`/servers/${guildId}/modules/member-management`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left">
+                <Link href={`/servers/${guildId}/modules/member-management`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left animate-fade-in-item" style={{animationDelay: '100ms'}}>
                   <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
                   Member Management
                 </Link>
-                <Link href={`/servers/${guildId}/modules/announcements`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left">
+                <Link href={`/servers/${guildId}/modules/announcements`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left animate-fade-in-item" style={{animationDelay: '150ms'}}>
                   <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
                   Announcements
                 </Link>
-                <Link href={`/servers/${guildId}/modules/tickets`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left">
+                <Link href={`/servers/${guildId}/modules/tickets`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left animate-fade-in-item" style={{animationDelay: '200ms'}}>
                   <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
                   Tickets
                 </Link>
-                <Link href={`/servers/${guildId}/modules/notifications`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left">
+                <Link href={`/servers/${guildId}/modules/notifications`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left animate-fade-in-item" style={{animationDelay: '250ms'}}>
                   <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
                   Notifications
                 </Link>
-                <Link href={`/servers/${guildId}/modules/custom-commands`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left">
+                <Link href={`/servers/${guildId}/modules/custom-commands`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left animate-fade-in-item" style={{animationDelay: '300ms'}}>
                   <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
                   Custom Commands
                 </Link>
-                <Link href={`/servers/${guildId}/modules/fun`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left">
+                <Link href={`/servers/${guildId}/modules/fun`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left animate-fade-in-item" style={{animationDelay: '350ms'}}>
                   <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
                   Fun
                 </Link>
-                <Link href={`/servers/${guildId}/modules/utilities`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left">
+                <Link href={`/servers/${guildId}/modules/utilities`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left animate-fade-in-item" style={{animationDelay: '400ms'}}>
                   <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
                   Utilities
                 </Link>
-                <Link href={`/servers/${guildId}/modules/security`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left">
+                <Link href={`/servers/${guildId}/modules/security`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left animate-fade-in-item" style={{animationDelay: '450ms'}}>
                   <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
                   Security
                 </Link>
