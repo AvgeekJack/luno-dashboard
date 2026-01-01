@@ -3,21 +3,80 @@
 import { useSession } from 'next-auth/react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function GeneralPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const { guildId } = useParams();
+  const gid = Array.isArray(guildId) ? guildId[0] : guildId;
+
+  const [prefix, setPrefix] = useState('!');
+  const [moderationEnabled, setModerationEnabled] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [feedback, setFeedback] = useState<'idle' | 'saved' | 'error'>('idle');
 
   useEffect(() => {
     if (status === 'loading') return;
     if (!session) {
       router.push('/');
+      return;
     }
-  }, [session, status, router]);
 
-  if (status === 'loading') {
+    const fetchSettings = async () => {
+      try {
+        const res = await fetch(`/api/servers/${gid}/general`);
+        if (!res.ok) throw new Error('Failed to load settings');
+        const data = await res.json();
+        setPrefix(data.prefix || '!');
+        setModerationEnabled(data.moderationEnabled ?? true);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSettings();
+  }, [session, status, router, gid]);
+
+  const handleSave = async () => {
+    setSaving(true);
+    setFeedback('idle');
+    try {
+      const trimmed = prefix.trim();
+      if (!trimmed || trimmed.length > 5) {
+        setFeedback('error');
+        setSaving(false);
+        return;
+      }
+
+      const res = await fetch(`/api/servers/${gid}/general`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prefix: trimmed,
+          moderationEnabled,
+        }),
+      });
+
+      if (!res.ok) {
+        setFeedback('error');
+        setSaving(false);
+        return;
+      }
+
+      setFeedback('saved');
+    } catch (err) {
+      console.error(err);
+      setFeedback('error');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (status === 'loading' || loading) {
     return <div className="flex min-h-screen items-center justify-center text-[#0f172a]">Loading...</div>;
   }
 
@@ -30,7 +89,7 @@ export default function GeneralPage() {
             <Link href="/servers" className="text-orange-600 font-semibold hover:text-orange-700 transition-colors text-sm">← Back to Servers</Link>
           </div>
           <nav className="space-y-1 text-sm font-semibold text-slate-700">
-            <Link href={`/servers/${guildId}`} className="flex items-center gap-3 rounded-xl px-3 py-2 hover:bg-orange-50 transition-colors">
+            <Link href={`/servers/${gid}`} className="flex items-center gap-3 rounded-xl px-3 py-2 hover:bg-orange-50 transition-colors">
               <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
               Dashboard
             </Link>
@@ -43,25 +102,25 @@ export default function GeneralPage() {
                 <span className="text-xs text-orange-600">▾</span>
               </summary>
               <div className="border-t border-orange-100 px-2 py-1 space-y-1">
-                <Link href={`/servers/${guildId}/general`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 bg-orange-100 text-orange-700 transition-colors text-left">
+                <Link href={`/servers/${gid}/general`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 bg-orange-100 text-orange-700 transition-colors text-left">
                   <span className="h-5 w-5 rounded-md bg-orange-100" aria-hidden />
                   General
                 </Link>
-                <Link href={`/servers/${guildId}/setup`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left">
+                <Link href={`/servers/${gid}/setup`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left">
                   <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
                   Setup
                 </Link>
-                <Link href={`/servers/${guildId}/commands`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left">
+                <Link href={`/servers/${gid}/commands`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left">
                   <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
                   Commands
                 </Link>
               </div>
             </details>
-            <Link href={`/servers/${guildId}/modules`} className="flex w-full items-center gap-3 rounded-xl px-3 py-2 hover:bg-orange-50 transition-colors text-left">
+            <Link href={`/servers/${gid}/modules`} className="flex w-full items-center gap-3 rounded-xl px-3 py-2 hover:bg-orange-50 transition-colors text-left">
               <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
               Modules
             </Link>
-            <Link href={`/servers/${guildId}/logs`} className="flex w-full items-center gap-3 rounded-xl px-3 py-2 hover:bg-orange-50 transition-colors text-left">
+            <Link href={`/servers/${gid}/logs`} className="flex w-full items-center gap-3 rounded-xl px-3 py-2 hover:bg-orange-50 transition-colors text-left">
               <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
               Logs
             </Link>
@@ -80,8 +139,48 @@ export default function GeneralPage() {
               <p className="text-slate-600">Configure general bot behavior for this server.</p>
             </div>
 
-            <div className="space-y-4 border-t border-orange-100 pt-6">
-              <p className="text-slate-600">General settings coming soon...</p>
+            <div className="space-y-6 border-t border-orange-100 pt-6">
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-slate-800">Command Prefix</label>
+                <div className="flex flex-col gap-2">
+                  <input
+                    value={prefix}
+                    onChange={(e) => setPrefix(e.target.value)}
+                    maxLength={5}
+                    className="w-full rounded-xl border border-orange-100 bg-white px-3 py-2 text-slate-800 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 outline-none transition"
+                    placeholder="!"
+                  />
+                  <p className="text-xs text-slate-500">1-5 characters. This is what users will type before commands.</p>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between rounded-xl border border-orange-100 bg-orange-50/50 px-4 py-3">
+                <div>
+                  <p className="font-semibold text-slate-800">Moderation Module</p>
+                  <p className="text-sm text-slate-600">Enable or disable moderation features for this server.</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setModerationEnabled((prev) => !prev)}
+                  className={`${moderationEnabled ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-6 w-11 items-center rounded-full transition`}
+                >
+                  <span
+                    className={`${moderationEnabled ? 'translate-x-6' : 'translate-x-1'} inline-block h-4 w-4 transform rounded-full bg-white transition`}
+                  />
+                </button>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={handleSave}
+                  disabled={saving}
+                  className="rounded-xl bg-orange-500 px-4 py-2 text-white font-semibold shadow-sm hover:bg-orange-600 transition disabled:opacity-60"
+                >
+                  {saving ? 'Saving...' : 'Save Changes'}
+                </button>
+                {feedback === 'saved' && <span className="text-sm text-green-600">Saved!</span>}
+                {feedback === 'error' && <span className="text-sm text-red-600">Could not save. Check prefix length.</span>}
+              </div>
             </div>
           </div>
         </main>

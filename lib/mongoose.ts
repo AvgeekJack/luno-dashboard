@@ -12,6 +12,8 @@ if (!cached) {
   cached = (global as any).mongoose = { conn: null, promise: null };
 }
 
+const DB_NAME = 'lumo-bot';
+
 async function dbConnect() {
   if (cached.conn) {
     return cached.conn;
@@ -20,6 +22,7 @@ async function dbConnect() {
   if (!cached.promise) {
     const opts = {
       bufferCommands: false,
+      dbName: DB_NAME,
     };
 
     cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {

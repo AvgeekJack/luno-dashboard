@@ -2,6 +2,7 @@ import { MongoClient } from 'mongodb';
 
 const uri = process.env.MONGODB_URI!;
 const options = {};
+const DB_NAME = 'lumo-bot';
 
 let client: MongoClient;
 let clientPromise: Promise<MongoClient>;
@@ -18,3 +19,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 export default clientPromise;
+export async function getDb() {
+  const client = await clientPromise;
+  return client.db(DB_NAME); // enforce database name to avoid defaulting to test
+}

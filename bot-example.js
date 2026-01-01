@@ -12,13 +12,14 @@ const { MongoClient } = require('mongodb');
 require('dotenv').config();
 
 // MongoDB Connection
+const DB_NAME = 'lumo-bot';
 const mongoClient = new MongoClient(process.env.MONGODB_URI);
 let db;
 
 async function connectDatabase() {
   await mongoClient.connect();
-  db = mongoClient.db(); // Uses database from connection string
-  console.log('✓ Connected to MongoDB');
+  db = mongoClient.db(DB_NAME); // Force database name to avoid defaulting to test
+  console.log(`✓ Connected to MongoDB (${DB_NAME})`);
 }
 
 // Cache for server settings (reload every 5 minutes)
