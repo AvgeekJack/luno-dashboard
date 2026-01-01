@@ -104,7 +104,7 @@ export default function LogsPage() {
               {logs.length === 0 ? (
                 <p className="text-slate-600">No changes yet.</p>
               ) : (
-                <div className="overflow-hidden rounded-xl border border-orange-100 bg-orange-50/50">
+                <div className="overflow-hidden border border-orange-100 bg-orange-50/50">
                   <div className="grid grid-cols-12 bg-orange-100/60 px-4 py-2 text-xs font-semibold text-orange-700 uppercase tracking-wide">
                     <div className="col-span-4">User</div>
                     <div className="col-span-2">User ID</div>
