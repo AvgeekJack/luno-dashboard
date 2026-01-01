@@ -17,26 +17,26 @@ export default function ModulesPage() {
   const [feedback, setFeedback] = useState<'idle' | 'saved' | 'error'>('idle');
 
   const moduleList = [
-    { key: 'moderation', label: 'Moderation' },
-    { key: 'automod', label: 'Automod' },
-    { key: 'antiRaid', label: 'Anti-Raid' },
-    { key: 'logging', label: 'Logging' },
-    { key: 'roleManagement', label: 'Role Management' },
-    { key: 'memberManagement', label: 'Member Management' },
-    { key: 'announcements', label: 'Announcements' },
-    { key: 'tickets', label: 'Tickets' },
-    { key: 'notifications', label: 'Notifications' },
-    { key: 'customCommands', label: 'Custom Commands' },
-    { key: 'fun', label: 'Fun' },
-    { key: 'music', label: 'Music' },
-    { key: 'serverInfo', label: 'Server Info' },
-    { key: 'utilities', label: 'Utilities' },
-    { key: 'settingsConfig', label: 'Settings / Config' },
-    { key: 'auditCompliance', label: 'Audit & Compliance' },
-    { key: 'security', label: 'Security' },
-    { key: 'scheduler', label: 'Scheduler Module' },
-    { key: 'analytics', label: 'Analytics' },
-    { key: 'messageSearching', label: 'Message Searching' },
+    { key: 'moderation', label: 'Moderation', desc: 'Warn, kick, and ban members.' },
+    { key: 'automod', label: 'Automod', desc: 'Auto-filter spam and profanity.' },
+    { key: 'antiRaid', label: 'Anti-Raid', desc: 'Protect against server raids.' },
+    { key: 'logging', label: 'Logging', desc: 'Log member and message activity.' },
+    { key: 'roleManagement', label: 'Role Management', desc: 'Auto-assign and manage roles.' },
+    { key: 'memberManagement', label: 'Member Management', desc: 'Welcome and goodbye messages.' },
+    { key: 'announcements', label: 'Announcements', desc: 'Send and manage announcements.' },
+    { key: 'tickets', label: 'Tickets', desc: 'Create support ticket system.' },
+    { key: 'notifications', label: 'Notifications', desc: 'Send event notifications.' },
+    { key: 'customCommands', label: 'Custom Commands', desc: 'Create custom bot commands.' },
+    { key: 'fun', label: 'Fun', desc: 'Fun and meme commands.' },
+    { key: 'music', label: 'Music', desc: 'Play music in voice channels.' },
+    { key: 'serverInfo', label: 'Server Info', desc: 'Display server info commands.' },
+    { key: 'utilities', label: 'Utilities', desc: 'Utility and helper commands.' },
+    { key: 'settingsConfig', label: 'Settings / Config', desc: 'Configure bot settings.' },
+    { key: 'auditCompliance', label: 'Audit & Compliance', desc: 'Track audit logs and compliance.' },
+    { key: 'security', label: 'Security', desc: 'Advanced security features.' },
+    { key: 'scheduler', label: 'Scheduler Module', desc: 'Schedule messages and tasks.' },
+    { key: 'analytics', label: 'Analytics', desc: 'View server analytics and stats.' },
+    { key: 'messageSearching', label: 'Message Searching', desc: 'Search through server messages.' },
   ];
 
   useEffect(() => {
@@ -159,12 +159,15 @@ export default function ModulesPage() {
             <div className="space-y-6 border-t border-orange-100 pt-6">
               <div className="grid gap-3 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                 {moduleList.map(module => (
-                  <div key={module.key} className="flex items-center justify-between rounded-lg border border-orange-100 bg-white px-3 py-2">
-                    <p className="font-semibold text-slate-800 text-sm">{module.label}</p>
+                  <div key={module.key} className="flex items-start justify-between rounded-lg border border-orange-100 bg-white px-3 py-2 gap-3">
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-slate-800 text-sm">{module.label}</p>
+                      <p className="text-xs text-slate-500">{module.desc}</p>
+                    </div>
                     <button
                       type="button"
                       onClick={() => handleToggle(module.key)}
-                      className={`${modules[module.key] ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition`}
+                      className={`${modules[module.key] ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}
                     >
                       <span
                         className={`${modules[module.key] ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`}
