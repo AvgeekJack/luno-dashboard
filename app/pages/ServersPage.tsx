@@ -3,6 +3,7 @@
 import { useSession, signIn } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface Guild {
   id: string;
@@ -14,6 +15,7 @@ interface Guild {
 export default function ServersPage() {
   const { data: session, status } = useSession();
   const [guilds, setGuilds] = useState<Guild[]>([]);
+  const router = useRouter();
   const inviteBase = process.env.NEXT_PUBLIC_DISCORD_INVITE_URL || '#';
 
   const inviteUrl = (guildId: string) => {
@@ -110,14 +112,15 @@ export default function ServersPage() {
                 </div>
               )}
               <h3 className="text-lg font-semibold text-slate-800">{guild.name}</h3>
-              <a
-                href={inviteUrl(guild.id)}
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                onClick={() => {
+                  window.open(inviteUrl(guild.id), '_blank', 'noopener,noreferrer');
+                  router.push(`/servers/${guild.id}`);
+                }}
                 className="inline-flex items-center justify-center w-full bg-orange-500 text-white px-4 py-2 rounded-lg font-semibold shadow hover:bg-orange-600 transition-colors disabled:opacity-60"
               >
                 Add to Server
-              </a>
+              </button>
             </div>
           ))}
         </div>
