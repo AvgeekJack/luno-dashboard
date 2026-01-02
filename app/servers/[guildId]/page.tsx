@@ -38,6 +38,26 @@ export default function ServerSettings() {
   const [stats, setStats] = useState<ServerStats | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [modulesOpen, setModulesOpen] = useState(false);
+  const [botOnline, setBotOnline] = useState<boolean | null>(null);
+
+  // Poll bot status every 10 seconds
+  useEffect(() => {
+    const checkBotStatus = async () => {
+      try {
+        const res = await fetch('/api/bot-status');
+        const data = await res.json();
+        setBotOnline(data.online);
+      } catch (error) {
+        console.error('Failed to check bot status:', error);
+        setBotOnline(false);
+      }
+    };
+
+    checkBotStatus();
+    const interval = setInterval(checkBotStatus, 10000); // Check every 10 seconds
+
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     if (status === 'loading') return;
@@ -213,9 +233,19 @@ export default function ServerSettings() {
                 <p className="text-slate-600">At-a-glance view of your bot configuration.</p>
               </div>
               <div className="flex items-center gap-3 text-sm font-semibold text-slate-700">
-                <span className="flex items-center gap-2 rounded-full bg-orange-50 px-3 py-1 border border-orange-100">
-                  <span className="h-2 w-2 rounded-full bg-green-500" aria-hidden /> Bot Online
-                </span>
+                {botOnline === null ? (
+                  <span className="flex items-center gap-2 rounded-full bg-slate-50 px-3 py-1 border border-slate-200">
+                    <span className="h-2 w-2 rounded-full bg-slate-400 animate-pulse" aria-hidden /> Checking...
+                  </span>
+                ) : botOnline ? (
+                  <span className="flex items-center gap-2 rounded-full bg-green-50 px-3 py-1 border border-green-200">
+                    <span className="h-2 w-2 rounded-full bg-green-500" aria-hidden /> Bot Online
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-2 rounded-full bg-red-50 px-3 py-1 border border-red-200">
+                    <span className="h-2 w-2 rounded-full bg-red-500" aria-hidden /> Bot Offline
+                  </span>
+                )}
               </div>
             </div>
 
