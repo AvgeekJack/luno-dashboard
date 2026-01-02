@@ -12,7 +12,7 @@ export default function HomePage() {
       <nav className="fixed top-0 w-full bg-white/90 backdrop-blur border-b border-orange-100 z-50 flex justify-center">
         <div className="w-full max-w-6xl px-6 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-center">
           <div className="flex items-center justify-center md:justify-start gap-3 w-full md:w-auto">
-            <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-amber-400 rounded-xl shadow-md"></div>
+            <img src="/luno-logo.svg" alt="Luno Bot" className="w-10 h-10" />
             <div className="text-left">
               <span className="block text-xl font-bold tracking-tight">LUNO</span>
               <span className="block text-sm text-slate-500">Discord Bot</span>
@@ -110,7 +110,7 @@ export default function HomePage() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6 text-center">
               <div className="space-y-3">
                 <div className="flex items-center justify-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-amber-400 rounded-xl shadow-md"></div>
+                  <img src="/luno-logo.svg" alt="Luno Bot" className="w-10 h-10" />
                   <span className="text-xl font-bold text-[#0f172a]">LUNO</span>
                 </div>
                 <p className="text-sm text-slate-600">The Discord bot that does it all.</p>
