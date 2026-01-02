@@ -209,9 +209,10 @@ export default function ModerationPage() {
             </div>
 
             <div className="space-y-6 border-t border-orange-100 pt-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {MODERATION_COMMANDS.map((command) => (
-                  <div key={command.name} className="rounded-xl border border-orange-100 bg-slate-50 p-5 shadow-sm space-y-4">
+              <div className="flex justify-center">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl">
+                  {MODERATION_COMMANDS.map((command) => (
+                    <div key={command.name} className="rounded-xl border border-orange-100 bg-slate-50 p-5 shadow-sm space-y-4 w-72">
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1">
                         <h3 className="text-lg font-bold text-[#0f172a] capitalize">{command.name}</h3>
@@ -241,6 +242,7 @@ export default function ModerationPage() {
                     </div>
                   </div>
                 ))}
+                </div>
               </div>
             </div>
           </div>
