@@ -96,8 +96,8 @@ export default function ModerationPage() {
               <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
               Dashboard
             </Link>
-            <details className="border border-orange-100 bg-orange-50/60 text-slate-800" open={settingsOpen}>
-              <summary className="flex items-center justify-between px-3 py-6 cursor-pointer select-none" onClick={(e) => { e.preventDefault(); setSettingsOpen(!settingsOpen); }}>
+            <details className="text-slate-700" open={settingsOpen}>
+              <summary className="flex items-center justify-between px-3 py-6 cursor-pointer select-none hover:bg-orange-50 transition-colors" onClick={(e) => { e.preventDefault(); setSettingsOpen(!settingsOpen); }}>
                 <span className="flex items-center gap-3">
                   <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
                   Settings
@@ -121,8 +121,8 @@ export default function ModerationPage() {
                 </div>
               )}
             </details>
-            <details className="border border-orange-100 bg-orange-50/60 text-slate-800" open={modulesOpen}>
-              <summary className="flex items-center justify-between px-3 py-6 cursor-pointer select-none" onClick={(e) => { e.preventDefault(); setModulesOpen(!modulesOpen); }}>
+            <details className="text-slate-700" open={modulesOpen}>
+              <summary className="flex items-center justify-between px-3 py-6 cursor-pointer select-none hover:bg-orange-50 transition-colors" onClick={(e) => { e.preventDefault(); setModulesOpen(!modulesOpen); }}>
                 <span className="flex items-center gap-3">
                   <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
                   Modules
