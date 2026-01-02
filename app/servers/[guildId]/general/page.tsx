@@ -199,6 +199,15 @@ export default function GeneralPage() {
                   </div>
                 </div>
 
+                <div className="rounded-xl border border-orange-100 bg-orange-50/50 p-4 space-y-2">
+                  <p className="text-sm font-semibold text-slate-800">Tips</p>
+                  <ul className="text-sm text-slate-600 space-y-1 list-disc list-inside">
+                    <li>Keep the prefix short and easy to remember.</li>
+                    <li>Update Commands/Setup pages for channel/role rules.</li>
+                    <li>Bot picks up changes immediately—no restart needed.</li>
+                  </ul>
+                </div>
+
                 <div className="space-y-2">
                   <label className="block text-sm font-semibold text-slate-800">Bot Nickname</label>
                   <div className="flex flex-col gap-2">
@@ -211,15 +220,6 @@ export default function GeneralPage() {
                     />
                     <p className="text-xs text-slate-500">Set a custom nickname for the bot in this server (max 32 characters).</p>
                   </div>
-                </div>
-
-                <div className="rounded-xl border border-orange-100 bg-orange-50/50 p-4 space-y-2">
-                  <p className="text-sm font-semibold text-slate-800">Tips</p>
-                  <ul className="text-sm text-slate-600 space-y-1 list-disc list-inside">
-                    <li>Keep the prefix short and easy to remember.</li>
-                    <li>Update Commands/Setup pages for channel/role rules.</li>
-                    <li>Bot picks up changes immediately—no restart needed.</li>
-                  </ul>
                 </div>
               </div>
 

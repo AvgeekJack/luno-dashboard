@@ -117,8 +117,8 @@ export default function AnnouncementsPage() {
           </nav>
       </aside>
 
-      <main className="flex-1 ml-64 py-12 px-4 md:px-8 flex justify-center">
-        <div className="max-w-6xl space-y-4 md:space-y-6">
+      <main className="flex-1 ml-64 py-12 px-4 md:px-8">
+        <div className="w-full space-y-4 md:space-y-6">
           <div className="space-y-1">
             <p className="text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">Modules</p>
             <h1 className="text-3xl font-bold">Announcements</h1>
