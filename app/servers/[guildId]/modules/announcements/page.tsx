@@ -5,19 +5,42 @@ import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
+const ANNOUNCEMENT_COMMANDS = [
+  { name: '/announce', description: 'Send an announcement to a channel' },
+  { name: '/creategiveaway', description: 'Create a new giveaway' },
+  { name: '/giveawaydraw', description: 'Draw winners for a giveaway' },
+  { name: '/poll', description: 'Create a poll for members to vote' },
+];
+
 export default function AnnouncementsPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const { guildId } = useParams();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [modulesOpen, setModulesOpen] = useState(false);
+  const [commandStates, setCommandStates] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     if (status === 'loading') return;
     if (!session) {
       router.push('/');
+      return;
     }
+
+    // Initialize all command states as enabled
+    const initialStates: Record<string, boolean> = {};
+    ANNOUNCEMENT_COMMANDS.forEach(cmd => {
+      initialStates[cmd.name] = true;
+    });
+    setCommandStates(initialStates);
   }, [session, status, router]);
+
+  const handleToggleCommand = (commandName: string) => {
+    setCommandStates(prev => ({
+      ...prev,
+      [commandName]: !prev[commandName]
+    }));
+  };
 
   if (status === 'loading') {
     return <div className="flex min-h-screen items-center justify-center text-[#0f172a]">Loading...</div>;
@@ -134,12 +157,46 @@ export default function AnnouncementsPage() {
 
           <div className="bg-white border border-orange-100 rounded-lg shadow-sm p-6 space-y-6">
             <div className="space-y-1">
-              <h2 className="text-xl font-semibold text-[#0f172a]">Announcement Settings</h2>
-              <p className="text-slate-600">Configure server announcements and notifications.</p>
+              <h2 className="text-xl font-semibold text-[#0f172a]">Announcement Commands</h2>
+              <p className="text-slate-600">Configure and manage announcement commands for your server.</p>
             </div>
 
-            <div className="space-y-4 border-t border-orange-100 pt-6 px-6">
-              <p className="text-slate-600">Announcement configuration coming soon.</p>
+            <div className="space-y-6 border-t border-orange-100 pt-6">
+              <div className="flex justify-center">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl">
+                  {ANNOUNCEMENT_COMMANDS.map((command) => (
+                    <div key={command.name} className="rounded-xl border border-orange-100 bg-slate-50 p-5 shadow-sm space-y-4 w-72">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex-1">
+                          <h3 className="text-lg font-bold text-[#0f172a] capitalize">{command.name}</h3>
+                          <p className="text-sm text-slate-600">{command.description}</p>
+                        </div>
+                        <button
+                          onClick={() => handleToggleCommand(command.name)}
+                          className={`relative inline-flex h-6 w-11 rounded-full transition-colors flex-shrink-0 ${
+                            commandStates[command.name] ? 'bg-orange-500' : 'bg-slate-400'
+                          }`}
+                        >
+                          <span
+                            className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
+                              commandStates[command.name] ? 'translate-x-5' : 'translate-x-1'
+                            }`}
+                            style={{ marginTop: '2px' }}
+                          />
+                        </button>
+                      </div>
+                      <div className="flex gap-2">
+                        <button className="flex-1 rounded-lg bg-orange-500 text-white px-3 py-2 text-sm font-semibold hover:bg-orange-600 transition-colors">
+                          Settings
+                        </button>
+                        <button className="flex-1 rounded-lg bg-orange-100 text-orange-700 px-3 py-2 text-sm font-semibold hover:bg-orange-200 transition-colors">
+                          Help
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
