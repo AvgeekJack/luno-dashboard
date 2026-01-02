@@ -1,32 +1,47 @@
 import { NextResponse } from 'next/server';
+import { connectDB } from '@/lib/mongodb';
+
+// In-memory storage for bot heartbeat (you can use MongoDB if preferred)
+let lastHeartbeat: number = 0;
 
 export async function GET() {
   try {
-    const botToken = process.env.DISCORD_BOT_TOKEN;
+    const now = Date.now();
+    const timeSinceLastHeartbeat = now - lastHeartbeat;
     
-    if (!botToken) {
-      return NextResponse.json({ online: false, error: 'Bot token not configured' }, { status: 500 });
-    }
-
-    // Get bot user info from Discord API
-    const response = await fetch('https://discord.com/api/v10/users/@me', {
-      headers: {
-        Authorization: `Bot ${botToken}`,
-      },
+    // Consider bot online if heartbeat was within last 60 seconds
+    const isOnline = timeSinceLastHeartbeat < 60000;
+    
+    return NextResponse.json({ 
+      online: isOnline,
+      lastHeartbeat: lastHeartbeat || null,
+      timeSinceLastHeartbeat: lastHeartbeat ? timeSinceLastHeartbeat : null
     });
-
-    if (response.ok) {
-      const botData = await response.json();
-      return NextResponse.json({ 
-        online: true, 
-        username: botData.username,
-        id: botData.id 
-      });
-    } else {
-      return NextResponse.json({ online: false }, { status: 200 });
-    }
   } catch (error) {
     console.error('Bot status check error:', error);
     return NextResponse.json({ online: false }, { status: 200 });
+  }
+}
+
+// Endpoint for bot to POST heartbeat
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    const botToken = request.headers.get('authorization');
+    
+    // Verify the request is from your bot (using a secret or bot token)
+    if (botToken !== `Bearer ${process.env.DISCORD_BOT_TOKEN}`) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    
+    lastHeartbeat = Date.now();
+    
+    return NextResponse.json({ 
+      success: true,
+      timestamp: lastHeartbeat
+    });
+  } catch (error) {
+    console.error('Bot heartbeat error:', error);
+    return NextResponse.json({ error: 'Failed to update heartbeat' }, { status: 500 });
   }
 }
