@@ -7,7 +7,7 @@
 // Import fetch for Node.js versions < 18 (remove if using Node 18+)
 // const fetch = require('node-fetch'); // Uncomment if you get "fetch is not defined" error
 
-const DASHBOARD_URL = process.env.DASHBOARD_URL || 'https://luno-dashboard-five.vercel.app';
+const DASHBOARD_URL = process.env.DASHBOARD_URL || 'https://luno-dashboard-flax.vercel.app';
 
 // Function to send heartbeat to dashboard
 async function sendHeartbeat() {
