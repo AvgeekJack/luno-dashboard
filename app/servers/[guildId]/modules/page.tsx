@@ -115,13 +115,11 @@ export default function ModulesPage() {
           
           <nav className="px-4 space-y-2 text-sm font-semibold text-slate-700">
             <Link href={`/servers/${gid}`} className="flex items-center gap-3 px-3 py-6 hover:bg-orange-50 transition-colors">
-              <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
               Dashboard
             </Link>
             <details className="text-slate-800" open={settingsOpen}>
               <summary className="flex items-center justify-between px-3 py-6 cursor-pointer select-none" onClick={(e) => { e.preventDefault(); setSettingsOpen(!settingsOpen); }}>
                 <span className="flex items-center gap-3">
-                  <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
                   Settings
                 </span>
                 <span className="text-xs text-orange-600">▾</span>
@@ -129,15 +127,12 @@ export default function ModulesPage() {
               {settingsOpen && (
                 <div className={`px-2 py-1 space-y-1 ${settingsOpen ? 'animate-dropdown-open' : 'animate-dropdown-close'}`}>
                   <Link href={`/servers/${gid}/general`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${settingsOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '0ms'}}>
-                    <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
                     General
                   </Link>
                   <Link href={`/servers/${gid}/setup`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${settingsOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '50ms'}}>
-                    <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
                     Setup
                   </Link>
                   <Link href={`/servers/${gid}/commands`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${settingsOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '100ms'}}>
-                    <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
                     Commands
                   </Link>
                 </div>
@@ -146,7 +141,6 @@ export default function ModulesPage() {
             <details className="text-slate-800" open={modulesOpen}>
               <summary className="flex items-center justify-between px-3 py-6 cursor-pointer select-none" onClick={(e) => { e.preventDefault(); setModulesOpen(!modulesOpen); }}>
                 <span className="flex items-center gap-3">
-                  <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
                   Modules
                 </span>
                 <span className="text-xs text-orange-600">▾</span>
@@ -154,50 +148,39 @@ export default function ModulesPage() {
               {modulesOpen && (
                 <div className={`px-2 py-1 space-y-1 ${modulesOpen ? 'animate-dropdown-open' : 'animate-dropdown-close'}`}>
                   <Link href={`/servers/${gid}/modules/moderation`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '0ms'}}>
-                    <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
                     Moderation
                   </Link>
                   <Link href={`/servers/${gid}/modules/role-management`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '50ms'}}>
-                    <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
                     Role Management
                   </Link>
                   <Link href={`/servers/${gid}/modules/member-management`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '100ms'}}>
-                    <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
                     Member Management
                   </Link>
                   <Link href={`/servers/${gid}/modules/announcements`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '150ms'}}>
-                    <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
                     Announcements
                   </Link>
                   <Link href={`/servers/${gid}/modules/tickets`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '200ms'}}>
-                    <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
                     Tickets
                   </Link>
                   <Link href={`/servers/${gid}/modules/notifications`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '250ms'}}>
-                    <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
                     Notifications
                   </Link>
                   <Link href={`/servers/${gid}/modules/custom-commands`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '300ms'}}>
-                    <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
                     Custom Commands
                   </Link>
                   <Link href={`/servers/${gid}/modules/fun`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '350ms'}}>
-                    <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
                     Fun
                   </Link>
                   <Link href={`/servers/${gid}/modules/utilities`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '400ms'}}>
-                    <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
                     Utilities
                   </Link>
                   <Link href={`/servers/${gid}/modules/security`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '450ms'}}>
-                    <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
                     Security
                   </Link>
                 </div>
               )}
             </details>
             <Link href={`/servers/${gid}/logs`} className="flex w-full items-center gap-3 px-3 py-6 hover:bg-orange-50 transition-colors text-left">
-              <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
               Logs
             </Link>
           </nav>
