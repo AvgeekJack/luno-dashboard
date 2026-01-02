@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { Switch } from '@/components/ui/switch';
 
 const MODERATION_COMMANDS = [
   { name: '/ban', description: 'Ban a user from the server' },
@@ -218,19 +219,10 @@ export default function ModerationPage() {
                         <h3 className="text-lg font-bold text-[#0f172a] capitalize">{command.name}</h3>
                         <p className="text-sm text-slate-600">{command.description}</p>
                       </div>
-                      <button
-                        onClick={() => handleToggleCommand(command.name)}
-                        className={`relative inline-flex h-6 w-11 rounded-full transition-colors flex-shrink-0 ${
-                          commandStates[command.name] ? 'bg-orange-500' : 'bg-slate-400'
-                        }`}
-                      >
-                        <span
-                          className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
-                            commandStates[command.name] ? 'translate-x-5' : 'translate-x-1'
-                          }`}
-                          style={{ marginTop: '2px' }}
-                        />
-                      </button>
+                      <Switch
+                        checked={commandStates[command.name]}
+                        onCheckedChange={() => handleToggleCommand(command.name)}
+                      />
                     </div>
                     <div className="flex gap-2">
                       <button className="flex-1 rounded-lg bg-orange-500 text-white px-3 py-2 text-sm font-semibold hover:bg-orange-600 transition-colors">
