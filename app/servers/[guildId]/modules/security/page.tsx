@@ -36,8 +36,8 @@ export default function SecurityPage() {
             <Link href="/servers" className="text-orange-600 font-semibold hover:text-orange-700 transition-colors text-sm px-3">← Back to Servers</Link>
           </div>
           <nav className="px-4 space-y-2 text-sm font-semibold text-slate-700">
-            <Link href={`/servers/${guildId}`} className="flex items-center gap-3 px-3 py-6 hover:bg-orange-50 transition-colors">
-              <img src="/dashboard-icon.png" alt="" className="h-5 w-5" />
+            <Link href={`/servers/${guildId}`} className="flex items-center gap-3 px-3 py-6 bg-white hover:bg-orange-50/30 text-slate-700 hover:text-orange-700 transition-colors">
+              <img src="/dashboard-icon.png" alt="" className="h-5 w-5 object-contain" />
               Dashboard
             </Link>
             <details className="text-slate-800" open={settingsOpen}>
