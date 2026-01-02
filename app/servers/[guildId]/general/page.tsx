@@ -207,6 +207,8 @@ export default function GeneralPage() {
                     <li>Bot picks up changes immediately—no restart needed.</li>
                     <li>Custom nicknames help personalize the bot for your server.</li>
                     <li>Leave nickname empty to use the bot's default name.</li>
+                    <li>Changes are saved instantly across all server channels.</li>
+                    <li>You can modify these settings anytime as needed.</li>
                   </ul>
                 </div>
 
