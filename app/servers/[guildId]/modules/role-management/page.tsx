@@ -29,10 +29,9 @@ export default function RoleManagementPage() {
           <div className="p-6 border-b border-orange-100">
             <div className="flex items-center gap-3">
               <img src="/luno-logo.svg" alt="Luno Bot" className="h-10 w-10" />
-                L
-              </div>
               <span className="text-xl font-bold text-[#0f172a]">Luno</span>
             </div>
+          </div>
           </div>
           
           <div className="px-4 py-4">
