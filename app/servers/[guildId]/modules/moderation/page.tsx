@@ -81,7 +81,7 @@ export default function ModerationPage() {
           <div className="p-6 border-b border-orange-100">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10">
-                <img src="/luno-logo.svg" alt="Luno Bot" className="h-10 w-10" />
+                <img src="/luno-logo.svg" alt="Luno Bot" className="w-10 h-10 object-contain" />
               </div>
               <span className="text-xl font-bold text-[#0f172a]">Luno</span>
             </div>
@@ -105,7 +105,7 @@ export default function ModerationPage() {
                 <span className="text-xs text-orange-600">▾</span>
               </summary>
               {settingsOpen && (
-                <div className={`border-t border-orange-100 px-2 py-1 space-y-1 ${settingsOpen ? 'animate-dropdown-open' : 'animate-dropdown-close'}`}>
+                <div className={`px-2 py-1 space-y-1 ${settingsOpen ? 'animate-dropdown-open' : 'animate-dropdown-close'}`}>
                   <Link href={`/servers/${guildId}/general`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${settingsOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '0ms'}}>
                     <span className="h-5 w-5 rounded-md bg-orange-50" aria-hidden />
                     General
@@ -130,7 +130,7 @@ export default function ModerationPage() {
                 <span className="text-xs text-orange-600">▾</span>
               </summary>
               {modulesOpen && (
-                <div className={`border-t border-orange-100 px-2 py-1 space-y-1 ${modulesOpen ? 'animate-dropdown-open' : 'animate-dropdown-close'}`}>
+                <div className={`px-2 py-1 space-y-1 ${modulesOpen ? 'animate-dropdown-open' : 'animate-dropdown-close'}`}>
                   <Link href={`/servers/${guildId}/modules/moderation`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 bg-orange-100 text-orange-700 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '0ms'}}>
                     <span className="h-5 w-5 rounded-md bg-orange-100" aria-hidden />
                     Moderation
