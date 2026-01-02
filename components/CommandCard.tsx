@@ -1,5 +1,5 @@
-import { Switch } from "./ui/switch";
-import { Button } from "./ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Button } from "@/components/ui/button";
 
 interface CommandCardProps {
   name: string;

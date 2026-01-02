@@ -170,8 +170,8 @@ export default function GeneralPage() {
           </nav>
       </aside>
 
-      <main className="flex-1 ml-64 py-12 px-4 md:px-8 flex justify-center">
-        <div className="max-w-6xl space-y-4 md:space-y-6">
+      <main className="flex-1 ml-64 py-12 px-4 md:px-8">
+        <div className="w-full space-y-4 md:space-y-6">
           <div className="space-y-1">
             <p className="text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">Settings</p>
             <h1 className="text-3xl font-bold">General</h1>
@@ -205,6 +205,8 @@ export default function GeneralPage() {
                     <li>Keep the prefix short and easy to remember.</li>
                     <li>Update Commands/Setup pages for channel/role rules.</li>
                     <li>Bot picks up changes immediately—no restart needed.</li>
+                    <li>Custom nicknames help personalize the bot for your server.</li>
+                    <li>Leave nickname empty to use the bot's default name.</li>
                   </ul>
                 </div>
 
