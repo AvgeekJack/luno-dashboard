@@ -32,7 +32,6 @@ export default function MemberManagementPage() {
               <span className="text-xl font-bold text-[#0f172a]">Luno</span>
             </div>
           </div>
-          </div>
           
           <div className="px-4 py-4">
             <Link href="/servers" className="text-orange-600 font-semibold hover:text-orange-700 transition-colors text-sm px-3">← Back to Servers</Link>
