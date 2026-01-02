@@ -37,7 +37,7 @@ export default function AnnouncementsPage() {
       <aside className="fixed left-0 top-0 h-screen w-64 bg-white/90 border-r border-orange-100 shadow-sm overflow-y-auto flex flex-col">
           <div className="p-6 border-b border-orange-100">
             <div className="flex items-center gap-3">
-              <img src="/luno-logo.svg" alt="Luno Bot" className="w-10 h-10 object-contain" />
+              <img src="/luno-logo.png" alt="Luno Bot" className="w-10 h-10 object-contain" />
               <span className="text-xl font-bold text-[#0f172a]">Luno</span>
             </div>
           </div>

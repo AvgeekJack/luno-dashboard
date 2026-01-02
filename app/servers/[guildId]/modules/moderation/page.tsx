@@ -81,7 +81,7 @@ export default function ModerationPage() {
           <div className="p-6 border-b border-orange-100">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10">
-                <img src="/luno-logo.svg" alt="Luno Bot" className="w-10 h-10 object-contain" />
+                <img src="/luno-logo.png" alt="Luno Bot" className="w-10 h-10 object-contain" />
               </div>
               <span className="text-xl font-bold text-[#0f172a]">Luno</span>
             </div>
