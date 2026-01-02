@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
-import { connectDB } from '@/lib/mongodb';
 
-// In-memory storage for bot heartbeat (you can use MongoDB if preferred)
+// In-memory storage for bot heartbeat
 let lastHeartbeat: number = 0;
 
 export async function GET() {
