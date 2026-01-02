@@ -4,13 +4,13 @@ import { useSession } from 'next-auth/react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { Switch } from '@/components/ui/switch';
+import { CommandGrid } from '@/components/CommandGrid';
 
 const ANNOUNCEMENT_COMMANDS = [
-  { name: '/announce', description: 'Send an announcement to a channel' },
-  { name: '/creategiveaway', description: 'Create a new giveaway' },
-  { name: '/giveawaydraw', description: 'Draw winners for a giveaway' },
-  { name: '/poll', description: 'Create a poll for members to vote' },
+  { name: '/announce', description: 'Send an announcement to a channel', enabled: true },
+  { name: '/creategiveaway', description: 'Create a new giveaway', enabled: true },
+  { name: '/giveawaydraw', description: 'Draw winners for a giveaway', enabled: true },
+  { name: '/poll', description: 'Create a poll for members to vote', enabled: true },
 ];
 
 export default function AnnouncementsPage() {
@@ -19,7 +19,6 @@ export default function AnnouncementsPage() {
   const { guildId } = useParams();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [modulesOpen, setModulesOpen] = useState(false);
-  const [commandStates, setCommandStates] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     if (status === 'loading') return;
@@ -27,21 +26,7 @@ export default function AnnouncementsPage() {
       router.push('/');
       return;
     }
-
-    // Initialize all command states as enabled
-    const initialStates: Record<string, boolean> = {};
-    ANNOUNCEMENT_COMMANDS.forEach(cmd => {
-      initialStates[cmd.name] = true;
-    });
-    setCommandStates(initialStates);
   }, [session, status, router]);
-
-  const handleToggleCommand = (commandName: string) => {
-    setCommandStates(prev => ({
-      ...prev,
-      [commandName]: !prev[commandName]
-    }));
-  };
 
   if (status === 'loading') {
     return <div className="flex min-h-screen items-center justify-center text-[#0f172a]">Loading...</div>;
@@ -163,32 +148,7 @@ export default function AnnouncementsPage() {
             </div>
 
             <div className="space-y-6 border-t border-orange-100 pt-6">
-              <div className="flex justify-center">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl">
-                  {ANNOUNCEMENT_COMMANDS.map((command) => (
-                    <div key={command.name} className="rounded-xl border border-orange-100 bg-slate-50 p-5 shadow-sm space-y-4 w-72">
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="flex-1">
-                          <h3 className="text-lg font-bold text-[#0f172a] capitalize">{command.name}</h3>
-                          <p className="text-sm text-slate-600">{command.description}</p>
-                        </div>
-                        <Switch
-                          checked={commandStates[command.name]}
-                          onCheckedChange={() => handleToggleCommand(command.name)}
-                        />
-                      </div>
-                      <div className="flex gap-2">
-                        <button className="flex-1 rounded-lg bg-orange-500 text-white px-3 py-2 text-sm font-semibold hover:bg-orange-600 transition-colors">
-                          Settings
-                        </button>
-                        <button className="flex-1 rounded-lg bg-orange-100 text-orange-700 px-3 py-2 text-sm font-semibold hover:bg-orange-200 transition-colors">
-                          Help
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <CommandGrid commands={ANNOUNCEMENT_COMMANDS} />
             </div>
           </div>
         </div>

@@ -4,56 +4,56 @@ import { useSession } from 'next-auth/react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { Switch } from '@/components/ui/switch';
+import { CommandGrid } from '@/components/CommandGrid';
 
 const MODERATION_COMMANDS = [
-  { name: '/ban', description: 'Ban a user from the server' },
-  { name: '/softban', description: 'Ban and then unban a user' },
-  { name: '/unban', description: 'Unban a previously banned user' },
-  { name: '/kick', description: 'Kick a user from the server' },
-  { name: '/mute', description: 'Mute a user in the server' },
-  { name: '/unmute', description: 'Unmute a muted user' },
-  { name: '/tempmute', description: 'Temporarily mute a user' },
-  { name: '/timeout', description: 'Timeout a user for a duration' },
-  { name: '/untimeout', description: 'Remove timeout from a user' },
-  { name: '/warn', description: 'Warn a user with a message' },
-  { name: '/warnings', description: 'View warnings for a user' },
-  { name: '/clearwarnings', description: 'Clear warnings for a user' },
-  { name: '/clear', description: 'Delete bulk messages from a channel' },
-  { name: '/slowmode', description: 'Set slowmode for a channel' },
-  { name: '/lock', description: 'Lock a channel from posting' },
-  { name: '/unlock', description: 'Unlock a locked channel' },
-  { name: '/automod enable', description: 'Enable automod features' },
-  { name: '/automod disable', description: 'Disable automod features' },
-  { name: '/antilink', description: 'Block invite links' },
-  { name: '/antiinvite', description: 'Block server invites' },
-  { name: '/antispam', description: 'Filter spam messages' },
-  { name: '/antimention', description: 'Filter mass mentions' },
-  { name: '/antizalgo', description: 'Filter zalgo text' },
-  { name: '/antiswear', description: 'Filter swear words' },
-  { name: '/antiflood', description: 'Prevent message flooding' },
-  { name: '/capsfilter', description: 'Filter excessive caps' },
-  { name: '/duplicatefilter', description: 'Filter duplicate messages' },
-  { name: '/regexfilter', description: 'Filter by regex patterns' },
-  { name: '/automod logs', description: 'View automod logs' },
-  { name: '/antiraid enable', description: 'Enable raid protection' },
-  { name: '/antiraid disable', description: 'Disable raid protection' },
-  { name: '/antiraid level', description: 'Set raid protection level' },
-  { name: '/joinrate', description: 'Set join rate limits' },
-  { name: '/verification enable', description: 'Enable membership verification' },
-  { name: '/verification disable', description: 'Disable membership verification' },
-  { name: '/lockdown', description: 'Lockdown the server' },
-  { name: '/unlockdown', description: 'End server lockdown' },
-  { name: '/modlog enable', description: 'Enable moderation logs' },
-  { name: '/modlog disable', description: 'Disable moderation logs' },
-  { name: '/message log', description: 'Log message activity' },
-  { name: '/edit log', description: 'Log message edits' },
-  { name: '/delete log', description: 'Log message deletions' },
-  { name: '/join log', description: 'Log user joins' },
-  { name: '/leave log', description: 'Log user leaves' },
-  { name: '/voice log', description: 'Log voice channel activity' },
-  { name: '/role log', description: 'Log role changes' },
-  { name: '/nickname log', description: 'Log nickname changes' },
+  { name: '/ban', description: 'Ban a user from the server', enabled: true },
+  { name: '/softban', description: 'Ban and then unban a user', enabled: true },
+  { name: '/unban', description: 'Unban a previously banned user', enabled: true },
+  { name: '/kick', description: 'Kick a user from the server', enabled: true },
+  { name: '/mute', description: 'Mute a user in the server', enabled: true },
+  { name: '/unmute', description: 'Unmute a muted user', enabled: true },
+  { name: '/tempmute', description: 'Temporarily mute a user', enabled: true },
+  { name: '/timeout', description: 'Timeout a user for a duration', enabled: true },
+  { name: '/untimeout', description: 'Remove timeout from a user', enabled: true },
+  { name: '/warn', description: 'Warn a user with a message', enabled: true },
+  { name: '/warnings', description: 'View warnings for a user', enabled: true },
+  { name: '/clearwarnings', description: 'Clear warnings for a user', enabled: true },
+  { name: '/clear', description: 'Delete bulk messages from a channel', enabled: true },
+  { name: '/slowmode', description: 'Set slowmode for a channel', enabled: true },
+  { name: '/lock', description: 'Lock a channel from posting', enabled: true },
+  { name: '/unlock', description: 'Unlock a locked channel', enabled: true },
+  { name: '/automod enable', description: 'Enable automod features', enabled: true },
+  { name: '/automod disable', description: 'Disable automod features', enabled: true },
+  { name: '/antilink', description: 'Block invite links', enabled: true },
+  { name: '/antiinvite', description: 'Block server invites', enabled: true },
+  { name: '/antispam', description: 'Filter spam messages', enabled: true },
+  { name: '/antimention', description: 'Filter mass mentions', enabled: true },
+  { name: '/antizalgo', description: 'Filter zalgo text', enabled: true },
+  { name: '/antiswear', description: 'Filter swear words', enabled: true },
+  { name: '/antiflood', description: 'Prevent message flooding', enabled: true },
+  { name: '/capsfilter', description: 'Filter excessive caps', enabled: true },
+  { name: '/duplicatefilter', description: 'Filter duplicate messages', enabled: true },
+  { name: '/regexfilter', description: 'Filter by regex patterns', enabled: true },
+  { name: '/automod logs', description: 'View automod logs', enabled: true },
+  { name: '/antiraid enable', description: 'Enable raid protection', enabled: true },
+  { name: '/antiraid disable', description: 'Disable raid protection', enabled: true },
+  { name: '/antiraid level', description: 'Set raid protection level', enabled: true },
+  { name: '/joinrate', description: 'Set join rate limits', enabled: true },
+  { name: '/verification enable', description: 'Enable membership verification', enabled: true },
+  { name: '/verification disable', description: 'Disable membership verification', enabled: true },
+  { name: '/lockdown', description: 'Lockdown the server', enabled: true },
+  { name: '/unlockdown', description: 'End server lockdown', enabled: true },
+  { name: '/modlog enable', description: 'Enable moderation logs', enabled: true },
+  { name: '/modlog disable', description: 'Disable moderation logs', enabled: true },
+  { name: '/message log', description: 'Log message activity', enabled: true },
+  { name: '/edit log', description: 'Log message edits', enabled: true },
+  { name: '/delete log', description: 'Log message deletions', enabled: true },
+  { name: '/join log', description: 'Log user joins', enabled: true },
+  { name: '/leave log', description: 'Log user leaves', enabled: true },
+  { name: '/voice log', description: 'Log voice channel activity', enabled: true },
+  { name: '/role log', description: 'Log role changes', enabled: true },
+  { name: '/nickname log', description: 'Log nickname changes', enabled: true },
 ];
 
 export default function ModerationPage() {
@@ -62,7 +62,6 @@ export default function ModerationPage() {
   const { guildId } = useParams();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [modulesOpen, setModulesOpen] = useState(false);
-  const [commandStates, setCommandStates] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     if (status === 'loading') return;
@@ -70,21 +69,7 @@ export default function ModerationPage() {
       router.push('/');
       return;
     }
-
-    // Initialize all command states as enabled
-    const initialStates: Record<string, boolean> = {};
-    MODERATION_COMMANDS.forEach(cmd => {
-      initialStates[cmd.name] = true;
-    });
-    setCommandStates(initialStates);
   }, [session, status, router]);
-
-  const handleToggleCommand = (commandName: string) => {
-    setCommandStates(prev => ({
-      ...prev,
-      [commandName]: !prev[commandName]
-    }));
-  };
 
   if (status === 'loading') {
     return <div className="flex min-h-screen items-center justify-center text-[#0f172a]">Loading...</div>;
@@ -210,32 +195,7 @@ export default function ModerationPage() {
             </div>
 
             <div className="space-y-6 border-t border-orange-100 pt-6">
-              <div className="flex justify-center">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl">
-                  {MODERATION_COMMANDS.map((command) => (
-                    <div key={command.name} className="rounded-xl border border-orange-100 bg-slate-50 p-5 shadow-sm space-y-4 w-72">
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex-1">
-                        <h3 className="text-lg font-bold text-[#0f172a] capitalize">{command.name}</h3>
-                        <p className="text-sm text-slate-600">{command.description}</p>
-                      </div>
-                      <Switch
-                        checked={commandStates[command.name]}
-                        onCheckedChange={() => handleToggleCommand(command.name)}
-                      />
-                    </div>
-                    <div className="flex gap-2">
-                      <button className="flex-1 rounded-lg bg-orange-500 text-white px-3 py-2 text-sm font-semibold hover:bg-orange-600 transition-colors">
-                        Settings
-                      </button>
-                      <button className="flex-1 rounded-lg bg-orange-100 text-orange-700 px-3 py-2 text-sm font-semibold hover:bg-orange-200 transition-colors">
-                        Help
-                      </button>
-                    </div>
-                  </div>
-                ))}
-                </div>
-              </div>
+              <CommandGrid commands={MODERATION_COMMANDS} />
             </div>
           </div>
         </div>
