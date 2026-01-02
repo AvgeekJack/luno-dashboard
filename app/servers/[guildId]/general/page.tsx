@@ -12,6 +12,7 @@ export default function GeneralPage() {
   const gid = Array.isArray(guildId) ? guildId[0] : guildId;
 
   const [prefix, setPrefix] = useState('!');
+  const [botNickname, setBotNickname] = useState('');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [feedback, setFeedback] = useState<'idle' | 'saved' | 'error'>('idle');
@@ -31,6 +32,7 @@ export default function GeneralPage() {
         if (!res.ok) throw new Error('Failed to load settings');
         const data = await res.json();
         setPrefix(data.prefix || '!');
+        setBotNickname(data.botNickname || '');
       } catch (err) {
         console.error(err);
       } finally {
@@ -57,6 +59,7 @@ export default function GeneralPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           prefix: trimmed,
+          botNickname: botNickname.trim(),
           moderationEnabled: true,
         }),
       });
@@ -193,6 +196,20 @@ export default function GeneralPage() {
                       placeholder="!"
                     />
                     <p className="text-xs text-slate-500">1-5 characters. Users type this before commands (e.g., !help).</p>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold text-slate-800">Bot Nickname</label>
+                  <div className="flex flex-col gap-2">
+                    <input
+                      value={botNickname}
+                      onChange={(e) => setBotNickname(e.target.value)}
+                      maxLength={32}
+                      className="w-full rounded-xl border border-orange-100 bg-white px-3 py-2 text-slate-800 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 outline-none transition"
+                      placeholder="Custom nickname (optional)"
+                    />
+                    <p className="text-xs text-slate-500">Set a custom nickname for the bot in this server (max 32 characters).</p>
                   </div>
                 </div>
 

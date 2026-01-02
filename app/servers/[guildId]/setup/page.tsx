@@ -34,6 +34,28 @@ export default function SetupPage() {
   const [saved, setSaved] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [modulesOpen, setModulesOpen] = useState(false);
+  const [currentStep, setCurrentStep] = useState(1);
+  const [slideDirection, setSlideDirection] = useState<'left' | 'right' | null>(null);
+
+  const handleNext = () => {
+    if (currentStep < 4) {
+      setSlideDirection('left');
+      setTimeout(() => {
+        setCurrentStep(currentStep + 1);
+        setSlideDirection(null);
+      }, 300);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentStep > 1) {
+      setSlideDirection('right');
+      setTimeout(() => {
+        setCurrentStep(currentStep - 1);
+        setSlideDirection(null);
+      }, 300);
+    }
+  };
 
   useEffect(() => {
     if (status === 'loading') return;
@@ -188,14 +210,16 @@ export default function SetupPage() {
       </aside>
 
       <main className="flex-1 ml-64 py-12 px-4 md:px-8 flex justify-center">
-        <div className="max-w-6xl space-y-4 md:space-y-6">
+        <div className="w-full max-w-5xl space-y-4 md:space-y-6">
           <div className="space-y-1">
             <p className="text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">Settings</p>
             <h1 className="text-3xl font-bold">Setup</h1>
           </div>
 
-          <div className="bg-white border border-orange-100 rounded-2xl shadow-sm p-6 md:p-8 space-y-8">
+          <div className="bg-white border border-orange-100 rounded-2xl shadow-sm p-6 md:p-8 overflow-hidden relative">
+            <div className={slideDirection === 'left' ? 'animate-slide-left' : slideDirection === 'right' ? 'animate-slide-right' : slideDirection === null && currentStep ? 'animate-slide-in-from-right' : ''}>
             {/* Section 1/4 - Moderation Log */}
+            {currentStep === 1 && (
             <div className="space-y-4">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
@@ -220,9 +244,11 @@ export default function SetupPage() {
                 <p className="text-xs text-slate-500">All moderation actions (warns, kicks, bans) will be logged here. Only visible to moderators.</p>
               </div>
             </div>
+            )}
 
             {/* Section 2/4 - Welcome Messages */}
-            <div className="space-y-4 border-t border-orange-100 pt-8">
+            {currentStep === 2 && (
+            <div className="space-y-4">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
                   <span className="bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded">2/4</span>
@@ -258,9 +284,11 @@ export default function SetupPage() {
                 </div>
               </div>
             </div>
+            )}
 
             {/* Section 3/4 - Goodbye Messages */}
-            <div className="space-y-4 border-t border-orange-100 pt-8">
+            {currentStep === 3 && (
+            <div className="space-y-4">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
                   <span className="bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded">3/4</span>
@@ -296,9 +324,11 @@ export default function SetupPage() {
                 </div>
               </div>
             </div>
+            )}
 
             {/* Section 4/4 - Roles */}
-            <div className="space-y-4 border-t border-orange-100 pt-8">
+            {currentStep === 4 && (
+            <div className="space-y-4">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
                   <span className="bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded">4/4</span>
@@ -383,16 +413,48 @@ export default function SetupPage() {
                 </div>
               </div>
             </div>
+            )}
+            </div>
 
-            {/* Save Button */}
-            <div className="border-t border-orange-100 pt-6">
-              <button 
-                onClick={handleSave}
-                disabled={loading}
-                className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? 'Saving...' : saved ? '✓ Saved Successfully!' : 'Save Setup Configuration'}
-              </button>
+            {/* Navigation Buttons */}
+            <div className="border-t border-orange-100 pt-6 mt-8">
+              <div className="flex items-center justify-between gap-4">
+                <button 
+                  onClick={handlePrevious}
+                  disabled={currentStep === 1}
+                  className="px-6 py-3 rounded-lg font-semibold transition-colors border border-orange-200 text-orange-600 hover:bg-orange-50 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+                >
+                  ← Previous
+                </button>
+                
+                <div className="flex items-center gap-2">
+                  {[1, 2, 3, 4].map((step) => (
+                    <div
+                      key={step}
+                      className={`h-2 w-2 rounded-full transition-colors ${
+                        step === currentStep ? 'bg-orange-500' : 'bg-orange-200'
+                      }`}
+                    />
+                  ))}
+                </div>
+
+                {currentStep < 4 ? (
+                  <button 
+                    onClick={handleNext}
+                    className="px-6 py-3 rounded-lg font-semibold transition-colors bg-orange-500 hover:bg-orange-600 text-white"
+                  >
+                    Next →
+                  </button>
+                ) : (
+                  <button 
+                    onClick={handleSave}
+                    disabled={loading}
+                    className="px-6 py-3 rounded-lg font-semibold transition-colors bg-orange-500 hover:bg-orange-600 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {loading ? 'Saving...' : saved ? '✓ Saved!' : 'Save Setup'}
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>

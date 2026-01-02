@@ -22,7 +22,7 @@ export function CommandCard({
     <div className="bg-white rounded-lg border border-gray-200 p-4 hover:border-gray-300 transition-colors">
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex-1 min-w-0">
-          <h3 className="text-gray-900 truncate">{name}</h3>
+          <h3 className="text-gray-900 font-bold truncate">{name}</h3>
           <p className="text-gray-600 text-sm line-clamp-1">{description}</p>
         </div>
         <Switch 
