@@ -312,6 +312,21 @@ export default function AutomodPage() {
           </div>
 
           <div className="bg-white border border-orange-100 rounded-2xl shadow-sm p-6 md:p-8 space-y-8">
+            {/* Info Box about Log Channel */}
+            <div className="p-4 rounded-lg border border-blue-200 bg-blue-50 space-y-2">
+              <div className="flex items-start gap-2">
+                <svg className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div>
+                  <p className="text-sm font-semibold text-blue-900">AutoMod Log Channel</p>
+                  <p className="text-xs text-blue-700 mt-1">
+                    AutoMod logging is now configured on the <Link href={`/servers/${gid}/configuration/logging`} className="font-semibold underline">Logging</Link> page at the top of the configuration.
+                  </p>
+                </div>
+              </div>
+            </div>
+
             {/* Master Toggle */}
             <div className="flex items-start justify-between gap-4">
               <div className="space-y-1">
@@ -668,20 +683,6 @@ export default function AutomodPage() {
                     className={`${settings.escalatingPunishments ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition`}>
                     <span className={`${settings.escalatingPunishments ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
                   </button>
-                </div>
-
-                <div className="p-4 rounded-lg border border-blue-200 bg-blue-50 space-y-2">
-                  <div className="flex items-start gap-2">
-                    <svg className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <div>
-                      <p className="text-sm font-semibold text-blue-900">AutoMod Log Channel</p>
-                      <p className="text-xs text-blue-700 mt-1">
-                        AutoMod logging is now configured on the <Link href={`/servers/${gid}/configuration/logging`} className="font-semibold underline">Logging</Link> page at the top of the configuration.
-                      </p>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
