@@ -157,14 +157,42 @@ const ServerSettingsSchema = new mongoose.Schema({
     botNickname: { type: String, default: null },
     timezone: { type: String, default: 'UTC' },
     automod: {
-      antiSpamEnabled: { type: Boolean, default: false },
+      // Filter Features (On/Off)
       antiLinkEnabled: { type: Boolean, default: false },
       antiInviteEnabled: { type: Boolean, default: false },
-      badWordsFilterEnabled: { type: Boolean, default: false },
-      maxMentions: { type: Number, default: 5 },
-      maxEmojis: { type: Number, default: 10 },
-      maxCapsPercentage: { type: Number, default: 70 },
-      punishmentType: { type: String, default: 'warn', enum: ['warn', 'mute', 'kick', 'ban'] },
+      antiSpamEnabled: { type: Boolean, default: false },
+      antiMentionEnabled: { type: Boolean, default: false },
+      antiFloodEnabled: { type: Boolean, default: false },
+      antiZalgoEnabled: { type: Boolean, default: false },
+      antiSwearEnabled: { type: Boolean, default: false },
+      capsFilterEnabled: { type: Boolean, default: false },
+      
+      // Thresholds/Limits
+      spamMessageCount: { type: Number, default: 5 },
+      spamTimeWindow: { type: Number, default: 5 },
+      mentionLimit: { type: Number, default: 5 },
+      capsPercentage: { type: Number, default: 70 },
+      floodMessageCount: { type: Number, default: 3 },
+      floodTimeWindow: { type: Number, default: 2 },
+      zalgoLimit: { type: Number, default: 10 },
+      
+      // Whitelist System
+      whitelistedChannels: { type: [String], default: [] },
+      whitelistedRoles: { type: [String], default: [] },
+      autoWhitelistModerators: { type: Boolean, default: true },
+      
+      // Action Settings
+      deleteMessage: { type: Boolean, default: true },
+      sendWarning: { type: Boolean, default: true },
+      warningDuration: { type: Number, default: 5 },
+      dmUser: { type: Boolean, default: true },
+      autoTimeoutEnabled: { type: Boolean, default: false },
+      autoTimeoutViolations: { type: Number, default: 3 },
+      autoTimeoutWindow: { type: Number, default: 60 },
+      autoTimeoutDuration: { type: Number, default: 300 },
+      escalatingPunishments: { type: Boolean, default: false },
+      
+      // Log Channel
       logChannel: { type: String, default: null },
     },
   },
