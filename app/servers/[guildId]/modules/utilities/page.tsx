@@ -4,6 +4,24 @@ import { useSession } from 'next-auth/react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { CommandGrid } from '@/components/CommandGrid';
+
+const UTILITIES_COMMANDS = [
+  { name: '/serverinfo', description: 'Display server information', enabled: true },
+  { name: '/channelinfo', description: 'Display channel information', enabled: true },
+  { name: '/roleinfo', description: 'Display role information', enabled: true },
+  { name: '/emoji list', description: 'List all server emojis', enabled: true },
+  { name: '/ping', description: 'Check bot latency', enabled: true },
+  { name: '/invite', description: 'Get bot invite link', enabled: true },
+  { name: '/help', description: 'Display help menu', enabled: true },
+  { name: '/support', description: 'Get support server link', enabled: true },
+  { name: '/dashboard', description: 'Get dashboard link', enabled: true },
+  { name: '/ignored channels', description: 'List ignored channels', enabled: true },
+  { name: '/ignored roles', description: 'List ignored roles', enabled: true },
+  { name: '/schedule message', description: 'Schedule a message', enabled: true },
+  { name: '/analytics server', description: 'View server analytics', enabled: true },
+  { name: '/analytics growth', description: 'View growth analytics', enabled: true },
+];
 
 export default function UtilitiesPage() {
   const { data: session, status } = useSession();
@@ -108,8 +126,8 @@ export default function UtilitiesPage() {
           </nav>
       </aside>
 
-      <main className="flex-1 ml-64 py-12 px-4 md:px-8 flex justify-center">
-        <div className="max-w-6xl space-y-4 md:space-y-6">
+      <main className="flex-1 ml-64 py-12 px-4 md:px-8">
+        <div className="w-full space-y-4 md:space-y-6">
           <div className="space-y-1">
             <p className="text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">Modules</p>
             <h1 className="text-3xl font-bold">Utilities</h1>
@@ -117,12 +135,12 @@ export default function UtilitiesPage() {
 
           <div className="bg-white border border-orange-100 rounded-lg shadow-sm p-6 space-y-6">
             <div className="space-y-1">
-              <h2 className="text-xl font-semibold text-[#0f172a]">Utility Settings</h2>
-              <p className="text-slate-600">Manage utility commands and tools.</p>
+              <h2 className="text-xl font-semibold text-[#0f172a]">Utility Commands</h2>
+              <p className="text-slate-600">Configure and manage utility commands for your server.</p>
             </div>
 
-            <div className="space-y-4 border-t border-orange-100 pt-6 px-6">
-              <p className="text-slate-600">Utility configuration coming soon.</p>
+            <div className="space-y-6 border-t border-orange-100 pt-6">
+              <CommandGrid commands={UTILITIES_COMMANDS} />
             </div>
           </div>
         </div>

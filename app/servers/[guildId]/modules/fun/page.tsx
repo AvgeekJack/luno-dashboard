@@ -4,6 +4,17 @@ import { useSession } from 'next-auth/react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { CommandGrid } from '@/components/CommandGrid';
+
+const FUN_COMMANDS = [
+  { name: '/meme', description: 'Get a random meme', enabled: true },
+  { name: '/8ball', description: 'Ask the magic 8ball a question', enabled: true },
+  { name: '/coinflip', description: 'Flip a coin', enabled: true },
+  { name: '/dice', description: 'Roll a dice', enabled: true },
+  { name: '/joke', description: 'Get a random joke', enabled: true },
+  { name: '/rps', description: 'Play rock paper scissors', enabled: true },
+  { name: '/rate', description: 'Rate something', enabled: true },
+];
 
 export default function FunPage() {
   const { data: session, status } = useSession();
@@ -108,8 +119,8 @@ export default function FunPage() {
           </nav>
       </aside>
 
-      <main className="flex-1 ml-64 py-12 px-4 md:px-8 flex justify-center">
-        <div className="max-w-6xl space-y-4 md:space-y-6">
+      <main className="flex-1 ml-64 py-12 px-4 md:px-8">
+        <div className="w-full space-y-4 md:space-y-6">
           <div className="space-y-1">
             <p className="text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">Modules</p>
             <h1 className="text-3xl font-bold">Fun</h1>
@@ -117,12 +128,12 @@ export default function FunPage() {
 
           <div className="bg-white border border-orange-100 rounded-lg shadow-sm p-6 space-y-6">
             <div className="space-y-1">
-              <h2 className="text-xl font-semibold text-[#0f172a]">Fun Settings</h2>
-              <p className="text-slate-600">Configure fun commands and features.</p>
+              <h2 className="text-xl font-semibold text-[#0f172a]">Fun Commands</h2>
+              <p className="text-slate-600">Configure and manage fun commands for your server.</p>
             </div>
 
-            <div className="space-y-4 border-t border-orange-100 pt-6 px-6">
-              <p className="text-slate-600">Fun configuration coming soon.</p>
+            <div className="space-y-6 border-t border-orange-100 pt-6">
+              <CommandGrid commands={FUN_COMMANDS} />
             </div>
           </div>
         </div>

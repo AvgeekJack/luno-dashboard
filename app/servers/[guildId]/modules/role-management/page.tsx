@@ -4,6 +4,14 @@ import { useSession } from 'next-auth/react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { CommandGrid } from '@/components/CommandGrid';
+
+const ROLE_MANAGEMENT_COMMANDS = [
+  { name: '/role create', description: 'Create a new role', enabled: true },
+  { name: '/role delete', description: 'Delete an existing role', enabled: true },
+  { name: '/role list', description: 'List all roles in the server', enabled: true },
+  { name: '/autorole status', description: 'Check autorole status', enabled: true },
+];
 
 export default function RoleManagementPage() {
   const { data: session, status } = useSession();
@@ -110,8 +118,8 @@ export default function RoleManagementPage() {
           </nav>
       </aside>
 
-      <main className="flex-1 ml-64 py-12 px-4 md:px-8 flex justify-center">
-        <div className="max-w-6xl space-y-4 md:space-y-6">
+      <main className="flex-1 ml-64 py-12 px-4 md:px-8">
+        <div className="w-full space-y-4 md:space-y-6">
           <div className="space-y-1">
             <p className="text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">Modules</p>
             <h1 className="text-3xl font-bold">Role Management</h1>
@@ -119,12 +127,12 @@ export default function RoleManagementPage() {
 
           <div className="bg-white border border-orange-100 rounded-lg shadow-sm p-6 space-y-6">
             <div className="space-y-1">
-              <h2 className="text-xl font-semibold text-[#0f172a]">Role Management Settings</h2>
-              <p className="text-slate-600">Manage server roles and permissions.</p>
+              <h2 className="text-xl font-semibold text-[#0f172a]">Role Management Commands</h2>
+              <p className="text-slate-600">Configure and manage role commands for your server.</p>
             </div>
 
-            <div className="space-y-4 border-t border-orange-100 pt-6 px-6">
-              <p className="text-slate-600">Role management configuration coming soon.</p>
+            <div className="space-y-6 border-t border-orange-100 pt-6">
+              <CommandGrid commands={ROLE_MANAGEMENT_COMMANDS} />
             </div>
           </div>
         </div>
