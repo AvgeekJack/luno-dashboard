@@ -83,16 +83,12 @@ export default function ModerationPage() {
           const data = await res.json();
           setModuleEnabled(data.enabled ?? true);
           setOriginalModuleEnabled(data.enabled ?? true);
-        }
-
-        // Load command states
-        const settingsRes = await fetch(`/api/servers/${guildId}/settings`);
-        if (settingsRes.ok) {
-          const settings = await settingsRes.json();
-          if (settings.commands) {
+          
+          // Load command states from nested structure
+          if (data.commands) {
             const updatedCommands = MODERATION_COMMANDS.map(cmd => {
               const commandKey = cmd.name.replace('/', '').replace(/ /g, '');
-              const commandData = settings.commands[commandKey];
+              const commandData = data.commands[commandKey];
               return {
                 ...cmd,
                 enabled: commandData?.enabled ?? true
@@ -126,29 +122,24 @@ export default function ModerationPage() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      // Save module state
-      const moduleRes = await fetch(`/api/servers/${guildId}/modules/moderation`, {
+      // Prepare commands object
+      const commandsObj: Record<string, { enabled: boolean }> = {};
+      commands.forEach(cmd => {
+        const commandKey = cmd.name.replace('/', '').replace(/ /g, '');
+        commandsObj[commandKey] = { enabled: cmd.enabled };
+      });
+
+      // Save module state and command states together
+      const res = await fetch(`/api/servers/${guildId}/modules/moderation`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ enabled: moduleEnabled }),
+        body: JSON.stringify({
+          enabled: moduleEnabled,
+          commands: commandsObj
+        }),
       });
 
-      // Save command states
-      const commandUpdates = commands.map(async (cmd) => {
-        const originalCmd = originalCommands.find(c => c.name === cmd.name);
-        if (originalCmd && cmd.enabled !== originalCmd.enabled) {
-          const commandName = cmd.name.replace('/', '').replace(/ /g, '');
-          await fetch(`/api/servers/${guildId}/commands/${commandName}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ enabled: cmd.enabled }),
-          });
-        }
-      });
-
-      await Promise.all(commandUpdates);
-
-      if (moduleRes.ok) {
+      if (res.ok) {
         setOriginalModuleEnabled(moduleEnabled);
         setOriginalCommands([...commands]);
         setHasUnsavedChanges(false);

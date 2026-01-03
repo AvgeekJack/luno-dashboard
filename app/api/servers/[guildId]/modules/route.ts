@@ -33,7 +33,7 @@ export async function GET(
 
     const modules: Record<string, boolean> = {};
     MODULE_LIST.forEach(m => {
-      modules[m] = (settings.modules as any)?.[m] ?? false;
+      modules[m] = (settings.modules as any)?.[m]?.enabled ?? false;
     });
 
     return NextResponse.json({ modules });
@@ -65,7 +65,7 @@ export async function PUT(
 
     MODULE_LIST.forEach(m => {
       if (typeof body[m] === 'boolean') {
-        updates[`modules.${m}`] = body[m];
+        updates[`modules.${m}.enabled`] = body[m];
       }
     });
 
@@ -77,7 +77,7 @@ export async function PUT(
 
     const modules: Record<string, boolean> = {};
     MODULE_LIST.forEach(m => {
-      modules[m] = (updated.modules as any)?.[m] ?? false;
+      modules[m] = (updated.modules as any)?.[m]?.enabled ?? false;
     });
 
     return NextResponse.json({ modules });

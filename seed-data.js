@@ -32,48 +32,63 @@ async function seedData() {
           defaultRoles: ['222222222222222222', '333333333333333333'],
           modRoles: ['444444444444444444'],
         },
-        commands: {
-          warn: {
+        modules: {
+          moderation: {
             enabled: true,
-            allowedChannels: [],
-            ignoredChannels: ['555555555555555555'],
-            allowedRoles: ['444444444444444444'],
-            ignoredRoles: [],
+            commands: {
+              warn: {
+                enabled: true,
+                allowedChannels: [],
+                ignoredChannels: ['555555555555555555'],
+                allowedRoles: ['444444444444444444'],
+                ignoredRoles: [],
+              },
+              kick: {
+                enabled: true,
+                allowedChannels: [],
+                ignoredChannels: [],
+                allowedRoles: ['444444444444444444'],
+                ignoredRoles: [],
+              },
+              ban: {
+                enabled: true,
+                allowedChannels: [],
+                ignoredChannels: [],
+                allowedRoles: ['444444444444444444'],
+                ignoredRoles: [],
+              },
+            },
           },
-          kick: {
+          utilities: {
             enabled: true,
-            allowedChannels: [],
-            ignoredChannels: [],
-            allowedRoles: ['444444444444444444'],
-            ignoredRoles: [],
+            commands: {
+              userinfo: {
+                enabled: true,
+                allowedChannels: [],
+                ignoredChannels: [],
+                allowedRoles: [],
+                ignoredRoles: [],
+              },
+              ping: {
+                enabled: true,
+                allowedChannels: [],
+                ignoredChannels: [],
+                allowedRoles: [],
+                ignoredRoles: [],
+              },
+            },
           },
-          ban: {
+          fun: {
             enabled: true,
-            allowedChannels: [],
-            ignoredChannels: [],
-            allowedRoles: ['444444444444444444'],
-            ignoredRoles: [],
-          },
-          userinfo: {
-            enabled: true,
-            allowedChannels: [],
-            ignoredChannels: [],
-            allowedRoles: [],
-            ignoredRoles: [],
-          },
-          eightball: {
-            enabled: true,
-            allowedChannels: [],
-            ignoredChannels: [],
-            allowedRoles: [],
-            ignoredRoles: [],
-          },
-          ping: {
-            enabled: true,
-            allowedChannels: [],
-            ignoredChannels: [],
-            allowedRoles: [],
-            ignoredRoles: [],
+            commands: {
+              eightball: {
+                enabled: true,
+                allowedChannels: [],
+                ignoredChannels: [],
+                allowedRoles: [],
+                ignoredRoles: [],
+              },
+            },
           },
         },
         createdAt: new Date(),

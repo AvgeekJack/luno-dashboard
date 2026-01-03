@@ -18,10 +18,14 @@ export async function GET(
     await connectDB();
 
     const settings = await ServerSettings.findOne({ guildId });
-    const moduleKey = module.replace(/-/g, '');
-    const enabled = settings?.modules?.[moduleKey] ?? true;
+    // Convert kebab-case to camelCase for schema (e.g., 'role-management' -> 'roleManagement')
+    const moduleKey = module.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
+    
+    const moduleData = settings?.modules?.[moduleKey];
+    const enabled = moduleData?.enabled ?? true;
+    const commands = moduleData?.commands ?? {};
 
-    return NextResponse.json({ enabled });
+    return NextResponse.json({ enabled, commands });
   } catch (error) {
     console.error('Error fetching module:', error);
     return NextResponse.json({ error: 'Failed to fetch module' }, { status: 500 });
@@ -39,19 +43,55 @@ export async function PUT(
     }
 
     const { guildId, module } = await params;
-    const { enabled } = await req.json();
+    const body = await req.json();
     await connectDB();
 
     // Convert kebab-case to camelCase for schema (e.g., 'role-management' -> 'roleManagement')
     const moduleKey = module.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
 
+    const updates: Record<string, any> = {};
+
+    // Update module enabled state
+    if (typeof body.enabled === 'boolean') {
+      updates[`modules.${moduleKey}.enabled`] = body.enabled;
+    }
+
+    // Update commands if provided
+    if (body.commands && typeof body.commands === 'object') {
+      Object.keys(body.commands).forEach(commandName => {
+        const commandData = body.commands[commandName];
+        if (typeof commandData === 'object') {
+          // Update individual command properties
+          if (typeof commandData.enabled === 'boolean') {
+            updates[`modules.${moduleKey}.commands.${commandName}.enabled`] = commandData.enabled;
+          }
+          if (Array.isArray(commandData.allowedChannels)) {
+            updates[`modules.${moduleKey}.commands.${commandName}.allowedChannels`] = commandData.allowedChannels;
+          }
+          if (Array.isArray(commandData.ignoredChannels)) {
+            updates[`modules.${moduleKey}.commands.${commandName}.ignoredChannels`] = commandData.ignoredChannels;
+          }
+          if (Array.isArray(commandData.allowedRoles)) {
+            updates[`modules.${moduleKey}.commands.${commandName}.allowedRoles`] = commandData.allowedRoles;
+          }
+          if (Array.isArray(commandData.ignoredRoles)) {
+            updates[`modules.${moduleKey}.commands.${commandName}.ignoredRoles`] = commandData.ignoredRoles;
+          }
+        }
+      });
+    }
+
     const settings = await ServerSettings.findOneAndUpdate(
       { guildId },
-      { $set: { [`modules.${moduleKey}`]: enabled } },
+      { $set: updates },
       { new: true, upsert: true }
     );
 
-    return NextResponse.json({ success: true, enabled });
+    const moduleData = settings?.modules?.[moduleKey];
+    const enabled = moduleData?.enabled ?? true;
+    const commands = moduleData?.commands ?? {};
+
+    return NextResponse.json({ success: true, enabled, commands });
   } catch (error) {
     console.error('Error updating module:', error);
     return NextResponse.json({ error: 'Failed to update module' }, { status: 500 });
