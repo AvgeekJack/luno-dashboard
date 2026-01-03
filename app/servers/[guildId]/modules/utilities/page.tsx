@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { CommandGrid } from '@/components/CommandGrid';
+import { Switch } from '@/components/ui/switch';
 
 const UTILITIES_COMMANDS = [
   { name: '/serverinfo', description: 'Display server information', enabled: true },
@@ -29,6 +30,7 @@ export default function UtilitiesPage() {
   const { guildId } = useParams();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [modulesOpen, setModulesOpen] = useState(false);
+  const [moduleEnabled, setModuleEnabled] = useState(true);
 
   useEffect(() => {
     if (status === 'loading') return;
@@ -134,13 +136,27 @@ export default function UtilitiesPage() {
           </div>
 
           <div className="bg-white border border-orange-100 rounded-lg shadow-sm p-6 space-y-6">
-            <div className="space-y-1">
-              <h2 className="text-xl font-semibold text-[#0f172a]">Utility Commands</h2>
-              <p className="text-slate-600">Configure and manage utility commands for your server.</p>
+            <div className="flex items-start justify-between gap-4">
+              <div className="space-y-1">
+                <h2 className="text-xl font-semibold text-[#0f172a]">Utility Commands</h2>
+                <p className="text-slate-600">Configure and manage utility commands for your server.</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-slate-600">Module {moduleEnabled ? 'Enabled' : 'Disabled'}</span>
+                <Switch 
+                  checked={moduleEnabled} 
+                  onCheckedChange={setModuleEnabled}
+                />
+              </div>
             </div>
 
-            <div className="space-y-6 border-t border-orange-100 pt-6">
-              <CommandGrid commands={UTILITIES_COMMANDS} />
+            <div 
+              className={`overflow-hidden transition-all duration-300 ${moduleEnabled ? 'max-h-[10000px] opacity-100' : 'max-h-0 opacity-0'}`}
+              style={{ transitionProperty: 'max-height, opacity' }}
+            >
+              <div className="space-y-6 border-t border-orange-100 pt-6">
+                <CommandGrid commands={UTILITIES_COMMANDS.map(cmd => ({ ...cmd, enabled: moduleEnabled ? cmd.enabled : false }))} />
+              </div>
             </div>
           </div>
         </div>
