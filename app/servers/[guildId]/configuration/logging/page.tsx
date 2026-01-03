@@ -429,7 +429,7 @@ export default function LoggingPage() {
                 <div className="space-y-4 bg-amber-50 p-6 rounded-lg border border-amber-200">
                   <div className="space-y-1">
                     <h2 className="text-xl font-semibold text-[#0f172a]">AutoMod Logging Channel</h2>
-                    <p className="text-sm text-slate-600">Configure where automod violations and actions are logged (moved from Automod configuration)</p>
+                    <p className="text-sm text-slate-600">Configure where automod violations and actions are logged. Leave empty to disable logging for AutoMod.</p>
                   </div>
 
                   <div className="flex items-center gap-3 p-4 rounded-lg border border-amber-200 bg-white">
@@ -485,7 +485,6 @@ export default function LoggingPage() {
                       { key: 'lockdowns', label: 'Lockdowns', desc: 'Server lockdown/unlockdown' },
                       { key: 'slowmode', label: 'Slowmode', desc: 'Slowmode changes' },
                       { key: 'messagePurge', label: 'Message Purge/Clear', desc: 'Bulk message deletions' },
-                      { key: 'automodActions', label: 'AutoMod Actions', desc: 'AutoMod violations and removals' },
                     ].map(item => (
                       <div key={item.key} className="flex items-center gap-3 p-4 rounded-lg border border-orange-100">
                         <button type="button" onClick={() => updateSetting(`${item.key}Enabled` as any, !settings[`${item.key}Enabled` as keyof LoggingSettings])}
@@ -571,7 +570,6 @@ export default function LoggingPage() {
                     {[
                       { key: 'messageDelete', label: 'Message Delete', desc: 'Deleted messages (with content)' },
                       { key: 'messageEdit', label: 'Message Edit', desc: 'Edited messages (before/after)' },
-                      { key: 'bulkDelete', label: 'Bulk Delete', desc: 'Multiple messages deleted at once' },
                       { key: 'messageAttachments', label: 'Message Attachments', desc: 'Track image/file shares' },
                     ].map(item => (
                       <div key={item.key} className="flex items-center gap-3 p-4 rounded-lg border border-orange-100">
