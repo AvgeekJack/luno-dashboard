@@ -5,7 +5,7 @@ import clientPromise from '@/lib/mongodb';
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { guildId: string; module: string } }
+  { params }: { params: Promise<{ guildId: string; module: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -13,7 +13,7 @@ export async function PUT(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { guildId, module } = params;
+    const { guildId, module } = await params;
     const { enabled } = await req.json();
 
     const client = await clientPromise;
