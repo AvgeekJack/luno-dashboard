@@ -279,8 +279,8 @@ export default function GeneralPage() {
             </div>
           </div>
         </div>
-        <Footer />
       </main>
+      <Footer />
     </div>
   );
 }

@@ -246,8 +246,8 @@ export default function FunPage() {
             </div>
           </div>
         </div>
-        <Footer />
       </main>
+      <Footer />
 
       {/* Save Changes Overlay */}
       <div 

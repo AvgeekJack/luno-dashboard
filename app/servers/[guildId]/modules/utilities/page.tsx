@@ -253,8 +253,8 @@ export default function UtilitiesPage() {
             </div>
           </div>
         </div>
-        <Footer />
       </main>
+      <Footer />
 
       {/* Save Changes Overlay */}
       <div 

@@ -300,8 +300,8 @@ export default function ModerationPage() {
             </div>
           </div>
         </div>
-        <Footer />
       </main>
+      <Footer />
 
       {/* Save Changes Overlay */}
       <div 

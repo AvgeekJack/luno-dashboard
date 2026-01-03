@@ -459,8 +459,8 @@ export default function SetupPage() {
             </div>
           </div>
         </div>
-        <Footer />
       </main>
+      <Footer />
     </div>
   );
 }

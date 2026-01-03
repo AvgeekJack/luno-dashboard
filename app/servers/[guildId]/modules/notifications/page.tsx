@@ -127,8 +127,8 @@ export default function NotificationsPage() {
             </div>
           </div>
         </div>
-        <Footer />
       </main>
+      <Footer />
     </div>
   );
 }

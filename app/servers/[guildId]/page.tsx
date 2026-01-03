@@ -370,8 +370,8 @@ export default function ServerSettings() {
             </div>
           </div>
         </div>
-        <Footer />
       </main>
+      <Footer />
     </div>
   );
 }

@@ -172,8 +172,8 @@ export default function LogsPage() {
             </div>
           </div>
         </div>
-        <Footer />
       </main>
+      <Footer />
     </div>
   );
 }

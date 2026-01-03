@@ -245,8 +245,8 @@ export default function AnnouncementsPage() {
             </div>
           </div>
         </div>
-        <Footer />
       </main>
+      <Footer />
 
       {/* Save Changes Overlay */}
       <div 

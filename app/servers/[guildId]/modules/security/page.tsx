@@ -127,8 +127,8 @@ export default function SecurityPage() {
             </div>
           </div>
         </div>
-        <Footer />
       </main>
+      <Footer />
     </div>
   );
 }
