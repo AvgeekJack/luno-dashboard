@@ -21,6 +21,38 @@ export default function RoleManagementPage() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [modulesOpen, setModulesOpen] = useState(false);
   const [moduleEnabled, setModuleEnabled] = useState(true);
+  const [originalModuleEnabled, setOriginalModuleEnabled] = useState(true);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  const handleModuleToggle = (checked: boolean) => {
+    setModuleEnabled(checked);
+    setHasUnsavedChanges(true);
+  };
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/servers/${guildId}/modules/role-management`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ enabled: moduleEnabled }),
+      });
+      if (res.ok) {
+        setOriginalModuleEnabled(moduleEnabled);
+        setHasUnsavedChanges(false);
+      }
+    } catch (error) {
+      console.error('Failed to save:', error);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleReset = () => {
+    setModuleEnabled(originalModuleEnabled);
+    setHasUnsavedChanges(false);
+  };
 
   useEffect(() => {
     if (status === 'loading') return;
@@ -134,7 +166,8 @@ export default function RoleManagementPage() {
                 <span className="text-sm text-slate-600">Module {moduleEnabled ? 'Enabled' : 'Disabled'}</span>
                 <Switch 
                   checked={moduleEnabled} 
-                  onCheckedChange={setModuleEnabled}
+                  onCheckedChange={handleModuleToggle}
+                  className="scale-150"
                 />
               </div>
             </div>
@@ -150,6 +183,34 @@ export default function RoleManagementPage() {
           </div>
         </div>
       </main>
+
+      {/* Save Changes Overlay */}
+      <div 
+        className={`fixed bottom-0 left-0 right-0 bg-slate-900 text-white p-4 shadow-2xl transition-transform duration-300 ease-out z-50 ${
+          hasUnsavedChanges ? 'translate-y-0' : 'translate-y-full'
+        }`}
+      >
+        <div className="max-w-4xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <span className="text-sm">Careful — you have unsaved changes!</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleReset}
+              className="px-4 py-2 text-sm font-medium text-white hover:underline transition"
+            >
+              Reset
+            </button>
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded transition disabled:opacity-50"
+            >
+              {saving ? 'Saving...' : 'Save Changes'}
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
