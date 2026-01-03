@@ -1,0 +1,799 @@
+'use client';
+
+import { useSession } from 'next-auth/react';
+import { useRouter, useParams } from 'next/navigation';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { Switch } from '@/components/ui/switch';
+
+interface LoggingSettings {
+  enabled: boolean;
+  warnsEnabled: boolean;
+  warnsChannel: string | null;
+  kicksEnabled: boolean;
+  kicksChannel: string | null;
+  bansEnabled: boolean;
+  bansChannel: string | null;
+  unbansEnabled: boolean;
+  unbansChannel: string | null;
+  timeoutsEnabled: boolean;
+  timeoutsChannel: string | null;
+  untimeoutsEnabled: boolean;
+  untimeoutsChannel: string | null;
+  softbansEnabled: boolean;
+  softbansChannel: string | null;
+  channelLocksEnabled: boolean;
+  channelLocksChannel: string | null;
+  lockdownsEnabled: boolean;
+  lockdownsChannel: string | null;
+  slowmodeEnabled: boolean;
+  slowmodeChannel: string | null;
+  messagePurgeEnabled: boolean;
+  messagePurgeChannel: string | null;
+  automodActionsEnabled: boolean;
+  automodActionsChannel: string | null;
+  memberJoinEnabled: boolean;
+  memberJoinChannel: string | null;
+  memberLeaveEnabled: boolean;
+  memberLeaveChannel: string | null;
+  roleUpdatesEnabled: boolean;
+  roleUpdatesChannel: string | null;
+  nicknameChangesEnabled: boolean;
+  nicknameChangesChannel: string | null;
+  usernameChangesEnabled: boolean;
+  usernameChangesChannel: string | null;
+  messageDeleteEnabled: boolean;
+  messageDeleteChannel: string | null;
+  messageEditEnabled: boolean;
+  messageEditChannel: string | null;
+  bulkDeleteEnabled: boolean;
+  bulkDeleteChannel: string | null;
+  messageAttachmentsEnabled: boolean;
+  messageAttachmentsChannel: string | null;
+  channelCreateEnabled: boolean;
+  channelCreateChannel: string | null;
+  channelDeleteEnabled: boolean;
+  channelDeleteChannel: string | null;
+  channelUpdateEnabled: boolean;
+  channelUpdateChannel: string | null;
+  roleCreateEnabled: boolean;
+  roleCreateChannel: string | null;
+  roleDeleteEnabled: boolean;
+  roleDeleteChannel: string | null;
+  roleUpdateEnabled: boolean;
+  roleUpdateChannel: string | null;
+  voiceJoinEnabled: boolean;
+  voiceJoinChannel: string | null;
+  voiceLeaveEnabled: boolean;
+  voiceLeaveChannel: string | null;
+  voiceMoveEnabled: boolean;
+  voiceMoveChannel: string | null;
+  voiceMuteDeafenEnabled: boolean;
+  voiceMuteDeafenChannel: string | null;
+  voiceStreamingEnabled: boolean;
+  voiceStreamingChannel: string | null;
+  serverUpdateEnabled: boolean;
+  serverUpdateChannel: string | null;
+  emojiEnabled: boolean;
+  emojiChannel: string | null;
+  stickerEnabled: boolean;
+  stickerChannel: string | null;
+  webhookEnabled: boolean;
+  webhookChannel: string | null;
+  inviteEnabled: boolean;
+  inviteChannel: string | null;
+  integrationEnabled: boolean;
+  integrationChannel: string | null;
+  ignoredChannels: string[];
+  ignoredRoles: string[];
+  ignoredUsers: string[];
+  includeBotActions: boolean;
+  logMessageContent: boolean;
+  logEmbedUrls: boolean;
+  retentionPeriod: number;
+}
+
+export default function LoggingPage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const { guildId } = useParams();
+  const gid = Array.isArray(guildId) ? guildId[0] : guildId;
+
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [configOpen, setConfigOpen] = useState(true);
+  const [modulesOpen, setModulesOpen] = useState(false);
+
+  const [settings, setSettings] = useState<LoggingSettings>({
+    enabled: false,
+    warnsEnabled: false,
+    warnsChannel: null,
+    kicksEnabled: false,
+    kicksChannel: null,
+    bansEnabled: false,
+    bansChannel: null,
+    unbansEnabled: false,
+    unbansChannel: null,
+    timeoutsEnabled: false,
+    timeoutsChannel: null,
+    untimeoutsEnabled: false,
+    untimeoutsChannel: null,
+    softbansEnabled: false,
+    softbansChannel: null,
+    channelLocksEnabled: false,
+    channelLocksChannel: null,
+    lockdownsEnabled: false,
+    lockdownsChannel: null,
+    slowmodeEnabled: false,
+    slowmodeChannel: null,
+    messagePurgeEnabled: false,
+    messagePurgeChannel: null,
+    automodActionsEnabled: false,
+    automodActionsChannel: null,
+    memberJoinEnabled: false,
+    memberJoinChannel: null,
+    memberLeaveEnabled: false,
+    memberLeaveChannel: null,
+    roleUpdatesEnabled: false,
+    roleUpdatesChannel: null,
+    nicknameChangesEnabled: false,
+    nicknameChangesChannel: null,
+    usernameChangesEnabled: false,
+    usernameChangesChannel: null,
+    messageDeleteEnabled: false,
+    messageDeleteChannel: null,
+    messageEditEnabled: false,
+    messageEditChannel: null,
+    bulkDeleteEnabled: false,
+    bulkDeleteChannel: null,
+    messageAttachmentsEnabled: false,
+    messageAttachmentsChannel: null,
+    channelCreateEnabled: false,
+    channelCreateChannel: null,
+    channelDeleteEnabled: false,
+    channelDeleteChannel: null,
+    channelUpdateEnabled: false,
+    channelUpdateChannel: null,
+    roleCreateEnabled: false,
+    roleCreateChannel: null,
+    roleDeleteEnabled: false,
+    roleDeleteChannel: null,
+    roleUpdateEnabled: false,
+    roleUpdateChannel: null,
+    voiceJoinEnabled: false,
+    voiceJoinChannel: null,
+    voiceLeaveEnabled: false,
+    voiceLeaveChannel: null,
+    voiceMoveEnabled: false,
+    voiceMoveChannel: null,
+    voiceMuteDeafenEnabled: false,
+    voiceMuteDeafenChannel: null,
+    voiceStreamingEnabled: false,
+    voiceStreamingChannel: null,
+    serverUpdateEnabled: false,
+    serverUpdateChannel: null,
+    emojiEnabled: false,
+    emojiChannel: null,
+    stickerEnabled: false,
+    stickerChannel: null,
+    webhookEnabled: false,
+    webhookChannel: null,
+    inviteEnabled: false,
+    inviteChannel: null,
+    integrationEnabled: false,
+    integrationChannel: null,
+    ignoredChannels: [],
+    ignoredRoles: [],
+    ignoredUsers: [],
+    includeBotActions: false,
+    logMessageContent: true,
+    logEmbedUrls: true,
+    retentionPeriod: 30,
+  });
+
+  const [originalSettings, setOriginalSettings] = useState<LoggingSettings>({
+    enabled: false,
+    warnsEnabled: false,
+    warnsChannel: null,
+    kicksEnabled: false,
+    kicksChannel: null,
+    bansEnabled: false,
+    bansChannel: null,
+    unbansEnabled: false,
+    unbansChannel: null,
+    timeoutsEnabled: false,
+    timeoutsChannel: null,
+    untimeoutsEnabled: false,
+    untimeoutsChannel: null,
+    softbansEnabled: false,
+    softbansChannel: null,
+    channelLocksEnabled: false,
+    channelLocksChannel: null,
+    lockdownsEnabled: false,
+    lockdownsChannel: null,
+    slowmodeEnabled: false,
+    slowmodeChannel: null,
+    messagePurgeEnabled: false,
+    messagePurgeChannel: null,
+    automodActionsEnabled: false,
+    automodActionsChannel: null,
+    memberJoinEnabled: false,
+    memberJoinChannel: null,
+    memberLeaveEnabled: false,
+    memberLeaveChannel: null,
+    roleUpdatesEnabled: false,
+    roleUpdatesChannel: null,
+    nicknameChangesEnabled: false,
+    nicknameChangesChannel: null,
+    usernameChangesEnabled: false,
+    usernameChangesChannel: null,
+    messageDeleteEnabled: false,
+    messageDeleteChannel: null,
+    messageEditEnabled: false,
+    messageEditChannel: null,
+    bulkDeleteEnabled: false,
+    bulkDeleteChannel: null,
+    messageAttachmentsEnabled: false,
+    messageAttachmentsChannel: null,
+    channelCreateEnabled: false,
+    channelCreateChannel: null,
+    channelDeleteEnabled: false,
+    channelDeleteChannel: null,
+    channelUpdateEnabled: false,
+    channelUpdateChannel: null,
+    roleCreateEnabled: false,
+    roleCreateChannel: null,
+    roleDeleteEnabled: false,
+    roleDeleteChannel: null,
+    roleUpdateEnabled: false,
+    roleUpdateChannel: null,
+    voiceJoinEnabled: false,
+    voiceJoinChannel: null,
+    voiceLeaveEnabled: false,
+    voiceLeaveChannel: null,
+    voiceMoveEnabled: false,
+    voiceMoveChannel: null,
+    voiceMuteDeafenEnabled: false,
+    voiceMuteDeafenChannel: null,
+    voiceStreamingEnabled: false,
+    voiceStreamingChannel: null,
+    serverUpdateEnabled: false,
+    serverUpdateChannel: null,
+    emojiEnabled: false,
+    emojiChannel: null,
+    stickerEnabled: false,
+    stickerChannel: null,
+    webhookEnabled: false,
+    webhookChannel: null,
+    inviteEnabled: false,
+    inviteChannel: null,
+    integrationEnabled: false,
+    integrationChannel: null,
+    ignoredChannels: [],
+    ignoredRoles: [],
+    ignoredUsers: [],
+    includeBotActions: false,
+    logMessageContent: true,
+    logEmbedUrls: true,
+    retentionPeriod: 30,
+  });
+
+  useEffect(() => {
+    if (status === 'loading') return;
+    if (!session) {
+      router.push('/');
+      return;
+    }
+
+    const fetchSettings = async () => {
+      try {
+        const response = await fetch(`/api/servers/${gid}/general`);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.configuration?.logging) {
+            const loadedSettings = { ...settings, ...data.configuration.logging };
+            setSettings(loadedSettings);
+            setOriginalSettings(loadedSettings);
+          }
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSettings();
+  }, [session, status, router, gid]);
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      const response = await fetch(`/api/servers/${gid}/general`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          'configuration.logging': settings,
+        }),
+      });
+
+      if (response.ok) {
+        setOriginalSettings({ ...settings });
+        setHasUnsavedChanges(false);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleReset = () => {
+    setSettings({ ...originalSettings });
+    setHasUnsavedChanges(false);
+  };
+
+  const updateSetting = <K extends keyof LoggingSettings>(key: K, value: LoggingSettings[K]) => {
+    setSettings(prev => ({ ...prev, [key]: value }));
+    setHasUnsavedChanges(true);
+  };
+
+  if (status === 'loading' || loading) {
+    return <div className="flex min-h-screen items-center justify-center text-[#0f172a]">Loading...</div>;
+  }
+
+  return (
+    <div className="min-h-screen bg-orange-50 text-[#0f172a] flex">
+      <aside className="fixed left-0 top-0 h-screen w-64 bg-white/90 border-r border-orange-100 shadow-sm overflow-y-auto flex flex-col">
+          <div className="p-6 border-b border-orange-100">
+            <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+              <img src="/luno-logo.png" alt="Luno Bot" className="w-10 h-10 object-contain" />
+              <span className="text-xl font-bold text-[#0f172a]">Luno</span>
+            </Link>
+          </div>
+          
+          <div className="px-4 py-4">
+            <Link href="/servers" className="text-orange-600 font-semibold hover:text-orange-700 transition-colors text-sm px-3">← Back to Servers</Link>
+          </div>
+          
+          <nav className="px-4 space-y-2 text-sm font-semibold text-slate-700">
+            <Link href={`/servers/${gid}`} className="flex items-center gap-3 px-3 py-6 hover:bg-orange-50 transition-colors">
+              Dashboard
+            </Link>
+            <details className="text-slate-800" open={settingsOpen}>
+              <summary className="flex items-center justify-between px-3 py-6 cursor-pointer select-none" onClick={(e) => { e.preventDefault(); setSettingsOpen(!settingsOpen); }}>
+                <span className="flex items-center gap-3">
+                  Settings
+                </span>
+                <span className="text-xs text-orange-600">▾</span>
+              </summary>
+              {settingsOpen && (
+                <div className={`px-2 py-1 space-y-1 ${settingsOpen ? 'animate-dropdown-open' : 'animate-dropdown-close'}`}>
+                  <Link href={`/servers/${gid}/general`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${settingsOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '0ms'}}>
+                    General
+                  </Link>
+                  <Link href={`/servers/${gid}/setup`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${settingsOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '50ms'}}>
+                    Setup
+                  </Link>
+                </div>
+              )}
+            </details>
+            <details className="text-slate-800" open={configOpen}>
+              <summary className="flex items-center justify-between px-3 py-6 cursor-pointer select-none" onClick={(e) => { e.preventDefault(); setConfigOpen(!configOpen); }}>
+                <span className="flex items-center gap-3">
+                  Configuration
+                </span>
+                <span className="text-xs text-orange-600">▾</span>
+              </summary>
+              {configOpen && (
+                <div className={`px-2 py-1 space-y-1 ${configOpen ? 'animate-dropdown-open' : 'animate-dropdown-close'}`}>
+                  <Link href={`/servers/${gid}/configuration/automod`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '0ms'}}>
+                    Automod
+                  </Link>
+                  <Link href={`/servers/${gid}/configuration/logging`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 bg-orange-100 text-orange-700 transition-colors text-left ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '50ms'}}>
+                    Logging
+                  </Link>
+                </div>
+              )}
+            </details>
+            <details className="text-slate-800" open={modulesOpen}>
+              <summary className="flex items-center justify-between px-3 py-6 cursor-pointer select-none" onClick={(e) => { e.preventDefault(); setModulesOpen(!modulesOpen); }}>
+                <span className="flex items-center gap-3">
+                  Modules
+                </span>
+                <span className="text-xs text-orange-600">▾</span>
+              </summary>
+              {modulesOpen && (
+                <div className={`px-2 py-1 space-y-1 ${modulesOpen ? 'animate-dropdown-open' : 'animate-dropdown-close'}`}>
+                  <Link href={`/servers/${gid}/modules/moderation`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '0ms'}}>
+                    Moderation
+                  </Link>
+                  <Link href={`/servers/${gid}/modules/role-management`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '50ms'}}>
+                    Role Management
+                  </Link>
+                  <Link href={`/servers/${gid}/modules/member-management`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '100ms'}}>
+                    Member Management
+                  </Link>
+                  <Link href={`/servers/${gid}/modules/announcements`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '150ms'}}>
+                    Announcements
+                  </Link>
+                  <Link href={`/servers/${gid}/modules/tickets`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '200ms'}}>
+                    Tickets
+                  </Link>
+                  <Link href={`/servers/${gid}/modules/notifications`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '250ms'}}>
+                    Notifications
+                  </Link>
+                  <Link href={`/servers/${gid}/modules/custom-commands`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '300ms'}}>
+                    Custom Commands
+                  </Link>
+                  <Link href={`/servers/${gid}/modules/fun`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '350ms'}}>
+                    Fun
+                  </Link>
+                  <Link href={`/servers/${gid}/modules/utilities`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '400ms'}}>
+                    Utilities
+                  </Link>
+                  <Link href={`/servers/${gid}/modules/security`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '450ms'}}>
+                    Security
+                  </Link>
+                </div>
+              )}
+            </details>
+          </nav>
+      </aside>
+
+      <main className="flex-1 ml-64 py-12 px-4 md:px-8 flex justify-center">
+        <div className="w-full max-w-6xl space-y-4 md:space-y-6">
+          <div className="space-y-1">
+            <p className="text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">Configuration</p>
+            <h1 className="text-3xl font-bold">Logging</h1>
+          </div>
+
+          <div className="bg-white border border-orange-100 rounded-2xl shadow-sm p-6 md:p-8 space-y-8">
+            {/* Master Toggle */}
+            <div className="flex items-start justify-between gap-4">
+              <div className="space-y-1">
+                <h2 className="text-xl font-semibold text-[#0f172a]">Logging Configuration</h2>
+                <p className="text-slate-600">Configure event logging for your server.</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <Switch 
+                  checked={settings.enabled} 
+                  onCheckedChange={(checked) => updateSetting('enabled', checked)}
+                  className="scale-150"
+                />
+              </div>
+            </div>
+
+            <div 
+              className={`overflow-hidden transition-all duration-700 ${settings.enabled ? 'max-h-[50000px] opacity-100' : 'max-h-0 opacity-0'}`}
+              style={{ transitionProperty: 'max-height, opacity' }}
+            >
+              <div className="space-y-8 border-t border-orange-100 pt-8">
+                {/* Moderation Logs Section */}
+                <div className="space-y-4">
+                  <div className="space-y-1">
+                    <h2 className="text-xl font-semibold text-[#0f172a]">Moderation Logs</h2>
+                    <p className="text-sm text-slate-600">Actions by staff members</p>
+                  </div>
+
+                  <div className="grid gap-3">
+                    {[
+                      { key: 'warns', label: 'Warns', desc: 'User warnings issued' },
+                      { key: 'kicks', label: 'Kicks', desc: 'User kicks' },
+                      { key: 'bans', label: 'Bans', desc: 'User bans' },
+                      { key: 'unbans', label: 'Unbans', desc: 'User unbans' },
+                      { key: 'timeouts', label: 'Timeouts/Mutes', desc: 'Temporary mutes/timeouts' },
+                      { key: 'untimeouts', label: 'Untimeouts/Unmutes', desc: 'Mute removals' },
+                      { key: 'softbans', label: 'Softbans', desc: 'Softbans (kick + delete messages)' },
+                      { key: 'channelLocks', label: 'Channel Locks', desc: 'Channel lock/unlock actions' },
+                      { key: 'lockdowns', label: 'Lockdowns', desc: 'Server lockdown/unlockdown' },
+                      { key: 'slowmode', label: 'Slowmode', desc: 'Slowmode changes' },
+                      { key: 'messagePurge', label: 'Message Purge/Clear', desc: 'Bulk message deletions' },
+                      { key: 'automodActions', label: 'AutoMod Actions', desc: 'AutoMod violations and removals' },
+                    ].map(item => (
+                      <div key={item.key} className="flex items-center gap-3 p-4 rounded-lg border border-orange-100">
+                        <button type="button" onClick={() => updateSetting(`${item.key}Enabled` as any, !settings[`${item.key}Enabled` as keyof LoggingSettings])}
+                          className={`${settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
+                          <span className={`${settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
+                        </button>
+                        <div className="flex-1">
+                          <p className="font-semibold text-slate-800 text-sm">{item.label}</p>
+                          <p className="text-xs text-slate-500">{item.desc}</p>
+                        </div>
+                        <input type="text" value={settings[`${item.key}Channel` as keyof LoggingSettings] as string || ''} onChange={(e) => updateSetting(`${item.key}Channel` as any, e.target.value || null)}
+                          className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm font-mono" placeholder="Channel ID" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Member Logs Section */}
+                <div className="space-y-4 border-t border-orange-100 pt-8">
+                  <div className="space-y-1">
+                    <h2 className="text-xl font-semibold text-[#0f172a]">Member Logs</h2>
+                    <p className="text-sm text-slate-600">Member activity</p>
+                  </div>
+
+                  <div className="grid gap-3">
+                    {[
+                      { key: 'memberJoin', label: 'Member Join', desc: 'New members joining' },
+                      { key: 'memberLeave', label: 'Member Leave', desc: 'Members leaving/kicked/banned' },
+                      { key: 'roleUpdates', label: 'Role Updates', desc: 'Role additions/removals to members' },
+                      { key: 'nicknameChanges', label: 'Nickname Changes', desc: 'Nickname updates (by user or staff)' },
+                      { key: 'usernameChanges', label: 'Username Changes', desc: 'Username changes (when Discord updates)' },
+                    ].map(item => (
+                      <div key={item.key} className="flex items-center gap-3 p-4 rounded-lg border border-orange-100">
+                        <button type="button" onClick={() => updateSetting(`${item.key}Enabled` as any, !settings[`${item.key}Enabled` as keyof LoggingSettings])}
+                          className={`${settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
+                          <span className={`${settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
+                        </button>
+                        <div className="flex-1">
+                          <p className="font-semibold text-slate-800 text-sm">{item.label}</p>
+                          <p className="text-xs text-slate-500">{item.desc}</p>
+                        </div>
+                        <input type="text" value={settings[`${item.key}Channel` as keyof LoggingSettings] as string || ''} onChange={(e) => updateSetting(`${item.key}Channel` as any, e.target.value || null)}
+                          className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm font-mono" placeholder="Channel ID" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Message Logs Section */}
+                <div className="space-y-4 border-t border-orange-100 pt-8">
+                  <div className="space-y-1">
+                    <h2 className="text-xl font-semibold text-[#0f172a]">Message Logs</h2>
+                    <p className="text-sm text-slate-600">Message activity</p>
+                  </div>
+
+                  <div className="grid gap-3">
+                    {[
+                      { key: 'messageDelete', label: 'Message Delete', desc: 'Deleted messages (with content)' },
+                      { key: 'messageEdit', label: 'Message Edit', desc: 'Edited messages (before/after)' },
+                      { key: 'bulkDelete', label: 'Bulk Delete', desc: 'Multiple messages deleted at once' },
+                      { key: 'messageAttachments', label: 'Message Attachments', desc: 'Track image/file shares' },
+                    ].map(item => (
+                      <div key={item.key} className="flex items-center gap-3 p-4 rounded-lg border border-orange-100">
+                        <button type="button" onClick={() => updateSetting(`${item.key}Enabled` as any, !settings[`${item.key}Enabled` as keyof LoggingSettings])}
+                          className={`${settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
+                          <span className={`${settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
+                        </button>
+                        <div className="flex-1">
+                          <p className="font-semibold text-slate-800 text-sm">{item.label}</p>
+                          <p className="text-xs text-slate-500">{item.desc}</p>
+                        </div>
+                        <input type="text" value={settings[`${item.key}Channel` as keyof LoggingSettings] as string || ''} onChange={(e) => updateSetting(`${item.key}Channel` as any, e.target.value || null)}
+                          className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm font-mono" placeholder="Channel ID" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Channel Logs Section */}
+                <div className="space-y-4 border-t border-orange-100 pt-8">
+                  <div className="space-y-1">
+                    <h2 className="text-xl font-semibold text-[#0f172a]">Channel Logs</h2>
+                    <p className="text-sm text-slate-600">Server structure</p>
+                  </div>
+
+                  <div className="grid gap-3">
+                    {[
+                      { key: 'channelCreate', label: 'Channel Create', desc: 'New channels created' },
+                      { key: 'channelDelete', label: 'Channel Delete', desc: 'Channels deleted' },
+                      { key: 'channelUpdate', label: 'Channel Update', desc: 'Channel name, topic, permissions changed' },
+                    ].map(item => (
+                      <div key={item.key} className="flex items-center gap-3 p-4 rounded-lg border border-orange-100">
+                        <button type="button" onClick={() => updateSetting(`${item.key}Enabled` as any, !settings[`${item.key}Enabled` as keyof LoggingSettings])}
+                          className={`${settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
+                          <span className={`${settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
+                        </button>
+                        <div className="flex-1">
+                          <p className="font-semibold text-slate-800 text-sm">{item.label}</p>
+                          <p className="text-xs text-slate-500">{item.desc}</p>
+                        </div>
+                        <input type="text" value={settings[`${item.key}Channel` as keyof LoggingSettings] as string || ''} onChange={(e) => updateSetting(`${item.key}Channel` as any, e.target.value || null)}
+                          className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm font-mono" placeholder="Channel ID" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Role Logs Section */}
+                <div className="space-y-4 border-t border-orange-100 pt-8">
+                  <div className="space-y-1">
+                    <h2 className="text-xl font-semibold text-[#0f172a]">Role Logs</h2>
+                    <p className="text-sm text-slate-600">Role management</p>
+                  </div>
+
+                  <div className="grid gap-3">
+                    {[
+                      { key: 'roleCreate', label: 'Role Create', desc: 'New roles created' },
+                      { key: 'roleDelete', label: 'Role Delete', desc: 'Roles deleted' },
+                      { key: 'roleUpdate', label: 'Role Update', desc: 'Role permissions, color, name changed' },
+                    ].map(item => (
+                      <div key={item.key} className="flex items-center gap-3 p-4 rounded-lg border border-orange-100">
+                        <button type="button" onClick={() => updateSetting(`${item.key}Enabled` as any, !settings[`${item.key}Enabled` as keyof LoggingSettings])}
+                          className={`${settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
+                          <span className={`${settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
+                        </button>
+                        <div className="flex-1">
+                          <p className="font-semibold text-slate-800 text-sm">{item.label}</p>
+                          <p className="text-xs text-slate-500">{item.desc}</p>
+                        </div>
+                        <input type="text" value={settings[`${item.key}Channel` as keyof LoggingSettings] as string || ''} onChange={(e) => updateSetting(`${item.key}Channel` as any, e.target.value || null)}
+                          className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm font-mono" placeholder="Channel ID" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Voice Logs Section */}
+                <div className="space-y-4 border-t border-orange-100 pt-8">
+                  <div className="space-y-1">
+                    <h2 className="text-xl font-semibold text-[#0f172a]">Voice Logs</h2>
+                    <p className="text-sm text-slate-600">Voice activity</p>
+                  </div>
+
+                  <div className="grid gap-3">
+                    {[
+                      { key: 'voiceJoin', label: 'Voice Join', desc: 'User joins voice channel' },
+                      { key: 'voiceLeave', label: 'Voice Leave', desc: 'User leaves voice channel' },
+                      { key: 'voiceMove', label: 'Voice Move', desc: 'User moved between channels' },
+                      { key: 'voiceMuteDeafen', label: 'Voice Mute/Deafen', desc: 'Server mute/deafen changes' },
+                      { key: 'voiceStreaming', label: 'Voice Streaming/Video', desc: 'User starts streaming/video' },
+                    ].map(item => (
+                      <div key={item.key} className="flex items-center gap-3 p-4 rounded-lg border border-orange-100">
+                        <button type="button" onClick={() => updateSetting(`${item.key}Enabled` as any, !settings[`${item.key}Enabled` as keyof LoggingSettings])}
+                          className={`${settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
+                          <span className={`${settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
+                        </button>
+                        <div className="flex-1">
+                          <p className="font-semibold text-slate-800 text-sm">{item.label}</p>
+                          <p className="text-xs text-slate-500">{item.desc}</p>
+                        </div>
+                        <input type="text" value={settings[`${item.key}Channel` as keyof LoggingSettings] as string || ''} onChange={(e) => updateSetting(`${item.key}Channel` as any, e.target.value || null)}
+                          className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm font-mono" placeholder="Channel ID" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Server Logs Section */}
+                <div className="space-y-4 border-t border-orange-100 pt-8">
+                  <div className="space-y-1">
+                    <h2 className="text-xl font-semibold text-[#0f172a]">Server Logs</h2>
+                    <p className="text-sm text-slate-600">Server changes</p>
+                  </div>
+
+                  <div className="grid gap-3">
+                    {[
+                      { key: 'serverUpdate', label: 'Server Update', desc: 'Server name, icon, region changed' },
+                      { key: 'emoji', label: 'Emoji Create/Delete/Update', desc: 'Emoji changes' },
+                      { key: 'sticker', label: 'Sticker Create/Delete/Update', desc: 'Sticker changes' },
+                      { key: 'webhook', label: 'Webhook Create/Delete/Update', desc: 'Webhook changes' },
+                      { key: 'invite', label: 'Invite Create/Delete', desc: 'Invite link tracking' },
+                      { key: 'integration', label: 'Integration Updates', desc: 'Bot integrations added/removed' },
+                    ].map(item => (
+                      <div key={item.key} className="flex items-center gap-3 p-4 rounded-lg border border-orange-100">
+                        <button type="button" onClick={() => updateSetting(`${item.key}Enabled` as any, !settings[`${item.key}Enabled` as keyof LoggingSettings])}
+                          className={`${settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
+                          <span className={`${settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
+                        </button>
+                        <div className="flex-1">
+                          <p className="font-semibold text-slate-800 text-sm">{item.label}</p>
+                          <p className="text-xs text-slate-500">{item.desc}</p>
+                        </div>
+                        <input type="text" value={settings[`${item.key}Channel` as keyof LoggingSettings] as string || ''} onChange={(e) => updateSetting(`${item.key}Channel` as any, e.target.value || null)}
+                          className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm font-mono" placeholder="Channel ID" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Advanced Options Section */}
+                <div className="space-y-4 border-t border-orange-100 pt-8">
+                  <div className="space-y-1">
+                    <h2 className="text-xl font-semibold text-[#0f172a]">Advanced Logging Options</h2>
+                    <p className="text-sm text-slate-600">Configure advanced logging behavior</p>
+                  </div>
+
+                  <div className="space-y-3">
+                    <div className="p-4 rounded-lg border border-orange-100 space-y-2">
+                      <label className="block text-sm font-semibold text-slate-800">Log Ignored Channels</label>
+                      <textarea value={settings.ignoredChannels.join('\n')} onChange={(e) => updateSetting('ignoredChannels', e.target.value.split('\n').filter(id => id.trim()))}
+                        className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm font-mono" rows={3} placeholder="Enter channel IDs (one per line)" />
+                      <p className="text-xs text-slate-500">Channels to exclude from logging</p>
+                    </div>
+
+                    <div className="p-4 rounded-lg border border-orange-100 space-y-2">
+                      <label className="block text-sm font-semibold text-slate-800">Log Ignored Roles</label>
+                      <textarea value={settings.ignoredRoles.join('\n')} onChange={(e) => updateSetting('ignoredRoles', e.target.value.split('\n').filter(id => id.trim()))}
+                        className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm font-mono" rows={3} placeholder="Enter role IDs (one per line)" />
+                      <p className="text-xs text-slate-500">Roles to exclude from logging (e.g., bots)</p>
+                    </div>
+
+                    <div className="p-4 rounded-lg border border-orange-100 space-y-2">
+                      <label className="block text-sm font-semibold text-slate-800">Log Ignored Users</label>
+                      <textarea value={settings.ignoredUsers.join('\n')} onChange={(e) => updateSetting('ignoredUsers', e.target.value.split('\n').filter(id => id.trim()))}
+                        className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm font-mono" rows={3} placeholder="Enter user IDs (one per line)" />
+                      <p className="text-xs text-slate-500">Specific users to exclude</p>
+                    </div>
+
+                    <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
+                      <div>
+                        <p className="font-semibold text-slate-800 text-sm">Include Bot Actions</p>
+                        <p className="text-xs text-slate-500">Toggle logging bot actions</p>
+                      </div>
+                      <button type="button" onClick={() => updateSetting('includeBotActions', !settings.includeBotActions)}
+                        className={`${settings.includeBotActions ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition`}>
+                        <span className={`${settings.includeBotActions ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
+                      </button>
+                    </div>
+
+                    <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
+                      <div>
+                        <p className="font-semibold text-slate-800 text-sm">Log Message Content</p>
+                        <p className="text-xs text-slate-500">Toggle storing message content (privacy)</p>
+                      </div>
+                      <button type="button" onClick={() => updateSetting('logMessageContent', !settings.logMessageContent)}
+                        className={`${settings.logMessageContent ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition`}>
+                        <span className={`${settings.logMessageContent ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
+                      </button>
+                    </div>
+
+                    <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
+                      <div>
+                        <p className="font-semibold text-slate-800 text-sm">Log Embed/Attachment URLs</p>
+                        <p className="text-xs text-slate-500">Store links from deleted messages</p>
+                      </div>
+                      <button type="button" onClick={() => updateSetting('logEmbedUrls', !settings.logEmbedUrls)}
+                        className={`${settings.logEmbedUrls ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition`}>
+                        <span className={`${settings.logEmbedUrls ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
+                      </button>
+                    </div>
+
+                    <div className="p-4 rounded-lg border border-orange-100 space-y-2">
+                      <label className="block text-sm font-semibold text-slate-800">Retention Period</label>
+                      <input type="number" value={settings.retentionPeriod} onChange={(e) => updateSetting('retentionPeriod', parseInt(e.target.value))}
+                        className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm" min="1" max="365" />
+                      <p className="text-xs text-slate-500">How long to keep logs (days)</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      {/* Save Changes Overlay */}
+      <div 
+        className={`fixed bottom-0 left-0 right-0 bg-slate-900 text-white p-4 shadow-2xl transition-transform duration-300 ease-out z-50 ${
+          hasUnsavedChanges ? 'translate-y-0' : 'translate-y-full'
+        }`}
+      >
+        <div className="max-w-4xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <span className="text-sm">Careful — you have unsaved changes!</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleReset}
+              className="px-4 py-2 text-sm font-medium text-white hover:underline transition"
+            >
+              Reset
+            </button>
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition disabled:opacity-60"
+            >
+              {saving ? 'Saving...' : 'Save Changes'}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

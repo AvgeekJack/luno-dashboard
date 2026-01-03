@@ -31,6 +31,7 @@ export async function GET(
         botNickname: settings.configuration?.botNickname || '',
         timezone: settings.configuration?.timezone || 'UTC',
         automod: settings.configuration?.automod || {},
+        logging: settings.configuration?.logging || {},
       },
     });
   } catch (error) {
@@ -92,6 +93,15 @@ export async function PUT(
       });
     }
 
+    // Handle full logging configuration update
+    if (body['configuration.logging'] !== undefined) {
+      // Update each logging field individually
+      const loggingSettings = body['configuration.logging'];
+      Object.keys(loggingSettings).forEach(key => {
+        updateFields[`configuration.logging.${key}`] = loggingSettings[key];
+      });
+    }
+
     if (Object.keys(updateFields).length === 0) {
       return NextResponse.json(
         { error: 'No fields to update' },
@@ -113,6 +123,7 @@ export async function PUT(
         botNickname: updated.configuration?.botNickname || '',
         timezone: updated.configuration?.timezone || 'UTC',
         automod: updated.configuration?.automod || {},
+        logging: updated.configuration?.logging || {},
       },
     });
   } catch (error) {
