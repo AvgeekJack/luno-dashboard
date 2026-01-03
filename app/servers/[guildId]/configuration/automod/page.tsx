@@ -4,8 +4,10 @@ import { useSession } from 'next-auth/react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { Switch } from '@/components/ui/switch';
 
 interface AutomodSettings {
+  enabled: boolean;
   antiLinkEnabled: boolean;
   antiInviteEnabled: boolean;
   antiSpamEnabled: boolean;
@@ -50,6 +52,7 @@ export default function AutomodPage() {
   const [modulesOpen, setModulesOpen] = useState(false);
 
   const [settings, setSettings] = useState<AutomodSettings>({
+    enabled: false,
     antiLinkEnabled: false,
     antiInviteEnabled: false,
     antiSpamEnabled: false,
@@ -244,6 +247,26 @@ export default function AutomodPage() {
           </div>
 
           <div className="bg-white border border-orange-100 rounded-2xl shadow-sm p-6 md:p-8 space-y-8">
+            {/* Master Toggle */}
+            <div className="flex items-start justify-between gap-4">
+              <div className="space-y-1">
+                <h2 className="text-xl font-semibold text-[#0f172a]">Automod Configuration</h2>
+                <p className="text-slate-600">Configure automatic moderation filters and rules for your server.</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <Switch 
+                  checked={settings.enabled} 
+                  onCheckedChange={(checked) => updateSetting('enabled', checked)}
+                  className="scale-150"
+                />
+              </div>
+            </div>
+
+            <div 
+              className={`overflow-hidden transition-all duration-700 ${settings.enabled ? 'max-h-[20000px] opacity-100' : 'max-h-0 opacity-0'}`}
+              style={{ transitionProperty: 'max-height, opacity' }}
+            >
+              <div className="space-y-8 border-t border-orange-100 pt-8">
             {/* Filter Features Section */}
             <div className="space-y-4">
               <div className="space-y-1">
@@ -547,6 +570,8 @@ export default function AutomodPage() {
               </button>
               {feedback === 'saved' && <span className="text-sm text-green-600 font-semibold">✓ Saved!</span>}
               {feedback === 'error' && <span className="text-sm text-red-600 font-semibold">✗ Error saving</span>}
+            </div>
+              </div>
             </div>
           </div>
         </div>

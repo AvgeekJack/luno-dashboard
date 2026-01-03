@@ -157,6 +157,9 @@ const ServerSettingsSchema = new mongoose.Schema({
     botNickname: { type: String, default: null },
     timezone: { type: String, default: 'UTC' },
     automod: {
+      // Master Toggle
+      enabled: { type: Boolean, default: false },
+      
       // Filter Features (On/Off)
       antiLinkEnabled: { type: Boolean, default: false },
       antiInviteEnabled: { type: Boolean, default: false },
