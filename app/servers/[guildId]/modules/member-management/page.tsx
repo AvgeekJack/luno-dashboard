@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { CommandGrid } from '@/components/CommandGrid';
 import { Switch } from '@/components/ui/switch';
-import Footer from '@/components/Footer';
 
 const MEMBER_MANAGEMENT_COMMANDS = [
   { name: '/user info', description: 'Display user information', enabled: true },
@@ -247,9 +246,8 @@ export default function MemberManagementPage() {
           </div>
         </div>
       </main>
-      <Footer />
 
-      {/* Save Changes Overlay */}
+      {/* Save Changes Overlay */}}
       <div 
         className={`fixed bottom-0 left-0 right-0 bg-slate-900 text-white p-4 shadow-2xl transition-transform duration-300 ease-out z-50 ${
           hasUnsavedChanges ? 'translate-y-0' : 'translate-y-full'

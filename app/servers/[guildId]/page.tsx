@@ -4,7 +4,6 @@ import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import Footer from '@/components/Footer';
 
 interface Settings {
   guildId: string;
@@ -371,7 +370,6 @@ export default function ServerSettings() {
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   );
 }

@@ -4,7 +4,6 @@ import { useSession } from 'next-auth/react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import Footer from '@/components/Footer';
 
 export default function GeneralPage() {
   const { data: session, status } = useSession();
@@ -280,7 +279,6 @@ export default function GeneralPage() {
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   );
 }

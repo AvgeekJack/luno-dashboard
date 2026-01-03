@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { CommandGrid } from '@/components/CommandGrid';
 import { Switch } from '@/components/ui/switch';
-import Footer from '@/components/Footer';
 
 const ROLE_MANAGEMENT_COMMANDS = [
   { name: '/role create', description: 'Create a new role', enabled: true },
@@ -255,7 +254,6 @@ export default function RoleManagementPage() {
           </div>
         </div>
       </main>
-      <Footer />
 
       {/* Save Changes Overlay */}
       <div 

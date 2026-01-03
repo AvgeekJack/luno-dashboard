@@ -4,7 +4,6 @@ import { useSession, signIn } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import Footer from '@/components/Footer';
 import ServerHeader from '@/components/ServerHeader';
 
 interface Guild {
@@ -151,7 +150,6 @@ export default function ServersPage() {
         </div>
         {renderNotInBot('Servers Luno is Not In', notInBot, 'Invite Luno to these servers to manage them here.')}
       </div>
-      <Footer />
     </div>
   );
 }
