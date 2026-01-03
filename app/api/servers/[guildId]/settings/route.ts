@@ -35,11 +35,14 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ gui
   const { guildId } = await params;
   const body = await req.json();
 
+  // Strip out forbidden fields that should not be saved
+  const { moderation, welcome, goodbye, roles, ...allowedFields } = body;
+
   await dbConnect();
 
   const settings = await ServerSettings.findOneAndUpdate(
     { guildId },
-    body,
+    allowedFields,
     { new: true, upsert: true }
   );
 

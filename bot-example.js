@@ -45,9 +45,6 @@ async function getServerSettings(guildId) {
     guildId,
     prefix: '!',
     commands: {},
-    moderation: { enabled: true },
-    welcome: { enabled: false },
-    goodbye: { enabled: false },
   };
 }
 

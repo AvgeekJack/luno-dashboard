@@ -156,6 +156,17 @@ const ServerSettingsSchema = new mongoose.Schema({
   configuration: {
     botNickname: { type: String, default: null },
     timezone: { type: String, default: 'UTC' },
+    automod: {
+      antiSpamEnabled: { type: Boolean, default: false },
+      antiLinkEnabled: { type: Boolean, default: false },
+      antiInviteEnabled: { type: Boolean, default: false },
+      badWordsFilterEnabled: { type: Boolean, default: false },
+      maxMentions: { type: Number, default: 5 },
+      maxEmojis: { type: Number, default: 10 },
+      maxCapsPercentage: { type: Number, default: 70 },
+      punishmentType: { type: String, default: 'warn', enum: ['warn', 'mute', 'kick', 'ban'] },
+      logChannel: { type: String, default: null },
+    },
   },
 }, {
   timestamps: true,
