@@ -13,6 +13,13 @@ export default function GeneralPage() {
 
   const [prefix, setPrefix] = useState('!');
   const [botNickname, setBotNickname] = useState('');
+  const [timezone, setTimezone] = useState(() => {
+    try {
+      return Intl.DateTimeFormat().resolvedOptions().timeZone;
+    } catch {
+      return 'UTC';
+    }
+  });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [feedback, setFeedback] = useState<'idle' | 'saved' | 'error'>('idle');
@@ -33,6 +40,7 @@ export default function GeneralPage() {
         const data = await res.json();
         setPrefix(data.prefix || '!');
         setBotNickname(data.botNickname || '');
+        if (data.timezone) setTimezone(data.timezone);
       } catch (err) {
         console.error(err);
       } finally {
@@ -60,6 +68,7 @@ export default function GeneralPage() {
         body: JSON.stringify({
           prefix: trimmed,
           botNickname: botNickname.trim(),
+          timezone: timezone,
           moderationEnabled: true,
         }),
       });
@@ -184,7 +193,7 @@ export default function GeneralPage() {
             </div>
 
             <div className="space-y-6 border-t border-orange-100 pt-6">
-              <div className="grid gap-6 md:grid-cols-2">
+              <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
                   <label className="block text-sm font-semibold text-slate-800">Command Prefix</label>
                   <div className="flex flex-col gap-2">
@@ -210,6 +219,41 @@ export default function GeneralPage() {
                     <li>Changes are saved instantly across all server channels.</li>
                     <li>You can modify these settings anytime as needed.</li>
                   </ul>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold text-slate-800">Server Timezone</label>
+                  <div className="flex flex-col gap-2">
+                    <select
+                      value={timezone}
+                      onChange={(e) => setTimezone(e.target.value)}
+                      className="w-full rounded-xl border border-orange-100 bg-white px-3 py-2 text-slate-800 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 outline-none transition"
+                    >
+                      <option value="UTC">UTC</option>
+                      <option value="America/New_York">America/New York (EST/EDT)</option>
+                      <option value="America/Chicago">America/Chicago (CST/CDT)</option>
+                      <option value="America/Denver">America/Denver (MST/MDT)</option>
+                      <option value="America/Los_Angeles">America/Los Angeles (PST/PDT)</option>
+                      <option value="America/Anchorage">America/Anchorage (AKST/AKDT)</option>
+                      <option value="Pacific/Honolulu">Pacific/Honolulu (HST)</option>
+                      <option value="Europe/London">Europe/London (GMT/BST)</option>
+                      <option value="Europe/Paris">Europe/Paris (CET/CEST)</option>
+                      <option value="Europe/Berlin">Europe/Berlin (CET/CEST)</option>
+                      <option value="Europe/Rome">Europe/Rome (CET/CEST)</option>
+                      <option value="Europe/Madrid">Europe/Madrid (CET/CEST)</option>
+                      <option value="Europe/Moscow">Europe/Moscow (MSK)</option>
+                      <option value="Asia/Dubai">Asia/Dubai (GST)</option>
+                      <option value="Asia/Kolkata">Asia/Kolkata (IST)</option>
+                      <option value="Asia/Shanghai">Asia/Shanghai (CST)</option>
+                      <option value="Asia/Tokyo">Asia/Tokyo (JST)</option>
+                      <option value="Asia/Seoul">Asia/Seoul (KST)</option>
+                      <option value="Asia/Singapore">Asia/Singapore (SGT)</option>
+                      <option value="Australia/Sydney">Australia/Sydney (AEDT/AEST)</option>
+                      <option value="Australia/Melbourne">Australia/Melbourne (AEDT/AEST)</option>
+                      <option value="Pacific/Auckland">Pacific/Auckland (NZDT/NZST)</option>
+                    </select>
+                    <p className="text-xs text-slate-500">Set the timezone for scheduled events and timestamps.</p>
+                  </div>
                 </div>
 
                 <div className="space-y-2">
