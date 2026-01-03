@@ -20,9 +20,20 @@ export default function GeneralPage() {
       return 'UTC';
     }
   });
+
+  const [originalPrefix, setOriginalPrefix] = useState('!');
+  const [originalBotNickname, setOriginalBotNickname] = useState('');
+  const [originalTimezone, setOriginalTimezone] = useState(() => {
+    try {
+      return Intl.DateTimeFormat().resolvedOptions().timeZone;
+    } catch {
+      return 'UTC';
+    }
+  });
+
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [feedback, setFeedback] = useState<'idle' | 'saved' | 'error'>('idle');
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(true);
   const [configOpen, setConfigOpen] = useState(false);
   const [modulesOpen, setModulesOpen] = useState(false);
@@ -39,9 +50,17 @@ export default function GeneralPage() {
         const res = await fetch(`/api/servers/${gid}/general`);
         if (!res.ok) throw new Error('Failed to load settings');
         const data = await res.json();
-        setPrefix(data.prefix || '!');
-        setBotNickname(data.botNickname || '');
-        if (data.timezone) setTimezone(data.timezone);
+        const loadedPrefix = data.prefix || '!';
+        const loadedNickname = data.botNickname || '';
+        const loadedTimezone = data.timezone || timezone;
+
+        setPrefix(loadedPrefix);
+        setBotNickname(loadedNickname);
+        setTimezone(loadedTimezone);
+
+        setOriginalPrefix(loadedPrefix);
+        setOriginalBotNickname(loadedNickname);
+        setOriginalTimezone(loadedTimezone);
       } catch (err) {
         console.error(err);
       } finally {
@@ -52,13 +71,19 @@ export default function GeneralPage() {
     fetchSettings();
   }, [session, status, router, gid]);
 
+  useEffect(() => {
+    const hasChanges = 
+      prefix !== originalPrefix ||
+      botNickname !== originalBotNickname ||
+      timezone !== originalTimezone;
+    setHasUnsavedChanges(hasChanges);
+  }, [prefix, botNickname, timezone, originalPrefix, originalBotNickname, originalTimezone]);
+
   const handleSave = async () => {
     setSaving(true);
-    setFeedback('idle');
     try {
       const trimmed = prefix.trim();
       if (!trimmed || trimmed.length > 5) {
-        setFeedback('error');
         setSaving(false);
         return;
       }
@@ -73,19 +98,24 @@ export default function GeneralPage() {
         }),
       });
 
-      if (!res.ok) {
-        setFeedback('error');
-        setSaving(false);
-        return;
+      if (res.ok) {
+        setOriginalPrefix(trimmed);
+        setOriginalBotNickname(botNickname.trim());
+        setOriginalTimezone(timezone);
+        setHasUnsavedChanges(false);
       }
-
-      setFeedback('saved');
     } catch (err) {
       console.error(err);
-      setFeedback('error');
     } finally {
       setSaving(false);
     }
+  };
+
+  const handleReset = () => {
+    setPrefix(originalPrefix);
+    setBotNickname(originalBotNickname);
+    setTimezone(originalTimezone);
+    setHasUnsavedChanges(false);
   };
 
   if (status === 'loading' || loading) {
@@ -275,22 +305,38 @@ export default function GeneralPage() {
                   </div>
                 </div>
               </div>
-
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={handleSave}
-                  disabled={saving}
-                  className="rounded-xl bg-orange-500 px-4 py-2 text-white font-semibold shadow-sm hover:bg-orange-600 transition disabled:opacity-60"
-                >
-                  {saving ? 'Saving...' : 'Save Changes'}
-                </button>
-                {feedback === 'saved' && <span className="text-sm text-green-600">Saved!</span>}
-                {feedback === 'error' && <span className="text-sm text-red-600">Could not save. Check prefix length.</span>}
-              </div>
             </div>
           </div>
         </div>
       </main>
+
+      {/* Save Changes Overlay */}
+      <div 
+        className={`fixed bottom-0 left-0 right-0 bg-slate-900 text-white p-4 shadow-2xl transition-transform duration-300 ease-out z-50 ${
+          hasUnsavedChanges ? 'translate-y-0' : 'translate-y-full'
+        }`}
+      >
+        <div className="max-w-4xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <span className="text-sm">Careful — you have unsaved changes!</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleReset}
+              className="px-4 py-2 text-sm font-medium text-white hover:underline transition"
+            >
+              Reset
+            </button>
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition disabled:opacity-60"
+            >
+              {saving ? 'Saving...' : 'Save Changes'}
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

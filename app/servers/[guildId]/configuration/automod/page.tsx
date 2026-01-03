@@ -46,12 +46,44 @@ export default function AutomodPage() {
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [feedback, setFeedback] = useState<'idle' | 'saved' | 'error'>('idle');
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [configOpen, setConfigOpen] = useState(true);
   const [modulesOpen, setModulesOpen] = useState(false);
 
   const [settings, setSettings] = useState<AutomodSettings>({
+    enabled: false,
+    antiLinkEnabled: false,
+    antiInviteEnabled: false,
+    antiSpamEnabled: false,
+    antiMentionEnabled: false,
+    antiFloodEnabled: false,
+    antiZalgoEnabled: false,
+    antiSwearEnabled: false,
+    capsFilterEnabled: false,
+    spamMessageCount: 5,
+    spamTimeWindow: 5,
+    mentionLimit: 5,
+    capsPercentage: 70,
+    floodMessageCount: 3,
+    floodTimeWindow: 2,
+    zalgoLimit: 10,
+    whitelistedChannels: [],
+    whitelistedRoles: [],
+    autoWhitelistModerators: true,
+    deleteMessage: true,
+    sendWarning: true,
+    warningDuration: 5,
+    dmUser: true,
+    autoTimeoutEnabled: false,
+    autoTimeoutViolations: 3,
+    autoTimeoutWindow: 60,
+    autoTimeoutDuration: 300,
+    escalatingPunishments: false,
+    logChannel: null,
+  });
+
+  const [originalSettings, setOriginalSettings] = useState<AutomodSettings>({
     enabled: false,
     antiLinkEnabled: false,
     antiInviteEnabled: false,
@@ -96,7 +128,9 @@ export default function AutomodPage() {
         if (response.ok) {
           const data = await response.json();
           if (data.configuration?.automod) {
-            setSettings(prev => ({ ...prev, ...data.configuration.automod }));
+            const loadedSettings = { ...settings, ...data.configuration.automod };
+            setSettings(loadedSettings);
+            setOriginalSettings(loadedSettings);
           }
         }
       } catch (err) {
@@ -111,7 +145,6 @@ export default function AutomodPage() {
 
   const handleSave = async () => {
     setSaving(true);
-    setFeedback('idle');
     try {
       const response = await fetch(`/api/servers/${gid}/general`, {
         method: 'PUT',
@@ -122,21 +155,24 @@ export default function AutomodPage() {
       });
 
       if (response.ok) {
-        setFeedback('saved');
-        setTimeout(() => setFeedback('idle'), 3000);
-      } else {
-        setFeedback('error');
+        setOriginalSettings({ ...settings });
+        setHasUnsavedChanges(false);
       }
     } catch (err) {
       console.error(err);
-      setFeedback('error');
     } finally {
       setSaving(false);
     }
   };
 
+  const handleReset = () => {
+    setSettings({ ...originalSettings });
+    setHasUnsavedChanges(false);
+  };
+
   const updateSetting = <K extends keyof AutomodSettings>(key: K, value: AutomodSettings[K]) => {
     setSettings(prev => ({ ...prev, [key]: value }));
+    setHasUnsavedChanges(true);
   };
 
   if (status === 'loading' || loading) {
@@ -562,20 +598,39 @@ export default function AutomodPage() {
               </div>
             </div>
 
-            {/* Save Button */}
-            <div className="flex items-center gap-3 border-t border-orange-100 pt-6">
-              <button onClick={handleSave} disabled={saving}
-                className="rounded-xl bg-orange-500 px-6 py-2.5 text-white font-semibold shadow-sm hover:bg-orange-600 transition disabled:opacity-60">
-                {saving ? 'Saving...' : 'Save Changes'}
-              </button>
-              {feedback === 'saved' && <span className="text-sm text-green-600 font-semibold">✓ Saved!</span>}
-              {feedback === 'error' && <span className="text-sm text-red-600 font-semibold">✗ Error saving</span>}
-            </div>
               </div>
             </div>
           </div>
         </div>
       </main>
+
+      {/* Save Changes Overlay */}
+      <div 
+        className={`fixed bottom-0 left-0 right-0 bg-slate-900 text-white p-4 shadow-2xl transition-transform duration-300 ease-out z-50 ${
+          hasUnsavedChanges ? 'translate-y-0' : 'translate-y-full'
+        }`}
+      >
+        <div className="max-w-4xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <span className="text-sm">Careful — you have unsaved changes!</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleReset}
+              className="px-4 py-2 text-sm font-medium text-white hover:underline transition"
+            >
+              Reset
+            </button>
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition disabled:opacity-60"
+            >
+              {saving ? 'Saving...' : 'Save Changes'}
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

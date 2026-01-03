@@ -30,8 +30,18 @@ export default function SetupPage() {
   const [goodbyeMessage, setGoodbyeMessage] = useState('Goodbye {user}, thanks for being part of {server}!');
   const [defaultRoles, setDefaultRoles] = useState<string[]>([]);
   const [modRoles, setModRoles] = useState<string[]>([]);
+
+  const [originalModLogChannel, setOriginalModLogChannel] = useState('');
+  const [originalWelcomeChannel, setOriginalWelcomeChannel] = useState('');
+  const [originalWelcomeMessage, setOriginalWelcomeMessage] = useState('Welcome {user} to {server}!');
+  const [originalGoodbyeChannel, setOriginalGoodbyeChannel] = useState('');
+  const [originalGoodbyeMessage, setOriginalGoodbyeMessage] = useState('Goodbye {user}, thanks for being part of {server}!');
+  const [originalDefaultRoles, setOriginalDefaultRoles] = useState<string[]>([]);
+  const [originalModRoles, setOriginalModRoles] = useState<string[]>([]);
+
   const [loading, setLoading] = useState(false);
-  const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(true);
   const [configOpen, setConfigOpen] = useState(false);
   const [modulesOpen, setModulesOpen] = useState(false);
@@ -78,20 +88,47 @@ export default function SetupPage() {
     fetch(`/api/servers/${guildId}/setup`)
       .then(res => res.json())
       .then(data => {
-        if (data.moderation?.logChannel) setModLogChannel(data.moderation.logChannel);
-        if (data.welcome?.channel) setWelcomeChannel(data.welcome.channel);
-        if (data.welcome?.message) setWelcomeMessage(data.welcome.message);
-        if (data.goodbye?.channel) setGoodbyeChannel(data.goodbye.channel);
-        if (data.goodbye?.message) setGoodbyeMessage(data.goodbye.message);
-        if (data.roles?.defaultRoles) setDefaultRoles(data.roles.defaultRoles);
-        if (data.roles?.modRoles) setModRoles(data.roles.modRoles);
+        const modLog = data.moderation?.logChannel || '';
+        const welcomeCh = data.welcome?.channel || '';
+        const welcomeMsg = data.welcome?.message || 'Welcome {user} to {server}!';
+        const goodbyeCh = data.goodbye?.channel || '';
+        const goodbyeMsg = data.goodbye?.message || 'Goodbye {user}, thanks for being part of {server}!';
+        const defRoles = data.roles?.defaultRoles || [];
+        const modRs = data.roles?.modRoles || [];
+
+        setModLogChannel(modLog);
+        setWelcomeChannel(welcomeCh);
+        setWelcomeMessage(welcomeMsg);
+        setGoodbyeChannel(goodbyeCh);
+        setGoodbyeMessage(goodbyeMsg);
+        setDefaultRoles(defRoles);
+        setModRoles(modRs);
+
+        setOriginalModLogChannel(modLog);
+        setOriginalWelcomeChannel(welcomeCh);
+        setOriginalWelcomeMessage(welcomeMsg);
+        setOriginalGoodbyeChannel(goodbyeCh);
+        setOriginalGoodbyeMessage(goodbyeMsg);
+        setOriginalDefaultRoles(defRoles);
+        setOriginalModRoles(modRs);
       })
       .catch(err => console.error(err));
   }, [session, status, router, guildId]);
 
+  useEffect(() => {
+    const hasChanges = 
+      modLogChannel !== originalModLogChannel ||
+      welcomeChannel !== originalWelcomeChannel ||
+      welcomeMessage !== originalWelcomeMessage ||
+      goodbyeChannel !== originalGoodbyeChannel ||
+      goodbyeMessage !== originalGoodbyeMessage ||
+      JSON.stringify(defaultRoles) !== JSON.stringify(originalDefaultRoles) ||
+      JSON.stringify(modRoles) !== JSON.stringify(originalModRoles);
+    setHasUnsavedChanges(hasChanges);
+  }, [modLogChannel, welcomeChannel, welcomeMessage, goodbyeChannel, goodbyeMessage, defaultRoles, modRoles, originalModLogChannel, originalWelcomeChannel, originalWelcomeMessage, originalGoodbyeChannel, originalGoodbyeMessage, originalDefaultRoles, originalModRoles]);
+
   const handleSave = async () => {
-    setLoading(true);
-    setSaved(false);
+    setSaving(true);
 
     try {
       const response = await fetch(`/api/servers/${guildId}/setup`, {
@@ -109,14 +146,31 @@ export default function SetupPage() {
       });
 
       if (response.ok) {
-        setSaved(true);
-        setTimeout(() => setSaved(false), 3000);
+        setOriginalModLogChannel(modLogChannel);
+        setOriginalWelcomeChannel(welcomeChannel);
+        setOriginalWelcomeMessage(welcomeMessage);
+        setOriginalGoodbyeChannel(goodbyeChannel);
+        setOriginalGoodbyeMessage(goodbyeMessage);
+        setOriginalDefaultRoles([...defaultRoles]);
+        setOriginalModRoles([...modRoles]);
+        setHasUnsavedChanges(false);
       }
     } catch (error) {
       console.error('Error saving setup:', error);
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
+  };
+
+  const handleReset = () => {
+    setModLogChannel(originalModLogChannel);
+    setWelcomeChannel(originalWelcomeChannel);
+    setWelcomeMessage(originalWelcomeMessage);
+    setGoodbyeChannel(originalGoodbyeChannel);
+    setGoodbyeMessage(originalGoodbyeMessage);
+    setDefaultRoles([...originalDefaultRoles]);
+    setModRoles([...originalModRoles]);
+    setHasUnsavedChanges(false);
   };
 
   if (status === 'loading') {
@@ -457,11 +511,10 @@ export default function SetupPage() {
                   </button>
                 ) : (
                   <button 
-                    onClick={handleSave}
-                    disabled={loading}
-                    className="px-6 py-3 rounded-lg font-semibold transition-colors bg-orange-500 hover:bg-orange-600 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                    onClick={handleNext}
+                    className="px-6 py-3 rounded-lg font-semibold transition-colors bg-orange-500 hover:bg-orange-600 text-white"
                   >
-                    {loading ? 'Saving...' : saved ? '✓ Saved!' : 'Save Setup'}
+                    Next →
                   </button>
                 )}
               </div>
@@ -469,6 +522,34 @@ export default function SetupPage() {
           </div>
         </div>
       </main>
+
+      {/* Save Changes Overlay */}
+      <div 
+        className={`fixed bottom-0 left-0 right-0 bg-slate-900 text-white p-4 shadow-2xl transition-transform duration-300 ease-out z-50 ${
+          hasUnsavedChanges ? 'translate-y-0' : 'translate-y-full'
+        }`}
+      >
+        <div className="max-w-4xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <span className="text-sm">Careful — you have unsaved changes!</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleReset}
+              className="px-4 py-2 text-sm font-medium text-white hover:underline transition"
+            >
+              Reset
+            </button>
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition disabled:opacity-60"
+            >
+              {saving ? 'Saving...' : 'Save Changes'}
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
