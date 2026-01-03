@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Footer from '@/components/Footer';
 
 interface Settings {
   guildId: string;
@@ -17,6 +18,16 @@ interface Settings {
     message: string;
     channel: string | null;
   };
+  goodbye: {
+    enabled: boolean;
+    message: string;
+    channel: string | null;
+  };
+}
+
+interface Channel {
+  id: string;
+  name: string;
 }
 
 interface ServerStats {
@@ -39,6 +50,8 @@ export default function ServerSettings() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [modulesOpen, setModulesOpen] = useState(false);
   const [botOnline, setBotOnline] = useState<boolean | null>(null);
+  const [channels, setChannels] = useState<Channel[]>([]);
+  const [saving, setSaving] = useState(false);
 
   // Poll bot status every 10 seconds
   useEffect(() => {
@@ -103,7 +116,47 @@ export default function ServerSettings() {
       .catch((err) => {
         console.error(err);
       });
+
+    // Fetch channels for dropdowns
+    fetch(`/api/servers/${guildId}/channels-and-roles`)
+      .then((res) => res.json())
+      .then((data) => {
+        setChannels(data.channels ?? []);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }, [session, status, guildId, router]);
+
+  const handleSaveChannel = async (type: 'moderation' | 'welcome' | 'goodbye', channelId: string) => {
+    if (!settings) return;
+    
+    setSaving(true);
+    try {
+      const updatedSettings = { ...settings };
+      if (type === 'moderation') {
+        updatedSettings.moderation.logChannel = channelId;
+      } else if (type === 'welcome') {
+        updatedSettings.welcome.channel = channelId;
+      } else if (type === 'goodbye') {
+        updatedSettings.goodbye.channel = channelId;
+      }
+
+      const res = await fetch(`/api/servers/${guildId}/settings`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedSettings),
+      });
+
+      if (res.ok) {
+        setSettings(updatedSettings);
+      }
+    } catch (error) {
+      console.error('Failed to save channel:', error);
+    } finally {
+      setSaving(false);
+    }
+  };
 
   if (loading) {
     return <div className="flex min-h-screen items-center justify-center text-[#0f172a]">Loading...</div>;
@@ -145,9 +198,6 @@ export default function ServerSettings() {
                   </Link>
                   <Link href={`/servers/${guildId}/setup`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${settingsOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '50ms'}}>
                     Setup
-                  </Link>
-                  <Link href={`/servers/${guildId}/commands`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${settingsOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '100ms'}}>
-                    Commands
                   </Link>
                 </div>
               )}
@@ -236,15 +286,45 @@ export default function ServerSettings() {
                 <p className="text-2xl font-bold text-[#0f172a]">{settings.prefix || '!'}</p>
                 <p className="text-xs text-slate-600">Current command prefix</p>
               </div>
-              <div className="rounded-xl border border-orange-100 bg-white p-4 shadow-sm">
+              <div className="rounded-xl border border-orange-100 bg-white p-4 shadow-sm space-y-2">
                 <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Moderation</p>
                 <p className="text-lg font-semibold text-[#0f172a]">{settings.moderation.enabled ? 'Enabled' : 'Disabled'}</p>
-                <p className="text-xs text-slate-600">Log channel: {settings.moderation.logChannel || 'Not set'}</p>
+                <div className="space-y-1">
+                  <label className="text-xs text-slate-600 block">Log Channel</label>
+                  <select
+                    value={settings.moderation.logChannel || ''}
+                    onChange={(e) => handleSaveChannel('moderation', e.target.value)}
+                    disabled={saving}
+                    className="w-full px-3 py-1.5 text-sm bg-white border border-orange-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:opacity-50"
+                  >
+                    <option value="">Select channel...</option>
+                    {channels.map((ch) => (
+                      <option key={ch.id} value={ch.id}>
+                        #{ch.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
-              <div className="rounded-xl border border-orange-100 bg-white p-4 shadow-sm">
+              <div className="rounded-xl border border-orange-100 bg-white p-4 shadow-sm space-y-2">
                 <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Welcome</p>
                 <p className="text-lg font-semibold text-[#0f172a]">{settings.welcome.enabled ? 'Enabled' : 'Disabled'}</p>
-                <p className="text-xs text-slate-600">Channel: {settings.welcome.channel || 'Not set'}</p>
+                <div className="space-y-1">
+                  <label className="text-xs text-slate-600 block">Channel</label>
+                  <select
+                    value={settings.welcome.channel || ''}
+                    onChange={(e) => handleSaveChannel('welcome', e.target.value)}
+                    disabled={saving}
+                    className="w-full px-3 py-1.5 text-sm bg-white border border-orange-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:opacity-50"
+                  >
+                    <option value="">Select channel...</option>
+                    {channels.map((ch) => (
+                      <option key={ch.id} value={ch.id}>
+                        #{ch.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
             </div>
           </div>
@@ -290,6 +370,7 @@ export default function ServerSettings() {
             </div>
           </div>
         </div>
+        <Footer />
       </main>
     </div>
   );

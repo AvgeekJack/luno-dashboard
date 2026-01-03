@@ -4,6 +4,8 @@ import { useSession, signIn } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import Footer from '@/components/Footer';
+import ServerHeader from '@/components/ServerHeader';
 
 interface Guild {
   id: string;
@@ -135,6 +137,7 @@ export default function ServersPage() {
 
   return (
     <div className="min-h-screen bg-white text-[#0f172a] pt-36 pb-16 px-6 md:px-10 flex justify-center">
+      <ServerHeader />
       <div className="w-full max-w-6xl space-y-12 flex flex-col items-center">
         <div className="text-center space-y-3">
           <p className="text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">Servers</p>
@@ -148,6 +151,7 @@ export default function ServersPage() {
         </div>
         {renderNotInBot('Servers Luno is Not In', notInBot, 'Invite Luno to these servers to manage them here.')}
       </div>
+      <Footer />
     </div>
   );
 }
