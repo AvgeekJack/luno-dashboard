@@ -8,6 +8,7 @@ import { Switch } from '@/components/ui/switch';
 
 interface LoggingSettings {
   enabled: boolean;
+  automodLogChannel: string | null;
   warnsEnabled: boolean;
   warnsChannel: string | null;
   kicksEnabled: boolean;
@@ -93,6 +94,16 @@ interface LoggingSettings {
   retentionPeriod: number;
 }
 
+interface Channel {
+  id: string;
+  name: string;
+}
+
+interface Role {
+  id: string;
+  name: string;
+}
+
 export default function LoggingPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -105,9 +116,12 @@ export default function LoggingPage() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [configOpen, setConfigOpen] = useState(true);
   const [modulesOpen, setModulesOpen] = useState(false);
+  const [channels, setChannels] = useState<Channel[]>([]);
+  const [roles, setRoles] = useState<Role[]>([]);
 
   const [settings, setSettings] = useState<LoggingSettings>({
     enabled: false,
+    automodLogChannel: null,
     warnsEnabled: false,
     warnsChannel: null,
     kicksEnabled: false,
@@ -195,6 +209,7 @@ export default function LoggingPage() {
 
   const [originalSettings, setOriginalSettings] = useState<LoggingSettings>({
     enabled: false,
+    automodLogChannel: null,
     warnsEnabled: false,
     warnsChannel: null,
     kicksEnabled: false,
@@ -287,6 +302,19 @@ export default function LoggingPage() {
       return;
     }
 
+    const fetchChannelsAndRoles = async () => {
+      try {
+        const res = await fetch(`/api/servers/${gid}/channels-and-roles`);
+        if (res.ok) {
+          const data = await res.json();
+          setChannels(data.channels || []);
+          setRoles(data.roles || []);
+        }
+      } catch (error) {
+        console.error("Failed to fetch channels and roles:", error);
+      }
+    };
+
     const fetchSettings = async () => {
       try {
         const response = await fetch(`/api/servers/${gid}/general`);
@@ -305,6 +333,7 @@ export default function LoggingPage() {
       }
     };
 
+    fetchChannelsAndRoles();
     fetchSettings();
   }, [session, status, router, gid]);
 
@@ -471,6 +500,31 @@ export default function LoggingPage() {
               style={{ transitionProperty: 'max-height, opacity' }}
             >
               <div className="space-y-8 border-t border-orange-100 pt-8">
+                {/* AutoMod Log Channel */}
+                <div className="space-y-4 bg-amber-50 p-6 rounded-lg border border-amber-200">
+                  <div className="space-y-1">
+                    <h2 className="text-xl font-semibold text-[#0f172a]">AutoMod Logging Channel</h2>
+                    <p className="text-sm text-slate-600">Configure where automod violations and actions are logged (moved from Automod configuration)</p>
+                  </div>
+
+                  <div className="flex items-center gap-3 p-4 rounded-lg border border-amber-200 bg-white">
+                    <div className="flex-1">
+                      <p className="font-semibold text-slate-800 text-sm">AutoMod Log Channel</p>
+                      <p className="text-xs text-slate-500">All automod actions and violations will be logged here</p>
+                    </div>
+                    <select 
+                      value={settings.automodLogChannel || ''} 
+                      onChange={(e) => updateSetting('automodLogChannel', e.target.value || null)}
+                      className="w-48 px-3 py-2 border border-amber-300 rounded-lg text-sm bg-white"
+                    >
+                      <option value="">Select channel...</option>
+                      {channels.map(ch => (
+                        <option key={ch.id} value={ch.id}>#{ch.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
                 {/* Moderation Logs Section */}
                 <div className="space-y-4">
                   <div className="space-y-1">
@@ -502,8 +556,13 @@ export default function LoggingPage() {
                           <p className="font-semibold text-slate-800 text-sm">{item.label}</p>
                           <p className="text-xs text-slate-500">{item.desc}</p>
                         </div>
-                        <input type="text" value={settings[`${item.key}Channel` as keyof LoggingSettings] as string || ''} onChange={(e) => updateSetting(`${item.key}Channel` as any, e.target.value || null)}
-                          className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm font-mono" placeholder="Channel ID" />
+                        <select value={settings[`${item.key}Channel` as keyof LoggingSettings] as string || ''} onChange={(e) => updateSetting(`${item.key}Channel` as any, e.target.value || null)}
+                          className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white">
+                          <option value="">Select channel...</option>
+                          {channels.map(ch => (
+                            <option key={ch.id} value={ch.id}>#{ch.name}</option>
+                          ))}
+                        </select>
                       </div>
                     ))}
                   </div>
@@ -533,8 +592,13 @@ export default function LoggingPage() {
                           <p className="font-semibold text-slate-800 text-sm">{item.label}</p>
                           <p className="text-xs text-slate-500">{item.desc}</p>
                         </div>
-                        <input type="text" value={settings[`${item.key}Channel` as keyof LoggingSettings] as string || ''} onChange={(e) => updateSetting(`${item.key}Channel` as any, e.target.value || null)}
-                          className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm font-mono" placeholder="Channel ID" />
+                        <select value={settings[`${item.key}Channel` as keyof LoggingSettings] as string || ''} onChange={(e) => updateSetting(`${item.key}Channel` as any, e.target.value || null)}
+                          className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white">
+                          <option value="">Select channel...</option>
+                          {channels.map(ch => (
+                            <option key={ch.id} value={ch.id}>#{ch.name}</option>
+                          ))}
+                        </select>
                       </div>
                     ))}
                   </div>
@@ -563,8 +627,13 @@ export default function LoggingPage() {
                           <p className="font-semibold text-slate-800 text-sm">{item.label}</p>
                           <p className="text-xs text-slate-500">{item.desc}</p>
                         </div>
-                        <input type="text" value={settings[`${item.key}Channel` as keyof LoggingSettings] as string || ''} onChange={(e) => updateSetting(`${item.key}Channel` as any, e.target.value || null)}
-                          className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm font-mono" placeholder="Channel ID" />
+                        <select value={settings[`${item.key}Channel` as keyof LoggingSettings] as string || ''} onChange={(e) => updateSetting(`${item.key}Channel` as any, e.target.value || null)}
+                          className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white">
+                          <option value="">Select channel...</option>
+                          {channels.map(ch => (
+                            <option key={ch.id} value={ch.id}>#{ch.name}</option>
+                          ))}
+                        </select>
                       </div>
                     ))}
                   </div>
@@ -592,8 +661,13 @@ export default function LoggingPage() {
                           <p className="font-semibold text-slate-800 text-sm">{item.label}</p>
                           <p className="text-xs text-slate-500">{item.desc}</p>
                         </div>
-                        <input type="text" value={settings[`${item.key}Channel` as keyof LoggingSettings] as string || ''} onChange={(e) => updateSetting(`${item.key}Channel` as any, e.target.value || null)}
-                          className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm font-mono" placeholder="Channel ID" />
+                        <select value={settings[`${item.key}Channel` as keyof LoggingSettings] as string || ''} onChange={(e) => updateSetting(`${item.key}Channel` as any, e.target.value || null)}
+                          className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white">
+                          <option value="">Select channel...</option>
+                          {channels.map(ch => (
+                            <option key={ch.id} value={ch.id}>#{ch.name}</option>
+                          ))}
+                        </select>
                       </div>
                     ))}
                   </div>
@@ -621,8 +695,13 @@ export default function LoggingPage() {
                           <p className="font-semibold text-slate-800 text-sm">{item.label}</p>
                           <p className="text-xs text-slate-500">{item.desc}</p>
                         </div>
-                        <input type="text" value={settings[`${item.key}Channel` as keyof LoggingSettings] as string || ''} onChange={(e) => updateSetting(`${item.key}Channel` as any, e.target.value || null)}
-                          className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm font-mono" placeholder="Channel ID" />
+                        <select value={settings[`${item.key}Channel` as keyof LoggingSettings] as string || ''} onChange={(e) => updateSetting(`${item.key}Channel` as any, e.target.value || null)}
+                          className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white">
+                          <option value="">Select channel...</option>
+                          {channels.map(ch => (
+                            <option key={ch.id} value={ch.id}>#{ch.name}</option>
+                          ))}
+                        </select>
                       </div>
                     ))}
                   </div>
@@ -652,8 +731,13 @@ export default function LoggingPage() {
                           <p className="font-semibold text-slate-800 text-sm">{item.label}</p>
                           <p className="text-xs text-slate-500">{item.desc}</p>
                         </div>
-                        <input type="text" value={settings[`${item.key}Channel` as keyof LoggingSettings] as string || ''} onChange={(e) => updateSetting(`${item.key}Channel` as any, e.target.value || null)}
-                          className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm font-mono" placeholder="Channel ID" />
+                        <select value={settings[`${item.key}Channel` as keyof LoggingSettings] as string || ''} onChange={(e) => updateSetting(`${item.key}Channel` as any, e.target.value || null)}
+                          className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white">
+                          <option value="">Select channel...</option>
+                          {channels.map(ch => (
+                            <option key={ch.id} value={ch.id}>#{ch.name}</option>
+                          ))}
+                        </select>
                       </div>
                     ))}
                   </div>
@@ -684,8 +768,13 @@ export default function LoggingPage() {
                           <p className="font-semibold text-slate-800 text-sm">{item.label}</p>
                           <p className="text-xs text-slate-500">{item.desc}</p>
                         </div>
-                        <input type="text" value={settings[`${item.key}Channel` as keyof LoggingSettings] as string || ''} onChange={(e) => updateSetting(`${item.key}Channel` as any, e.target.value || null)}
-                          className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm font-mono" placeholder="Channel ID" />
+                        <select value={settings[`${item.key}Channel` as keyof LoggingSettings] as string || ''} onChange={(e) => updateSetting(`${item.key}Channel` as any, e.target.value || null)}
+                          className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white">
+                          <option value="">Select channel...</option>
+                          {channels.map(ch => (
+                            <option key={ch.id} value={ch.id}>#{ch.name}</option>
+                          ))}
+                        </select>
                       </div>
                     ))}
                   </div>

@@ -202,6 +202,9 @@ const ServerSettingsSchema = new mongoose.Schema({
       // Master Toggle
       enabled: { type: Boolean, default: false },
       
+      // AutoMod Log Channel (from automod configuration)
+      automodLogChannel: { type: String, default: null },
+      
       // Moderation Logs
       warnsEnabled: { type: Boolean, default: false },
       warnsChannel: { type: String, default: null },

@@ -24,19 +24,6 @@ const MODERATION_COMMANDS = [
   { name: '/slowmode', description: 'Set slowmode for a channel', enabled: true },
   { name: '/lock', description: 'Lock a channel from posting', enabled: true },
   { name: '/unlock', description: 'Unlock a locked channel', enabled: true },
-  { name: '/automod enable', description: 'Enable automod features', enabled: true },
-  { name: '/automod disable', description: 'Disable automod features', enabled: true },
-  { name: '/antilink', description: 'Block invite links', enabled: true },
-  { name: '/antiinvite', description: 'Block server invites', enabled: true },
-  { name: '/antispam', description: 'Filter spam messages', enabled: true },
-  { name: '/antimention', description: 'Filter mass mentions', enabled: true },
-  { name: '/antizalgo', description: 'Filter zalgo text', enabled: true },
-  { name: '/antiswear', description: 'Filter swear words', enabled: true },
-  { name: '/antiflood', description: 'Prevent message flooding', enabled: true },
-  { name: '/capsfilter', description: 'Filter excessive caps', enabled: true },
-  { name: '/duplicatefilter', description: 'Filter duplicate messages', enabled: true },
-  { name: '/regexfilter', description: 'Filter by regex patterns', enabled: true },
-  { name: '/automod logs', description: 'View automod logs', enabled: true },
   { name: '/antiraid enable', description: 'Enable raid protection', enabled: true },
   { name: '/antiraid disable', description: 'Disable raid protection', enabled: true },
   { name: '/antiraid level', description: 'Set raid protection level', enabled: true },
@@ -218,6 +205,9 @@ export default function ModerationPage() {
                 <div className={`px-2 py-1 space-y-1 ${configOpen ? 'animate-dropdown-open' : 'animate-dropdown-close'}`}>
                   <Link href={`/servers/${guildId}/configuration/automod`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '0ms'}}>
                     Automod
+                  </Link>
+                  <Link href={`/servers/${guildId}/configuration/logging`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '50ms'}}>
+                    Logging
                   </Link>
                 </div>
               )}

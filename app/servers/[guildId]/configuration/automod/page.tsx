@@ -38,6 +38,16 @@ interface AutomodSettings {
   logChannel: string | null;
 }
 
+interface Channel {
+  id: string;
+  name: string;
+}
+
+interface Role {
+  id: string;
+  name: string;
+}
+
 export default function AutomodPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -50,6 +60,8 @@ export default function AutomodPage() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [configOpen, setConfigOpen] = useState(true);
   const [modulesOpen, setModulesOpen] = useState(false);
+  const [channels, setChannels] = useState<Channel[]>([]);
+  const [roles, setRoles] = useState<Role[]>([]);
 
   const [settings, setSettings] = useState<AutomodSettings>({
     enabled: false,
@@ -122,6 +134,19 @@ export default function AutomodPage() {
       return;
     }
 
+    const fetchChannelsAndRoles = async () => {
+      try {
+        const res = await fetch(`/api/servers/${gid}/channels-and-roles`);
+        if (res.ok) {
+          const data = await res.json();
+          setChannels(data.channels || []);
+          setRoles(data.roles || []);
+        }
+      } catch (error) {
+        console.error("Failed to fetch channels and roles:", error);
+      }
+    };
+
     const fetchSettings = async () => {
       try {
         const response = await fetch(`/api/servers/${gid}/general`);
@@ -140,6 +165,7 @@ export default function AutomodPage() {
       }
     };
 
+    fetchChannelsAndRoles();
     fetchSettings();
   }, [session, status, router, gid]);
 
@@ -477,15 +503,67 @@ export default function AutomodPage() {
               <div className="space-y-3">
                 <div className="p-4 rounded-lg border border-orange-100 space-y-2">
                   <label className="block text-sm font-semibold text-slate-800">Whitelisted Channels</label>
-                  <textarea value={settings.whitelistedChannels.join('\n')} onChange={(e) => updateSetting('whitelistedChannels', e.target.value.split('\n').filter(id => id.trim()))}
-                    className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm font-mono" rows={3} placeholder="Enter channel IDs (one per line)" />
+                  <select 
+                    className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white" 
+                    onChange={(e) => {
+                      if (e.target.value && !settings.whitelistedChannels.includes(e.target.value)) {
+                        updateSetting('whitelistedChannels', [...settings.whitelistedChannels, e.target.value]);
+                      }
+                      e.target.value = '';
+                    }}
+                  >
+                    <option value="">Select a channel to add...</option>
+                    {channels.filter(ch => !settings.whitelistedChannels.includes(ch.id)).map(ch => (
+                      <option key={ch.id} value={ch.id}>#{ch.name}</option>
+                    ))}
+                  </select>
+                  {settings.whitelistedChannels.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {settings.whitelistedChannels.map(chId => {
+                        const channel = channels.find(c => c.id === chId);
+                        return (
+                          <span key={chId} className="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm flex items-center gap-2">
+                            #{channel?.name || chId}
+                            <button type="button" onClick={() => updateSetting('whitelistedChannels', settings.whitelistedChannels.filter(id => id !== chId))}
+                              className="hover:text-orange-600 font-bold">✕</button>
+                          </span>
+                        );
+                      })}
+                    </div>
+                  )}
                   <p className="text-xs text-slate-500">Channels exempt from AutoMod</p>
                 </div>
 
                 <div className="p-4 rounded-lg border border-orange-100 space-y-2">
                   <label className="block text-sm font-semibold text-slate-800">Whitelisted Roles</label>
-                  <textarea value={settings.whitelistedRoles.join('\n')} onChange={(e) => updateSetting('whitelistedRoles', e.target.value.split('\n').filter(id => id.trim()))}
-                    className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm font-mono" rows={3} placeholder="Enter role IDs (one per line)" />
+                  <select 
+                    className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white" 
+                    onChange={(e) => {
+                      if (e.target.value && !settings.whitelistedRoles.includes(e.target.value)) {
+                        updateSetting('whitelistedRoles', [...settings.whitelistedRoles, e.target.value]);
+                      }
+                      e.target.value = '';
+                    }}
+                  >
+                    <option value="">Select a role to add...</option>
+                    {roles.filter(r => !settings.whitelistedRoles.includes(r.id)).map(r => (
+                      <option key={r.id} value={r.id}>@{r.name}</option>
+                    ))}
+                  </select>
+                  {settings.whitelistedRoles.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {settings.whitelistedRoles.map(roleId => {
+                        const role = roles.find(r => r.id === roleId);
+                        return (
+                          <span key={roleId} className="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm flex items-center gap-2">
+                            @{role?.name || roleId}
+                            <button type="button" onClick={() => updateSetting('whitelistedRoles', settings.whitelistedRoles.filter(id => id !== roleId))}
+                              className="hover:text-orange-600 font-bold">✕</button>
+                          </span>
+                        );
+                      })}
+                    </div>
+                  )}
                   <p className="text-xs text-slate-500">Roles exempt from AutoMod</p>
                 </div>
 
@@ -592,11 +670,18 @@ export default function AutomodPage() {
                   </button>
                 </div>
 
-                <div className="p-4 rounded-lg border border-orange-100 space-y-2">
-                  <label className="block text-sm font-semibold text-slate-800">Log Channel</label>
-                  <input type="text" value={settings.logChannel || ''} onChange={(e) => updateSetting('logChannel', e.target.value || null)}
-                    className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm font-mono" placeholder="Enter channel ID" />
-                  <p className="text-xs text-slate-500">Channel to log AutoMod actions</p>
+                <div className="p-4 rounded-lg border border-blue-200 bg-blue-50 space-y-2">
+                  <div className="flex items-start gap-2">
+                    <svg className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div>
+                      <p className="text-sm font-semibold text-blue-900">AutoMod Log Channel</p>
+                      <p className="text-xs text-blue-700 mt-1">
+                        AutoMod logging is now configured on the <Link href={`/servers/${gid}/configuration/logging`} className="font-semibold underline">Logging</Link> page at the top of the configuration.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
