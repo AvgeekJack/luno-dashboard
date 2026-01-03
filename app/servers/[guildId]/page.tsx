@@ -210,9 +210,20 @@ export default function ServerSettings() {
               </summary>
               {modulesOpen && (
                 <div className={`px-2 py-1 space-y-1 bg-white ${modulesOpen ? 'animate-dropdown-open' : 'animate-dropdown-close'}`}>
-                  <Link href={`/servers/${guildId}/modules/moderation`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '0ms'}}>
-                    Moderation
-                  </Link>
+                  <details className="text-slate-800">
+                    <summary className="flex w-full items-center justify-between rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left cursor-pointer">
+                      <span>Moderation</span>
+                      <span className="text-xs text-orange-600">▾</span>
+                    </summary>
+                    <div className="pl-4 space-y-1 mt-1">
+                      <Link href={`/servers/${guildId}/modules/moderation`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left text-sm">
+                        Moderation
+                      </Link>
+                      <Link href={`/servers/${guildId}/modules/moderation/automod`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left text-sm">
+                        Automod
+                      </Link>
+                    </div>
+                  </details>
                   <Link href={`/servers/${guildId}/modules/role-management`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '50ms'}}>
                     Role Management
                   </Link>
@@ -287,21 +298,8 @@ export default function ServerSettings() {
               </div>
               <div className="rounded-xl border border-orange-100 bg-white p-4 shadow-sm">
                 <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Moderation</p>
-                <details className="mt-2">
-                  <summary className="text-sm font-semibold text-[#0f172a] cursor-pointer hover:text-orange-600 transition-colors">
-                    {settings.moderation.enabled ? 'Enabled' : 'Disabled'} ▾
-                  </summary>
-                  <div className="mt-2 pl-3 border-l-2 border-orange-200 space-y-2">
-                    <div>
-                      <p className="text-xs text-slate-500">Log Channel</p>
-                      <p className="text-xs text-slate-700">{settings.moderation.logChannel || 'Not set'}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-slate-500">Automod</p>
-                      <p className="text-xs text-slate-700">Not configured</p>
-                    </div>
-                  </div>
-                </details>
+                <p className="text-lg font-semibold text-[#0f172a]">{settings.moderation.enabled ? 'Enabled' : 'Disabled'}</p>
+                <p className="text-xs text-slate-600">Log channel: {settings.moderation.logChannel || 'Not set'}</p>
               </div>
               <div className="rounded-xl border border-orange-100 bg-white p-4 shadow-sm">
                 <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Welcome</p>
