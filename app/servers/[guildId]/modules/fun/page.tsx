@@ -25,24 +25,66 @@ export default function FunPage() {
   const [modulesOpen, setModulesOpen] = useState(false);
   const [moduleEnabled, setModuleEnabled] = useState(true);
   const [originalModuleEnabled, setOriginalModuleEnabled] = useState(true);
+  const [commands, setCommands] = useState(FUN_COMMANDS);
+  const [originalCommands, setOriginalCommands] = useState(FUN_COMMANDS);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    const loadSettings = async () => {
+      if (!guildId) return;
+      try {
+        const res = await fetch(`/api/servers/${guildId}/modules/fun`);
+        if (res.ok) {
+          const data = await res.json();
+          setModuleEnabled(data.enabled ?? true);
+          setOriginalModuleEnabled(data.enabled ?? true);
+        }
+      } catch (error) {
+        console.error('Failed to load settings:', error);
+      }
+    };
+    loadSettings();
+  }, [guildId]);
 
   const handleModuleToggle = (checked: boolean) => {
     setModuleEnabled(checked);
     setHasUnsavedChanges(true);
   };
 
+  const handleCommandToggle = (commandName: string, enabled: boolean) => {
+    setCommands(prev => prev.map(cmd => 
+      cmd.name === commandName ? { ...cmd, enabled } : cmd
+    ));
+    setHasUnsavedChanges(true);
+  };
+
   const handleSave = async () => {
     setSaving(true);
     try {
-      const res = await fetch(`/api/servers/${guildId}/modules/fun`, {
+      const moduleRes = await fetch(`/api/servers/${guildId}/modules/fun`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ enabled: moduleEnabled }),
       });
-      if (res.ok) {
+
+      const commandUpdates = commands.map(async (cmd) => {
+        const originalCmd = originalCommands.find(c => c.name === cmd.name);
+        if (originalCmd && cmd.enabled !== originalCmd.enabled) {
+          const commandName = cmd.name.replace('/', '').replace(/ /g, '');
+          await fetch(`/api/servers/${guildId}/commands/${commandName}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ enabled: cmd.enabled }),
+          });
+        }
+      });
+
+      await Promise.all(commandUpdates);
+
+      if (moduleRes.ok) {
         setOriginalModuleEnabled(moduleEnabled);
+        setOriginalCommands([...commands]);
         setHasUnsavedChanges(false);
       }
     } catch (error) {
@@ -54,6 +96,7 @@ export default function FunPage() {
 
   const handleReset = () => {
     setModuleEnabled(originalModuleEnabled);
+    setCommands([...originalCommands]);
     setHasUnsavedChanges(false);
   };
 
@@ -178,7 +221,7 @@ export default function FunPage() {
               style={{ transitionProperty: 'max-height, opacity' }}
             >
               <div className="space-y-6 border-t border-orange-100 pt-6">
-                <CommandGrid commands={FUN_COMMANDS.map(cmd => ({ ...cmd, enabled: moduleEnabled ? cmd.enabled : false }))} />
+                <CommandGrid commands={commands} onCommandToggle={handleCommandToggle} />
               </div>
             </div>
           </div>

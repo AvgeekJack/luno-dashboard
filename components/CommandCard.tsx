@@ -26,7 +26,7 @@ export function CommandCard({
           <p className="text-gray-600 text-sm line-clamp-1">{description}</p>
         </div>
         <Switch 
-          defaultChecked={enabled} 
+          checked={enabled} 
           onCheckedChange={onToggle}
         />
       </div>

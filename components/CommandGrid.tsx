@@ -8,9 +8,10 @@ interface Command {
 
 interface CommandGridProps {
   commands: Command[];
+  onCommandToggle?: (commandName: string, enabled: boolean) => void;
 }
 
-export function CommandGrid({ commands }: CommandGridProps) {
+export function CommandGrid({ commands, onCommandToggle }: CommandGridProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
       {commands.map((command, index) => (
@@ -19,6 +20,7 @@ export function CommandGrid({ commands }: CommandGridProps) {
           name={command.name}
           description={command.description}
           enabled={command.enabled}
+          onToggle={onCommandToggle ? (enabled) => onCommandToggle(command.name, enabled) : undefined}
         />
       ))}
     </div>
