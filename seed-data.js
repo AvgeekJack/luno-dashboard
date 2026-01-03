@@ -14,24 +14,6 @@ async function seedData() {
       {
         guildId: '123456789012345678',
         prefix: '!',
-        moderation: {
-          enabled: true,
-          logChannel: '987654321098765432',
-        },
-        welcome: {
-          enabled: true,
-          message: 'Welcome to the server! Please read the rules.',
-          channel: '111111111111111111',
-        },
-        goodbye: {
-          enabled: true,
-          message: 'Goodbye! Hope to see you again!',
-          channel: '111111111111111111',
-        },
-        roles: {
-          defaultRoles: ['222222222222222222', '333333333333333333'],
-          modRoles: ['444444444444444444'],
-        },
         modules: {
           moderation: {
             enabled: true,
@@ -90,6 +72,10 @@ async function seedData() {
               },
             },
           },
+        },
+        configuration: {
+          botNickname: 'Luno Bot',
+          timezone: 'UTC',
         },
         createdAt: new Date(),
         updatedAt: new Date(),

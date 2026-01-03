@@ -8,19 +8,9 @@ import Link from 'next/link';
 interface Settings {
   guildId: string;
   prefix: string;
-  moderation: {
-    enabled: boolean;
-    logChannel: string | null;
-  };
-  welcome: {
-    enabled: boolean;
-    message: string;
-    channel: string | null;
-  };
-  goodbye: {
-    enabled: boolean;
-    message: string;
-    channel: string | null;
+  configuration?: {
+    botNickname: string;
+    timezone: string;
   };
 }
 
@@ -127,36 +117,6 @@ export default function ServerSettings() {
         console.error(err);
       });
   }, [session, status, guildId, router]);
-
-  const handleSaveChannel = async (type: 'moderation' | 'welcome' | 'goodbye', channelId: string) => {
-    if (!settings) return;
-    
-    setSaving(true);
-    try {
-      const updatedSettings = { ...settings };
-      if (type === 'moderation') {
-        updatedSettings.moderation.logChannel = channelId;
-      } else if (type === 'welcome') {
-        updatedSettings.welcome.channel = channelId;
-      } else if (type === 'goodbye') {
-        updatedSettings.goodbye.channel = channelId;
-      }
-
-      const res = await fetch(`/api/servers/${guildId}/settings`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedSettings),
-      });
-
-      if (res.ok) {
-        setSettings(updatedSettings);
-      }
-    } catch (error) {
-      console.error('Failed to save channel:', error);
-    } finally {
-      setSaving(false);
-    }
-  };
 
   if (loading) {
     return <div className="flex min-h-screen items-center justify-center text-[#0f172a]">Loading...</div>;
@@ -292,21 +252,16 @@ export default function ServerSettings() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="rounded-xl border border-orange-100 bg-orange-50/50 p-4 shadow-sm">
                 <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Prefix</p>
                 <p className="text-2xl font-bold text-[#0f172a]">{settings.prefix || '!'}</p>
                 <p className="text-xs text-slate-600">Current command prefix</p>
               </div>
               <div className="rounded-xl border border-orange-100 bg-white p-4 shadow-sm">
-                <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Moderation</p>
-                <p className="text-lg font-semibold text-[#0f172a]">{settings.moderation.enabled ? 'Enabled' : 'Disabled'}</p>
-                <p className="text-xs text-slate-600">Log channel: {settings.moderation.logChannel || 'Not set'}</p>
-              </div>
-              <div className="rounded-xl border border-orange-100 bg-white p-4 shadow-sm">
-                <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Welcome</p>
-                <p className="text-lg font-semibold text-[#0f172a]">{settings.welcome.enabled ? 'Enabled' : 'Disabled'}</p>
-                <p className="text-xs text-slate-600">Channel: {settings.welcome.channel || 'Not set'}</p>
+                <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Bot Nickname</p>
+                <p className="text-lg font-semibold text-[#0f172a]">{settings.configuration?.botNickname || 'Not set'}</p>
+                <p className="text-xs text-slate-600">Custom bot nickname</p>
               </div>
             </div>
           </div>

@@ -70,7 +70,6 @@ export default function GeneralPage() {
           prefix: trimmed,
           botNickname: botNickname.trim(),
           timezone: timezone,
-          moderationEnabled: true,
         }),
       });
 

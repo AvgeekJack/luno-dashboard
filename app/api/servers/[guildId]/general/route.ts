@@ -25,7 +25,8 @@ export async function GET(
 
     return NextResponse.json({
       prefix: settings.prefix,
-      moderationEnabled: settings.moderation?.enabled ?? true,
+      botNickname: settings.configuration?.botNickname || '',
+      timezone: settings.configuration?.timezone || 'UTC',
     });
   } catch (error) {
     console.error('Error fetching general settings:', error);
@@ -50,7 +51,8 @@ export async function PUT(
   try {
     const body = await request.json();
     const prefix = (body.prefix || '!').toString().trim();
-    const moderationEnabled = Boolean(body.moderationEnabled);
+    const botNickname = (body.botNickname || '').toString().trim();
+    const timezone = (body.timezone || 'UTC').toString().trim();
 
     if (!prefix || prefix.length > 5) {
       return NextResponse.json(
@@ -66,7 +68,8 @@ export async function PUT(
       {
         $set: {
           prefix,
-          'moderation.enabled': moderationEnabled,
+          'configuration.botNickname': botNickname,
+          'configuration.timezone': timezone,
         },
       },
       { new: true, upsert: true }
@@ -74,7 +77,8 @@ export async function PUT(
 
     return NextResponse.json({
       prefix: updated.prefix,
-      moderationEnabled: updated.moderation?.enabled ?? true,
+      botNickname: updated.configuration?.botNickname || '',
+      timezone: updated.configuration?.timezone || 'UTC',
     });
   } catch (error) {
     console.error('Error updating general settings:', error);

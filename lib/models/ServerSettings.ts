@@ -3,24 +3,6 @@ import mongoose from 'mongoose';
 const ServerSettingsSchema = new mongoose.Schema({
   guildId: { type: String, required: true, unique: true },
   prefix: { type: String, default: '!' },
-  moderation: {
-    enabled: { type: Boolean, default: true },
-    logChannel: { type: String, default: null },
-  },
-  welcome: {
-    enabled: { type: Boolean, default: false },
-    message: { type: String, default: 'Welcome {user} to {server}!' },
-    channel: { type: String, default: null },
-  },
-  goodbye: {
-    enabled: { type: Boolean, default: false },
-    message: { type: String, default: 'Goodbye {user}, thanks for being part of {server}!' },
-    channel: { type: String, default: null },
-  },
-  roles: {
-    defaultRoles: { type: [String], default: [] },
-    modRoles: { type: [String], default: [] },
-  },
   modules: {
     moderation: {
       enabled: { type: Boolean, default: true },
@@ -170,6 +152,10 @@ const ServerSettingsSchema = new mongoose.Schema({
       }
     },
     messageSearching: { enabled: { type: Boolean, default: false }, commands: {} },
+  },
+  configuration: {
+    botNickname: { type: String, default: null },
+    timezone: { type: String, default: 'UTC' },
   },
 }, {
   timestamps: true,
