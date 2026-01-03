@@ -47,6 +47,7 @@ export default function ServerSettings() {
   const [serverName, setServerName] = useState<string | null>(null);
   const [stats, setStats] = useState<ServerStats | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [configOpen, setConfigOpen] = useState(false);
   const [modulesOpen, setModulesOpen] = useState(false);
   const [botOnline, setBotOnline] = useState<boolean | null>(null);
   const [channels, setChannels] = useState<Channel[]>([]);
@@ -169,10 +170,10 @@ export default function ServerSettings() {
     <div className="min-h-screen bg-orange-50 text-[#0f172a] flex">
       <aside className="fixed left-0 top-0 h-screen w-64 bg-white/90 border-r border-orange-100 shadow-sm overflow-y-auto flex flex-col">
           <div className="p-6 border-b border-orange-100">
-            <div className="flex items-center gap-3">
+            <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
               <img src="/luno-logo.png" alt="Luno Bot" className="w-10 h-10 object-contain" />
               <span className="text-xl font-bold text-[#0f172a]">Luno</span>
-            </div>
+            </Link>
           </div>
           
           <div className="px-4 py-4">
@@ -197,6 +198,21 @@ export default function ServerSettings() {
                   </Link>
                   <Link href={`/servers/${guildId}/setup`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${settingsOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '50ms'}}>
                     Setup
+                  </Link>
+                </div>
+              )}
+            </details>
+            <details className="text-slate-800" open={configOpen}>
+              <summary className="flex items-center justify-between px-3 py-6 cursor-pointer select-none" onClick={(e) => { e.preventDefault(); setConfigOpen(!configOpen); }}>
+                <span className="flex items-center gap-3">
+                  Configuration
+                </span>
+                <span className="text-xs text-orange-600">▾</span>
+              </summary>
+              {configOpen && (
+                <div className={`px-2 py-1 space-y-1 ${configOpen ? 'animate-dropdown-open' : 'animate-dropdown-close'}`}>
+                  <Link href={`/servers/${guildId}/configuration/automod`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '0ms'}}>
+                    Automod
                   </Link>
                 </div>
               )}
@@ -243,9 +259,6 @@ export default function ServerSettings() {
                 </div>
               )}
             </details>
-            <Link href={`/servers/${guildId}/logs`} className="flex w-full items-center gap-3 px-3 py-6 hover:bg-orange-50 transition-colors text-left">
-              Logs
-            </Link>
           </nav>
       </aside>
 
@@ -287,21 +300,8 @@ export default function ServerSettings() {
               </div>
               <div className="rounded-xl border border-orange-100 bg-white p-4 shadow-sm">
                 <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Moderation</p>
-                <details className="mt-2">
-                  <summary className="text-sm font-semibold text-[#0f172a] cursor-pointer hover:text-orange-600 transition-colors">
-                    {settings.moderation.enabled ? 'Enabled' : 'Disabled'} ▾
-                  </summary>
-                  <div className="mt-2 pl-3 border-l-2 border-orange-200 space-y-2">
-                    <div>
-                      <p className="text-xs text-slate-500">Log Channel</p>
-                      <p className="text-xs text-slate-700">{settings.moderation.logChannel || 'Not set'}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-slate-500">Automod</p>
-                      <p className="text-xs text-slate-700">Not configured</p>
-                    </div>
-                  </div>
-                </details>
+                <p className="text-lg font-semibold text-[#0f172a]">{settings.moderation.enabled ? 'Enabled' : 'Disabled'}</p>
+                <p className="text-xs text-slate-600">Log channel: {settings.moderation.logChannel || 'Not set'}</p>
               </div>
               <div className="rounded-xl border border-orange-100 bg-white p-4 shadow-sm">
                 <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Welcome</p>

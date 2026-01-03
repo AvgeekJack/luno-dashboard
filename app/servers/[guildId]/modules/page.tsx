@@ -16,6 +16,7 @@ export default function ModulesPage() {
   const [saving, setSaving] = useState(false);
   const [feedback, setFeedback] = useState<'idle' | 'saved' | 'error'>('idle');
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [configOpen, setConfigOpen] = useState(false);
   const [modulesOpen, setModulesOpen] = useState(false);
 
   const moduleList = [
@@ -34,7 +35,6 @@ export default function ModulesPage() {
     { key: 'serverInfo', label: 'Server Info', desc: 'Display server info commands.' },
     { key: 'utilities', label: 'Utilities', desc: 'Utility and helper commands.' },
     { key: 'settingsConfig', label: 'Settings / Config', desc: 'Configure bot settings.' },
-    { key: 'auditCompliance', label: 'Audit & Compliance', desc: 'Track audit logs and compliance.' },
     { key: 'security', label: 'Security', desc: 'Advanced security features.' },
     { key: 'scheduler', label: 'Scheduler Module', desc: 'Schedule messages and tasks.' },
     { key: 'analytics', label: 'Analytics', desc: 'View server analytics and stats.' },
@@ -103,10 +103,10 @@ export default function ModulesPage() {
     <div className="min-h-screen bg-orange-50 text-[#0f172a] flex">
       <aside className="fixed left-0 top-0 h-screen w-64 bg-white/90 border-r border-orange-100 shadow-sm overflow-y-auto flex flex-col">
           <div className="p-6 border-b border-orange-100">
-            <div className="flex items-center gap-3">
+            <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
               <img src="/luno-logo.png" alt="Luno Bot" className="w-10 h-10 object-contain" />
               <span className="text-xl font-bold text-[#0f172a]">Luno</span>
-            </div>
+            </Link>
           </div>
           
           <div className="px-4 py-4">
@@ -134,6 +134,21 @@ export default function ModulesPage() {
                   </Link>
                   <Link href={`/servers/${gid}/commands`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${settingsOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '100ms'}}>
                     Commands
+                  </Link>
+                </div>
+              )}
+            </details>
+            <details className="text-slate-800" open={configOpen}>
+              <summary className="flex items-center justify-between px-3 py-6 cursor-pointer select-none" onClick={(e) => { e.preventDefault(); setConfigOpen(!configOpen); }}>
+                <span className="flex items-center gap-3">
+                  Configuration
+                </span>
+                <span className="text-xs text-orange-600">▾</span>
+              </summary>
+              {configOpen && (
+                <div className={`px-2 py-1 space-y-1 ${configOpen ? 'animate-dropdown-open' : 'animate-dropdown-close'}`}>
+                  <Link href={`/servers/${gid}/configuration/automod`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '0ms'}}>
+                    Automod
                   </Link>
                 </div>
               )}
@@ -180,9 +195,6 @@ export default function ModulesPage() {
                 </div>
               )}
             </details>
-            <Link href={`/servers/${gid}/logs`} className="flex w-full items-center gap-3 px-3 py-6 hover:bg-orange-50 transition-colors text-left">
-              Logs
-            </Link>
           </nav>
       </aside>
 

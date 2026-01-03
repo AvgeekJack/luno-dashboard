@@ -14,6 +14,7 @@ export default function LogsPage() {
   const [logs, setLogs] = useState<Array<{ _id: string; userName: string; userId: string; action: string; createdAt: string }>>([]);
   const [loading, setLoading] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [configOpen, setConfigOpen] = useState(false);
   const [modulesOpen, setModulesOpen] = useState(false);
 
   useEffect(() => {
@@ -47,10 +48,10 @@ export default function LogsPage() {
     <div className="min-h-screen bg-orange-50 text-[#0f172a] flex">
       <aside className="fixed left-0 top-0 h-screen w-64 bg-white/90 border-r border-orange-100 shadow-sm overflow-y-auto flex flex-col">
           <div className="p-6 border-b border-orange-100">
-            <div className="flex items-center gap-3">
+            <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
               <img src="/luno-logo.png" alt="Luno Bot" className="w-10 h-10 object-contain" />
               <span className="text-xl font-bold text-[#0f172a]">Luno</span>
-            </div>
+            </Link>
           </div>
           
           <div className="px-4 py-4">
@@ -120,6 +121,21 @@ export default function LogsPage() {
                   </Link>
                   <Link href={`/servers/${guildId}/modules/security`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '450ms'}}>
                     Security
+                  </Link>
+                </div>
+              )}
+            </details>
+            <details className="text-slate-800" open={configOpen}>
+              <summary className="flex items-center justify-between px-3 py-6 cursor-pointer select-none" onClick={(e) => { e.preventDefault(); setConfigOpen(!configOpen); }}>
+                <span className="flex items-center gap-3">
+                  Configuration
+                </span>
+                <span className="text-xs text-orange-600">▾</span>
+              </summary>
+              {configOpen && (
+                <div className={`px-2 py-1 space-y-1 ${configOpen ? 'animate-dropdown-open' : 'animate-dropdown-close'}`}>
+                  <Link href={`/servers/${guildId}/configuration/automod`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '0ms'}}>
+                    Automod
                   </Link>
                 </div>
               )}

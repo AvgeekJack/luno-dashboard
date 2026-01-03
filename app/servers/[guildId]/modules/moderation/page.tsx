@@ -63,6 +63,7 @@ export default function ModerationPage() {
   const pathname = usePathname();
   const { guildId } = useParams();
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [configOpen, setConfigOpen] = useState(false);
   const [modulesOpen, setModulesOpen] = useState(true);
   const [moduleEnabled, setModuleEnabled] = useState(true);
   const [originalModuleEnabled, setOriginalModuleEnabled] = useState(true);
@@ -257,9 +258,6 @@ export default function ModerationPage() {
                 </div>
               )}
             </details>
-            <Link href={`/servers/${guildId}/logs`} className="flex w-full items-center gap-3 px-3 py-6 hover:bg-orange-50 transition-colors text-left">
-              Logs
-            </Link>
           </nav>
       </aside>
 

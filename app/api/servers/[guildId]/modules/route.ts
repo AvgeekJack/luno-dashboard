@@ -3,13 +3,12 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import connectDB from '@/lib/mongoose';
 import ServerSettings from '@/lib/models/ServerSettings';
-import { logAction } from '@/lib/audit';
 
 const MODULE_LIST = [
   'moderation', 'automod', 'antiRaid', 'logging', 'roleManagement',
   'memberManagement', 'announcements', 'tickets', 'notifications',
   'customCommands', 'fun', 'music', 'serverInfo', 'utilities',
-  'settingsConfig', 'auditCompliance', 'security', 'scheduler',
+  'settingsConfig', 'security', 'scheduler',
   'analytics', 'messageSearching',
 ];
 
@@ -75,13 +74,6 @@ export async function PUT(
       { $set: updates },
       { new: true, upsert: true }
     );
-
-    await logAction({
-      guildId,
-      userId: session.user?.id as string | undefined,
-      userName: session.user?.name as string | undefined,
-      action: 'Updated module settings',
-    });
 
     const modules: Record<string, boolean> = {};
     MODULE_LIST.forEach(m => {

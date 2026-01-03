@@ -37,7 +37,6 @@ const ServerSettingsSchema = new mongoose.Schema({
     serverInfo: { type: Boolean, default: false },
     utilities: { type: Boolean, default: false },
     settingsConfig: { type: Boolean, default: false },
-    auditCompliance: { type: Boolean, default: false },
     security: { type: Boolean, default: false },
     scheduler: { type: Boolean, default: false },
     analytics: { type: Boolean, default: false },

@@ -23,6 +23,7 @@ export default function FunPage() {
   const pathname = usePathname();
   const { guildId } = useParams();
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [configOpen, setConfigOpen] = useState(false);
   const [modulesOpen, setModulesOpen] = useState(true);
   const [moduleEnabled, setModuleEnabled] = useState(true);
   const [originalModuleEnabled, setOriginalModuleEnabled] = useState(true);
@@ -134,10 +135,10 @@ export default function FunPage() {
     <div className="min-h-screen bg-orange-50 text-[#0f172a] flex">
       <aside className="fixed left-0 top-0 h-screen w-64 bg-white/90 border-r border-orange-100 shadow-sm overflow-y-auto flex flex-col">
           <div className="p-6 border-b border-orange-100">
-            <div className="flex items-center gap-3">
+            <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
               <img src="/luno-logo.png" alt="Luno Bot" className="w-10 h-10 object-contain" />
               <span className="text-xl font-bold text-[#0f172a]">Luno</span>
-            </div>
+            </Link>
           </div>
           <div className="px-4 py-4">
             <Link href="/servers" className="text-orange-600 font-semibold hover:text-orange-700 transition-colors text-sm px-3">← Back to Servers</Link>
@@ -206,9 +207,6 @@ export default function FunPage() {
                 </div>
               )}
             </details>
-            <Link href={`/servers/${guildId}/logs`} className="flex w-full items-center gap-3 px-3 py-6 hover:bg-orange-50 transition-colors text-left">
-              Logs
-            </Link>
           </nav>
       </aside>
 

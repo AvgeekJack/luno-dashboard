@@ -19,7 +19,6 @@ const CATEGORIES = [
   'Server Info',
   'Utilities',
   'Settings/Config',
-  'Audit & Compliance',
   'Security',
   'Scheduler',
   'Analytics',
@@ -43,7 +42,7 @@ const COMMANDS: Record<string, { category: string; description: string }> = {
   unlock: { category: 'Security', description: 'Unlock a locked channel' },
   unmute: { category: 'Moderation', description: 'Unmute a muted user' },
   untimeout: { category: 'Moderation', description: 'Remove timeout from a user' },
-  warnings: { category: 'Audit & Compliance', description: 'View warnings for a user' },
+  warnings: { category: 'Moderation', description: 'View warnings for a user' },
   // Info / Utility / Fun
   userinfo: { category: 'Server Info', description: 'Display information about a user' },
   eightball: { category: 'Fun', description: 'Ask the magic 8ball a question' },
@@ -93,6 +92,7 @@ export default function CommandsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentCommand, setCurrentCommand] = useState('');
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [configOpen, setConfigOpen] = useState(false);
   const [modulesOpen, setModulesOpen] = useState(false);
 
   useEffect(() => {
@@ -216,10 +216,10 @@ export default function CommandsPage() {
     <div className="min-h-screen bg-orange-50 text-[#0f172a] flex">
       <aside className="fixed left-0 top-0 h-screen w-64 bg-white/90 border-r border-orange-100 shadow-sm overflow-y-auto flex flex-col">
         <div className="p-6 border-b border-orange-100">
-          <div className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
             <img src="/luno-logo.png" alt="Luno Bot" className="w-10 h-10 object-contain" />
             <span className="text-xl font-bold text-[#0f172a]">Luno</span>
-          </div>
+          </Link>
         </div>
         
         <div className="px-4 py-4">
@@ -293,9 +293,6 @@ export default function CommandsPage() {
               </div>
             )}
           </details>
-          <Link href={`/servers/${guildId}/logs`} className="flex w-full items-center gap-3 px-3 py-6 hover:bg-orange-50 transition-colors text-left">
-            Logs
-          </Link>
         </nav>
         </aside>
 

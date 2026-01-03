@@ -3,7 +3,6 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import connectDB from '@/lib/mongoose';
 import ServerSettings from '@/lib/models/ServerSettings';
-import { logAction } from '@/lib/audit';
 
 export async function GET(
   request: NextRequest,
@@ -67,13 +66,6 @@ export async function PUT(
       },
       { new: true, upsert: true }
     );
-
-    await logAction({
-      guildId,
-      userId: session.user?.id as string | undefined,
-      userName: session.user?.name as string | undefined,
-      action: 'Updated setup settings (logs/welcome/goodbye/roles)',
-    });
 
     return NextResponse.json(settings);
   } catch (error) {
