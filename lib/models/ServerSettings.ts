@@ -205,95 +205,66 @@ const ServerSettingsSchema = new mongoose.Schema({
       // AutoMod Log Channel (from automod configuration)
       automodLogChannel: { type: String, default: null },
       
-      // Moderation Logs
+      // Section Channels
+      moderationChannel: { type: String, default: null },
+      memberChannel: { type: String, default: null },
+      messageChannel: { type: String, default: null },
+      channelLogsChannel: { type: String, default: null },
+      roleLogsChannel: { type: String, default: null },
+      voiceChannel: { type: String, default: null },
+      serverChannel: { type: String, default: null },
+      
+      // Moderation Logs (toggles only)
       warnsEnabled: { type: Boolean, default: false },
-      warnsChannel: { type: String, default: null },
       kicksEnabled: { type: Boolean, default: false },
-      kicksChannel: { type: String, default: null },
       bansEnabled: { type: Boolean, default: false },
-      bansChannel: { type: String, default: null },
       unbansEnabled: { type: Boolean, default: false },
-      unbansChannel: { type: String, default: null },
       timeoutsEnabled: { type: Boolean, default: false },
-      timeoutsChannel: { type: String, default: null },
       untimeoutsEnabled: { type: Boolean, default: false },
-      untimeoutsChannel: { type: String, default: null },
       softbansEnabled: { type: Boolean, default: false },
-      softbansChannel: { type: String, default: null },
       channelLocksEnabled: { type: Boolean, default: false },
-      channelLocksChannel: { type: String, default: null },
       lockdownsEnabled: { type: Boolean, default: false },
-      lockdownsChannel: { type: String, default: null },
       slowmodeEnabled: { type: Boolean, default: false },
-      slowmodeChannel: { type: String, default: null },
       messagePurgeEnabled: { type: Boolean, default: false },
-      messagePurgeChannel: { type: String, default: null },
       automodActionsEnabled: { type: Boolean, default: false },
-      automodActionsChannel: { type: String, default: null },
       
-      // Member Logs
+      // Member Logs (toggles only)
       memberJoinEnabled: { type: Boolean, default: false },
-      memberJoinChannel: { type: String, default: null },
       memberLeaveEnabled: { type: Boolean, default: false },
-      memberLeaveChannel: { type: String, default: null },
       roleUpdatesEnabled: { type: Boolean, default: false },
-      roleUpdatesChannel: { type: String, default: null },
       nicknameChangesEnabled: { type: Boolean, default: false },
-      nicknameChangesChannel: { type: String, default: null },
       usernameChangesEnabled: { type: Boolean, default: false },
-      usernameChangesChannel: { type: String, default: null },
       
-      // Message Logs
+      // Message Logs (toggles only)
       messageDeleteEnabled: { type: Boolean, default: false },
-      messageDeleteChannel: { type: String, default: null },
       messageEditEnabled: { type: Boolean, default: false },
-      messageEditChannel: { type: String, default: null },
       bulkDeleteEnabled: { type: Boolean, default: false },
-      bulkDeleteChannel: { type: String, default: null },
       messageAttachmentsEnabled: { type: Boolean, default: false },
-      messageAttachmentsChannel: { type: String, default: null },
       
-      // Channel Logs
+      // Channel Logs (toggles only)
       channelCreateEnabled: { type: Boolean, default: false },
-      channelCreateChannel: { type: String, default: null },
       channelDeleteEnabled: { type: Boolean, default: false },
-      channelDeleteChannel: { type: String, default: null },
       channelUpdateEnabled: { type: Boolean, default: false },
-      channelUpdateChannel: { type: String, default: null },
       
-      // Role Logs
+      // Role Logs (toggles only)
       roleCreateEnabled: { type: Boolean, default: false },
-      roleCreateChannel: { type: String, default: null },
       roleDeleteEnabled: { type: Boolean, default: false },
-      roleDeleteChannel: { type: String, default: null },
       roleUpdateEnabled: { type: Boolean, default: false },
-      roleUpdateChannel: { type: String, default: null },
       
-      // Voice Logs
+      // Voice Logs (toggles only)
       voiceJoinEnabled: { type: Boolean, default: false },
-      voiceJoinChannel: { type: String, default: null },
       voiceLeaveEnabled: { type: Boolean, default: false },
-      voiceLeaveChannel: { type: String, default: null },
       voiceMoveEnabled: { type: Boolean, default: false },
-      voiceMoveChannel: { type: String, default: null },
       voiceMuteDeafenEnabled: { type: Boolean, default: false },
-      voiceMuteDeafenChannel: { type: String, default: null },
       voiceStreamingEnabled: { type: Boolean, default: false },
-      voiceStreamingChannel: { type: String, default: null },
       
-      // Server Logs
+      // Server Logs (toggles only)
       serverUpdateEnabled: { type: Boolean, default: false },
-      serverUpdateChannel: { type: String, default: null },
       emojiEnabled: { type: Boolean, default: false },
-      emojiChannel: { type: String, default: null },
       stickerEnabled: { type: Boolean, default: false },
-      stickerChannel: { type: String, default: null },
       webhookEnabled: { type: Boolean, default: false },
-      webhookChannel: { type: String, default: null },
       inviteEnabled: { type: Boolean, default: false },
-      inviteChannel: { type: String, default: null },
       integrationEnabled: { type: Boolean, default: false },
-      integrationChannel: { type: String, default: null },
       
       // Advanced Options
       ignoredChannels: { type: [String], default: [] },

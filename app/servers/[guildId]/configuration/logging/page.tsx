@@ -9,82 +9,69 @@ import { Switch } from '@/components/ui/switch';
 interface LoggingSettings {
   enabled: boolean;
   automodLogChannel: string | null;
+  
+  // Section Channels
+  moderationChannel: string | null;
+  memberChannel: string | null;
+  messageChannel: string | null;
+  channelLogsChannel: string | null;
+  roleLogsChannel: string | null;
+  voiceChannel: string | null;
+  serverChannel: string | null;
+  
+  // Moderation Logs (toggles only)
   warnsEnabled: boolean;
-  warnsChannel: string | null;
   kicksEnabled: boolean;
-  kicksChannel: string | null;
   bansEnabled: boolean;
-  bansChannel: string | null;
   unbansEnabled: boolean;
-  unbansChannel: string | null;
   timeoutsEnabled: boolean;
-  timeoutsChannel: string | null;
   untimeoutsEnabled: boolean;
-  untimeoutsChannel: string | null;
   softbansEnabled: boolean;
-  softbansChannel: string | null;
   channelLocksEnabled: boolean;
-  channelLocksChannel: string | null;
   lockdownsEnabled: boolean;
-  lockdownsChannel: string | null;
   slowmodeEnabled: boolean;
-  slowmodeChannel: string | null;
   messagePurgeEnabled: boolean;
-  messagePurgeChannel: string | null;
   automodActionsEnabled: boolean;
-  automodActionsChannel: string | null;
+  
+  // Member Logs (toggles only)
   memberJoinEnabled: boolean;
-  memberJoinChannel: string | null;
   memberLeaveEnabled: boolean;
-  memberLeaveChannel: string | null;
   roleUpdatesEnabled: boolean;
-  roleUpdatesChannel: string | null;
   nicknameChangesEnabled: boolean;
-  nicknameChangesChannel: string | null;
   usernameChangesEnabled: boolean;
-  usernameChangesChannel: string | null;
+  
+  // Message Logs (toggles only)
   messageDeleteEnabled: boolean;
-  messageDeleteChannel: string | null;
   messageEditEnabled: boolean;
-  messageEditChannel: string | null;
   bulkDeleteEnabled: boolean;
-  bulkDeleteChannel: string | null;
   messageAttachmentsEnabled: boolean;
-  messageAttachmentsChannel: string | null;
+  
+  // Channel Logs (toggles only)
   channelCreateEnabled: boolean;
-  channelCreateChannel: string | null;
   channelDeleteEnabled: boolean;
-  channelDeleteChannel: string | null;
   channelUpdateEnabled: boolean;
-  channelUpdateChannel: string | null;
+  
+  // Role Logs (toggles only)
   roleCreateEnabled: boolean;
-  roleCreateChannel: string | null;
   roleDeleteEnabled: boolean;
-  roleDeleteChannel: string | null;
   roleUpdateEnabled: boolean;
-  roleUpdateChannel: string | null;
+  
+  // Voice Logs (toggles only)
   voiceJoinEnabled: boolean;
-  voiceJoinChannel: string | null;
   voiceLeaveEnabled: boolean;
-  voiceLeaveChannel: string | null;
   voiceMoveEnabled: boolean;
-  voiceMoveChannel: string | null;
   voiceMuteDeafenEnabled: boolean;
-  voiceMuteDeafenChannel: string | null;
   voiceStreamingEnabled: boolean;
-  voiceStreamingChannel: string | null;
+  
+  // Server Logs (toggles only)
   serverUpdateEnabled: boolean;
-  serverUpdateChannel: string | null;
   emojiEnabled: boolean;
-  emojiChannel: string | null;
   stickerEnabled: boolean;
-  stickerChannel: string | null;
   webhookEnabled: boolean;
-  webhookChannel: string | null;
   inviteEnabled: boolean;
-  inviteChannel: string | null;
   integrationEnabled: boolean;
-  integrationChannel: string | null;
+  
+  // Advanced Settings
   ignoredChannels: string[];
   ignoredRoles: string[];
   ignoredUsers: string[];
@@ -122,82 +109,51 @@ export default function LoggingPage() {
   const [settings, setSettings] = useState<LoggingSettings>({
     enabled: false,
     automodLogChannel: null,
+    moderationChannel: null,
+    memberChannel: null,
+    messageChannel: null,
+    channelLogsChannel: null,
+    roleLogsChannel: null,
+    voiceChannel: null,
+    serverChannel: null,
     warnsEnabled: false,
-    warnsChannel: null,
     kicksEnabled: false,
-    kicksChannel: null,
     bansEnabled: false,
-    bansChannel: null,
     unbansEnabled: false,
-    unbansChannel: null,
     timeoutsEnabled: false,
-    timeoutsChannel: null,
     untimeoutsEnabled: false,
-    untimeoutsChannel: null,
     softbansEnabled: false,
-    softbansChannel: null,
     channelLocksEnabled: false,
-    channelLocksChannel: null,
     lockdownsEnabled: false,
-    lockdownsChannel: null,
     slowmodeEnabled: false,
-    slowmodeChannel: null,
     messagePurgeEnabled: false,
-    messagePurgeChannel: null,
     automodActionsEnabled: false,
-    automodActionsChannel: null,
     memberJoinEnabled: false,
-    memberJoinChannel: null,
     memberLeaveEnabled: false,
-    memberLeaveChannel: null,
     roleUpdatesEnabled: false,
-    roleUpdatesChannel: null,
     nicknameChangesEnabled: false,
-    nicknameChangesChannel: null,
     usernameChangesEnabled: false,
-    usernameChangesChannel: null,
     messageDeleteEnabled: false,
-    messageDeleteChannel: null,
     messageEditEnabled: false,
-    messageEditChannel: null,
     bulkDeleteEnabled: false,
-    bulkDeleteChannel: null,
     messageAttachmentsEnabled: false,
-    messageAttachmentsChannel: null,
     channelCreateEnabled: false,
-    channelCreateChannel: null,
     channelDeleteEnabled: false,
-    channelDeleteChannel: null,
     channelUpdateEnabled: false,
-    channelUpdateChannel: null,
     roleCreateEnabled: false,
-    roleCreateChannel: null,
     roleDeleteEnabled: false,
-    roleDeleteChannel: null,
     roleUpdateEnabled: false,
-    roleUpdateChannel: null,
     voiceJoinEnabled: false,
-    voiceJoinChannel: null,
     voiceLeaveEnabled: false,
-    voiceLeaveChannel: null,
     voiceMoveEnabled: false,
-    voiceMoveChannel: null,
     voiceMuteDeafenEnabled: false,
-    voiceMuteDeafenChannel: null,
     voiceStreamingEnabled: false,
-    voiceStreamingChannel: null,
     serverUpdateEnabled: false,
-    serverUpdateChannel: null,
     emojiEnabled: false,
-    emojiChannel: null,
     stickerEnabled: false,
-    stickerChannel: null,
     webhookEnabled: false,
-    webhookChannel: null,
     inviteEnabled: false,
-    inviteChannel: null,
     integrationEnabled: false,
-    integrationChannel: null,
     ignoredChannels: [],
     ignoredRoles: [],
     ignoredUsers: [],
@@ -210,82 +166,51 @@ export default function LoggingPage() {
   const [originalSettings, setOriginalSettings] = useState<LoggingSettings>({
     enabled: false,
     automodLogChannel: null,
+    moderationChannel: null,
+    memberChannel: null,
+    messageChannel: null,
+    channelLogsChannel: null,
+    roleLogsChannel: null,
+    voiceChannel: null,
+    serverChannel: null,
     warnsEnabled: false,
-    warnsChannel: null,
     kicksEnabled: false,
-    kicksChannel: null,
     bansEnabled: false,
-    bansChannel: null,
     unbansEnabled: false,
-    unbansChannel: null,
     timeoutsEnabled: false,
-    timeoutsChannel: null,
     untimeoutsEnabled: false,
-    untimeoutsChannel: null,
     softbansEnabled: false,
-    softbansChannel: null,
     channelLocksEnabled: false,
-    channelLocksChannel: null,
     lockdownsEnabled: false,
-    lockdownsChannel: null,
     slowmodeEnabled: false,
-    slowmodeChannel: null,
     messagePurgeEnabled: false,
-    messagePurgeChannel: null,
     automodActionsEnabled: false,
-    automodActionsChannel: null,
     memberJoinEnabled: false,
-    memberJoinChannel: null,
     memberLeaveEnabled: false,
-    memberLeaveChannel: null,
     roleUpdatesEnabled: false,
-    roleUpdatesChannel: null,
     nicknameChangesEnabled: false,
-    nicknameChangesChannel: null,
     usernameChangesEnabled: false,
-    usernameChangesChannel: null,
     messageDeleteEnabled: false,
-    messageDeleteChannel: null,
     messageEditEnabled: false,
-    messageEditChannel: null,
     bulkDeleteEnabled: false,
-    bulkDeleteChannel: null,
     messageAttachmentsEnabled: false,
-    messageAttachmentsChannel: null,
     channelCreateEnabled: false,
-    channelCreateChannel: null,
     channelDeleteEnabled: false,
-    channelDeleteChannel: null,
     channelUpdateEnabled: false,
-    channelUpdateChannel: null,
     roleCreateEnabled: false,
-    roleCreateChannel: null,
     roleDeleteEnabled: false,
-    roleDeleteChannel: null,
     roleUpdateEnabled: false,
-    roleUpdateChannel: null,
     voiceJoinEnabled: false,
-    voiceJoinChannel: null,
     voiceLeaveEnabled: false,
-    voiceLeaveChannel: null,
     voiceMoveEnabled: false,
-    voiceMoveChannel: null,
     voiceMuteDeafenEnabled: false,
-    voiceMuteDeafenChannel: null,
     voiceStreamingEnabled: false,
-    voiceStreamingChannel: null,
     serverUpdateEnabled: false,
-    serverUpdateChannel: null,
     emojiEnabled: false,
-    emojiChannel: null,
     stickerEnabled: false,
-    stickerChannel: null,
     webhookEnabled: false,
-    webhookChannel: null,
     inviteEnabled: false,
-    inviteChannel: null,
     integrationEnabled: false,
-    integrationChannel: null,
     ignoredChannels: [],
     ignoredRoles: [],
     ignoredUsers: [],
@@ -480,6 +405,21 @@ export default function LoggingPage() {
           </div>
 
           <div className="bg-white border border-orange-100 rounded-2xl shadow-sm p-6 md:p-8 space-y-8">
+            {/* Info Box about AutoMod */}
+            <div className="p-4 rounded-lg border border-blue-200 bg-blue-50 space-y-2">
+              <div className="flex items-start gap-2">
+                <svg className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div>
+                  <p className="text-sm font-semibold text-blue-900">AutoMod Log Channel Moved Here</p>
+                  <p className="text-xs text-blue-700 mt-1">
+                    The AutoMod log channel configuration has been moved from the Automod page to this centralized logging configuration below.
+                  </p>
+                </div>
+              </div>
+            </div>
+
             {/* Master Toggle */}
             <div className="flex items-start justify-between gap-4">
               <div className="space-y-1">
@@ -641,9 +581,24 @@ export default function LoggingPage() {
 
                 {/* Channel Logs Section */}
                 <div className="space-y-4 border-t border-orange-100 pt-8">
-                  <div className="space-y-1">
-                    <h2 className="text-xl font-semibold text-[#0f172a]">Channel Logs</h2>
-                    <p className="text-sm text-slate-600">Server structure</p>
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-1">
+                      <h2 className="text-xl font-semibold text-[#0f172a]">Channel Logs</h2>
+                      <p className="text-sm text-slate-600">Server structure</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-slate-600">Log to:</span>
+                      <select 
+                        value={settings.channelLogsChannel || ''} 
+                        onChange={(e) => updateSetting('channelLogsChannel', e.target.value || null)}
+                        className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white"
+                      >
+                        <option value="">Select channel...</option>
+                        {channels.map(ch => (
+                          <option key={ch.id} value={ch.id}>#{ch.name}</option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
 
                   <div className="grid gap-3">
@@ -661,13 +616,6 @@ export default function LoggingPage() {
                           <p className="font-semibold text-slate-800 text-sm">{item.label}</p>
                           <p className="text-xs text-slate-500">{item.desc}</p>
                         </div>
-                        <select value={settings[`${item.key}Channel` as keyof LoggingSettings] as string || ''} onChange={(e) => updateSetting(`${item.key}Channel` as any, e.target.value || null)}
-                          className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white">
-                          <option value="">Select channel...</option>
-                          {channels.map(ch => (
-                            <option key={ch.id} value={ch.id}>#{ch.name}</option>
-                          ))}
-                        </select>
                       </div>
                     ))}
                   </div>
@@ -675,9 +623,24 @@ export default function LoggingPage() {
 
                 {/* Role Logs Section */}
                 <div className="space-y-4 border-t border-orange-100 pt-8">
-                  <div className="space-y-1">
-                    <h2 className="text-xl font-semibold text-[#0f172a]">Role Logs</h2>
-                    <p className="text-sm text-slate-600">Role management</p>
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-1">
+                      <h2 className="text-xl font-semibold text-[#0f172a]">Role Logs</h2>
+                      <p className="text-sm text-slate-600">Role management</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-slate-600">Log to:</span>
+                      <select 
+                        value={settings.roleLogsChannel || ''} 
+                        onChange={(e) => updateSetting('roleLogsChannel', e.target.value || null)}
+                        className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white"
+                      >
+                        <option value="">Select channel...</option>
+                        {channels.map(ch => (
+                          <option key={ch.id} value={ch.id}>#{ch.name}</option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
 
                   <div className="grid gap-3">
@@ -695,13 +658,6 @@ export default function LoggingPage() {
                           <p className="font-semibold text-slate-800 text-sm">{item.label}</p>
                           <p className="text-xs text-slate-500">{item.desc}</p>
                         </div>
-                        <select value={settings[`${item.key}Channel` as keyof LoggingSettings] as string || ''} onChange={(e) => updateSetting(`${item.key}Channel` as any, e.target.value || null)}
-                          className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white">
-                          <option value="">Select channel...</option>
-                          {channels.map(ch => (
-                            <option key={ch.id} value={ch.id}>#{ch.name}</option>
-                          ))}
-                        </select>
                       </div>
                     ))}
                   </div>
@@ -709,9 +665,24 @@ export default function LoggingPage() {
 
                 {/* Voice Logs Section */}
                 <div className="space-y-4 border-t border-orange-100 pt-8">
-                  <div className="space-y-1">
-                    <h2 className="text-xl font-semibold text-[#0f172a]">Voice Logs</h2>
-                    <p className="text-sm text-slate-600">Voice activity</p>
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-1">
+                      <h2 className="text-xl font-semibold text-[#0f172a]">Voice Logs</h2>
+                      <p className="text-sm text-slate-600">Voice activity</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-slate-600">Log to:</span>
+                      <select 
+                        value={settings.voiceChannel || ''} 
+                        onChange={(e) => updateSetting('voiceChannel', e.target.value || null)}
+                        className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white"
+                      >
+                        <option value="">Select channel...</option>
+                        {channels.map(ch => (
+                          <option key={ch.id} value={ch.id}>#{ch.name}</option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
 
                   <div className="grid gap-3">
@@ -731,13 +702,6 @@ export default function LoggingPage() {
                           <p className="font-semibold text-slate-800 text-sm">{item.label}</p>
                           <p className="text-xs text-slate-500">{item.desc}</p>
                         </div>
-                        <select value={settings[`${item.key}Channel` as keyof LoggingSettings] as string || ''} onChange={(e) => updateSetting(`${item.key}Channel` as any, e.target.value || null)}
-                          className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white">
-                          <option value="">Select channel...</option>
-                          {channels.map(ch => (
-                            <option key={ch.id} value={ch.id}>#{ch.name}</option>
-                          ))}
-                        </select>
                       </div>
                     ))}
                   </div>
@@ -745,9 +709,24 @@ export default function LoggingPage() {
 
                 {/* Server Logs Section */}
                 <div className="space-y-4 border-t border-orange-100 pt-8">
-                  <div className="space-y-1">
-                    <h2 className="text-xl font-semibold text-[#0f172a]">Server Logs</h2>
-                    <p className="text-sm text-slate-600">Server changes</p>
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-1">
+                      <h2 className="text-xl font-semibold text-[#0f172a]">Server Logs</h2>
+                      <p className="text-sm text-slate-600">Server changes</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-slate-600">Log to:</span>
+                      <select 
+                        value={settings.serverChannel || ''} 
+                        onChange={(e) => updateSetting('serverChannel', e.target.value || null)}
+                        className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white"
+                      >
+                        <option value="">Select channel...</option>
+                        {channels.map(ch => (
+                          <option key={ch.id} value={ch.id}>#{ch.name}</option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
 
                   <div className="grid gap-3">
@@ -761,20 +740,13 @@ export default function LoggingPage() {
                     ].map(item => (
                       <div key={item.key} className="flex items-center gap-3 p-4 rounded-lg border border-orange-100">
                         <button type="button" onClick={() => updateSetting(`${item.key}Enabled` as any, !settings[`${item.key}Enabled` as keyof LoggingSettings])}
-                          className={`${settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
+                          className={`${settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-centers rounded-full transition flex-shrink-0`}>
                           <span className={`${settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
                         </button>
                         <div className="flex-1">
                           <p className="font-semibold text-slate-800 text-sm">{item.label}</p>
                           <p className="text-xs text-slate-500">{item.desc}</p>
                         </div>
-                        <select value={settings[`${item.key}Channel` as keyof LoggingSettings] as string || ''} onChange={(e) => updateSetting(`${item.key}Channel` as any, e.target.value || null)}
-                          className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white">
-                          <option value="">Select channel...</option>
-                          {channels.map(ch => (
-                            <option key={ch.id} value={ch.id}>#{ch.name}</option>
-                          ))}
-                        </select>
                       </div>
                     ))}
                   </div>
