@@ -158,6 +158,21 @@ export default function FunPage() {
                 </div>
               )}
             </details>
+            <details className="text-slate-700" open={configOpen}>
+              <summary className="flex items-center justify-between px-3 py-6 cursor-pointer select-none hover:bg-orange-50 transition-colors" onClick={(e) => { e.preventDefault(); setConfigOpen(!configOpen); }}>
+                <span className="flex items-center gap-3">
+                  Configuration
+                </span>
+                <span className="text-xs text-orange-600">▾</span>
+              </summary>
+              {configOpen && (
+                <div className={`px-2 py-1 space-y-1 ${configOpen ? 'animate-dropdown-open' : 'animate-dropdown-close'}`}>
+                  <Link href={`/servers/${guildId}/configuration/automod`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '0ms'}}>
+                    Automod
+                  </Link>
+                </div>
+              )}
+            </details>
             <details className="text-slate-800" open={modulesOpen}>
               <summary className="flex items-center justify-between px-3 py-6 cursor-pointer select-none" onClick={(e) => { e.preventDefault(); setModulesOpen(!modulesOpen); }}>
                 <span className="flex items-center gap-3">
@@ -217,7 +232,6 @@ export default function FunPage() {
                 <p className="text-slate-600">Configure and manage fun commands for your server.</p>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-sm text-slate-600">Module {moduleEnabled ? 'Enabled' : 'Disabled'}</span>
                 <Switch 
                   checked={moduleEnabled} 
                   onCheckedChange={handleModuleToggle}
