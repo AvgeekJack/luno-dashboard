@@ -216,9 +216,21 @@ export default function GeneralPage() {
                     <li>Bot picks up changes immediately—no restart needed.</li>
                     <li>Custom nicknames help personalize the bot for your server.</li>
                     <li>Leave nickname empty to use the bot's default name.</li>
-                    <li>Changes are saved instantly across all server channels.</li>
-                    <li>You can modify these settings anytime as needed.</li>
                   </ul>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold text-slate-800">Bot Nickname</label>
+                  <div className="flex flex-col gap-2">
+                    <input
+                      value={botNickname}
+                      onChange={(e) => setBotNickname(e.target.value)}
+                      maxLength={32}
+                      className="w-full rounded-xl border border-orange-100 bg-white px-3 py-2 text-slate-800 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 outline-none transition"
+                      placeholder="Custom nickname (optional)"
+                    />
+                    <p className="text-xs text-slate-500">Set a custom nickname for the bot in this server (max 32 characters).</p>
+                  </div>
                 </div>
 
                 <div className="space-y-2">
@@ -253,20 +265,6 @@ export default function GeneralPage() {
                       <option value="Pacific/Auckland">Pacific/Auckland (NZDT/NZST)</option>
                     </select>
                     <p className="text-xs text-slate-500">Set the timezone for scheduled events and timestamps.</p>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-slate-800">Bot Nickname</label>
-                  <div className="flex flex-col gap-2">
-                    <input
-                      value={botNickname}
-                      onChange={(e) => setBotNickname(e.target.value)}
-                      maxLength={32}
-                      className="w-full rounded-xl border border-orange-100 bg-white px-3 py-2 text-slate-800 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 outline-none transition"
-                      placeholder="Custom nickname (optional)"
-                    />
-                    <p className="text-xs text-slate-500">Set a custom nickname for the bot in this server (max 32 characters).</p>
                   </div>
                 </div>
               </div>
