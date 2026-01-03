@@ -4,23 +4,144 @@ import { useSession } from 'next-auth/react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { Switch } from '@/components/ui/switch';
+
+interface WelcomeMessage {
+  enabled: boolean;
+  channelId: string | null;
+  title: string;
+  description: string;
+  color: string;
+  footer: string;
+}
+
+interface LeaveMessage {
+  enabled: boolean;
+  channelId: string | null;
+  title: string;
+  description: string;
+  color: string;
+  footer: string;
+}
+
+interface Channel {
+  id: string;
+  name: string;
+}
 
 export default function NotificationsPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const { guildId } = useParams();
+  const gid = Array.isArray(guildId) ? guildId[0] : guildId;
+  
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [configOpen, setConfigOpen] = useState(false);
-  const [modulesOpen, setModulesOpen] = useState(false);
+  const [modulesOpen, setModulesOpen] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [channels, setChannels] = useState<Channel[]>([]);
+
+  const [welcome, setWelcome] = useState<WelcomeMessage>({
+    enabled: false,
+    channelId: null,
+    title: '👋 Welcome!',
+    description: 'Welcome {user} to {server}! We hope you enjoy your stay!',
+    color: '#10b981',
+    footer: 'Member #{memberCount}',
+  });
+
+  const [leave, setLeave] = useState<LeaveMessage>({
+    enabled: false,
+    channelId: null,
+    title: '👋 Goodbye',
+    description: '{user} has left the server.',
+    color: '#ef4444',
+    footer: '{memberCount} members remaining',
+  });
+
+  const [originalWelcome, setOriginalWelcome] = useState<WelcomeMessage>(welcome);
+  const [originalLeave, setOriginalLeave] = useState<LeaveMessage>(leave);
 
   useEffect(() => {
     if (status === 'loading') return;
     if (!session) {
       router.push('/');
+      return;
     }
-  }, [session, status, router]);
 
-  if (status === 'loading') {
+    const fetchData = async () => {
+      try {
+        const [channelsRes, settingsRes] = await Promise.all([
+          fetch(`/api/servers/${gid}/channels-and-roles`),
+          fetch(`/api/servers/${gid}/modules/notifications`)
+        ]);
+
+        if (channelsRes.ok) {
+          const data = await channelsRes.json();
+          setChannels(data.channels || []);
+        }
+
+        if (settingsRes.ok) {
+          const data = await settingsRes.json();
+          if (data.welcome) {
+            setWelcome({ ...welcome, ...data.welcome });
+            setOriginalWelcome({ ...welcome, ...data.welcome });
+          }
+          if (data.leave) {
+            setLeave({ ...leave, ...data.leave });
+            setOriginalLeave({ ...leave, ...data.leave });
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [session, status, router, gid]);
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      const response = await fetch(`/api/servers/${gid}/modules/notifications`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ welcome, leave }),
+      });
+
+      if (response.ok) {
+        setOriginalWelcome({ ...welcome });
+        setOriginalLeave({ ...leave });
+        setHasUnsavedChanges(false);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleReset = () => {
+    setWelcome({ ...originalWelcome });
+    setLeave({ ...originalLeave });
+    setHasUnsavedChanges(false);
+  };
+
+  const updateWelcome = <K extends keyof WelcomeMessage>(key: K, value: WelcomeMessage[K]) => {
+    setWelcome(prev => ({ ...prev, [key]: value }));
+    setHasUnsavedChanges(true);
+  };
+
+  const updateLeave = <K extends keyof LeaveMessage>(key: K, value: LeaveMessage[K]) => {
+    setLeave(prev => ({ ...prev, [key]: value }));
+    setHasUnsavedChanges(true);
+  };
+
+  if (status === 'loading' || loading) {
     return <div className="flex min-h-screen items-center justify-center text-[#0f172a]">Loading...</div>;
   }
 

@@ -747,7 +747,7 @@ export default function LoggingPage() {
                     ].map(item => (
                       <div key={item.key} className="flex items-center gap-3 p-4 rounded-lg border border-orange-100">
                         <button type="button" onClick={() => updateSetting(`${item.key}Enabled` as any, !settings[`${item.key}Enabled` as keyof LoggingSettings])}
-                          className={`${settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-centers rounded-full transition flex-shrink-0`}>
+                          className={`${settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
                           <span className={`${settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
                         </button>
                         <div className="flex-1">
@@ -769,23 +769,125 @@ export default function LoggingPage() {
                   <div className="space-y-3">
                     <div className="p-4 rounded-lg border border-orange-100 space-y-2">
                       <label className="block text-sm font-semibold text-slate-800">Log Ignored Channels</label>
-                      <textarea value={settings.ignoredChannels.join('\n')} onChange={(e) => updateSetting('ignoredChannels', e.target.value.split('\n').filter(id => id.trim()))}
-                        className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm font-mono" rows={3} placeholder="Enter channel IDs (one per line)" />
+                      <div className="space-y-2">
+                        {settings.ignoredChannels.map((channelId, idx) => (
+                          <div key={idx} className="flex items-center gap-2">
+                            <select 
+                              value={channelId} 
+                              onChange={(e) => {
+                                const newIgnored = [...settings.ignoredChannels];
+                                newIgnored[idx] = e.target.value;
+                                updateSetting('ignoredChannels', newIgnored);
+                              }}
+                              className="flex-1 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white"
+                            >
+                              <option value="">Select channel...</option>
+                              {channels.map(ch => (
+                                <option key={ch.id} value={ch.id}>#{ch.name}</option>
+                              ))}
+                            </select>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const newIgnored = settings.ignoredChannels.filter((_, i) => i !== idx);
+                                updateSetting('ignoredChannels', newIgnored);
+                              }}
+                              className="px-3 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition text-sm font-medium"
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        ))}
+                        <button
+                          type="button"
+                          onClick={() => updateSetting('ignoredChannels', [...settings.ignoredChannels, ''])}
+                          className="w-full px-3 py-2 border-2 border-dashed border-orange-300 rounded-lg text-orange-600 hover:border-orange-400 hover:text-orange-700 transition text-sm font-medium"
+                        >
+                          + Add Channel
+                        </button>
+                      </div>
                       <p className="text-xs text-slate-500">Channels to exclude from logging</p>
                     </div>
 
                     <div className="p-4 rounded-lg border border-orange-100 space-y-2">
                       <label className="block text-sm font-semibold text-slate-800">Log Ignored Roles</label>
-                      <textarea value={settings.ignoredRoles.join('\n')} onChange={(e) => updateSetting('ignoredRoles', e.target.value.split('\n').filter(id => id.trim()))}
-                        className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm font-mono" rows={3} placeholder="Enter role IDs (one per line)" />
+                      <div className="space-y-2">
+                        {settings.ignoredRoles.map((roleId, idx) => (
+                          <div key={idx} className="flex items-center gap-2">
+                            <select 
+                              value={roleId} 
+                              onChange={(e) => {
+                                const newIgnored = [...settings.ignoredRoles];
+                                newIgnored[idx] = e.target.value;
+                                updateSetting('ignoredRoles', newIgnored);
+                              }}
+                              className="flex-1 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white"
+                            >
+                              <option value="">Select role...</option>
+                              {roles.map(role => (
+                                <option key={role.id} value={role.id}>@{role.name}</option>
+                              ))}
+                            </select>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const newIgnored = settings.ignoredRoles.filter((_, i) => i !== idx);
+                                updateSetting('ignoredRoles', newIgnored);
+                              }}
+                              className="px-3 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition text-sm font-medium"
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        ))}
+                        <button
+                          type="button"
+                          onClick={() => updateSetting('ignoredRoles', [...settings.ignoredRoles, ''])}
+                          className="w-full px-3 py-2 border-2 border-dashed border-orange-300 rounded-lg text-orange-600 hover:border-orange-400 hover:text-orange-700 transition text-sm font-medium"
+                        >
+                          + Add Role
+                        </button>
+                      </div>
                       <p className="text-xs text-slate-500">Roles to exclude from logging (e.g., bots)</p>
                     </div>
 
                     <div className="p-4 rounded-lg border border-orange-100 space-y-2">
                       <label className="block text-sm font-semibold text-slate-800">Log Ignored Users</label>
-                      <textarea value={settings.ignoredUsers.join('\n')} onChange={(e) => updateSetting('ignoredUsers', e.target.value.split('\n').filter(id => id.trim()))}
-                        className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm font-mono" rows={3} placeholder="Enter user IDs (one per line)" />
-                      <p className="text-xs text-slate-500">Specific users to exclude</p>
+                      <div className="space-y-2">
+                        {settings.ignoredUsers.map((userId, idx) => (
+                          <div key={idx} className="flex items-center gap-2">
+                            <input 
+                              type="text"
+                              value={userId} 
+                              onChange={(e) => {
+                                const newIgnored = [...settings.ignoredUsers];
+                                newIgnored[idx] = e.target.value;
+                                updateSetting('ignoredUsers', newIgnored);
+                              }}
+                              placeholder="Enter user ID or search..."
+                              className="flex-1 px-3 py-2 border border-orange-200 rounded-lg text-sm"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const newIgnored = settings.ignoredUsers.filter((_, i) => i !== idx);
+                                updateSetting('ignoredUsers', newIgnored);
+                              }}
+                              className="px-3 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition text-sm font-medium"
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        ))}
+                        <button
+                          type="button"
+                          onClick={() => updateSetting('ignoredUsers', [...settings.ignoredUsers, ''])}
+                          className="w-full px-3 py-2 border-2 border-dashed border-orange-300 rounded-lg text-orange-600 hover:border-orange-400 hover:text-orange-700 transition text-sm font-medium"
+                        >
+                          + Add User
+                        </button>
+                      </div>
+                      <p className="text-xs text-slate-500">Specific users to exclude (enter Discord user ID)</p>
                     </div>
 
                     <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">

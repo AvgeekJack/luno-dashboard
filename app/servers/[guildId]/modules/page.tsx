@@ -28,14 +28,13 @@ export default function ModulesPage() {
     { key: 'memberManagement', label: 'Member Management', desc: 'Change member usernames and profile pictures.' },
     { key: 'announcements', label: 'Announcements', desc: 'Send and manage announcements.' },
     { key: 'tickets', label: 'Tickets', desc: 'Create support ticket system.' },
-    { key: 'notifications', label: 'Notifications', desc: 'Server-wide notifications and announcements.' },
+    { key: 'notifications', label: 'Welcome Messages', desc: 'Welcome and leave message setup.' },
     { key: 'customCommands', label: 'Custom Commands', desc: 'Create custom bot commands.' },
     { key: 'fun', label: 'Fun', desc: 'Fun and meme commands.' },
     { key: 'music', label: 'Music', desc: 'Play music in voice channels.' },
     { key: 'serverInfo', label: 'Server Info', desc: 'Display server info commands.' },
     { key: 'utilities', label: 'Utilities', desc: 'Utility and helper commands.' },
     { key: 'settingsConfig', label: 'Settings / Config', desc: 'Configure bot settings.' },
-    { key: 'security', label: 'Security', desc: 'Advanced security features.' },
     { key: 'scheduler', label: 'Scheduler Module', desc: 'Schedule messages and tasks.' },
     { key: 'analytics', label: 'Analytics', desc: 'View server analytics and stats.' },
     { key: 'messageSearching', label: 'Message Searching', desc: 'Search through server messages.' },
@@ -175,7 +174,7 @@ export default function ModulesPage() {
                     Tickets
                   </Link>
                   <Link href={`/servers/${gid}/modules/notifications`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '250ms'}}>
-                    Notifications
+                    Welcome Messages
                   </Link>
                   <Link href={`/servers/${gid}/modules/custom-commands`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '300ms'}}>
                     Custom Commands
@@ -185,9 +184,6 @@ export default function ModulesPage() {
                   </Link>
                   <Link href={`/servers/${gid}/modules/utilities`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '400ms'}}>
                     Utilities
-                  </Link>
-                  <Link href={`/servers/${gid}/modules/security`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '450ms'}}>
-                    Security
                   </Link>
                 </div>
               )}
