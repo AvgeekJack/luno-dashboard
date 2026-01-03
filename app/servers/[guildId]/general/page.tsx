@@ -125,9 +125,6 @@ export default function GeneralPage() {
                   <Link href={`/servers/${gid}/setup`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${settingsOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '50ms'}}>
                     Setup
                   </Link>
-                  <Link href={`/servers/${gid}/commands`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${settingsOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '100ms'}}>
-                    Commands
-                  </Link>
                 </div>
               )}
             </details>
@@ -212,8 +209,6 @@ export default function GeneralPage() {
                   <p className="text-sm font-semibold text-slate-800">Tips</p>
                   <ul className="text-sm text-slate-600 space-y-1 list-disc list-inside">
                     <li>Keep the prefix short and easy to remember.</li>
-                    <li>Update Commands/Setup pages for channel/role rules.</li>
-                    <li>Bot picks up changes immediately—no restart needed.</li>
                     <li>Custom nicknames help personalize the bot for your server.</li>
                     <li>Leave nickname empty to use the bot's default name.</li>
                   </ul>

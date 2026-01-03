@@ -112,9 +112,6 @@ export default function ModerationPage() {
                   <Link href={`/servers/${guildId}/setup`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${settingsOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '50ms'}}>
                     Setup
                   </Link>
-                  <Link href={`/servers/${guildId}/commands`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${settingsOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '100ms'}}>
-                    Commands
-                  </Link>
                 </div>
               )}
             </details>
@@ -189,7 +186,7 @@ export default function ModerationPage() {
             </div>
 
             <div 
-              className={`overflow-hidden transition-all duration-300 ${moduleEnabled ? 'max-h-[10000px] opacity-100' : 'max-h-0 opacity-0'}`}
+              className={`overflow-hidden transition-all duration-700 ${moduleEnabled ? 'max-h-[10000px] opacity-100' : 'max-h-0 opacity-0'}`}
               style={{ transitionProperty: 'max-height, opacity' }}
             >
               <div className="space-y-6 border-t border-orange-100 pt-6">
