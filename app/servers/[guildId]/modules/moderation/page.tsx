@@ -82,6 +82,24 @@ export default function ModerationPage() {
           setModuleEnabled(data.enabled ?? true);
           setOriginalModuleEnabled(data.enabled ?? true);
         }
+
+        // Load command states
+        const settingsRes = await fetch(`/api/servers/${guildId}/settings`);
+        if (settingsRes.ok) {
+          const settings = await settingsRes.json();
+          if (settings.commands) {
+            const updatedCommands = MODERATION_COMMANDS.map(cmd => {
+              const commandKey = cmd.name.replace('/', '').replace(/ /g, '');
+              const commandData = settings.commands[commandKey];
+              return {
+                ...cmd,
+                enabled: commandData?.enabled ?? true
+              };
+            });
+            setCommands(updatedCommands);
+            setOriginalCommands(updatedCommands);
+          }
+        }
       } catch (error) {
         console.error('Failed to load settings:', error);
       } finally {
