@@ -285,45 +285,28 @@ export default function ServerSettings() {
                 <p className="text-2xl font-bold text-[#0f172a]">{settings.prefix || '!'}</p>
                 <p className="text-xs text-slate-600">Current command prefix</p>
               </div>
-              <div className="rounded-xl border border-orange-100 bg-white p-4 shadow-sm space-y-2">
+              <div className="rounded-xl border border-orange-100 bg-white p-4 shadow-sm">
                 <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Moderation</p>
-                <p className="text-lg font-semibold text-[#0f172a]">{settings.moderation.enabled ? 'Enabled' : 'Disabled'}</p>
-                <div className="space-y-1">
-                  <label className="text-xs text-slate-600 block">Log Channel</label>
-                  <select
-                    value={settings.moderation.logChannel || ''}
-                    onChange={(e) => handleSaveChannel('moderation', e.target.value)}
-                    disabled={saving}
-                    className="w-full px-3 py-1.5 text-sm bg-white border border-orange-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:opacity-50"
-                  >
-                    <option value="">Select channel...</option>
-                    {channels.map((ch) => (
-                      <option key={ch.id} value={ch.id}>
-                        #{ch.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <details className="mt-2">
+                  <summary className="text-sm font-semibold text-[#0f172a] cursor-pointer hover:text-orange-600 transition-colors">
+                    {settings.moderation.enabled ? 'Enabled' : 'Disabled'} ▾
+                  </summary>
+                  <div className="mt-2 pl-3 border-l-2 border-orange-200 space-y-2">
+                    <div>
+                      <p className="text-xs text-slate-500">Log Channel</p>
+                      <p className="text-xs text-slate-700">{settings.moderation.logChannel || 'Not set'}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-slate-500">Automod</p>
+                      <p className="text-xs text-slate-700">Not configured</p>
+                    </div>
+                  </div>
+                </details>
               </div>
-              <div className="rounded-xl border border-orange-100 bg-white p-4 shadow-sm space-y-2">
+              <div className="rounded-xl border border-orange-100 bg-white p-4 shadow-sm">
                 <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Welcome</p>
                 <p className="text-lg font-semibold text-[#0f172a]">{settings.welcome.enabled ? 'Enabled' : 'Disabled'}</p>
-                <div className="space-y-1">
-                  <label className="text-xs text-slate-600 block">Channel</label>
-                  <select
-                    value={settings.welcome.channel || ''}
-                    onChange={(e) => handleSaveChannel('welcome', e.target.value)}
-                    disabled={saving}
-                    className="w-full px-3 py-1.5 text-sm bg-white border border-orange-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:opacity-50"
-                  >
-                    <option value="">Select channel...</option>
-                    {channels.map((ch) => (
-                      <option key={ch.id} value={ch.id}>
-                        #{ch.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <p className="text-xs text-slate-600">Channel: {settings.welcome.channel || 'Not set'}</p>
               </div>
             </div>
           </div>
