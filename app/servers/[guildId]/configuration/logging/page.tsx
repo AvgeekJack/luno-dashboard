@@ -452,9 +452,24 @@ export default function LoggingPage() {
 
                 {/* Moderation Logs Section */}
                 <div className="space-y-4">
-                  <div className="space-y-1">
-                    <h2 className="text-xl font-semibold text-[#0f172a]">Moderation Logs</h2>
-                    <p className="text-sm text-slate-600">Actions by staff members</p>
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-1">
+                      <h2 className="text-xl font-semibold text-[#0f172a]">Moderation Logs</h2>
+                      <p className="text-sm text-slate-600">Actions by staff members</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-slate-600">Log to:</span>
+                      <select 
+                        value={settings.moderationChannel || ''} 
+                        onChange={(e) => updateSetting('moderationChannel', e.target.value || null)}
+                        className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white"
+                      >
+                        <option value="">Select channel...</option>
+                        {channels.map(ch => (
+                          <option key={ch.id} value={ch.id}>#{ch.name}</option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
 
                   <div className="grid gap-3">
@@ -481,13 +496,6 @@ export default function LoggingPage() {
                           <p className="font-semibold text-slate-800 text-sm">{item.label}</p>
                           <p className="text-xs text-slate-500">{item.desc}</p>
                         </div>
-                        <select value={settings[`${item.key}Channel` as keyof LoggingSettings] as string || ''} onChange={(e) => updateSetting(`${item.key}Channel` as any, e.target.value || null)}
-                          className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white">
-                          <option value="">Select channel...</option>
-                          {channels.map(ch => (
-                            <option key={ch.id} value={ch.id}>#{ch.name}</option>
-                          ))}
-                        </select>
                       </div>
                     ))}
                   </div>
@@ -495,9 +503,24 @@ export default function LoggingPage() {
 
                 {/* Member Logs Section */}
                 <div className="space-y-4 border-t border-orange-100 pt-8">
-                  <div className="space-y-1">
-                    <h2 className="text-xl font-semibold text-[#0f172a]">Member Logs</h2>
-                    <p className="text-sm text-slate-600">Member activity</p>
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-1">
+                      <h2 className="text-xl font-semibold text-[#0f172a]">Member Logs</h2>
+                      <p className="text-sm text-slate-600">Member activity</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-slate-600">Log to:</span>
+                      <select 
+                        value={settings.memberChannel || ''} 
+                        onChange={(e) => updateSetting('memberChannel', e.target.value || null)}
+                        className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white"
+                      >
+                        <option value="">Select channel...</option>
+                        {channels.map(ch => (
+                          <option key={ch.id} value={ch.id}>#{ch.name}</option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
 
                   <div className="grid gap-3">
@@ -517,13 +540,6 @@ export default function LoggingPage() {
                           <p className="font-semibold text-slate-800 text-sm">{item.label}</p>
                           <p className="text-xs text-slate-500">{item.desc}</p>
                         </div>
-                        <select value={settings[`${item.key}Channel` as keyof LoggingSettings] as string || ''} onChange={(e) => updateSetting(`${item.key}Channel` as any, e.target.value || null)}
-                          className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white">
-                          <option value="">Select channel...</option>
-                          {channels.map(ch => (
-                            <option key={ch.id} value={ch.id}>#{ch.name}</option>
-                          ))}
-                        </select>
                       </div>
                     ))}
                   </div>
@@ -531,9 +547,24 @@ export default function LoggingPage() {
 
                 {/* Message Logs Section */}
                 <div className="space-y-4 border-t border-orange-100 pt-8">
-                  <div className="space-y-1">
-                    <h2 className="text-xl font-semibold text-[#0f172a]">Message Logs</h2>
-                    <p className="text-sm text-slate-600">Message activity</p>
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-1">
+                      <h2 className="text-xl font-semibold text-[#0f172a]">Message Logs</h2>
+                      <p className="text-sm text-slate-600">Message activity</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-slate-600">Log to:</span>
+                      <select 
+                        value={settings.messageChannel || ''} 
+                        onChange={(e) => updateSetting('messageChannel', e.target.value || null)}
+                        className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white"
+                      >
+                        <option value="">Select channel...</option>
+                        {channels.map(ch => (
+                          <option key={ch.id} value={ch.id}>#{ch.name}</option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
 
                   <div className="grid gap-3">
@@ -552,13 +583,6 @@ export default function LoggingPage() {
                           <p className="font-semibold text-slate-800 text-sm">{item.label}</p>
                           <p className="text-xs text-slate-500">{item.desc}</p>
                         </div>
-                        <select value={settings[`${item.key}Channel` as keyof LoggingSettings] as string || ''} onChange={(e) => updateSetting(`${item.key}Channel` as any, e.target.value || null)}
-                          className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white">
-                          <option value="">Select channel...</option>
-                          {channels.map(ch => (
-                            <option key={ch.id} value={ch.id}>#{ch.name}</option>
-                          ))}
-                        </select>
                       </div>
                     ))}
                   </div>
