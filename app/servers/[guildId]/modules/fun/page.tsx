@@ -247,7 +247,7 @@ export default function FunPage() {
         </div>
       </main>
 
-      {/* Save Changes Overlay */}}
+      {/* Save Changes Overlay */}
       <div 
         className={`fixed bottom-0 left-0 right-0 bg-slate-900 text-white p-4 shadow-2xl transition-transform duration-300 ease-out z-50 ${
           hasUnsavedChanges ? 'translate-y-0' : 'translate-y-full'
