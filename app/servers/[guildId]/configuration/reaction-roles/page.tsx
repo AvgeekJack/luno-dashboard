@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Switch } from '@/components/ui/switch';
+import ServerHeader from '@/components/ServerHeader';
 
 interface ReactionRole {
   emoji: string;
