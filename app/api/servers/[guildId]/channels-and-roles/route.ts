@@ -34,9 +34,25 @@ export async function GET(
 
     const allChannels = await channelsResponse.json();
     
-    // Filter for text channels only (type 0)
+    // Filter for text channels (type 0) and categories (type 4)
     const channels = allChannels
       .filter((ch: any) => ch.type === 0)
+      .map((ch: any) => ({
+        id: ch.id,
+        name: ch.name,
+        type: ch.type,
+      }));
+
+    const categories = allChannels
+      .filter((ch: any) => ch.type === 4)
+      .map((ch: any) => ({
+        id: ch.id,
+        name: ch.name,
+        type: ch.type,
+      }));
+
+    const categories = allChannels
+      .filter((ch: any) => ch.type === 4)
       .map((ch: any) => ({
         id: ch.id,
         name: ch.name,
@@ -68,7 +84,7 @@ export async function GET(
         color: r.color,
       }));
 
-    return NextResponse.json({ channels, roles });
+    return NextResponse.json({ channels, categories, roles });
   } catch (error) {
     console.error('Error fetching channels and roles:', error);
     return NextResponse.json(

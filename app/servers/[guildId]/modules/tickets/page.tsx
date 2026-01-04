@@ -50,6 +50,7 @@ export default function TicketsPage() {
   const [saving, setSaving] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [channels, setChannels] = useState<Channel[]>([]);
+  const [categories, setCategories] = useState<Channel[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
 
   const [settings, setSettings] = useState<TicketSettings>({
@@ -91,6 +92,7 @@ export default function TicketsPage() {
         if (channelsRes.ok) {
           const data = await channelsRes.json();
           setChannels(data.channels || []);
+          setCategories(data.categories || []);
           setRoles(data.roles || []);
         }
 
