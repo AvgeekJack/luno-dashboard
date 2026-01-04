@@ -305,6 +305,77 @@ const ServerSettingsSchema = new mongoose.Schema({
       lastUpdatedBy: { type: String, default: null }, // User ID who last updated
       lastUpdatedAt: { type: Date, default: null }, // When it was last updated
     },
+    reactionRoles: {
+      // Master Toggle
+      enabled: { type: Boolean, default: false },
+      
+      // Reaction Role Panels
+      panels: [{
+        id: { type: String },
+        title: { type: String },
+        description: { type: String },
+        color: { type: String, default: '#5865F2' },
+        channelId: { type: String },
+        messageId: { type: String },
+        panelType: { type: String, enum: ['single', 'multiple', 'remove-on-unreact'], default: 'multiple' },
+        roleEmojiPairs: [{
+          roleId: { type: String },
+          emoji: { type: String }
+        }]
+      }],
+      
+      // Role Assignment Settings
+      roleLimit: { type: Number, default: 0 }, // 0 = unlimited
+      requiredRole: { type: String, default: null },
+      blacklistedRoles: { type: [String], default: [] },
+      allowRoleStacking: { type: Boolean, default: true },
+      
+      // Advanced Options
+      autoDeleteReactions: { type: Boolean, default: false },
+      dmOnRoleChange: { type: Boolean, default: false },
+      dmMessage: { type: String, default: 'You have been given the {role} role!' },
+      rolePersistence: { type: Boolean, default: false },
+      reactionCooldown: { type: Number, default: 0 }, // seconds
+    },
+    verification: {
+      // Master Toggle
+      enabled: { type: Boolean, default: false },
+      
+      // Verification Method
+      verificationMethod: { type: String, enum: ['reaction', 'button', 'captcha', 'manual'], default: 'button' },
+      
+      // Verification Configuration
+      verificationChannel: { type: String, default: null },
+      messageTitle: { type: String, default: 'Server Verification' },
+      messageDescription: { type: String, default: 'Click the button below to verify and gain access to the server!' },
+      messageColor: { type: String, default: '#5865F2' },
+      verifiedRole: { type: String, default: null },
+      unverifiedRole: { type: String, default: null },
+      
+      // Rules & Requirements
+      rulesText: { type: String, default: 'By verifying, you agree to follow our server rules.' },
+      accountAgeRequirement: { type: Number, default: 0 }, // days
+      requireServerAgreement: { type: Boolean, default: true },
+      multipleSteps: { type: Boolean, default: false },
+      
+      // Post-Verification Actions
+      welcomeDM: { type: Boolean, default: false },
+      welcomeDMMessage: { type: String, default: 'Welcome to the server! You have been verified.' },
+      additionalRoles: { type: [String], default: [] },
+      redirectChannel: { type: String, default: null },
+      removeVerificationMessages: { type: Boolean, default: true },
+      
+      // Logging
+      logChannel: { type: String, default: null },
+      trackVerificationMetrics: { type: Boolean, default: true },
+      logFailedAttempts: { type: Boolean, default: true },
+      
+      // Security Settings
+      antiAltProtection: { type: Boolean, default: false },
+      kickUnverifiedAfter: { type: Number, default: 0 }, // hours, 0 = disabled
+      verificationBypassRoles: { type: [String], default: [] },
+      verificationCooldown: { type: Number, default: 0 }, // seconds
+    },
   },
 }, {
   timestamps: true,
