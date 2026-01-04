@@ -294,7 +294,7 @@ export default function VerificationPage() {
             <div 
               className={`overflow-hidden transition-all duration-700 ${settings.enabled ? 'max-h-[50000px] opacity-100' : 'max-h-0 opacity-0'}`}
             >
-              <div className="space-y-8 border-t border-orange-100 pt-8">
+              <div className="space-y-8 border-t border-orange-100 pt-8 overflow-visible">
             {/* Info Box about Verification Logs */}
             <div className="p-4 rounded-lg border border-blue-200 bg-blue-50 space-y-2">
               <div className="flex items-start gap-2">
@@ -351,7 +351,7 @@ export default function VerificationPage() {
                         {settings.verificationChannel ? `# ${getChannelName(settings.verificationChannel)}` : '+ Select Channel'}
                       </button>
                       {showVerificationChannelDropdown && (
-                        <div className="absolute z-10 w-full mt-2 bg-white border border-orange-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                        <div className="absolute z-50 w-full mt-2 bg-white border border-orange-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                           {textChannels.map(channel => (
                             <button
                               key={channel.id}
@@ -378,7 +378,7 @@ export default function VerificationPage() {
                         {settings.verifiedRole ? getRoleName(settings.verifiedRole) : '+ Select Role'}
                       </button>
                       {showVerifiedRoleDropdown && (
-                        <div className="absolute z-10 w-full mt-2 bg-white border border-orange-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                        <div className="absolute z-50 w-full mt-2 bg-white border border-orange-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                           {roles.map(role => (
                             <button
                               key={role.id}
@@ -405,7 +405,7 @@ export default function VerificationPage() {
                         {settings.unverifiedRole ? getRoleName(settings.unverifiedRole) : '+ Select Role (Optional)'}
                       </button>
                       {showUnverifiedRoleDropdown && (
-                        <div className="absolute z-10 w-full mt-2 bg-white border border-orange-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                        <div className="absolute z-50 w-full mt-2 bg-white border border-orange-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                           <button
                             onClick={() => {
                               updateSetting('unverifiedRole', null);
@@ -573,7 +573,7 @@ export default function VerificationPage() {
                           + Add Role
                         </button>
                         {showAdditionalRolesDropdown && (
-                          <div className="absolute z-10 w-full mt-2 bg-white border border-orange-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                          <div className="absolute z-50 w-full mt-2 bg-white border border-orange-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                             {roles.filter(r => !settings.additionalRoles.includes(r.id) && r.id !== settings.verifiedRole).map(role => (
                               <button
                                 key={role.id}
@@ -658,7 +658,7 @@ export default function VerificationPage() {
                           + Add Bypass Role
                         </button>
                         {showBypassRolesDropdown && (
-                          <div className="absolute z-10 w-full mt-2 bg-white border border-orange-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                          <div className="absolute z-50 w-full mt-2 bg-white border border-orange-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                             {roles.filter(r => !settings.verificationBypassRoles.includes(r.id)).map(role => (
                               <button
                                 key={role.id}

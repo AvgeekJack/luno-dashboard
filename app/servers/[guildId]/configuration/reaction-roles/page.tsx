@@ -401,7 +401,7 @@ export default function ReactionRolesPage() {
             <div 
               className={`overflow-hidden transition-all duration-700 ${settings.enabled ? 'max-h-[50000px] opacity-100' : 'max-h-0 opacity-0'}`}
             >
-              <div className="space-y-8 border-t border-orange-100 pt-8">
+              <div className="space-y-8 border-t border-orange-100 pt-8 overflow-visible">
                 {/* Panels Management */}
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
@@ -475,7 +475,7 @@ export default function ReactionRolesPage() {
                               {newPanel.channelId ? `# ${getChannelName(newPanel.channelId)}` : '+ Select Channel'}
                             </button>
                             {showPanelChannelDropdown && (
-                              <div className="absolute z-10 w-full mt-2 bg-white border border-orange-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                              <div className="absolute z-50 w-full mt-2 bg-white border border-orange-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                                 {textChannels.map(channel => (
                                   <button
                                     key={channel.id}
@@ -533,7 +533,7 @@ export default function ReactionRolesPage() {
                                     {tempRoleEmoji.roleId ? getRoleName(tempRoleEmoji.roleId) : 'Choose a role...'}
                                   </button>
                                   {showRoleEmojiDropdown && (
-                                    <div className="absolute z-20 w-full mt-2 bg-white border border-orange-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                                    <div className="absolute z-50 w-full mt-2 bg-white border border-orange-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                                       {roles.map(role => (
                                         <button
                                           key={role.id}
@@ -688,7 +688,7 @@ export default function ReactionRolesPage() {
                         {settings.requiredRole ? getRoleName(settings.requiredRole) : '+ Select Role (Optional)'}
                       </button>
                       {showRequiredRoleDropdown && (
-                        <div className="absolute z-10 w-full mt-2 bg-white border border-orange-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                        <div className="absolute z-50 w-full mt-2 bg-white border border-orange-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                           <button
                             onClick={() => {
                               updateSetting('requiredRole', null);
@@ -741,7 +741,7 @@ export default function ReactionRolesPage() {
                         + Add Blacklisted Role
                       </button>
                       {showBlacklistDropdown && (
-                        <div className="absolute z-10 w-full mt-2 bg-white border border-orange-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                        <div className="absolute z-50 w-full mt-2 bg-white border border-orange-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                           {roles.filter(r => !settings.blacklistedRoles.includes(r.id)).map(role => (
                             <button
                               key={role.id}
