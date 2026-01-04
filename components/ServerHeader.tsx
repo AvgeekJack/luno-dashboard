@@ -4,7 +4,11 @@ import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-export default function ServerHeader() {
+interface ServerHeaderProps {
+  guildId?: string;
+}
+
+export default function ServerHeader({ guildId }: ServerHeaderProps) {
   const { data: session } = useSession();
   const router = useRouter();
 
