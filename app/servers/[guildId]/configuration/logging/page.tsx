@@ -9,6 +9,7 @@ import { Switch } from '@/components/ui/switch';
 interface LoggingSettings {
   enabled: boolean;
   automodLogChannel: string | null;
+  antiRaidChannel: string | null;
   
   // Section Channels
   moderationChannel: string | null;
@@ -109,6 +110,7 @@ export default function LoggingPage() {
   const [settings, setSettings] = useState<LoggingSettings>({
     enabled: false,
     automodLogChannel: null,
+    antiRaidChannel: null,
     moderationChannel: null,
     memberChannel: null,
     messageChannel: null,
@@ -166,6 +168,7 @@ export default function LoggingPage() {
   const [originalSettings, setOriginalSettings] = useState<LoggingSettings>({
     enabled: false,
     automodLogChannel: null,
+    antiRaidChannel: null,
     moderationChannel: null,
     memberChannel: null,
     messageChannel: null,
@@ -444,6 +447,31 @@ export default function LoggingPage() {
                       value={settings.automodLogChannel || ''} 
                       onChange={(e) => updateSetting('automodLogChannel', e.target.value || null)}
                       className="w-48 px-3 py-2 border border-amber-300 rounded-lg text-sm bg-white"
+                    >
+                      <option value="">Select channel...</option>
+                      {channels.map(ch => (
+                        <option key={ch.id} value={ch.id}>#{ch.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {/* Anti-Raid Log Channel */}
+                <div className="space-y-4 bg-red-50 p-6 rounded-lg border border-red-200">
+                  <div className="space-y-1">
+                    <h2 className="text-xl font-semibold text-[#0f172a]">Anti-Raid Alert Channel</h2>
+                    <p className="text-sm text-slate-600">Configure where anti-raid alerts and actions are logged. Leave empty to disable alerts for Anti-Raid.</p>
+                  </div>
+
+                  <div className="flex items-center gap-3 p-4 rounded-lg border border-red-200 bg-white">
+                    <div className="flex-1">
+                      <p className="font-semibold text-slate-800 text-sm">Anti-Raid Alert Channel</p>
+                      <p className="text-xs text-slate-500">All anti-raid detections and actions will be logged here</p>
+                    </div>
+                    <select 
+                      value={settings.antiRaidChannel || ''} 
+                      onChange={(e) => updateSetting('antiRaidChannel', e.target.value || null)}
+                      className="w-48 px-3 py-2 border border-red-300 rounded-lg text-sm bg-white"
                     >
                       <option value="">Select channel...</option>
                       {channels.map(ch => (

@@ -33,8 +33,6 @@ export async function GET(
         verificationLevel: 1,
         autoKickNewAccounts: true,
         kickOnRateExceeded: true,
-        sendAlerts: true,
-        alertChannelId: null,
         enabledBy: null,
         enabledAt: null,
         lastUpdatedBy: null,
@@ -106,14 +104,6 @@ export async function PUT(
     
     if (body.kickOnRateExceeded !== undefined) {
       updateFields['configuration.antiraid.kickOnRateExceeded'] = body.kickOnRateExceeded;
-    }
-    
-    if (body.sendAlerts !== undefined) {
-      updateFields['configuration.antiraid.sendAlerts'] = body.sendAlerts;
-    }
-    
-    if (body.alertChannelId !== undefined) {
-      updateFields['configuration.antiraid.alertChannelId'] = body.alertChannelId;
     }
 
     // Always update lastUpdated fields

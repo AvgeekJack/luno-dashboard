@@ -15,8 +15,6 @@ interface AntiRaidSettings {
   verificationLevel: number;
   autoKickNewAccounts: boolean;
   kickOnRateExceeded: boolean;
-  sendAlerts: boolean;
-  alertChannelId: string | null;
   enabledBy: string | null;
   enabledAt: Date | null;
   lastUpdatedBy: string | null;
@@ -74,8 +72,6 @@ export default function AntiRaidPage() {
     verificationLevel: 1,
     autoKickNewAccounts: true,
     kickOnRateExceeded: true,
-    sendAlerts: true,
-    alertChannelId: null,
     enabledBy: null,
     enabledAt: null,
     lastUpdatedBy: null,
@@ -304,6 +300,21 @@ export default function AntiRaidPage() {
               className={`overflow-hidden transition-all duration-700 ${settings.enabled ? 'max-h-[50000px] opacity-100' : 'max-h-0 opacity-0'}`}
             >
               <div className="space-y-8 border-t border-orange-100 pt-8">
+            {/* Info Box about Alert Channel */}
+            <div className="p-4 rounded-lg border border-blue-200 bg-blue-50 space-y-2">
+              <div className="flex items-start gap-2">
+                <svg className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div>
+                  <p className="text-sm font-semibold text-blue-900">Anti-Raid Alert Channel</p>
+                  <p className="text-xs text-blue-700 mt-1">
+                    Anti-raid alerts are now configured on the <Link href={`/servers/${gid}/configuration/logging`} className="font-semibold underline">Logging</Link> page under the configuration section.
+                  </p>
+                </div>
+              </div>
+            </div>
+
                 {/* Status Display */}
                 <div className="p-4 bg-slate-50 rounded-lg border border-slate-200 space-y-3">
                   <h3 className="text-sm font-semibold text-slate-800">Current Status</h3>
@@ -451,34 +462,6 @@ export default function AntiRaidPage() {
                         onCheckedChange={(checked) => updateSetting('kickOnRateExceeded', checked)}
                       />
                     </div>
-
-                    <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
-                      <div>
-                        <p className="font-semibold text-slate-800 text-sm">Send Alerts</p>
-                        <p className="text-xs text-slate-500">Alert moderators of potential raids</p>
-                      </div>
-                      <Switch 
-                        checked={settings.sendAlerts} 
-                        onCheckedChange={(checked) => updateSetting('sendAlerts', checked)}
-                      />
-                    </div>
-
-                    {settings.sendAlerts && (
-                      <div className="p-4 rounded-lg border border-orange-100 space-y-2">
-                        <label className="block text-sm font-semibold text-slate-800">Alert Channel</label>
-                        <select 
-                          value={settings.alertChannelId || ''} 
-                          onChange={(e) => updateSetting('alertChannelId', e.target.value || null)}
-                          className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white"
-                        >
-                          <option value="">Select channel...</option>
-                          {channels.map(ch => (
-                            <option key={ch.id} value={ch.id}>#{ch.name}</option>
-                          ))}
-                        </select>
-                        <p className="text-xs text-slate-500">Channel to send raid alerts</p>
-                      </div>
-                    )}
                   </div>
                 </div>
               </div>
