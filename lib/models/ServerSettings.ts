@@ -275,6 +275,37 @@ const ServerSettingsSchema = new mongoose.Schema({
       logEmbedUrls: { type: Boolean, default: true },
       retentionPeriod: { type: Number, default: 30 },
     },
+    antiraid: {
+      // Master Toggle
+      enabled: { type: Boolean, default: false },
+      
+      // Protection Level Preset
+      protectionLevel: { type: String, enum: ['low', 'medium', 'high', 'extreme', 'custom'], default: 'medium' },
+      
+      // Account Age Settings
+      accountAge: { type: Number, default: 600000 }, // 10 minutes in milliseconds
+      
+      // Join Rate Limiting
+      joinRateLimit: { type: Number, default: 5 }, // Maximum joins per window
+      joinRateWindow: { type: Number, default: 60000 }, // Time window in milliseconds (1 minute)
+      
+      // Verification Level (Discord server verification)
+      verificationLevel: { type: Number, default: 1, min: 0, max: 4 },
+      
+      // Action Settings
+      autoKickNewAccounts: { type: Boolean, default: true }, // Kick accounts below minimum age
+      kickOnRateExceeded: { type: Boolean, default: true }, // Kick when join rate is exceeded
+      
+      // Alert System
+      sendAlerts: { type: Boolean, default: true }, // Send alerts to moderators
+      alertChannelId: { type: String, default: null }, // Channel to send alerts
+      
+      // Tracking/Audit Fields
+      enabledBy: { type: String, default: null }, // User ID who enabled it
+      enabledAt: { type: Date, default: null }, // When it was enabled
+      lastUpdatedBy: { type: String, default: null }, // User ID who last updated
+      lastUpdatedAt: { type: Date, default: null }, // When it was last updated
+    },
   },
 }, {
   timestamps: true,
