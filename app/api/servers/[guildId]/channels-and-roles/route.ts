@@ -51,14 +51,6 @@ export async function GET(
         type: ch.type,
       }));
 
-    const categories = allChannels
-      .filter((ch: any) => ch.type === 4)
-      .map((ch: any) => ({
-        id: ch.id,
-        name: ch.name,
-        type: ch.type,
-      }));
-
     // Fetch roles
     const rolesResponse = await fetch(
       `https://discord.com/api/v10/guilds/${guildId}/roles`,
