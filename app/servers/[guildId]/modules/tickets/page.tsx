@@ -118,7 +118,17 @@ export default function TicketsPage() {
       const response = await fetch(`/api/servers/${gid}/modules/tickets`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(settings),
+        body: JSON.stringify({ 
+          enabled: settings.enabled,
+          tickets: {
+            categoryId: settings.categoryId,
+            supportRoleIds: settings.supportRoleIds,
+            ticketMessage: settings.ticketMessage,
+            transcripts: settings.transcripts,
+            maxTicketsPerUser: settings.maxTicketsPerUser,
+            autoCloseAfterHours: settings.autoCloseAfterHours,
+          }
+        }),
       });
 
       if (response.ok) {

@@ -97,9 +97,44 @@ const ServerSettingsSchema = new mongoose.Schema({
         poll: { enabled: { type: Boolean, default: true }, allowedChannels: { type: [String], default: [] }, ignoredChannels: { type: [String], default: [] }, allowedRoles: { type: [String], default: [] }, ignoredRoles: { type: [String], default: [] } },
       }
     },
-    tickets: { enabled: { type: Boolean, default: false }, commands: {} },
-    notifications: { enabled: { type: Boolean, default: false }, commands: {} },
-    customCommands: { enabled: { type: Boolean, default: false }, commands: {} },
+    tickets: {
+      enabled: { type: Boolean, default: false },
+      categoryId: { type: String, default: null },
+      supportRoleIds: { type: [String], default: [] },
+      ticketMessage: {
+        title: { type: String, default: '🎫 Support Ticket' },
+        description: { type: String, default: 'Click the button below to create a support ticket. Our team will assist you shortly!' },
+        color: { type: String, default: '#f97316' },
+        footer: { type: String, default: 'Ticket System' },
+        buttonText: { type: String, default: 'Create Ticket' },
+        buttonEmoji: { type: String, default: '🎫' },
+      },
+      transcripts: {
+        enabled: { type: Boolean, default: false },
+        channelId: { type: String, default: null },
+      },
+      maxTicketsPerUser: { type: Number, default: 1 },
+      autoCloseAfterHours: { type: Number, default: 24 },
+      commands: {}
+    },
+    customCommands: {
+      enabled: { type: Boolean, default: false },
+      commands: {},
+      command: {
+        trigger: { type: String, default: '' },
+        title: { type: String, default: '' },
+        description: { type: String, default: '' },
+        color: { type: String, default: '#f97316' },
+        footer: { type: String, default: '' },
+        thumbnailUrl: { type: String, default: '' },
+        imageUrl: { type: String, default: '' },
+        fields: [{
+          name: { type: String },
+          value: { type: String },
+          inline: { type: Boolean, default: false }
+        }]
+      }
+    },
     fun: {
       enabled: { type: Boolean, default: false },
       commands: {
@@ -112,8 +147,6 @@ const ServerSettingsSchema = new mongoose.Schema({
         rate: { enabled: { type: Boolean, default: true }, allowedChannels: { type: [String], default: [] }, ignoredChannels: { type: [String], default: [] }, allowedRoles: { type: [String], default: [] }, ignoredRoles: { type: [String], default: [] } },
       }
     },
-    music: { enabled: { type: Boolean, default: false }, commands: {} },
-    serverInfo: { enabled: { type: Boolean, default: false }, commands: {} },
     utilities: {
       enabled: { type: Boolean, default: false },
       commands: {
@@ -130,20 +163,6 @@ const ServerSettingsSchema = new mongoose.Schema({
         ignoredroles: { enabled: { type: Boolean, default: true }, allowedChannels: { type: [String], default: [] }, ignoredChannels: { type: [String], default: [] }, allowedRoles: { type: [String], default: [] }, ignoredRoles: { type: [String], default: [] } },
       }
     },
-    settingsConfig: { enabled: { type: Boolean, default: false }, commands: {} },
-    security: {
-      enabled: { type: Boolean, default: false },
-      commands: {
-        lock: { enabled: { type: Boolean, default: true }, allowedChannels: { type: [String], default: [] }, ignoredChannels: { type: [String], default: [] }, allowedRoles: { type: [String], default: [] }, ignoredRoles: { type: [String], default: [] } },
-        unlock: { enabled: { type: Boolean, default: true }, allowedChannels: { type: [String], default: [] }, ignoredChannels: { type: [String], default: [] }, allowedRoles: { type: [String], default: [] }, ignoredRoles: { type: [String], default: [] } },
-      }
-    },
-    scheduler: {
-      enabled: { type: Boolean, default: false },
-      commands: {
-        schedulemessage: { enabled: { type: Boolean, default: true }, allowedChannels: { type: [String], default: [] }, ignoredChannels: { type: [String], default: [] }, allowedRoles: { type: [String], default: [] }, ignoredRoles: { type: [String], default: [] } },
-      }
-    },
     analytics: {
       enabled: { type: Boolean, default: false },
       commands: {
@@ -151,7 +170,6 @@ const ServerSettingsSchema = new mongoose.Schema({
         analyticsgrowth: { enabled: { type: Boolean, default: true }, allowedChannels: { type: [String], default: [] }, ignoredChannels: { type: [String], default: [] }, allowedRoles: { type: [String], default: [] }, ignoredRoles: { type: [String], default: [] } },
       }
     },
-    messageSearching: { enabled: { type: Boolean, default: false }, commands: {} },
   },
   configuration: {
     botNickname: { type: String, default: null },

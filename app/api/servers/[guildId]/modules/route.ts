@@ -6,10 +6,9 @@ import ServerSettings from '@/lib/models/ServerSettings';
 
 const MODULE_LIST = [
   'moderation', 'automod', 'antiRaid', 'logging', 'roleManagement',
-  'memberManagement', 'announcements', 'tickets', 'notifications',
-  'customCommands', 'fun', 'music', 'serverInfo', 'utilities',
-  'settingsConfig', 'security', 'scheduler',
-  'analytics', 'messageSearching',
+  'memberManagement', 'announcements', 'tickets',
+  'customCommands', 'fun', 'utilities',
+  'analytics',
 ];
 
 export async function GET(

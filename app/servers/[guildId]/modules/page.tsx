@@ -28,16 +28,10 @@ export default function ModulesPage() {
     { key: 'memberManagement', label: 'Member Management', desc: 'Change member usernames and profile pictures.' },
     { key: 'announcements', label: 'Announcements', desc: 'Send and manage announcements.' },
     { key: 'tickets', label: 'Tickets', desc: 'Create support ticket system.' },
-    { key: 'notifications', label: 'Welcome Messages', desc: 'Welcome and leave message setup.' },
     { key: 'customCommands', label: 'Custom Commands', desc: 'Create custom bot commands.' },
     { key: 'fun', label: 'Fun', desc: 'Fun and meme commands.' },
-    { key: 'music', label: 'Music', desc: 'Play music in voice channels.' },
-    { key: 'serverInfo', label: 'Server Info', desc: 'Display server info commands.' },
     { key: 'utilities', label: 'Utilities', desc: 'Utility and helper commands.' },
-    { key: 'settingsConfig', label: 'Settings / Config', desc: 'Configure bot settings.' },
-    { key: 'scheduler', label: 'Scheduler Module', desc: 'Schedule messages and tasks.' },
     { key: 'analytics', label: 'Analytics', desc: 'View server analytics and stats.' },
-    { key: 'messageSearching', label: 'Message Searching', desc: 'Search through server messages.' },
   ];
 
   useEffect(() => {
