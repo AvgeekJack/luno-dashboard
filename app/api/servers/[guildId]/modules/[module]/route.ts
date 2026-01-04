@@ -31,6 +31,7 @@ export async function GET(
         enabled, 
         commands,
         tickets: {
+          panelChannelId: moduleData?.panelChannelId ?? null,
           categoryId: moduleData?.categoryId ?? null,
           supportRoleIds: moduleData?.supportRoleIds ?? [],
           ticketMessage: moduleData?.ticketMessage ?? {
@@ -103,6 +104,9 @@ export async function PUT(
     // Handle tickets module specific data
     if (moduleKey === 'tickets' && body.tickets) {
       const ticketData = body.tickets;
+      if (ticketData.panelChannelId !== undefined) {
+        updates[`modules.${moduleKey}.panelChannelId`] = ticketData.panelChannelId;
+      }
       if (ticketData.categoryId !== undefined) {
         updates[`modules.${moduleKey}.categoryId`] = ticketData.categoryId;
       }
@@ -216,6 +220,7 @@ export async function PUT(
         enabled, 
         commands,
         tickets: {
+          panelChannelId: moduleData?.panelChannelId ?? null,
           categoryId: moduleData?.categoryId ?? null,
           supportRoleIds: moduleData?.supportRoleIds ?? [],
           ticketMessage: moduleData?.ticketMessage ?? {},

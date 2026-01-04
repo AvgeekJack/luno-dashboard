@@ -8,6 +8,7 @@ import { Switch } from '@/components/ui/switch';
 
 interface TicketSettings {
   enabled: boolean;
+  panelChannelId: string | null;
   categoryId: string | null;
   supportRoleIds: string[];
   ticketMessage: {
@@ -55,6 +56,7 @@ export default function TicketsPage() {
 
   const [settings, setSettings] = useState<TicketSettings>({
     enabled: false,
+    panelChannelId: null,
     categoryId: null,
     supportRoleIds: [],
     ticketMessage: {
@@ -123,6 +125,7 @@ export default function TicketsPage() {
         body: JSON.stringify({ 
           enabled: settings.enabled,
           tickets: {
+            panelChannelId: settings.panelChannelId,
             categoryId: settings.categoryId,
             supportRoleIds: settings.supportRoleIds,
             ticketMessage: settings.ticketMessage,
@@ -298,6 +301,21 @@ export default function TicketsPage() {
                   <h3 className="text-lg font-semibold text-[#0f172a]">Basic Settings</h3>
                   
                   <div className="grid gap-4">
+                    <div className="p-4 rounded-lg border border-orange-100 space-y-2">
+                      <label className="block text-sm font-semibold text-slate-800">Ticket Panel Channel</label>
+                      <select 
+                        value={settings.panelChannelId || ''} 
+                        onChange={(e) => updateSetting('panelChannelId', e.target.value || null)}
+                        className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white"
+                      >
+                        <option value="">Select channel...</option>
+                        {channels.filter(ch => ch.type !== 4).map(ch => (
+                          <option key={ch.id} value={ch.id}>#{ch.name}</option>
+                        ))}
+                      </select>
+                      <p className="text-xs text-slate-500">Channel where users can create tickets (the ticket panel will be sent here)</p>
+                    </div>
+
                     <div className="p-4 rounded-lg border border-orange-100 space-y-2">
                       <label className="block text-sm font-semibold text-slate-800">Ticket Category</label>
                       <select 

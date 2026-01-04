@@ -99,6 +99,7 @@ const ServerSettingsSchema = new mongoose.Schema({
     },
     tickets: {
       enabled: { type: Boolean, default: false },
+      panelChannelId: { type: String, default: null },
       categoryId: { type: String, default: null },
       supportRoleIds: { type: [String], default: [] },
       ticketMessage: {
