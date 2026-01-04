@@ -23,10 +23,39 @@ export async function GET(
       settings = await ServerSettings.create({ guildId });
     }
 
+    // Fetch channels and roles from Discord API
+    const botToken = process.env.DISCORD_BOT_TOKEN;
+    let channelsArray = [];
+    let rolesArray = [];
+
+    if (botToken) {
+      try {
+        const channelsRes = await fetch(`https://discord.com/api/v10/guilds/${guildId}/channels`, {
+          headers: { Authorization: `Bot ${botToken}` },
+        });
+        if (channelsRes.ok) {
+          const channels = await channelsRes.json();
+          channelsArray = channels.filter((c: any) => c.type === 0).map((c: any) => ({ id: c.id, name: c.name }));
+        }
+
+        const rolesRes = await fetch(`https://discord.com/api/v10/guilds/${guildId}/roles`, {
+          headers: { Authorization: `Bot ${botToken}` },
+        });
+        if (rolesRes.ok) {
+          const roles = await rolesRes.json();
+          rolesArray = roles.map((r: any) => ({ id: r.id, name: r.name, color: r.color }));
+        }
+      } catch (err) {
+        console.error('Error fetching Discord data:', err);
+      }
+    }
+
     return NextResponse.json({
       prefix: settings.prefix,
       botNickname: settings.configuration?.botNickname || '',
       timezone: settings.configuration?.timezone || 'UTC',
+      channels: channelsArray,
+      roles: rolesArray,
       configuration: {
         botNickname: settings.configuration?.botNickname || '',
         timezone: settings.configuration?.timezone || 'UTC',
@@ -106,13 +135,11 @@ export async function PUT(
 
     // Handle full reaction roles configuration update
     if (body['configuration.reactionRoles'] !== undefined) {
-      // Update entire reactionRoles object
       updateFields['configuration.reactionRoles'] = body['configuration.reactionRoles'];
     }
 
     // Handle full member verification configuration update
     if (body['configuration.memberVerification'] !== undefined) {
-      // Update entire memberVerification object
       updateFields['configuration.memberVerification'] = body['configuration.memberVerification'];
     }
 
