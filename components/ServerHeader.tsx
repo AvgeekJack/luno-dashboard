@@ -3,6 +3,7 @@
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import UserDropdown from '@/components/UserDropdown';
 
 interface ServerHeaderProps {
   guildId?: string;
@@ -30,18 +31,10 @@ export default function ServerHeader({ guildId }: ServerHeaderProps) {
             >
               Manage Servers
             </Link>
-            <div className="flex items-center gap-3 px-3 py-2 bg-orange-50 rounded-lg border border-orange-100">
-              {session.user.image && (
-                <img 
-                  src={session.user.image} 
-                  alt={session.user.name || 'User'} 
-                  className="w-8 h-8 rounded-full"
-                />
-              )}
-              <span className="text-sm font-semibold text-[#0f172a]">
-                {session.user.name || 'User'}
-              </span>
-            </div>
+            <UserDropdown 
+              userName={session.user.name || 'User'}
+              userImage={session.user.image}
+            />
           </div>
         )}
       </div>

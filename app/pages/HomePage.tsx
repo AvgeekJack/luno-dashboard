@@ -2,6 +2,7 @@
 
 import { useSession, signIn } from 'next-auth/react';
 import Link from 'next/link';
+import UserDropdown from '@/components/UserDropdown';
 
 export default function HomePage() {
   const { data: session } = useSession();
@@ -29,18 +30,10 @@ export default function HomePage() {
                   Dashboard
                 </Link>
                 {session.user && (
-                  <div className="flex items-center gap-3 px-3 py-2 bg-orange-50 rounded-lg border border-orange-100">
-                    {session.user.image && (
-                      <img 
-                        src={session.user.image} 
-                        alt={session.user.name || 'User'} 
-                        className="w-8 h-8 rounded-full"
-                      />
-                    )}
-                    <span className="text-sm font-semibold text-[#0f172a]">
-                      {session.user.name || 'User'}
-                    </span>
-                  </div>
+                  <UserDropdown 
+                    userName={session.user.name || 'User'}
+                    userImage={session.user.image}
+                  />
                 )}
               </>
             ) : (
