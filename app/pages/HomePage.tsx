@@ -504,7 +504,7 @@ export default function HomePage() {
 
             <div className="grid md:grid-cols-3 gap-6">
               {/* Row 1 */}
-              <div className="bg-gradient-to-br from-orange-500 to-orange-600 text-white p-8 rounded-2xl">
+              <div className="bg-gradient-to-br from-orange-500 to-orange-600 text-white p-6 rounded-2xl">
                 <h3 className="text-2xl font-bold mb-3">Moderation</h3>
                 <div className="space-y-2 text-sm opacity-90">
                   <p>/ban • /kick • /warn</p>
@@ -520,9 +520,9 @@ export default function HomePage() {
                   <p>/poll • /remind • /stats</p>
                 </div>
               </div>
-              <div className="bg-white border-2 border-slate-200 p-6 rounded-2xl">
-                <h3 className="text-xl font-bold mb-3 text-[#0f172a]">Security</h3>
-                <div className="space-y-2 text-sm text-slate-600">
+              <div className="bg-gradient-to-br from-orange-500 to-orange-600 text-white p-6 rounded-2xl">
+                <h3 className="text-2xl font-bold mb-3">Security</h3>
+                <div className="space-y-2 text-sm opacity-90">
                   <p>/antiraid • /antispam</p>
                   <p>/antilink • /verification</p>
                   <p>/captcha • /lockdown</p>
@@ -538,7 +538,7 @@ export default function HomePage() {
                   <p>/roll • /flip • /choose</p>
                 </div>
               </div>
-              <div className="md:col-span-2 bg-gradient-to-br from-orange-500 to-orange-600 text-white p-8 rounded-2xl">
+              <div className="bg-gradient-to-br from-orange-500 to-orange-600 text-white p-6 rounded-2xl">
                 <h3 className="text-2xl font-bold mb-3">Role Management</h3>
                 <div className="space-y-2 text-sm opacity-90">
                   <p>/role • /autorole • /massrole</p>
@@ -546,11 +546,9 @@ export default function HomePage() {
                   <p>/roleall • /removerole</p>
                 </div>
               </div>
-
-              {/* Row 3 */}
-              <div className="md:col-span-3 bg-gradient-to-br from-orange-500 to-orange-600 text-white p-8 rounded-2xl">
-                <h3 className="text-2xl font-bold mb-3">Announcements</h3>
-                <div className="space-y-2 text-sm opacity-90">
+              <div className="bg-white border-2 border-slate-200 p-6 rounded-2xl">
+                <h3 className="text-xl font-bold mb-3 text-[#0f172a]">Announcements</h3>
+                <div className="space-y-2 text-sm text-slate-600">
                   <p>/announce • /embed</p>
                   <p>/schedule • /edit</p>
                   <p>/ping • /say</p>
