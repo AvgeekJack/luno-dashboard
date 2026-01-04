@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import ServerHeader from '@/components/ServerHeader';
+import { Switch } from '@/components/ui/switch';
 
 interface MemberVerificationSettings {
   enabled: boolean;
@@ -28,6 +29,21 @@ interface MemberVerificationSettings {
   logChannel: string | null;
   captchaProvider: string;
   captchaDifficulty: 'easy' | 'medium' | 'hard';
+  customMessage?: string;
+  rulesText?: string;
+  accountAgeMinimum?: number;
+  requireServerAgreement?: boolean;
+  multipleSteps?: boolean;
+  stepCount?: number;
+  welcomeDmEnabled?: boolean;
+  welcomeDmMessage?: string;
+  redirectChannel?: string;
+  autoCleanupEnabled?: boolean;
+  cleanupDelay?: number;
+  antiAltEnabled?: boolean;
+  kickUnverifiedEnabled?: boolean;
+  kickUnverifiedAfter?: number;
+  verificationCooldown?: number;
 }
 
 interface Channel {
@@ -77,15 +93,8 @@ export default function MemberVerificationPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-    redirectChannel: '',
-    autoCleanupEnabled: false,
-    cleanupDelay: 60,
-    antiAltEnabled: false,
-    kickUnverifiedEnabled: false,
-    kickUnverifiedAfter: 600,
-    bypassRoles: [],
-    verificationCooldown: 0,
-  });
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [configOpen, setConfigOpen] = useState(true);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -215,7 +224,7 @@ export default function MemberVerificationPage() {
             </div>
             <Switch
               checked={settings.enabled}
-              onCheckedChange={(checked) => setSettings((prev) => ({ ...prev, enabled: checked }))}
+              onCheckedChange={(checked: boolean) => setSettings((prev) => ({ ...prev, enabled: checked }))}
             />
           </div>
 
@@ -241,7 +250,7 @@ export default function MemberVerificationPage() {
               <div>
                 <label className="block text-sm font-medium mb-2">Verification Channel</label>
                 <select
-                  value={settings.channelId}
+                  value={settings.channelId || ''}
                   onChange={(e) => setSettings((prev) => ({ ...prev, channelId: e.target.value }))}
                   className="w-full px-4 py-2 border border-slate-300 rounded-lg"
                 >
@@ -256,7 +265,7 @@ export default function MemberVerificationPage() {
               <div>
                 <label className="block text-sm font-medium mb-2">Verified Role</label>
                 <select
-                  value={settings.verifiedRoleId}
+                  value={settings.verifiedRoleId || ''}
                   onChange={(e) => setSettings((prev) => ({ ...prev, verifiedRoleId: e.target.value }))}
                   className="w-full px-4 py-2 border border-slate-300 rounded-lg"
                 >
@@ -271,7 +280,7 @@ export default function MemberVerificationPage() {
               <div>
                 <label className="block text-sm font-medium mb-2">Unverified Role (Optional)</label>
                 <select
-                  value={settings.unverifiedRoleId}
+                  value={settings.unverifiedRoleId || ''}
                   onChange={(e) => setSettings((prev) => ({ ...prev, unverifiedRoleId: e.target.value }))}
                   className="w-full px-4 py-2 border border-slate-300 rounded-lg"
                 >
@@ -321,7 +330,7 @@ export default function MemberVerificationPage() {
                 </div>
                 <Switch
                   checked={settings.requireAccountAge}
-                  onCheckedChange={(checked) => setSettings((prev) => ({ ...prev, requireAccountAge: checked }))}
+                  onCheckedChange={(checked: boolean) => setSettings((prev) => ({ ...prev, requireAccountAge: checked }))}
                 />
               </div>
 
@@ -346,7 +355,7 @@ export default function MemberVerificationPage() {
                 </div>
                 <Switch
                   checked={settings.requireServerAgreement}
-                  onCheckedChange={(checked) => setSettings((prev) => ({ ...prev, requireServerAgreement: checked }))}
+                  onCheckedChange={(checked: boolean) => setSettings((prev) => ({ ...prev, requireServerAgreement: checked }))}
                 />
               </div>
 
@@ -357,7 +366,7 @@ export default function MemberVerificationPage() {
                 </div>
                 <Switch
                   checked={settings.multipleSteps}
-                  onCheckedChange={(checked) => setSettings((prev) => ({ ...prev, multipleSteps: checked }))}
+                  onCheckedChange={(checked: boolean) => setSettings((prev) => ({ ...prev, multipleSteps: checked }))}
                 />
               </div>
 
@@ -389,7 +398,7 @@ export default function MemberVerificationPage() {
                 </div>
                 <Switch
                   checked={settings.welcomeDmEnabled}
-                  onCheckedChange={(checked) => setSettings((prev) => ({ ...prev, welcomeDmEnabled: checked }))}
+                  onCheckedChange={(checked: boolean) => setSettings((prev) => ({ ...prev, welcomeDmEnabled: checked }))}
                 />
               </div>
 
@@ -447,7 +456,7 @@ export default function MemberVerificationPage() {
                 </div>
                 <Switch
                   checked={settings.autoCleanupEnabled}
-                  onCheckedChange={(checked) => setSettings((prev) => ({ ...prev, autoCleanupEnabled: checked }))}
+                  onCheckedChange={(checked: boolean) => setSettings((prev) => ({ ...prev, autoCleanupEnabled: checked }))}
                 />
               </div>
 
@@ -479,7 +488,7 @@ export default function MemberVerificationPage() {
                 </div>
                 <Switch
                   checked={settings.antiAltEnabled}
-                  onCheckedChange={(checked) => setSettings((prev) => ({ ...prev, antiAltEnabled: checked }))}
+                  onCheckedChange={(checked: boolean) => setSettings((prev) => ({ ...prev, antiAltEnabled: checked }))}
                 />
               </div>
 
@@ -490,7 +499,7 @@ export default function MemberVerificationPage() {
                 </div>
                 <Switch
                   checked={settings.kickUnverifiedEnabled}
-                  onCheckedChange={(checked) => setSettings((prev) => ({ ...prev, kickUnverifiedEnabled: checked }))}
+                  onCheckedChange={(checked: boolean) => setSettings((prev) => ({ ...prev, kickUnverifiedEnabled: checked }))}
                 />
               </div>
 
