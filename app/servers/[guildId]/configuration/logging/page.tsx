@@ -12,7 +12,7 @@ interface LoggingSettings {
   antiRaidChannel: string | null;
   
   // Verification Logs
-  verificationLogChannel: string | null;
+  verificationChannel: string | null;
   trackVerificationMetrics: boolean;
   logFailedVerificationAttempts: boolean;
   
@@ -116,7 +116,7 @@ export default function LoggingPage() {
     enabled: false,
     automodLogChannel: null,
     antiRaidChannel: null,
-    verificationLogChannel: null,
+    verificationChannel: null,
     trackVerificationMetrics: false,
     logFailedVerificationAttempts: false,
     moderationChannel: null,
@@ -177,7 +177,7 @@ export default function LoggingPage() {
     enabled: false,
     automodLogChannel: null,
     antiRaidChannel: null,
-    verificationLogChannel: null,
+    verificationChannel: null,
     trackVerificationMetrics: false,
     logFailedVerificationAttempts: false,
     moderationChannel: null,
@@ -505,8 +505,8 @@ export default function LoggingPage() {
                       <p className="text-xs text-slate-500">All verification events will be logged here</p>
                     </div>
                     <select 
-                      value={settings.verificationLogChannel || ''} 
-                      onChange={(e) => updateSetting('verificationLogChannel', e.target.value || null)}
+                      value={settings.verificationChannel || ''} 
+                      onChange={(e) => updateSetting('verificationChannel', e.target.value || null)}
                       className="w-48 px-3 py-2 border border-blue-300 rounded-lg text-sm bg-white"
                     >
                       <option value="">Select channel...</option>

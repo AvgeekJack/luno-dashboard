@@ -270,7 +270,7 @@ const ServerSettingsSchema = new mongoose.Schema({
       integrationEnabled: { type: Boolean, default: false },
       
       // Verification Logs
-      verificationLogChannel: { type: String, default: null },
+      verificationChannel: { type: String, default: null },
       trackVerificationMetrics: { type: Boolean, default: false },
       logFailedVerificationAttempts: { type: Boolean, default: false },
       
