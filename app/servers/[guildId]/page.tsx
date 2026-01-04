@@ -255,7 +255,7 @@ export default function ServerSettings() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="rounded-xl border border-orange-100 bg-orange-50/50 p-4 shadow-sm">
                 <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Prefix</p>
                 <p className="text-2xl font-bold text-[#0f172a]">{settings.prefix || '!'}</p>

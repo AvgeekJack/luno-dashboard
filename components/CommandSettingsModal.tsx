@@ -187,26 +187,52 @@ export function CommandSettingsModal({
                   <p className="text-sm text-gray-600 mb-3">
                     Select channels where this command can be used. Leave empty to allow in all channels.
                   </p>
-                  <select
-                    multiple
-                    value={settings.allowedChannels}
-                    onChange={(e) => {
-                      const selected = Array.from(e.target.selectedOptions, option => option.value);
-                      setSettings(prev => ({ ...prev, allowedChannels: selected }));
-                    }}
-                    className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 min-h-[120px]"
-                  >
-                    {channels.length === 0 ? (
-                      <option disabled>No channels available</option>
-                    ) : (
-                      channels.map((channel) => (
+                  <div className="flex gap-2 mb-3">
+                    <select
+                      className="flex-1 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                      onChange={(e) => {
+                        if (e.target.value && !settings.allowedChannels.includes(e.target.value)) {
+                          setSettings(prev => ({
+                            ...prev,
+                            allowedChannels: [...prev.allowedChannels, e.target.value]
+                          }));
+                          e.target.value = '';
+                        }
+                      }}
+                      defaultValue=""
+                    >
+                      <option value="">Select channel...</option>
+                      {channels.map((channel) => (
                         <option key={channel.id} value={channel.id}>
                           # {channel.name}
                         </option>
-                      ))
+                      ))}
+                    </select>
+                  </div>
+                  <div className="space-y-2">
+                    {settings.allowedChannels.map((channelId) => {
+                      const channel = channels.find(c => c.id === channelId);
+                      return (
+                        <div key={channelId} className="flex items-center justify-between border border-gray-200 rounded-lg p-2 bg-gray-50">
+                          <span className="text-sm text-gray-700"># {channel?.name || channelId}</span>
+                          <button
+                            onClick={() => {
+                              setSettings(prev => ({
+                                ...prev,
+                                allowedChannels: prev.allowedChannels.filter(id => id !== channelId)
+                              }));
+                            }}
+                            className="text-red-600 hover:text-red-700 text-sm font-medium"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      );
+                    })}
+                    {settings.allowedChannels.length === 0 && (
+                      <p className="text-sm text-gray-500 italic">No channels selected</p>
                     )}
-                  </select>
-                  <p className="text-xs text-gray-500 mt-1">Hold Ctrl/Cmd to select multiple</p>
+                  </div>
                 </div>
 
                 {/* Ignored Channels */}
@@ -215,26 +241,52 @@ export function CommandSettingsModal({
                   <p className="text-sm text-gray-600 mb-3">
                     Select channels where this command should be disabled.
                   </p>
-                  <select
-                    multiple
-                    value={settings.ignoredChannels}
-                    onChange={(e) => {
-                      const selected = Array.from(e.target.selectedOptions, option => option.value);
-                      setSettings(prev => ({ ...prev, ignoredChannels: selected }));
-                    }}
-                    className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 min-h-[120px]"
-                  >
-                    {channels.length === 0 ? (
-                      <option disabled>No channels available</option>
-                    ) : (
-                      channels.map((channel) => (
+                  <div className="flex gap-2 mb-3">
+                    <select
+                      className="flex-1 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                      onChange={(e) => {
+                        if (e.target.value && !settings.ignoredChannels.includes(e.target.value)) {
+                          setSettings(prev => ({
+                            ...prev,
+                            ignoredChannels: [...prev.ignoredChannels, e.target.value]
+                          }));
+                          e.target.value = '';
+                        }
+                      }}
+                      defaultValue=""
+                    >
+                      <option value="">Select channel...</option>
+                      {channels.map((channel) => (
                         <option key={channel.id} value={channel.id}>
                           # {channel.name}
                         </option>
-                      ))
+                      ))}
+                    </select>
+                  </div>
+                  <div className="space-y-2">
+                    {settings.ignoredChannels.map((channelId) => {
+                      const channel = channels.find(c => c.id === channelId);
+                      return (
+                        <div key={channelId} className="flex items-center justify-between border border-gray-200 rounded-lg p-2 bg-gray-50">
+                          <span className="text-sm text-gray-700"># {channel?.name || channelId}</span>
+                          <button
+                            onClick={() => {
+                              setSettings(prev => ({
+                                ...prev,
+                                ignoredChannels: prev.ignoredChannels.filter(id => id !== channelId)
+                              }));
+                            }}
+                            className="text-red-600 hover:text-red-700 text-sm font-medium"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      );
+                    })}
+                    {settings.ignoredChannels.length === 0 && (
+                      <p className="text-sm text-gray-500 italic">No channels selected</p>
                     )}
-                  </select>
-                  <p className="text-xs text-gray-500 mt-1">Hold Ctrl/Cmd to select multiple</p>
+                  </div>
                 </div>
 
                 {/* Allowed Roles */}
@@ -243,26 +295,52 @@ export function CommandSettingsModal({
                   <p className="text-sm text-gray-600 mb-3">
                     Select roles that can use this command. Leave empty to allow all roles.
                   </p>
-                  <select
-                    multiple
-                    value={settings.allowedRoles}
-                    onChange={(e) => {
-                      const selected = Array.from(e.target.selectedOptions, option => option.value);
-                      setSettings(prev => ({ ...prev, allowedRoles: selected }));
-                    }}
-                    className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 min-h-[120px]"
-                  >
-                    {roles.length === 0 ? (
-                      <option disabled>No roles available</option>
-                    ) : (
-                      roles.map((role) => (
+                  <div className="flex gap-2 mb-3">
+                    <select
+                      className="flex-1 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                      onChange={(e) => {
+                        if (e.target.value && !settings.allowedRoles.includes(e.target.value)) {
+                          setSettings(prev => ({
+                            ...prev,
+                            allowedRoles: [...prev.allowedRoles, e.target.value]
+                          }));
+                          e.target.value = '';
+                        }
+                      }}
+                      defaultValue=""
+                    >
+                      <option value="">Select role...</option>
+                      {roles.map((role) => (
                         <option key={role.id} value={role.id}>
                           @ {role.name}
                         </option>
-                      ))
+                      ))}
+                    </select>
+                  </div>
+                  <div className="space-y-2">
+                    {settings.allowedRoles.map((roleId) => {
+                      const role = roles.find(r => r.id === roleId);
+                      return (
+                        <div key={roleId} className="flex items-center justify-between border border-gray-200 rounded-lg p-2 bg-gray-50">
+                          <span className="text-sm text-gray-700">@ {role?.name || roleId}</span>
+                          <button
+                            onClick={() => {
+                              setSettings(prev => ({
+                                ...prev,
+                                allowedRoles: prev.allowedRoles.filter(id => id !== roleId)
+                              }));
+                            }}
+                            className="text-red-600 hover:text-red-700 text-sm font-medium"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      );
+                    })}
+                    {settings.allowedRoles.length === 0 && (
+                      <p className="text-sm text-gray-500 italic">No roles selected</p>
                     )}
-                  </select>
-                  <p className="text-xs text-gray-500 mt-1">Hold Ctrl/Cmd to select multiple</p>
+                  </div>
                 </div>
 
                 {/* Ignored Roles */}
@@ -271,26 +349,52 @@ export function CommandSettingsModal({
                   <p className="text-sm text-gray-600 mb-3">
                     Select roles that cannot use this command.
                   </p>
-                  <select
-                    multiple
-                    value={settings.ignoredRoles}
-                    onChange={(e) => {
-                      const selected = Array.from(e.target.selectedOptions, option => option.value);
-                      setSettings(prev => ({ ...prev, ignoredRoles: selected }));
-                    }}
-                    className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 min-h-[120px]"
-                  >
-                    {roles.length === 0 ? (
-                      <option disabled>No roles available</option>
-                    ) : (
-                      roles.map((role) => (
+                  <div className="flex gap-2 mb-3">
+                    <select
+                      className="flex-1 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                      onChange={(e) => {
+                        if (e.target.value && !settings.ignoredRoles.includes(e.target.value)) {
+                          setSettings(prev => ({
+                            ...prev,
+                            ignoredRoles: [...prev.ignoredRoles, e.target.value]
+                          }));
+                          e.target.value = '';
+                        }
+                      }}
+                      defaultValue=""
+                    >
+                      <option value="">Select role...</option>
+                      {roles.map((role) => (
                         <option key={role.id} value={role.id}>
                           @ {role.name}
                         </option>
-                      ))
+                      ))}
+                    </select>
+                  </div>
+                  <div className="space-y-2">
+                    {settings.ignoredRoles.map((roleId) => {
+                      const role = roles.find(r => r.id === roleId);
+                      return (
+                        <div key={roleId} className="flex items-center justify-between border border-gray-200 rounded-lg p-2 bg-gray-50">
+                          <span className="text-sm text-gray-700">@ {role?.name || roleId}</span>
+                          <button
+                            onClick={() => {
+                              setSettings(prev => ({
+                                ...prev,
+                                ignoredRoles: prev.ignoredRoles.filter(id => id !== roleId)
+                              }));
+                            }}
+                            className="text-red-600 hover:text-red-700 text-sm font-medium"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      );
+                    })}
+                    {settings.ignoredRoles.length === 0 && (
+                      <p className="text-sm text-gray-500 italic">No roles selected</p>
                     )}
-                  </select>
-                  <p className="text-xs text-gray-500 mt-1">Hold Ctrl/Cmd to select multiple</p>
+                  </div>
                 </div>
               </div>
             )}
