@@ -9,14 +9,18 @@ import { Switch } from '@/components/ui/switch';
 interface LoggingSettings {
   enabled: boolean;
   automodLogChannel: string | null;
+  logAutomodViolations: boolean;
+  logAutomodActions: boolean;
+  logAutomodFilters: boolean;
   antiRaidChannel: string | null;
+  logRaidDetections: boolean;
+  logRaidActions: boolean;
+  logJoinPatterns: boolean;
   
   // Verification Logs
-  verificationChannel: {
-    channelId: string | null;
-    trackVerificationMetrics: boolean;
-    logFailedVerificationAttempts: boolean;
-  };
+  verificationChannel: string | null;
+  trackVerificationMetrics: boolean;
+  logFailedVerificationAttempts: boolean;
   
   // Section Channels
   moderationChannel: string | null;
@@ -117,12 +121,16 @@ export default function LoggingPage() {
   const [settings, setSettings] = useState<LoggingSettings>({
     enabled: false,
     automodLogChannel: null,
+    logAutomodViolations: true,
+    logAutomodActions: true,
+    logAutomodFilters: false,
     antiRaidChannel: null,
-    verificationChannel: {
-      channelId: null,
-      trackVerificationMetrics: false,
-      logFailedVerificationAttempts: false,
-    },
+    logRaidDetections: true,
+    logRaidActions: true,
+    logJoinPatterns: false,
+    verificationChannel: null,
+    trackVerificationMetrics: false,
+    logFailedVerificationAttempts: false,
     moderationChannel: null,
     memberChannel: null,
     messageChannel: null,
@@ -180,12 +188,16 @@ export default function LoggingPage() {
   const [originalSettings, setOriginalSettings] = useState<LoggingSettings>({
     enabled: false,
     automodLogChannel: null,
+    logAutomodViolations: true,
+    logAutomodActions: true,
+    logAutomodFilters: false,
     antiRaidChannel: null,
-    verificationChannel: {
-      channelId: null,
-      trackVerificationMetrics: false,
-      logFailedVerificationAttempts: false,
-    },
+    logRaidDetections: true,
+    logRaidActions: true,
+    logJoinPatterns: false,
+    verificationChannel: null,
+    trackVerificationMetrics: false,
+    logFailedVerificationAttempts: false,
     moderationChannel: null,
     memberChannel: null,
     messageChannel: null,
@@ -471,6 +483,41 @@ export default function LoggingPage() {
                       ))}
                     </select>
                   </div>
+
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3 p-4 rounded-lg border border-amber-100">
+                      <button type="button" onClick={() => updateSetting('logAutomodViolations', !settings.logAutomodViolations)}
+                        className={`${settings.logAutomodViolations ? 'bg-amber-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
+                        <span className={`${settings.logAutomodViolations ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
+                      </button>
+                      <div className="flex-1">
+                        <p className="font-semibold text-slate-800 text-sm">Log AutoMod Violations</p>
+                        <p className="text-xs text-slate-500">Track when users trigger automod filters</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3 p-4 rounded-lg border border-amber-100">
+                      <button type="button" onClick={() => updateSetting('logAutomodActions', !settings.logAutomodActions)}
+                        className={`${settings.logAutomodActions ? 'bg-amber-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
+                        <span className={`${settings.logAutomodActions ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
+                      </button>
+                      <div className="flex-1">
+                        <p className="font-semibold text-slate-800 text-sm">Log AutoMod Actions</p>
+                        <p className="text-xs text-slate-500">Track actions taken by automod (deletes, timeouts, etc.)</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3 p-4 rounded-lg border border-amber-100">
+                      <button type="button" onClick={() => updateSetting('logAutomodFilters', !settings.logAutomodFilters)}
+                        className={`${settings.logAutomodFilters ? 'bg-amber-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
+                        <span className={`${settings.logAutomodFilters ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
+                      </button>
+                      <div className="flex-1">
+                        <p className="font-semibold text-slate-800 text-sm">Log Filter Triggers</p>
+                        <p className="text-xs text-slate-500">Log which specific filters were triggered</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Anti-Raid Log Channel */}
@@ -496,6 +543,41 @@ export default function LoggingPage() {
                       ))}
                     </select>
                   </div>
+
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3 p-4 rounded-lg border border-red-100">
+                      <button type="button" onClick={() => updateSetting('logRaidDetections', !settings.logRaidDetections)}
+                        className={`${settings.logRaidDetections ? 'bg-red-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
+                        <span className={`${settings.logRaidDetections ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
+                      </button>
+                      <div className="flex-1">
+                        <p className="font-semibold text-slate-800 text-sm">Log Raid Detections</p>
+                        <p className="text-xs text-slate-500">Track when potential raids are detected</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3 p-4 rounded-lg border border-red-100">
+                      <button type="button" onClick={() => updateSetting('logRaidActions', !settings.logRaidActions)}
+                        className={`${settings.logRaidActions ? 'bg-red-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
+                        <span className={`${settings.logRaidActions ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
+                      </button>
+                      <div className="flex-1">
+                        <p className="font-semibold text-slate-800 text-sm">Log Anti-Raid Actions</p>
+                        <p className="text-xs text-slate-500">Track actions taken during raid mitigation (kicks, bans, lockdowns)</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3 p-4 rounded-lg border border-red-100">
+                      <button type="button" onClick={() => updateSetting('logJoinPatterns', !settings.logJoinPatterns)}
+                        className={`${settings.logJoinPatterns ? 'bg-red-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
+                        <span className={`${settings.logJoinPatterns ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
+                      </button>
+                      <div className="flex-1">
+                        <p className="font-semibold text-slate-800 text-sm">Log Join Patterns</p>
+                        <p className="text-xs text-slate-500">Monitor suspicious join patterns and member influx rates</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Verification Logs Section */}
@@ -511,8 +593,8 @@ export default function LoggingPage() {
                       <p className="text-xs text-slate-500">All verification events will be logged here</p>
                     </div>
                     <select 
-                      value={settings.verificationChannel.channelId || ''} 
-                      onChange={(e) => updateSetting('verificationChannel', { ...settings.verificationChannel, channelId: e.target.value || null })}
+                      value={settings.verificationChannel || ''} 
+                      onChange={(e) => updateSetting('verificationChannel', e.target.value || null)}
                       className="w-48 px-3 py-2 border border-blue-300 rounded-lg text-sm bg-white"
                     >
                       <option value="">Select channel...</option>
@@ -524,9 +606,9 @@ export default function LoggingPage() {
 
                   <div className="space-y-3">
                     <div className="flex items-center gap-3 p-4 rounded-lg border border-blue-100">
-                      <button type="button" onClick={() => updateSetting('verificationChannel', { ...settings.verificationChannel, trackVerificationMetrics: !settings.verificationChannel.trackVerificationMetrics })}
-                        className={`${settings.verificationChannel.trackVerificationMetrics ? 'bg-blue-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
-                        <span className={`${settings.verificationChannel.trackVerificationMetrics ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
+                      <button type="button" onClick={() => updateSetting('trackVerificationMetrics', !settings.trackVerificationMetrics)}
+                        className={`${settings.trackVerificationMetrics ? 'bg-blue-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
+                        <span className={`${settings.trackVerificationMetrics ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
                       </button>
                       <div className="flex-1">
                         <p className="font-semibold text-slate-800 text-sm">Track Verification Metrics</p>
@@ -535,9 +617,9 @@ export default function LoggingPage() {
                     </div>
 
                     <div className="flex items-center gap-3 p-4 rounded-lg border border-blue-100">
-                      <button type="button" onClick={() => updateSetting('verificationChannel', { ...settings.verificationChannel, logFailedVerificationAttempts: !settings.verificationChannel.logFailedVerificationAttempts })}
-                        className={`${settings.verificationChannel.logFailedVerificationAttempts ? 'bg-blue-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
-                        <span className={`${settings.verificationChannel.logFailedVerificationAttempts ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
+                      <button type="button" onClick={() => updateSetting('logFailedVerificationAttempts', !settings.logFailedVerificationAttempts)}
+                        className={`${settings.logFailedVerificationAttempts ? 'bg-blue-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
+                        <span className={`${settings.logFailedVerificationAttempts ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
                       </button>
                       <div className="flex-1">
                         <p className="font-semibold text-slate-800 text-sm">Log Failed Verification Attempts</p>
