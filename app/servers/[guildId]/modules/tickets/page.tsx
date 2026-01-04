@@ -165,8 +165,6 @@ export default function TicketsPage() {
     setHasUnsavedChanges(true);
   };
 
-  const categories = channels.filter(ch => ch.type === 4);
-
   if (status === 'loading' || loading) {
     return <div className="flex min-h-screen items-center justify-center text-[#0f172a]">Loading...</div>;
   }
