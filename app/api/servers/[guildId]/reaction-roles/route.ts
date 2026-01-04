@@ -5,7 +5,7 @@ import clientPromise from '@/lib/mongodb';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { guildId: string } }
+  { params }: { params: Promise<{ guildId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -13,11 +13,12 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const { guildId } = await params;
     const client = await clientPromise;
     const db = client.db('luno_bot');
     
     const serverSettings = await db.collection('server_settings').findOne({
-      guildId: params.guildId,
+      guildId: guildId,
     });
 
     const settings = serverSettings?.configuration?.reactionRoles || {
@@ -45,7 +46,7 @@ export async function GET(
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { guildId: string } }
+  { params }: { params: Promise<{ guildId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -54,12 +55,13 @@ export async function POST(
     }
 
     const { settings } = await request.json();
+    const { guildId } = await params;
 
     const client = await clientPromise;
     const db = client.db('luno_bot');
     
     await db.collection('server_settings').updateOne(
-      { guildId: params.guildId },
+      { guildId: guildId },
       {
         $set: {
           'configuration.reactionRoles': settings,
