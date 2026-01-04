@@ -4,32 +4,30 @@ import { useSession } from 'next-auth/react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { Switch } from '@/components/ui/switch';
+import ServerHeader from '@/components/ServerHeader';
 
 interface MemberVerificationSettings {
   enabled: boolean;
-  method: 'reaction' | 'button' | 'captcha' | 'manual';
-  channelId: string;
-  verifiedRoleId: string;
-  unverifiedRoleId: string;
-  customMessage: string;
-  rulesText: string;
-  requireAccountAge: boolean;
-  accountAgeMinimum: number;
-  requireServerAgreement: boolean;
-  multipleSteps: boolean;
-  stepCount: number;
-  welcomeDmEnabled: boolean;
-  welcomeDmMessage: string;
+  method: 'button' | 'captcha' | 'email';
+  channelId: string | null;
+  verifiedRoleId: string | null;
+  unverifiedRoleId: string | null;
   additionalRoles: string[];
-  redirectChannel: string;
-  autoCleanupEnabled: boolean;
-  cleanupDelay: number;
-  antiAltEnabled: boolean;
-  kickUnverifiedEnabled: boolean;
-  kickUnverifiedAfter: number;
   bypassRoles: string[];
-  verificationCooldown: number;
+  kickUnverified: boolean;
+  kickTimeout: number;
+  sendDM: boolean;
+  dmMessage: string;
+  verifyMessage: string;
+  buttonLabel: string;
+  buttonColor: string;
+  requireAccountAge: boolean;
+  minimumAccountAge: number;
+  requireServerTime: boolean;
+  minimumServerTime: number;
+  logChannel: string | null;
+  captchaProvider: string;
+  captchaDifficulty: 'easy' | 'medium' | 'hard';
 }
 
 interface Channel {

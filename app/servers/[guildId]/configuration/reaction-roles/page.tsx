@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { Switch } from '@/components/ui/switch';
+import ServerHeader from '@/components/ServerHeader';
 
 interface ReactionRole {
   emoji: string;
@@ -108,36 +108,46 @@ export default function ReactionRolesPage() {
   });
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
+    if (status === 'loading') return;
+    if (!session) {
       router.push('/');
       return;
     }
 
-    if (!session || !gid) return;
+    const fetchChannelsAndRoles = async () => {
+      try {
+        const res = await fetch(`/api/servers/${gid}/channels-and-roles`);
+        if (res.ok) {
+          const data = await res.json();
+          setChannels(data.channels || []);
+          setRoles(data.roles || []);
+        }
+      } catch (error) {
+        console.error("Failed to fetch channels and roles:", error);
+      }
+    };
 
-    // Fetch channels and roles
-    fetch(`/api/servers/${gid}/channels-and-roles`)
-      .then((res) => res.json())
-      .then((data) => {
-        setChannels(data.channels ?? []);
-        setRoles(data.roles ?? []);
-      })
-      .catch((err) => console.error(err));
-
-    // Fetch reaction role settings
-    fetch(`/api/servers/${gid}/reaction-roles`)
-      .then((res) => res.json())
-      .then((data) => {
-        const loadedSettings = data.settings || settings;
-        setSettings(loadedSettings);
-        setOriginalSettings(loadedSettings);
-        setLoading(false);
-      })
-      .catch((err) => {
+    const fetchSettings = async () => {
+      try {
+        const response = await fetch(`/api/servers/${gid}/general`);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.configuration?.reactionRoles) {
+            const loadedSettings = { ...settings, ...data.configuration.reactionRoles };
+            setSettings(loadedSettings);
+            setOriginalSettings(loadedSettings);
+          }
+        }
+      } catch (err) {
         console.error(err);
+      } finally {
         setLoading(false);
-      });
-  }, [session, status, gid, router]);
+      }
+    };
+
+    fetchChannelsAndRoles();
+    fetchSettings();
+  }, [session, status, router, gid]);
 
   useEffect(() => {
     const hasChanges = JSON.stringify(settings) !== JSON.stringify(originalSettings);
@@ -147,25 +157,32 @@ export default function ReactionRolesPage() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const res = await fetch(`/api/servers/${gid}/reaction-roles`, {
-        method: 'POST',
+      const response = await fetch(`/api/servers/${gid}/general`, {
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ settings }),
+        body: JSON.stringify({
+          'configuration.reactionRoles': settings,
+        }),
       });
 
-      if (res.ok) {
-        setOriginalSettings(settings);
+      if (response.ok) {
+        setOriginalSettings({ ...settings });
         setHasUnsavedChanges(false);
-        alert('Settings saved successfully!');
-      } else {
-        alert('Failed to save settings');
       }
     } catch (err) {
       console.error(err);
-      alert('Error saving settings');
     } finally {
       setSaving(false);
     }
+  };
+
+  const handleReset = () => {
+    setSettings({ ...originalSettings });
+    setHasUnsavedChanges(false);
+  };
+
+  const updateSetting = <K extends keyof ReactionRoleSettings>(key: K, value: ReactionRoleSettings[K]) => {
+    setSettings(prev => ({ ...prev, [key]: value }));
   };
 
   const handleAddPanel = () => {
@@ -326,27 +343,37 @@ export default function ReactionRolesPage() {
       </aside>
 
       {/* Main Content */}
-      <main className="ml-64 flex-1 p-8">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h1 className="text-3xl font-bold">Reaction Roles</h1>
-              <p className="text-slate-600 mt-1">Configure reaction role panels and settings</p>
-            </div>
-            <Switch
-              checked={settings.enabled}
-              onCheckedChange={(checked) => setSettings((prev) => ({ ...prev, enabled: checked }))}
-            />
+      <main className="flex-1 ml-64 py-12 px-4 md:px-8 flex justify-center">
+        <div className="w-full max-w-4xl space-y-4 md:space-y-6">
+          <ServerHeader guildId={gid} />
+
+          <div className="space-y-1">
+            <p className="text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">Configuration</p>
+            <h1 className="text-3xl font-bold">Reaction Roles</h1>
           </div>
 
-          {/* Core Configuration */}
-          <div className="bg-white rounded-lg shadow-sm border border-orange-100 p-6 mb-6">
-            <h2 className="text-xl font-bold mb-4">Core Configuration</h2>
-            
-            <div className="space-y-6">
-              {/* Role Assignment Settings */}
+          <div className="bg-white border border-orange-100 rounded-2xl shadow-sm p-6 md:p-8 space-y-8">
+            {/* Master Toggle */}
+            <div className="flex items-center justify-between pb-6 border-b border-orange-100">
               <div>
-                <label className="block text-sm font-medium mb-2">Role Limit Per User</label>
+                <h2 className="text-xl font-semibold text-[#0f172a]">Reaction Roles System</h2>
+                <p className="text-slate-600 text-sm mt-1">Allow users to self-assign roles via reactions</p>
+              </div>
+              <button 
+                type="button" 
+                onClick={() => updateSetting('enabled', !settings.enabled)}
+                className={`${settings.enabled ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-6 w-11 items-center rounded-full transition`}
+              >
+                <span className={`${settings.enabled ? 'translate-x-6' : 'translate-x-1'} inline-block h-4 w-4 transform rounded-full bg-white transition`} />
+              </button>
+            </div>
+
+            {/* Core Settings */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-[#0f172a]">Core Settings</h3>
+
+              <div className="p-4 rounded-lg border border-orange-100 space-y-2">
+                <label className="block text-sm font-semibold text-slate-800">Role Limit Per User</label>
                 <input
                   type="number"
                   min="1"
@@ -373,33 +400,60 @@ export default function ReactionRolesPage() {
                 <p className="text-xs text-slate-500 mt-1">Users must have this role to access reaction roles</p>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-2">Blacklisted Roles</label>
-                <select
-                  multiple
-                  value={settings.blacklistedRoles}
-                  onChange={(e) => {
-                    const selected = Array.from(e.target.selectedOptions, option => option.value);
-                    setSettings((prev) => ({ ...prev, blacklistedRoles: selected }));
-                  }}
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg h-32"
-                >
-                  {roles.map((role) => (
-                    <option key={role.id} value={role.id}>{role.name}</option>
+              <div className="p-4 rounded-lg border border-orange-100 space-y-2">
+                <label className="block text-sm font-semibold text-slate-800">Blacklisted Roles</label>
+                <div className="space-y-2">
+                  {settings.blacklistedRoles.map((roleId, idx) => (
+                    <div key={idx} className="flex items-center gap-2">
+                      <select
+                        value={roleId}
+                        onChange={(e) => {
+                          const newBlacklist = [...settings.blacklistedRoles];
+                          newBlacklist[idx] = e.target.value;
+                          updateSetting('blacklistedRoles', newBlacklist);
+                        }}
+                        className="flex-1 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white"
+                      >
+                        <option value="">Select role...</option>
+                        {roles.map((role) => (
+                          <option key={role.id} value={role.id}>@{role.name}</option>
+                        ))}
+                      </select>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const newBlacklist = settings.blacklistedRoles.filter((_, i) => i !== idx);
+                          updateSetting('blacklistedRoles', newBlacklist);
+                        }}
+                        className="px-3 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition text-sm font-medium"
+                      >
+                        Remove
+                      </button>
+                    </div>
                   ))}
-                </select>
-                <p className="text-xs text-slate-500 mt-1">Hold Ctrl/Cmd to select multiple. Users with these roles cannot access reaction roles</p>
+                  <button
+                    type="button"
+                    onClick={() => updateSetting('blacklistedRoles', [...settings.blacklistedRoles, ''])}
+                    className="w-full px-3 py-2 border-2 border-dashed border-orange-300 rounded-lg text-orange-600 hover:border-orange-400 hover:text-orange-700 transition text-sm font-medium"
+                  >
+                    + Add Role
+                  </button>
+                </div>
+                <p className="text-xs text-slate-500">Users with these roles cannot access reaction roles</p>
               </div>
 
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
                 <div>
-                  <p className="font-medium">Allow Role Stacking</p>
-                  <p className="text-sm text-slate-600">Users can have multiple roles from the same panel</p>
+                  <p className="font-semibold text-slate-800 text-sm">Allow Role Stacking</p>
+                  <p className="text-xs text-slate-500">Users can have multiple roles from the same panel</p>
                 </div>
-                <Switch
-                  checked={settings.allowRoleStacking}
-                  onCheckedChange={(checked) => setSettings((prev) => ({ ...prev, allowRoleStacking: checked }))}
-                />
+                <button 
+                  type="button" 
+                  onClick={() => updateSetting('allowRoleStacking', !settings.allowRoleStacking)}
+                  className={`${settings.allowRoleStacking ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition`}
+                >
+                  <span className={`${settings.allowRoleStacking ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
+                </button>
               </div>
             </div>
           </div>
@@ -409,26 +463,32 @@ export default function ReactionRolesPage() {
             <h2 className="text-xl font-bold mb-4">Advanced Options</h2>
             
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
                 <div>
-                  <p className="font-medium">Auto-Delete Reactions</p>
-                  <p className="text-sm text-slate-600">Delete reaction after role is assigned</p>
+                  <p className="font-semibold text-slate-800 text-sm">Auto-Delete Reactions</p>
+                  <p className="text-xs text-slate-500">Delete reaction after role is assigned</p>
                 </div>
-                <Switch
-                  checked={settings.autoDeleteReactions}
-                  onCheckedChange={(checked) => setSettings((prev) => ({ ...prev, autoDeleteReactions: checked }))}
-                />
+                <button 
+                  type="button" 
+                  onClick={() => updateSetting('autoDeleteReactions', !settings.autoDeleteReactions)}
+                  className={`${settings.autoDeleteReactions ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition`}
+                >
+                  <span className={`${settings.autoDeleteReactions ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
+                </button>
               </div>
 
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
                 <div>
-                  <p className="font-medium">DM on Role Add</p>
-                  <p className="text-sm text-slate-600">Send DM when role is added</p>
+                  <p className="font-semibold text-slate-800 text-sm">DM on Role Add</p>
+                  <p className="text-xs text-slate-500">Send DM when role is added</p>
                 </div>
-                <Switch
-                  checked={settings.dmOnRoleAdd}
-                  onCheckedChange={(checked) => setSettings((prev) => ({ ...prev, dmOnRoleAdd: checked }))}
-                />
+                <button 
+                  type="button" 
+                  onClick={() => updateSetting('dmOnRoleAdd', !settings.dmOnRoleAdd)}
+                  className={`${settings.dmOnRoleAdd ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition`}
+                >
+                  <span className={`${settings.dmOnRoleAdd ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
+                </button>
               </div>
 
               {settings.dmOnRoleAdd && (
@@ -445,15 +505,18 @@ export default function ReactionRolesPage() {
                 </div>
               )}
 
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
                 <div>
-                  <p className="font-medium">DM on Role Remove</p>
-                  <p className="text-sm text-slate-600">Send DM when role is removed</p>
+                  <p className="font-semibold text-slate-800 text-sm">DM on Role Remove</p>
+                  <p className="text-xs text-slate-500">Send DM when role is removed</p>
                 </div>
-                <Switch
-                  checked={settings.dmOnRoleRemove}
-                  onCheckedChange={(checked) => setSettings((prev) => ({ ...prev, dmOnRoleRemove: checked }))}
-                />
+                <button 
+                  type="button" 
+                  onClick={() => updateSetting('dmOnRoleRemove', !settings.dmOnRoleRemove)}
+                  className={`${settings.dmOnRoleRemove ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition`}
+                >
+                  <span className={`${settings.dmOnRoleRemove ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
+                </button>
               </div>
 
               {settings.dmOnRoleRemove && (
@@ -470,15 +533,18 @@ export default function ReactionRolesPage() {
                 </div>
               )}
 
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
                 <div>
-                  <p className="font-medium">Role Persistence</p>
-                  <p className="text-sm text-slate-600">Re-add roles if user leaves and rejoins</p>
+                  <p className="font-semibold text-slate-800 text-sm">Role Persistence</p>
+                  <p className="text-xs text-slate-500">Re-add roles if user leaves and rejoins</p>
                 </div>
-                <Switch
-                  checked={settings.rolePersistence}
-                  onCheckedChange={(checked) => setSettings((prev) => ({ ...prev, rolePersistence: checked }))}
-                />
+                <button 
+                  type="button" 
+                  onClick={() => updateSetting('rolePersistence', !settings.rolePersistence)}
+                  className={`${settings.rolePersistence ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition`}
+                >
+                  <span className={`${settings.rolePersistence ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
+                </button>
               </div>
 
               <div>
