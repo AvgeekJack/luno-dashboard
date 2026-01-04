@@ -62,7 +62,6 @@ export async function GET(
         automod: settings.configuration?.automod || {},
         logging: settings.configuration?.logging || {},
         reactionRoles: settings.configuration?.reactionRoles || {},
-        memberVerification: settings.configuration?.memberVerification || {},
       },
     });
   } catch (error) {
@@ -138,11 +137,6 @@ export async function PUT(
       updateFields['configuration.reactionRoles'] = body['configuration.reactionRoles'];
     }
 
-    // Handle full member verification configuration update
-    if (body['configuration.memberVerification'] !== undefined) {
-      updateFields['configuration.memberVerification'] = body['configuration.memberVerification'];
-    }
-
     if (Object.keys(updateFields).length === 0) {
       return NextResponse.json(
         { error: 'No fields to update' },
@@ -166,7 +160,6 @@ export async function PUT(
         automod: updated.configuration?.automod || {},
         logging: updated.configuration?.logging || {},
         reactionRoles: updated.configuration?.reactionRoles || {},
-        memberVerification: updated.configuration?.memberVerification || {},
       },
     });
   } catch (error) {

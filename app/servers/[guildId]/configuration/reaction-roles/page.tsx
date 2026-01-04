@@ -178,9 +178,6 @@ export default function ReactionRolesPage() {
             <Link href={`/servers/${gid}/configuration/reaction-roles`} className="block px-4 py-2 rounded-lg bg-orange-100 text-orange-600 transition">
               Reaction Roles
             </Link>
-            <Link href={`/servers/${gid}/configuration/member-verification`} className="block px-4 py-2 rounded-lg text-slate-700 hover:bg-orange-50 transition">
-              Member Verification
-            </Link>
           </div>
         </nav>
       </aside>
