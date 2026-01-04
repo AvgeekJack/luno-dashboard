@@ -5,6 +5,7 @@ import { useRouter, useParams, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { CommandGrid } from '@/components/CommandGrid';
+import { CommandSettingsModal } from '@/components/CommandSettingsModal';
 import { Switch } from '@/components/ui/switch';
 
 const MEMBER_MANAGEMENT_COMMANDS = [
@@ -29,6 +30,8 @@ export default function MemberManagementPage() {
   const [originalCommands, setOriginalCommands] = useState(MEMBER_MANAGEMENT_COMMANDS);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [settingsModalOpen, setSettingsModalOpen] = useState(false);
+  const [selectedCommand, setSelectedCommand] = useState<string | null>(null);
 
   useEffect(() => {
     const loadSettings = async () => {
@@ -109,6 +112,16 @@ export default function MemberManagementPage() {
     setModuleEnabled(originalModuleEnabled);
     setCommands([...originalCommands]);
     setHasUnsavedChanges(false);
+  };
+
+  const handleCommandSettings = (commandName: string) => {
+    setSelectedCommand(commandName);
+    setSettingsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setSettingsModalOpen(false);
+    setSelectedCommand(null);
   };
 
   useEffect(() => {
@@ -251,12 +264,27 @@ export default function MemberManagementPage() {
               style={{ transitionProperty: 'max-height, opacity' }}
             >
               <div className="space-y-6 border-t border-orange-100 pt-6">
-                <CommandGrid commands={commands} onCommandToggle={handleCommandToggle} />
+                <CommandGrid 
+                  commands={commands} 
+                  onCommandToggle={handleCommandToggle}
+                  onCommandSettings={handleCommandSettings}
+                />
               </div>
             </div>
           </div>
         </div>
       </main>
+
+      {/* Command Settings Modal */}
+      {selectedCommand && (
+        <CommandSettingsModal
+          isOpen={settingsModalOpen}
+          onClose={handleCloseModal}
+          commandName={selectedCommand}
+          module="memberManagement"
+          guildId={guildId as string}
+        />
+      )}
 
       {/* Save Changes Overlay */}
       <div 

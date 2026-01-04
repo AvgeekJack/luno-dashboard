@@ -4,6 +4,70 @@ import { authOptions } from '@/lib/auth';
 import connectDB from '@/lib/mongoose';
 import ServerSettings from '@/lib/models/ServerSettings';
 
+// GET endpoint to fetch command settings
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ guildId: string; command: string }> }
+) {
+  const session = await getServerSession(authOptions);
+  const { guildId, command } = await params;
+
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  try {
+    await connectDB();
+    const settings = await ServerSettings.findOne({ guildId });
+    
+    if (!settings) {
+      return NextResponse.json({
+        enabled: true,
+        allowedChannels: [],
+        ignoredChannels: [],
+        allowedRoles: [],
+        ignoredRoles: [],
+      });
+    }
+
+    // Search through all modules to find the command
+    let commandData = null;
+    for (const [moduleName, moduleData] of Object.entries(settings.modules)) {
+      if (moduleData && typeof moduleData === 'object' && 'commands' in moduleData) {
+        const commands = (moduleData as any).commands;
+        if (commands && commands[command]) {
+          commandData = commands[command];
+          break;
+        }
+      }
+    }
+
+    if (!commandData) {
+      return NextResponse.json({
+        enabled: true,
+        allowedChannels: [],
+        ignoredChannels: [],
+        allowedRoles: [],
+        ignoredRoles: [],
+      });
+    }
+
+    return NextResponse.json({
+      enabled: commandData.enabled ?? true,
+      allowedChannels: commandData.allowedChannels || [],
+      ignoredChannels: commandData.ignoredChannels || [],
+      allowedRoles: commandData.allowedRoles || [],
+      ignoredRoles: commandData.ignoredRoles || [],
+    });
+  } catch (error) {
+    console.error('Error fetching command settings:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
+
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ guildId: string; command: string }> }
@@ -19,8 +83,72 @@ export async function PUT(
     const body = await request.json();
     await connectDB();
 
-    const updatePath = `commands.${command}`;
-    const settings = await ServerSettings.findOneAndUpdate(
+    // Find which module this command belongs to
+    const settings = await ServerSettings.findOne({ guildId });
+    let moduleName = null;
+    
+    if (settings) {
+      for (const [module, moduleData] of Object.entries(settings.modules)) {
+        if (moduleData && typeof moduleData === 'object' && 'commands' in moduleData) {
+          const commands = (moduleData as any).commands;
+          if (commands && commands[command]) {
+            moduleName = module;
+            break;
+          }
+        }
+      }
+    }
+
+    // If we can't find the module, try to find it in the schema defaults
+    if (!moduleName) {
+      // Common module mappings based on command names
+      const moduleMap: Record<string, string> = {
+        ban: 'moderation', softban: 'moderation', unban: 'moderation', kick: 'moderation',
+        mute: 'moderation', unmute: 'moderation', tempmute: 'moderation',
+        timeout: 'moderation', untimeout: 'moderation',
+        warn: 'moderation', warnings: 'moderation', clearwarnings: 'moderation',
+        clear: 'moderation', slowmode: 'moderation',
+        automodenable: 'automod', automoddisable: 'automod',
+        antilink: 'automod', antiinvite: 'automod', antispam: 'automod',
+        antimention: 'automod', antizalgo: 'automod', antiswear: 'automod',
+        antiflood: 'automod', capsfilter: 'automod', duplicatefilter: 'automod',
+        regexfilter: 'automod', automodlogs: 'automod',
+        antiraidenable: 'antiRaid', antiraiddisable: 'antiRaid', antiraidlevel: 'antiRaid',
+        joinrate: 'antiRaid', verificationenable: 'antiRaid', verificationdisable: 'antiRaid',
+        lockdown: 'antiRaid', unlockdown: 'antiRaid',
+        modlogenable: 'logging', modlogdisable: 'logging',
+        messagelog: 'logging', editlog: 'logging', deletelog: 'logging',
+        joinlog: 'logging', leavelog: 'logging', voicelog: 'logging',
+        rolelog: 'logging', nicknamelog: 'logging',
+        rolecreate: 'roleManagement', roledelete: 'roleManagement',
+        rolelist: 'roleManagement', autorolestatus: 'roleManagement',
+        userinfo: 'memberManagement', useravatar: 'memberManagement',
+        userbanner: 'memberManagement', userroles: 'memberManagement',
+        pruneusers: 'memberManagement',
+        announce: 'announcements', creategiveaway: 'announcements',
+        giveawaydraw: 'announcements', poll: 'announcements',
+        meme: 'fun', '8ball': 'fun', coinflip: 'fun', dice: 'fun',
+        joke: 'fun', rps: 'fun', rate: 'fun',
+        serverinfo: 'utilities', channelinfo: 'utilities', roleinfo: 'utilities',
+        emojilist: 'utilities', ping: 'utilities', invite: 'utilities',
+        help: 'utilities', support: 'utilities', dashboard: 'utilities',
+        ignoredchannels: 'utilities', ignoredroles: 'utilities',
+        lock: 'security', unlock: 'security',
+        schedulemessage: 'scheduler',
+        analyticsserver: 'analytics',
+      };
+      moduleName = moduleMap[command];
+    }
+
+    if (!moduleName) {
+      return NextResponse.json(
+        { error: 'Command module not found' },
+        { status: 404 }
+      );
+    }
+
+    const updatePath = `modules.${moduleName}.commands.${command}`;
+    const updatedSettings = await ServerSettings.findOneAndUpdate(
       { guildId },
       {
         $set: {
@@ -34,7 +162,7 @@ export async function PUT(
       { new: true, upsert: true }
     );
 
-    return NextResponse.json(settings);
+    return NextResponse.json(updatedSettings);
   } catch (error) {
     console.error('Error updating command settings:', error);
     return NextResponse.json(

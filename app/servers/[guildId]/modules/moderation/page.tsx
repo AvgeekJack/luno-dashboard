@@ -5,6 +5,7 @@ import { useRouter, useParams, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { CommandGrid } from '@/components/CommandGrid';
+import { CommandSettingsModal } from '@/components/CommandSettingsModal';
 import { Switch } from '@/components/ui/switch';
 
 const MODERATION_COMMANDS = [
@@ -59,6 +60,8 @@ export default function ModerationPage() {
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [settingsModalOpen, setSettingsModalOpen] = useState(false);
+  const [selectedCommand, setSelectedCommand] = useState<string | null>(null);
 
   // Load initial state
   useEffect(() => {
@@ -142,6 +145,16 @@ export default function ModerationPage() {
     setModuleEnabled(originalModuleEnabled);
     setCommands([...originalCommands]);
     setHasUnsavedChanges(false);
+  };
+
+  const handleCommandSettings = (commandName: string) => {
+    setSelectedCommand(commandName);
+    setSettingsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setSettingsModalOpen(false);
+    setSelectedCommand(null);
   };
 
   useEffect(() => {
@@ -290,12 +303,24 @@ export default function ModerationPage() {
                 <CommandGrid 
                   commands={commands}
                   onCommandToggle={handleCommandToggle}
+                  onCommandSettings={handleCommandSettings}
                 />
               </div>
             </div>
           </div>
         </div>
       </main>
+
+      {/* Command Settings Modal */}
+      {selectedCommand && (
+        <CommandSettingsModal
+          isOpen={settingsModalOpen}
+          onClose={handleCloseModal}
+          commandName={selectedCommand}
+          module="moderation"
+          guildId={guildId as string}
+        />
+      )}
 
       {/* Save Changes Overlay */}
       <div 
