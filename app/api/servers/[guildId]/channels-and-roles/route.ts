@@ -40,6 +40,7 @@ export async function GET(
       .map((ch: any) => ({
         id: ch.id,
         name: ch.name,
+        type: ch.type,
       }));
 
     // Fetch roles
@@ -64,6 +65,7 @@ export async function GET(
       .map((r: any) => ({
         id: r.id,
         name: r.name,
+        color: r.color,
       }));
 
     return NextResponse.json({ channels, roles });

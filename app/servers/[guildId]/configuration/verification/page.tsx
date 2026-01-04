@@ -167,6 +167,13 @@ export default function VerificationPage() {
 
   const textChannels = channels.filter(c => c.type === 0);
 
+  // Debug logging
+  if (typeof window !== 'undefined') {
+    console.log('Verification Page - Channels:', channels.length);
+    console.log('Verification Page - Text Channels:', textChannels.length);
+    console.log('Verification Page - Text Channels Data:', textChannels);
+  }
+
   if (status === 'loading' || loading) {
     return <div className="flex min-h-screen items-center justify-center text-[#0f172a]">Loading...</div>;
   }
@@ -351,19 +358,23 @@ export default function VerificationPage() {
                         {settings.verificationChannel ? `# ${getChannelName(settings.verificationChannel)}` : '+ Select Channel'}
                       </button>
                       {showVerificationChannelDropdown && (
-                        <div className="absolute z-50 w-full mt-2 bg-white border border-orange-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
-                          {textChannels.map(channel => (
-                            <button
-                              key={channel.id}
-                              onClick={() => {
-                                updateSetting('verificationChannel', channel.id);
-                                setShowVerificationChannelDropdown(false);
-                              }}
-                              className="w-full px-4 py-2 text-left hover:bg-orange-50 text-sm transition"
-                            >
-                              # {channel.name}
-                            </button>
-                          ))}
+                        <div className="absolute z-50 left-0 right-0 mt-2 bg-white border border-orange-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                          {textChannels.length === 0 ? (
+                            <div className="px-4 py-2 text-sm text-slate-500">No text channels found</div>
+                          ) : (
+                            textChannels.map(channel => (
+                              <button
+                                key={channel.id}
+                                onClick={() => {
+                                  updateSetting('verificationChannel', channel.id);
+                                  setShowVerificationChannelDropdown(false);
+                                }}
+                                className="w-full px-4 py-2 text-left hover:bg-orange-50 text-sm transition"
+                              >
+                                # {channel.name}
+                              </button>
+                            ))
+                          )}
                         </div>
                       )}
                       <p className="text-xs text-slate-500">Channel where verification message appears</p>
@@ -378,19 +389,23 @@ export default function VerificationPage() {
                         {settings.verifiedRole ? getRoleName(settings.verifiedRole) : '+ Select Role'}
                       </button>
                       {showVerifiedRoleDropdown && (
-                        <div className="absolute z-50 w-full mt-2 bg-white border border-orange-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
-                          {roles.map(role => (
-                            <button
-                              key={role.id}
-                              onClick={() => {
-                                updateSetting('verifiedRole', role.id);
-                                setShowVerifiedRoleDropdown(false);
-                              }}
-                              className="w-full px-4 py-2 text-left hover:bg-orange-50 text-sm transition"
-                            >
-                              {role.name}
-                            </button>
-                          ))}
+                        <div className="absolute z-50 left-0 right-0 mt-2 bg-white border border-orange-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                          {roles.length === 0 ? (
+                            <div className="px-4 py-2 text-sm text-slate-500">No roles found</div>
+                          ) : (
+                            roles.map(role => (
+                              <button
+                                key={role.id}
+                                onClick={() => {
+                                  updateSetting('verifiedRole', role.id);
+                                  setShowVerifiedRoleDropdown(false);
+                                }}
+                                className="w-full px-4 py-2 text-left hover:bg-orange-50 text-sm transition"
+                              >
+                                {role.name}
+                              </button>
+                            ))
+                          )}
                         </div>
                       )}
                       <p className="text-xs text-slate-500">Role given upon verification</p>
@@ -405,7 +420,7 @@ export default function VerificationPage() {
                         {settings.unverifiedRole ? getRoleName(settings.unverifiedRole) : '+ Select Role (Optional)'}
                       </button>
                       {showUnverifiedRoleDropdown && (
-                        <div className="absolute z-50 w-full mt-2 bg-white border border-orange-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                        <div className="absolute z-50 left-0 right-0 mt-2 bg-white border border-orange-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                           <button
                             onClick={() => {
                               updateSetting('unverifiedRole', null);
@@ -573,7 +588,7 @@ export default function VerificationPage() {
                           + Add Role
                         </button>
                         {showAdditionalRolesDropdown && (
-                          <div className="absolute z-50 w-full mt-2 bg-white border border-orange-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                          <div className="absolute z-50 left-0 right-0 mt-2 bg-white border border-orange-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                             {roles.filter(r => !settings.additionalRoles.includes(r.id) && r.id !== settings.verifiedRole).map(role => (
                               <button
                                 key={role.id}
@@ -658,7 +673,7 @@ export default function VerificationPage() {
                           + Add Bypass Role
                         </button>
                         {showBypassRolesDropdown && (
-                          <div className="absolute z-50 w-full mt-2 bg-white border border-orange-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                          <div className="absolute z-50 left-0 right-0 mt-2 bg-white border border-orange-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                             {roles.filter(r => !settings.verificationBypassRoles.includes(r.id)).map(role => (
                               <button
                                 key={role.id}
