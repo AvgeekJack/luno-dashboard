@@ -33,7 +33,7 @@ export default function ServerHeader({ guildId }: ServerHeaderProps) {
             </Link>
             <UserDropdown 
               userName={session.user.name || 'User'}
-              userImage={session.user.image}
+              userImage={session.user.image ?? undefined}
             />
           </div>
         )}

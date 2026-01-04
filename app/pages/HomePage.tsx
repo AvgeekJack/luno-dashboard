@@ -32,7 +32,7 @@ export default function HomePage() {
                 {session.user && (
                   <UserDropdown 
                     userName={session.user.name || 'User'}
-                    userImage={session.user.image}
+                    userImage={session.user.image ?? undefined}
                   />
                 )}
               </>
