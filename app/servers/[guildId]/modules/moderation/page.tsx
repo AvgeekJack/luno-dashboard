@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { CommandGrid } from '@/components/CommandGrid';
 import { CommandSettingsModal } from '@/components/CommandSettingsModal';
+import { CommandHelpModal } from '@/components/CommandHelpModal';
 import { Switch } from '@/components/ui/switch';
 
 const MODERATION_COMMANDS = [
@@ -62,6 +63,8 @@ export default function ModerationPage() {
   const [loading, setLoading] = useState(true);
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
   const [selectedCommand, setSelectedCommand] = useState<string | null>(null);
+  const [helpModalOpen, setHelpModalOpen] = useState(false);
+  const [helpCommand, setHelpCommand] = useState<{ name: string; description: string } | null>(null);
 
   // Load initial state
   useEffect(() => {
@@ -155,6 +158,16 @@ export default function ModerationPage() {
   const handleCloseModal = () => {
     setSettingsModalOpen(false);
     setSelectedCommand(null);
+  };
+
+  const handleCommandHelp = (commandName: string, description: string) => {
+    setHelpCommand({ name: commandName, description });
+    setHelpModalOpen(true);
+  };
+
+  const handleCloseHelpModal = () => {
+    setHelpModalOpen(false);
+    setHelpCommand(null);
   };
 
   useEffect(() => {
@@ -304,6 +317,7 @@ export default function ModerationPage() {
                   commands={commands}
                   onCommandToggle={handleCommandToggle}
                   onCommandSettings={handleCommandSettings}
+                  onCommandHelp={handleCommandHelp}
                 />
               </div>
             </div>
@@ -319,6 +333,16 @@ export default function ModerationPage() {
           commandName={selectedCommand}
           module="moderation"
           guildId={guildId as string}
+        />
+      )}
+
+      {/* Command Help Modal */}
+      {helpCommand && (
+        <CommandHelpModal
+          isOpen={helpModalOpen}
+          onClose={handleCloseHelpModal}
+          commandName={helpCommand.name}
+          description={helpCommand.description}
         />
       )}
 
