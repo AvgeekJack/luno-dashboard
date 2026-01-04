@@ -152,18 +152,6 @@ export default function HomePage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
                   </svg>
                 </div>
-                <h3 className="text-2xl font-bold mb-3 text-[#0f172a]">Reaction Roles</h3>
-                <p className="text-slate-600 leading-relaxed">
-                  Let members self-assign roles by reacting to messages. Support for unique mode, verify mode, reversed roles, temporary roles, and multiple roles per reaction. High limits and fast performance.
-                </p>
-              </div>
-
-              <div className="bg-gradient-to-br from-orange-50 to-white p-8 rounded-2xl border border-orange-100 shadow-sm hover:shadow-md transition-all">
-                <div className="w-14 h-14 bg-orange-500 rounded-xl flex items-center justify-center mb-5">
-                  <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                </div>
                 <h3 className="text-2xl font-bold mb-3 text-[#0f172a]">Comprehensive Logging</h3>
                 <p className="text-slate-600 leading-relaxed">
                   Track deleted messages, edited messages, member updates, role changes, joins, leaves, bans, channel updates, and more. Split logging into separate channels to stay organized.
@@ -388,36 +376,6 @@ export default function HomePage() {
                   <li className="flex items-start gap-2">
                     <span className="text-orange-500 font-bold">•</span>
                     <span>Split logging across multiple channels</span>
-                  </li>
-                </ul>
-              </div>
-
-              <div className="bg-white rounded-2xl p-8 border border-orange-100 shadow-sm">
-                <h3 className="text-2xl font-bold mb-4 text-[#0f172a]">Reaction Roles</h3>
-                <ul className="space-y-3 text-slate-600">
-                  <li className="flex items-start gap-2">
-                    <span className="text-orange-500 font-bold">•</span>
-                    <span>High limits: up to 250 roles per message</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-orange-500 font-bold">•</span>
-                    <span>Multiple modes: unique, verify, reversed, binding, temporary</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-orange-500 font-bold">•</span>
-                    <span>Multiple roles with a single reaction</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-orange-500 font-bold">•</span>
-                    <span>Fast rate limiting to prevent spam abuse</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-orange-500 font-bold">•</span>
-                    <span>Use any emoji, even from other servers</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-orange-500 font-bold">•</span>
-                    <span>Blacklist and whitelist roles for control</span>
                   </li>
                 </ul>
               </div>

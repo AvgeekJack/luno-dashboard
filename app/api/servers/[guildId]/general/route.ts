@@ -61,7 +61,6 @@ export async function GET(
         timezone: settings.configuration?.timezone || 'UTC',
         automod: settings.configuration?.automod || {},
         logging: settings.configuration?.logging || {},
-        reactionRoles: settings.configuration?.reactionRoles || {},
       },
     });
   } catch (error) {
@@ -132,11 +131,6 @@ export async function PUT(
       });
     }
 
-    // Handle full reaction roles configuration update
-    if (body['configuration.reactionRoles'] !== undefined) {
-      updateFields['configuration.reactionRoles'] = body['configuration.reactionRoles'];
-    }
-
     if (Object.keys(updateFields).length === 0) {
       return NextResponse.json(
         { error: 'No fields to update' },
@@ -159,7 +153,6 @@ export async function PUT(
         timezone: updated.configuration?.timezone || 'UTC',
         automod: updated.configuration?.automod || {},
         logging: updated.configuration?.logging || {},
-        reactionRoles: updated.configuration?.reactionRoles || {},
       },
     });
   } catch (error) {

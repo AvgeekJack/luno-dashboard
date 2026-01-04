@@ -305,33 +305,6 @@ const ServerSettingsSchema = new mongoose.Schema({
       lastUpdatedBy: { type: String, default: null }, // User ID who last updated
       lastUpdatedAt: { type: Date, default: null }, // When it was last updated
     },
-    reactionRoles: {
-      enabled: { type: Boolean, default: false },
-      panels: [{
-        id: { type: String },
-        title: { type: String },
-        description: { type: String },
-        color: { type: String, default: '#FF6B35' },
-        channelId: { type: String },
-        messageId: { type: String },
-        panelType: { type: String, enum: ['single', 'multiple', 'remove-on-unreact'], default: 'multiple' },
-        roleEmojiPairs: [{
-          emoji: { type: String },
-          roleId: { type: String },
-        }],
-      }],
-      roleLimit: { type: Number, default: 5 },
-      requiredRole: { type: String, default: null },
-      blacklistedRoles: { type: [String], default: [] },
-      allowRoleStacking: { type: Boolean, default: true },
-      autoDeleteReactions: { type: Boolean, default: false },
-      dmOnRoleAdd: { type: Boolean, default: false },
-      dmOnRoleRemove: { type: Boolean, default: false },
-      dmMessageAdd: { type: String, default: 'You have been given the {role} role!' },
-      dmMessageRemove: { type: String, default: 'The {role} role has been removed from you.' },
-      rolePersistence: { type: Boolean, default: true },
-      reactionCooldown: { type: Number, default: 0 },
-    },
   },
 }, {
   timestamps: true,
