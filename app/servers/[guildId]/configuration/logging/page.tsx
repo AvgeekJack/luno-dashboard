@@ -12,9 +12,11 @@ interface LoggingSettings {
   antiRaidChannel: string | null;
   
   // Verification Logs
-  verificationChannel: string | null;
-  trackVerificationMetrics: boolean;
-  logFailedVerificationAttempts: boolean;
+  verificationChannel: {
+    channelId: string | null;
+    trackVerificationMetrics: boolean;
+    logFailedVerificationAttempts: boolean;
+  };
   
   // Section Channels
   moderationChannel: string | null;
@@ -116,9 +118,11 @@ export default function LoggingPage() {
     enabled: false,
     automodLogChannel: null,
     antiRaidChannel: null,
-    verificationChannel: null,
-    trackVerificationMetrics: false,
-    logFailedVerificationAttempts: false,
+    verificationChannel: {
+      channelId: null,
+      trackVerificationMetrics: false,
+      logFailedVerificationAttempts: false,
+    },
     moderationChannel: null,
     memberChannel: null,
     messageChannel: null,
@@ -177,9 +181,11 @@ export default function LoggingPage() {
     enabled: false,
     automodLogChannel: null,
     antiRaidChannel: null,
-    verificationChannel: null,
-    trackVerificationMetrics: false,
-    logFailedVerificationAttempts: false,
+    verificationChannel: {
+      channelId: null,
+      trackVerificationMetrics: false,
+      logFailedVerificationAttempts: false,
+    },
     moderationChannel: null,
     memberChannel: null,
     messageChannel: null,
@@ -505,8 +511,8 @@ export default function LoggingPage() {
                       <p className="text-xs text-slate-500">All verification events will be logged here</p>
                     </div>
                     <select 
-                      value={settings.verificationChannel || ''} 
-                      onChange={(e) => updateSetting('verificationChannel', e.target.value || null)}
+                      value={settings.verificationChannel.channelId || ''} 
+                      onChange={(e) => updateSetting('verificationChannel', { ...settings.verificationChannel, channelId: e.target.value || null })}
                       className="w-48 px-3 py-2 border border-blue-300 rounded-lg text-sm bg-white"
                     >
                       <option value="">Select channel...</option>
@@ -518,9 +524,9 @@ export default function LoggingPage() {
 
                   <div className="space-y-3">
                     <div className="flex items-center gap-3 p-4 rounded-lg border border-blue-100">
-                      <button type="button" onClick={() => updateSetting('trackVerificationMetrics', !settings.trackVerificationMetrics)}
-                        className={`${settings.trackVerificationMetrics ? 'bg-blue-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
-                        <span className={`${settings.trackVerificationMetrics ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
+                      <button type="button" onClick={() => updateSetting('verificationChannel', { ...settings.verificationChannel, trackVerificationMetrics: !settings.verificationChannel.trackVerificationMetrics })}
+                        className={`${settings.verificationChannel.trackVerificationMetrics ? 'bg-blue-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
+                        <span className={`${settings.verificationChannel.trackVerificationMetrics ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
                       </button>
                       <div className="flex-1">
                         <p className="font-semibold text-slate-800 text-sm">Track Verification Metrics</p>
@@ -529,9 +535,9 @@ export default function LoggingPage() {
                     </div>
 
                     <div className="flex items-center gap-3 p-4 rounded-lg border border-blue-100">
-                      <button type="button" onClick={() => updateSetting('logFailedVerificationAttempts', !settings.logFailedVerificationAttempts)}
-                        className={`${settings.logFailedVerificationAttempts ? 'bg-blue-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
-                        <span className={`${settings.logFailedVerificationAttempts ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
+                      <button type="button" onClick={() => updateSetting('verificationChannel', { ...settings.verificationChannel, logFailedVerificationAttempts: !settings.verificationChannel.logFailedVerificationAttempts })}
+                        className={`${settings.verificationChannel.logFailedVerificationAttempts ? 'bg-blue-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
+                        <span className={`${settings.verificationChannel.logFailedVerificationAttempts ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
                       </button>
                       <div className="flex-1">
                         <p className="font-semibold text-slate-800 text-sm">Log Failed Verification Attempts</p>
