@@ -266,6 +266,11 @@ export default function ServerSettings() {
                 <p className="text-lg font-semibold text-[#0f172a]">{settings.configuration?.botNickname || 'Not set'}</p>
                 <p className="text-xs text-slate-600">Custom bot nickname</p>
               </div>
+              <div className="rounded-xl border border-orange-100 bg-white p-4 shadow-sm">
+                <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Timezone</p>
+                <p className="text-lg font-semibold text-[#0f172a]">{settings.configuration?.timezone || 'UTC'}</p>
+                <p className="text-xs text-slate-600">Server timezone</p>
+              </div>
             </div>
           </div>
 
