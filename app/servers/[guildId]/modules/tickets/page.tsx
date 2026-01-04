@@ -101,7 +101,7 @@ export default function TicketsPage() {
         if (settingsRes.ok) {
           const data = await settingsRes.json();
           if (data.tickets) {
-            const loadedSettings = { ...settings, ...data.tickets };
+            const loadedSettings = { ...settings, ...data.tickets, enabled: data.enabled };
             setSettings(loadedSettings);
             setOriginalSettings(loadedSettings);
           }
