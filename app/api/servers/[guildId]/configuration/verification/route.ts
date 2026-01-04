@@ -40,15 +40,11 @@ export async function GET(
         welcomeDM: false,
         welcomeDMMessage: 'Welcome to the server! You have been verified.',
         additionalRoles: [],
-        redirectChannel: null,
         removeVerificationMessages: true,
-        logChannel: null,
         antiAltProtection: false,
         kickUnverifiedAfter: 0,
         verificationBypassRoles: [],
         verificationCooldown: 0,
-        trackVerificationMetrics: true,
-        logFailedAttempts: true,
       },
     });
   } catch (error) {
@@ -138,16 +134,8 @@ export async function PUT(
       updateFields['configuration.verification.additionalRoles'] = body.additionalRoles;
     }
     
-    if (body.redirectChannel !== undefined) {
-      updateFields['configuration.verification.redirectChannel'] = body.redirectChannel;
-    }
-    
     if (body.removeVerificationMessages !== undefined) {
       updateFields['configuration.verification.removeVerificationMessages'] = body.removeVerificationMessages;
-    }
-    
-    if (body.logChannel !== undefined) {
-      updateFields['configuration.verification.logChannel'] = body.logChannel;
     }
     
     if (body.antiAltProtection !== undefined) {
@@ -164,14 +152,6 @@ export async function PUT(
     
     if (body.verificationCooldown !== undefined) {
       updateFields['configuration.verification.verificationCooldown'] = body.verificationCooldown;
-    }
-    
-    if (body.trackVerificationMetrics !== undefined) {
-      updateFields['configuration.verification.trackVerificationMetrics'] = body.trackVerificationMetrics;
-    }
-    
-    if (body.logFailedAttempts !== undefined) {
-      updateFields['configuration.verification.logFailedAttempts'] = body.logFailedAttempts;
     }
 
     const settings = await ServerSettings.findOneAndUpdate(

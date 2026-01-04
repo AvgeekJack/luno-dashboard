@@ -11,6 +11,11 @@ interface LoggingSettings {
   automodLogChannel: string | null;
   antiRaidChannel: string | null;
   
+  // Verification Logs
+  verificationLogChannel: string | null;
+  trackVerificationMetrics: boolean;
+  logFailedVerificationAttempts: boolean;
+  
   // Section Channels
   moderationChannel: string | null;
   memberChannel: string | null;
@@ -111,6 +116,9 @@ export default function LoggingPage() {
     enabled: false,
     automodLogChannel: null,
     antiRaidChannel: null,
+    verificationLogChannel: null,
+    trackVerificationMetrics: false,
+    logFailedVerificationAttempts: false,
     moderationChannel: null,
     memberChannel: null,
     messageChannel: null,
@@ -169,6 +177,9 @@ export default function LoggingPage() {
     enabled: false,
     automodLogChannel: null,
     antiRaidChannel: null,
+    verificationLogChannel: null,
+    trackVerificationMetrics: false,
+    logFailedVerificationAttempts: false,
     moderationChannel: null,
     memberChannel: null,
     messageChannel: null,
@@ -478,6 +489,55 @@ export default function LoggingPage() {
                         <option key={ch.id} value={ch.id}>#{ch.name}</option>
                       ))}
                     </select>
+                  </div>
+                </div>
+
+                {/* Verification Logs Section */}
+                <div className="space-y-4 bg-blue-50 p-6 rounded-lg border border-blue-200">
+                  <div className="space-y-1">
+                    <h2 className="text-xl font-semibold text-[#0f172a]">Verification Logging</h2>
+                    <p className="text-sm text-slate-600">Configure where verification events and metrics are logged. Tracks successful verifications, failures, and security events. Configure the full <Link href={`/servers/${gid}/configuration/verification`} className="text-blue-600 hover:text-blue-700 underline">Verification System</Link> settings separately.</p>
+                  </div>
+
+                  <div className="flex items-center gap-3 p-4 rounded-lg border border-blue-200 bg-white">
+                    <div className="flex-1">
+                      <p className="font-semibold text-slate-800 text-sm">Verification Log Channel</p>
+                      <p className="text-xs text-slate-500">All verification events will be logged here</p>
+                    </div>
+                    <select 
+                      value={settings.verificationLogChannel || ''} 
+                      onChange={(e) => updateSetting('verificationLogChannel', e.target.value || null)}
+                      className="w-48 px-3 py-2 border border-blue-300 rounded-lg text-sm bg-white"
+                    >
+                      <option value="">Select channel...</option>
+                      {channels.map(ch => (
+                        <option key={ch.id} value={ch.id}>#{ch.name}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3 p-4 rounded-lg border border-blue-100">
+                      <button type="button" onClick={() => updateSetting('trackVerificationMetrics', !settings.trackVerificationMetrics)}
+                        className={`${settings.trackVerificationMetrics ? 'bg-blue-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
+                        <span className={`${settings.trackVerificationMetrics ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
+                      </button>
+                      <div className="flex-1">
+                        <p className="font-semibold text-slate-800 text-sm">Track Verification Metrics</p>
+                        <p className="text-xs text-slate-500">Log statistics about verification success rates and timing</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3 p-4 rounded-lg border border-blue-100">
+                      <button type="button" onClick={() => updateSetting('logFailedVerificationAttempts', !settings.logFailedVerificationAttempts)}
+                        className={`${settings.logFailedVerificationAttempts ? 'bg-blue-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
+                        <span className={`${settings.logFailedVerificationAttempts ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
+                      </button>
+                      <div className="flex-1">
+                        <p className="font-semibold text-slate-800 text-sm">Log Failed Verification Attempts</p>
+                        <p className="text-xs text-slate-500">Track users who fail verification (account age, rules agreement, etc.)</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
 

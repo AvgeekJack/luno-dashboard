@@ -133,7 +133,8 @@ export default function ReactionRolesPage() {
     };
 
     fetchData();
-  }, [session, status, router, gid]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session, status, gid]);
 
   const handleSave = async () => {
     setSaving(true);

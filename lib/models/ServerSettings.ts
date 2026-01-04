@@ -269,6 +269,11 @@ const ServerSettingsSchema = new mongoose.Schema({
       inviteEnabled: { type: Boolean, default: false },
       integrationEnabled: { type: Boolean, default: false },
       
+      // Verification Logs
+      verificationLogChannel: { type: String, default: null },
+      trackVerificationMetrics: { type: Boolean, default: false },
+      logFailedVerificationAttempts: { type: Boolean, default: false },
+      
       // Advanced Options
       ignoredChannels: { type: [String], default: [] },
       ignoredRoles: { type: [String], default: [] },
@@ -362,13 +367,7 @@ const ServerSettingsSchema = new mongoose.Schema({
       welcomeDM: { type: Boolean, default: false },
       welcomeDMMessage: { type: String, default: 'Welcome to the server! You have been verified.' },
       additionalRoles: { type: [String], default: [] },
-      redirectChannel: { type: String, default: null },
       removeVerificationMessages: { type: Boolean, default: true },
-      
-      // Logging
-      logChannel: { type: String, default: null },
-      trackVerificationMetrics: { type: Boolean, default: true },
-      logFailedAttempts: { type: Boolean, default: true },
       
       // Security Settings
       antiAltProtection: { type: Boolean, default: false },

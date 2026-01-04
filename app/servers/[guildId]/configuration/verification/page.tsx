@@ -22,15 +22,11 @@ interface VerificationSettings {
   welcomeDM: boolean;
   welcomeDMMessage: string;
   additionalRoles: string[];
-  redirectChannel: string | null;
   removeVerificationMessages: boolean;
-  logChannel: string | null;
   antiAltProtection: boolean;
   kickUnverifiedAfter: number;
   verificationBypassRoles: string[];
   verificationCooldown: number;
-  trackVerificationMetrics: boolean;
-  logFailedAttempts: boolean;
 }
 
 interface Channel {
@@ -65,8 +61,6 @@ export default function VerificationPage() {
   const [showVerifiedRoleDropdown, setShowVerifiedRoleDropdown] = useState(false);
   const [showUnverifiedRoleDropdown, setShowUnverifiedRoleDropdown] = useState(false);
   const [showAdditionalRolesDropdown, setShowAdditionalRolesDropdown] = useState(false);
-  const [showRedirectChannelDropdown, setShowRedirectChannelDropdown] = useState(false);
-  const [showLogChannelDropdown, setShowLogChannelDropdown] = useState(false);
   const [showBypassRolesDropdown, setShowBypassRolesDropdown] = useState(false);
 
   const [settings, setSettings] = useState<VerificationSettings>({
@@ -85,15 +79,11 @@ export default function VerificationPage() {
     welcomeDM: false,
     welcomeDMMessage: 'Welcome to the server! You have been verified.',
     additionalRoles: [],
-    redirectChannel: null,
     removeVerificationMessages: true,
-    logChannel: null,
     antiAltProtection: false,
     kickUnverifiedAfter: 0,
     verificationBypassRoles: [],
     verificationCooldown: 0,
-    trackVerificationMetrics: true,
-    logFailedAttempts: true,
   });
 
   const [originalSettings, setOriginalSettings] = useState<VerificationSettings>(settings);
@@ -134,7 +124,8 @@ export default function VerificationPage() {
     };
 
     fetchData();
-  }, [session, status, router, gid]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session, status, gid]);
 
   const handleSave = async () => {
     setSaving(true);
@@ -304,6 +295,21 @@ export default function VerificationPage() {
               className={`overflow-hidden transition-all duration-700 ${settings.enabled ? 'max-h-[50000px] opacity-100' : 'max-h-0 opacity-0'}`}
             >
               <div className="space-y-8 border-t border-orange-100 pt-8">
+            {/* Info Box about Verification Logs */}
+            <div className="p-4 rounded-lg border border-blue-200 bg-blue-50 space-y-2">
+              <div className="flex items-start gap-2">
+                <svg className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div>
+                  <p className="text-sm font-semibold text-blue-900">Verification Logging</p>
+                  <p className="text-xs text-blue-700 mt-1">
+                    Verification logs are now configured on the <Link href={`/servers/${gid}/configuration/logging`} className="font-semibold underline">Logging</Link> page under the configuration section.
+                  </p>
+                </div>
+              </div>
+            </div>
+
                 {/* Verification Method */}
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold text-[#0f172a]">Verification Method</h3>
@@ -586,42 +592,6 @@ export default function VerificationPage() {
                       <p className="text-xs text-slate-500">Auto-assign additional roles beyond verified role</p>
                     </div>
 
-                    <div className="relative p-4 rounded-lg border border-orange-100 space-y-2">
-                      <label className="block text-sm font-semibold text-slate-800">Redirect Channel</label>
-                      <button
-                        onClick={() => setShowRedirectChannelDropdown(!showRedirectChannelDropdown)}
-                        className="w-full px-3 py-2 border-2 border-dashed border-orange-300 rounded-lg text-sm text-left hover:border-orange-400 transition bg-orange-50/50"
-                      >
-                        {settings.redirectChannel ? `# ${getChannelName(settings.redirectChannel)}` : '+ Select Channel (Optional)'}
-                      </button>
-                      {showRedirectChannelDropdown && (
-                        <div className="absolute z-10 w-full mt-2 bg-white border border-orange-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
-                          <button
-                            onClick={() => {
-                              updateSetting('redirectChannel', null);
-                              setShowRedirectChannelDropdown(false);
-                            }}
-                            className="w-full px-4 py-2 text-left hover:bg-orange-50 text-sm transition text-slate-500"
-                          >
-                            None
-                          </button>
-                          {textChannels.map(channel => (
-                            <button
-                              key={channel.id}
-                              onClick={() => {
-                                updateSetting('redirectChannel', channel.id);
-                                setShowRedirectChannelDropdown(false);
-                              }}
-                              className="w-full px-4 py-2 text-left hover:bg-orange-50 text-sm transition"
-                            >
-                              # {channel.name}
-                            </button>
-                          ))}
-                        </div>
-                      )}
-                      <p className="text-xs text-slate-500">Send welcome message to this channel</p>
-                    </div>
-
                     <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
                       <div>
                         <p className="font-semibold text-slate-800 text-sm">Remove Verification Messages</p>
@@ -717,71 +687,6 @@ export default function VerificationPage() {
                         min="0"
                       />
                       <p className="text-xs text-slate-500">Seconds between verification attempts (0 = no cooldown)</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Logging */}
-                <div className="space-y-4 border-t border-orange-100 pt-8">
-                  <h3 className="text-lg font-semibold text-[#0f172a]">Logging</h3>
-                  
-                  <div className="relative p-4 rounded-lg border border-orange-100 space-y-2">
-                    <label className="block text-sm font-semibold text-slate-800">Verification Log Channel</label>
-                    <button
-                      onClick={() => setShowLogChannelDropdown(!showLogChannelDropdown)}
-                      className="w-full px-3 py-2 border-2 border-dashed border-orange-300 rounded-lg text-sm text-left hover:border-orange-400 transition bg-orange-50/50"
-                    >
-                      {settings.logChannel ? `# ${getChannelName(settings.logChannel)}` : '+ Select Channel (Optional)'}
-                    </button>
-                    {showLogChannelDropdown && (
-                      <div className="absolute z-10 w-full mt-2 bg-white border border-orange-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
-                        <button
-                          onClick={() => {
-                            updateSetting('logChannel', null);
-                            setShowLogChannelDropdown(false);
-                          }}
-                          className="w-full px-4 py-2 text-left hover:bg-orange-50 text-sm transition text-slate-500"
-                        >
-                          None
-                        </button>
-                        {textChannels.map(channel => (
-                          <button
-                            key={channel.id}
-                            onClick={() => {
-                              updateSetting('logChannel', channel.id);
-                              setShowLogChannelDropdown(false);
-                            }}
-                            className="w-full px-4 py-2 text-left hover:bg-orange-50 text-sm transition"
-                          >
-                            # {channel.name}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                    <p className="text-xs text-slate-500">Staff monitoring channel for verifications</p>
-                  </div>
-
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
-                      <div>
-                        <p className="font-semibold text-slate-800 text-sm">Track Verification Metrics</p>
-                        <p className="text-xs text-slate-500">Time to verify, success rate</p>
-                      </div>
-                      <Switch 
-                        checked={settings.trackVerificationMetrics} 
-                        onCheckedChange={(checked) => updateSetting('trackVerificationMetrics', checked)}
-                      />
-                    </div>
-
-                    <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
-                      <div>
-                        <p className="font-semibold text-slate-800 text-sm">Log Failed Attempts</p>
-                        <p className="text-xs text-slate-500">Track failed verification attempts</p>
-                      </div>
-                      <Switch 
-                        checked={settings.logFailedAttempts} 
-                        onCheckedChange={(checked) => updateSetting('logFailedAttempts', checked)}
-                      />
                     </div>
                   </div>
                 </div>
