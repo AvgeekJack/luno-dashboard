@@ -97,27 +97,6 @@ const ServerSettingsSchema = new mongoose.Schema({
         poll: { enabled: { type: Boolean, default: true }, allowedChannels: { type: [String], default: [] }, ignoredChannels: { type: [String], default: [] }, allowedRoles: { type: [String], default: [] }, ignoredRoles: { type: [String], default: [] } },
       }
     },
-    tickets: {
-      enabled: { type: Boolean, default: false },
-      panelChannelId: { type: String, default: null },
-      categoryId: { type: String, default: null },
-      supportRoleIds: { type: [String], default: [] },
-      ticketMessage: {
-        title: { type: String, default: '🎫 Support Ticket' },
-        description: { type: String, default: 'Click the button below to create a support ticket. Our team will assist you shortly!' },
-        color: { type: String, default: '#f97316' },
-        footer: { type: String, default: 'Ticket System' },
-        buttonText: { type: String, default: 'Create Ticket' },
-        buttonEmoji: { type: String, default: '🎫' },
-      },
-      transcripts: {
-        enabled: { type: Boolean, default: false },
-        channelId: { type: String, default: null },
-      },
-      maxTicketsPerUser: { type: Number, default: 1 },
-      autoCloseAfterHours: { type: Number, default: 24 },
-      commands: {}
-    },
     customCommands: {
       enabled: { type: Boolean, default: false },
       commands: {},

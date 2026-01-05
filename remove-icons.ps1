@@ -13,7 +13,6 @@ $files = @(
   "c:\Users\Jackr\OneDrive\Desktop\Luno Website\app\servers\[guildId]\modules\notifications\page.tsx",
   "c:\Users\Jackr\OneDrive\Desktop\Luno Website\app\servers\[guildId]\modules\role-management\page.tsx",
   "c:\Users\Jackr\OneDrive\Desktop\Luno Website\app\servers\[guildId]\modules\security\page.tsx",
-  "c:\Users\Jackr\OneDrive\Desktop\Luno Website\app\servers\[guildId]\modules\tickets\page.tsx",
   "c:\Users\Jackr\OneDrive\Desktop\Luno Website\app\servers\[guildId]\modules\utilities\page.tsx"
 )
 

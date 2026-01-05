@@ -25,33 +25,6 @@ export async function GET(
     const enabled = moduleData?.enabled ?? true;
     const commands = moduleData?.commands ?? {};
 
-    // For tickets module, return the full ticket configuration
-    if (moduleKey === 'tickets') {
-      return NextResponse.json({ 
-        enabled, 
-        commands,
-        tickets: {
-          panelChannelId: moduleData?.panelChannelId ?? null,
-          categoryId: moduleData?.categoryId ?? null,
-          supportRoleIds: moduleData?.supportRoleIds ?? [],
-          ticketMessage: moduleData?.ticketMessage ?? {
-            title: '🎫 Support Ticket',
-            description: 'Click the button below to create a support ticket. Our team will assist you shortly!',
-            color: '#f97316',
-            footer: 'Ticket System',
-            buttonText: 'Create Ticket',
-            buttonEmoji: '🎫',
-          },
-          transcripts: moduleData?.transcripts ?? {
-            enabled: false,
-            channelId: null,
-          },
-          maxTicketsPerUser: moduleData?.maxTicketsPerUser ?? 1,
-          autoCloseAfterHours: moduleData?.autoCloseAfterHours ?? 24,
-        }
-      });
-    }
-
     // For custom commands module, return the custom commands list
     if (moduleKey === 'customCommands') {
       return NextResponse.json({ 
@@ -99,54 +72,6 @@ export async function PUT(
     // Update module enabled state
     if (typeof body.enabled === 'boolean') {
       updates[`modules.${moduleKey}.enabled`] = body.enabled;
-    }
-
-    // Handle tickets module specific data
-    if (moduleKey === 'tickets' && body.tickets) {
-      const ticketData = body.tickets;
-      if (ticketData.panelChannelId !== undefined) {
-        updates[`modules.${moduleKey}.panelChannelId`] = ticketData.panelChannelId;
-      }
-      if (ticketData.categoryId !== undefined) {
-        updates[`modules.${moduleKey}.categoryId`] = ticketData.categoryId;
-      }
-      if (Array.isArray(ticketData.supportRoleIds)) {
-        updates[`modules.${moduleKey}.supportRoleIds`] = ticketData.supportRoleIds;
-      }
-      if (ticketData.ticketMessage) {
-        if (ticketData.ticketMessage.title !== undefined) {
-          updates[`modules.${moduleKey}.ticketMessage.title`] = ticketData.ticketMessage.title;
-        }
-        if (ticketData.ticketMessage.description !== undefined) {
-          updates[`modules.${moduleKey}.ticketMessage.description`] = ticketData.ticketMessage.description;
-        }
-        if (ticketData.ticketMessage.color !== undefined) {
-          updates[`modules.${moduleKey}.ticketMessage.color`] = ticketData.ticketMessage.color;
-        }
-        if (ticketData.ticketMessage.footer !== undefined) {
-          updates[`modules.${moduleKey}.ticketMessage.footer`] = ticketData.ticketMessage.footer;
-        }
-        if (ticketData.ticketMessage.buttonText !== undefined) {
-          updates[`modules.${moduleKey}.ticketMessage.buttonText`] = ticketData.ticketMessage.buttonText;
-        }
-        if (ticketData.ticketMessage.buttonEmoji !== undefined) {
-          updates[`modules.${moduleKey}.ticketMessage.buttonEmoji`] = ticketData.ticketMessage.buttonEmoji;
-        }
-      }
-      if (ticketData.transcripts) {
-        if (typeof ticketData.transcripts.enabled === 'boolean') {
-          updates[`modules.${moduleKey}.transcripts.enabled`] = ticketData.transcripts.enabled;
-        }
-        if (ticketData.transcripts.channelId !== undefined) {
-          updates[`modules.${moduleKey}.transcripts.channelId`] = ticketData.transcripts.channelId;
-        }
-      }
-      if (typeof ticketData.maxTicketsPerUser === 'number') {
-        updates[`modules.${moduleKey}.maxTicketsPerUser`] = ticketData.maxTicketsPerUser;
-      }
-      if (typeof ticketData.autoCloseAfterHours === 'number') {
-        updates[`modules.${moduleKey}.autoCloseAfterHours`] = ticketData.autoCloseAfterHours;
-      }
     }
 
     // Handle custom commands module specific data
@@ -214,23 +139,6 @@ export async function PUT(
     const commands = moduleData?.commands ?? {};
 
     // Return appropriate data based on module type
-    if (moduleKey === 'tickets') {
-      return NextResponse.json({ 
-        success: true, 
-        enabled, 
-        commands,
-        tickets: {
-          panelChannelId: moduleData?.panelChannelId ?? null,
-          categoryId: moduleData?.categoryId ?? null,
-          supportRoleIds: moduleData?.supportRoleIds ?? [],
-          ticketMessage: moduleData?.ticketMessage ?? {},
-          transcripts: moduleData?.transcripts ?? {},
-          maxTicketsPerUser: moduleData?.maxTicketsPerUser ?? 1,
-          autoCloseAfterHours: moduleData?.autoCloseAfterHours ?? 24,
-        }
-      });
-    }
-
     if (moduleKey === 'customCommands') {
       return NextResponse.json({ 
         success: true, 

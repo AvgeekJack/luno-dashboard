@@ -260,9 +260,6 @@ export default function AntiRaidPage() {
                 <Link href={`/servers/${gid}/modules/announcements`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left">
                   Announcements
                 </Link>
-                <Link href={`/servers/${gid}/modules/tickets`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left">
-                  Tickets
-                </Link>
                 <Link href={`/servers/${gid}/modules/notifications`} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left">
                   Welcome Messages
                 </Link>

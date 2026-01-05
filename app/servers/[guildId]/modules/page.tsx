@@ -27,7 +27,6 @@ export default function ModulesPage() {
     { key: 'roleManagement', label: 'Role Management', desc: 'Auto-assign and manage roles.' },
     { key: 'memberManagement', label: 'Member Management', desc: 'Change member usernames and profile pictures.' },
     { key: 'announcements', label: 'Announcements', desc: 'Send and manage announcements.' },
-    { key: 'tickets', label: 'Tickets', desc: 'Create support ticket system.' },
     { key: 'customCommands', label: 'Custom Commands', desc: 'Create custom bot commands.' },
     { key: 'fun', label: 'Fun', desc: 'Fun and meme commands.' },
     { key: 'utilities', label: 'Utilities', desc: 'Utility and helper commands.' },
@@ -176,13 +175,10 @@ export default function ModulesPage() {
                   <Link href={`/servers/${gid}/modules/announcements`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '150ms'}}>
                     Announcements
                   </Link>
-                  <Link href={`/servers/${gid}/modules/tickets`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '200ms'}}>
-                    Tickets
-                  </Link>
-                  <Link href={`/servers/${gid}/modules/notifications`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '250ms'}}>
+                  <Link href={`/servers/${gid}/modules/notifications`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '200ms'}}>
                     Welcome Messages
                   </Link>
-                  <Link href={`/servers/${gid}/modules/custom-commands`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '300ms'}}>
+                  <Link href={`/servers/${gid}/modules/custom-commands`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '250ms'}}>
                     Custom Commands
                   </Link>
                   <Link href={`/servers/${gid}/modules/fun`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '350ms'}}>
