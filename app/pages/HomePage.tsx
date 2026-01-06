@@ -169,6 +169,18 @@ export default function HomePage() {
                   Greet new members with customizable welcome messages, farewell messages, and ban announcements. Send DMs upon joining and use embeds with variables for a personal touch.
                 </p>
               </div>
+
+              <div className="bg-gradient-to-br from-orange-50 to-white p-8 rounded-2xl border border-orange-100 shadow-sm hover:shadow-md transition-all">
+                <div className="w-14 h-14 bg-orange-500 rounded-xl flex items-center justify-center mb-5">
+                  <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold mb-3 text-[#0f172a]">Granular Permissions</h3>
+                <p className="text-slate-600 leading-relaxed">
+                  Fine-tune command permissions with role and channel restrictions. Manage commands in bulk from the dashboard, redirect outputs, and apply global rules across all commands effortlessly.
+                </p>
+              </div>
             </div>
 
             {/* Detailed Feature Showcases */}
