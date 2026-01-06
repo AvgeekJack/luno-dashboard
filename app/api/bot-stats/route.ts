@@ -10,6 +10,7 @@ let botStats = {
 
 export async function GET() {
   try {
+    console.log('[Bot Stats] GET request - Current stats:', botStats);
     return NextResponse.json({ 
       serverCount: botStats.serverCount,
       memberCount: botStats.memberCount,
@@ -17,7 +18,7 @@ export async function GET() {
       lastUpdate: botStats.lastUpdate || null
     });
   } catch (error) {
-    console.error('Bot stats error:', error);
+    console.error('[Bot Stats] GET error:', error);
     return NextResponse.json({ 
       serverCount: 0,
       memberCount: 0,
@@ -31,29 +32,31 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
+    console.log('[Bot Stats] POST request received with body:', body);
     
     if (body.serverCount !== undefined) {
-      botStats.serverCount = body.serverCount;
+      botStats.serverCount = Number(body.serverCount);
     }
     if (body.memberCount !== undefined) {
-      botStats.memberCount = body.memberCount;
+      botStats.memberCount = Number(body.memberCount);
     }
     if (body.commandCount !== undefined) {
-      botStats.commandCount = body.commandCount;
+      botStats.commandCount = Number(body.commandCount);
     }
     
     botStats.lastUpdate = Date.now();
     
-    console.log('[Bot Stats] ✅ Stats updated:', botStats);
+    console.log('[Bot Stats] ✅ Stats updated successfully:', botStats);
     
     return NextResponse.json({ 
       success: true,
       stats: botStats
     });
   } catch (error: any) {
-    console.error('[Bot Stats] Error:', error);
+    console.error('[Bot Stats] POST error:', error);
     return NextResponse.json({ 
-      error: 'Failed to update stats'
+      error: 'Failed to update stats',
+      message: error.message
     }, { status: 500 });
   }
 }
