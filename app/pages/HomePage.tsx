@@ -566,7 +566,7 @@ export default function HomePage() {
         <section id="about" className="w-full py-24 px-6 bg-gradient-to-b from-orange-50 to-white flex justify-center">
           <div className="w-full max-w-6xl">
             <div className="text-center mb-16">
-              <h2 className="text-5xl font-bold mb-4 text-[#0f172a]">Trusted by Millions</h2>
+              <h2 className="text-5xl font-bold mb-4 text-[#0f172a]">Trusted by Everyone</h2>
               <p className="text-xl text-slate-600 max-w-3xl mx-auto">
                 Luno is trusted by Discord communities worldwide to keep their servers safe, organized, and engaging.
               </p>
@@ -605,7 +605,7 @@ export default function HomePage() {
             <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-3xl p-12 text-center text-white shadow-2xl">
               <h3 className="text-4xl font-bold mb-4">Ready to get started?</h3>
               <p className="text-xl mb-8 opacity-90">
-                Join millions of Discord users and start managing your server like a pro.
+                Join other Discord users and start managing your server like a pro!
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 {session ? (
