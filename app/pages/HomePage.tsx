@@ -439,6 +439,36 @@ export default function HomePage() {
                   </li>
                 </ul>
               </div>
+
+              <div className="bg-white rounded-2xl p-8 border border-orange-100 shadow-sm">
+                <h3 className="text-2xl font-bold mb-4 text-[#0f172a]">Advanced Features</h3>
+                <ul className="space-y-3 text-slate-600">
+                  <li className="flex items-start gap-2">
+                    <span className="text-orange-500 font-bold">•</span>
+                    <span>Reaction roles for self-assignable roles</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-orange-500 font-bold">•</span>
+                    <span>Auto-moderation with configurable filters</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-orange-500 font-bold">•</span>
+                    <span>Verification system with captcha support</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-orange-500 font-bold">•</span>
+                    <span>Anti-raid protection with smart detection</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-orange-500 font-bold">•</span>
+                    <span>Temporary channels and voice management</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-orange-500 font-bold">•</span>
+                    <span>Server statistics and analytics dashboard</span>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </section>
