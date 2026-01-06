@@ -3,9 +3,37 @@
 import { useSession, signIn } from 'next-auth/react';
 import Link from 'next/link';
 import UserDropdown from '@/components/UserDropdown';
+import { useEffect, useState } from 'react';
 
 export default function HomePage() {
   const { data: session } = useSession();
+  const [stats, setStats] = useState({
+    serverCount: 0,
+    memberCount: 0,
+    commandCount: 150
+  });
+
+  useEffect(() => {
+    // Fetch stats on mount
+    const fetchStats = async () => {
+      try {
+        const response = await fetch('/api/bot-stats');
+        const data = await response.json();
+        setStats({
+          serverCount: data.serverCount || 0,
+          memberCount: data.memberCount || 0,
+          commandCount: data.commandCount || 150
+        });
+      } catch (error) {
+        console.error('Failed to fetch stats:', error);
+      }
+    };
+
+    fetchStats();
+    // Refresh stats every 30 seconds
+    const interval = setInterval(fetchStats, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="min-h-screen bg-white text-[#0f172a] flex flex-col items-center">
@@ -23,7 +51,7 @@ export default function HomePage() {
             <Link href="#features" className="text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">Features</Link>
             <Link href="#commands" className="text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">Commands</Link>
             <Link href="#about" className="text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">About</Link>
-            <a href="https://discord.gg/luno" target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">Support</a>
+            <a href="https://discord.gg/shGCTRhwez" target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">Support</a>
             {session ? (
               <>
                 <Link href="/servers" className="bg-orange-500 text-white px-6 py-2 rounded-full text-sm font-semibold shadow hover:bg-orange-600 transition-colors">
@@ -66,9 +94,6 @@ export default function HomePage() {
                   </Link>
                 ) : (
                   <>
-                    <button className="bg-orange-500 text-white px-10 py-4 rounded-full text-lg font-semibold shadow-lg hover:bg-orange-600 hover:shadow-xl transition-all">
-                      Add To Server
-                    </button>
                     <button
                       onClick={() => signIn('discord')}
                       className="bg-white text-slate-900 px-10 py-4 rounded-full text-lg font-semibold border-2 border-slate-200 shadow-md hover:border-orange-500 hover:shadow-lg transition-all"
@@ -82,15 +107,19 @@ export default function HomePage() {
               {/* Statistics */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
                 <div className="bg-white rounded-2xl p-6 border border-orange-100 shadow-sm">
-                  <div className="text-4xl font-bold text-orange-500 mb-2">11.0M+</div>
+                  <div className="text-4xl font-bold text-orange-500 mb-2">
+                    {stats.serverCount > 0 ? `${(stats.serverCount / 1000000).toFixed(1)}M+` : '0'}
+                  </div>
                   <div className="text-slate-600 font-medium">Servers</div>
                 </div>
                 <div className="bg-white rounded-2xl p-6 border border-orange-100 shadow-sm">
-                  <div className="text-4xl font-bold text-orange-500 mb-2">500M+</div>
+                  <div className="text-4xl font-bold text-orange-500 mb-2">
+                    {stats.memberCount > 0 ? `${(stats.memberCount / 1000000).toFixed(0)}M+` : '0'}
+                  </div>
                   <div className="text-slate-600 font-medium">Members Served</div>
                 </div>
                 <div className="bg-white rounded-2xl p-6 border border-orange-100 shadow-sm">
-                  <div className="text-4xl font-bold text-orange-500 mb-2">150+</div>
+                  <div className="text-4xl font-bold text-orange-500 mb-2">{stats.commandCount}+</div>
                   <div className="text-slate-600 font-medium">Commands</div>
                 </div>
               </div>
@@ -609,9 +638,6 @@ export default function HomePage() {
                   </Link>
                 ) : (
                   <>
-                    <button className="bg-white text-orange-500 px-10 py-4 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl hover:bg-orange-50 transition-all">
-                      Add to Discord
-                    </button>
                     <button
                       onClick={() => signIn('discord')}
                       className="bg-slate-900 text-white px-10 py-4 rounded-full text-lg font-semibold shadow-lg hover:bg-slate-800 hover:shadow-xl transition-all"
@@ -638,19 +664,24 @@ export default function HomePage() {
                   The most powerful and customizable Discord bot for server management, moderation, and engagement.
                 </p>
                 <div className="flex gap-3">
-                  <a href="https://discord.gg/luno" target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-slate-800 hover:bg-slate-700 rounded-xl flex items-center justify-center transition-colors">
+                  <a href="https://discord.gg/shGCTRhwez" target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-slate-800 hover:bg-slate-700 rounded-xl flex items-center justify-center transition-colors">
                     <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00-.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
                     </svg>
                   </a>
-                  <a href="https://twitter.com/lunobot" target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-slate-800 hover:bg-slate-700 rounded-xl flex items-center justify-center transition-colors">
+                  <a href="https://x.com/lunobotdiscord" target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-slate-800 hover:bg-slate-700 rounded-xl flex items-center justify-center transition-colors">
                     <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
                     </svg>
                   </a>
-                  <a href="https://github.com/lunobot" target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-slate-800 hover:bg-slate-700 rounded-xl flex items-center justify-center transition-colors">
+                  <a href="https://www.instagram.com/lunobot" target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-slate-800 hover:bg-slate-700 rounded-xl flex items-center justify-center transition-colors">
                     <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                    </svg>
+                  </a>
+                  <a href="https://www.tiktok.com/@lunobot" target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-slate-800 hover:bg-slate-700 rounded-xl flex items-center justify-center transition-colors">
+                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
                     </svg>
                   </a>
                 </div>
@@ -669,7 +700,7 @@ export default function HomePage() {
               <div>
                 <h4 className="font-bold text-lg mb-4">SUPPORT</h4>
                 <ul className="space-y-3 text-slate-400">
-                  <li><a href="https://discord.gg/luno" target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 transition-colors">Discord Server</a></li>
+                  <li><a href="https://discord.gg/shGCTRhwez" target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 transition-colors">Discord Server</a></li>
                   <li><a href="https://docs.luno.bot/faq" target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 transition-colors">FAQ</a></li>
                   <li><a href="https://docs.luno.bot/guides" target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 transition-colors">Guides</a></li>
                   <li><a href="mailto:support@luno.bot" className="hover:text-orange-400 transition-colors">Contact Us</a></li>
