@@ -3,56 +3,9 @@
 import { useSession, signIn } from 'next-auth/react';
 import Link from 'next/link';
 import UserDropdown from '@/components/UserDropdown';
-import { useEffect, useState } from 'react';
 
 export default function HomePage() {
   const { data: session } = useSession();
-  const [stats, setStats] = useState({
-    serverCount: 0,
-    memberCount: 0,
-    commandCount: 150
-  });
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Fetch stats on mount
-    const fetchStats = async () => {
-      try {
-        const response = await fetch('/api/bot-stats');
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log('Fetched bot stats:', data); // Debug log
-        setStats({
-          serverCount: data.serverCount || 0,
-          memberCount: data.memberCount || 0,
-          commandCount: data.commandCount || 150
-        });
-        setLoading(false);
-      } catch (error) {
-        console.error('Failed to fetch stats:', error);
-        setLoading(false);
-      }
-    };
-
-    fetchStats();
-    // Refresh stats every 30 seconds
-    const interval = setInterval(fetchStats, 30000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Format number for display
-  const formatNumber = (num: number): string => {
-    if (num === 0) return '0';
-    if (num >= 1000000) {
-      return `${(num / 1000000).toFixed(1)}M+`;
-    } else if (num >= 1000) {
-      return `${(num / 1000).toFixed(1)}K+`;
-    } else {
-      return `${num}`;
-    }
-  };
 
   return (
     <div className="min-h-screen bg-white text-[#0f172a] flex flex-col items-center">
@@ -123,23 +76,27 @@ export default function HomePage() {
                 )}
               </div>
               
-              {/* Statistics */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+              {/* Key Features Highlights */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
                 <div className="bg-white rounded-2xl p-6 border border-orange-100 shadow-sm">
-                  <div className="text-4xl font-bold text-orange-500 mb-2">
-                    {formatNumber(stats.serverCount)}
-                  </div>
-                  <div className="text-slate-600 font-medium">Servers</div>
+                  <div className="text-3xl font-bold text-orange-500 mb-2">⚡</div>
+                  <div className="text-lg font-bold text-slate-800 mb-1">Lightning Fast</div>
+                  <div className="text-sm text-slate-600">Instant responses & minimal latency</div>
                 </div>
                 <div className="bg-white rounded-2xl p-6 border border-orange-100 shadow-sm">
-                  <div className="text-4xl font-bold text-orange-500 mb-2">
-                    {formatNumber(stats.memberCount)}
-                  </div>
-                  <div className="text-slate-600 font-medium">Members Served</div>
+                  <div className="text-3xl font-bold text-orange-500 mb-2">🛡️</div>
+                  <div className="text-lg font-bold text-slate-800 mb-1">24/7 Uptime</div>
+                  <div className="text-sm text-slate-600">Always online & reliable</div>
                 </div>
                 <div className="bg-white rounded-2xl p-6 border border-orange-100 shadow-sm">
-                  <div className="text-4xl font-bold text-orange-500 mb-2">{stats.commandCount}+</div>
-                  <div className="text-slate-600 font-medium">Commands</div>
+                  <div className="text-3xl font-bold text-orange-500 mb-2">🎨</div>
+                  <div className="text-lg font-bold text-slate-800 mb-1">Fully Custom</div>
+                  <div className="text-sm text-slate-600">Tailor every feature to your needs</div>
+                </div>
+                <div className="bg-white rounded-2xl p-6 border border-orange-100 shadow-sm">
+                  <div className="text-3xl font-bold text-orange-500 mb-2">🔒</div>
+                  <div className="text-lg font-bold text-slate-800 mb-1">Secure</div>
+                  <div className="text-sm text-slate-600">Your data privacy is our priority</div>
                 </div>
               </div>
             </div>
