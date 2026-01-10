@@ -1,0 +1,1703 @@
+================================================================================
+               COMPLETE MONGODB DATA CONNECTIONS MAPPING
+                      Luno Discord Bot Dashboard
+================================================================================
+
+DATABASE: lumo-bot
+CONNECTION FILES:
+  - lib/mongodb.ts (MongoClient for native MongoDB operations)
+  - lib/mongoose.ts (Mongoose ODM for schema-based operations)
+
+PRIMARY MODEL:
+  - lib/models/ServerSettings.ts (Main schema for all server configurations)
+
+================================================================================
+                          API ENDPOINTS & CONNECTIONS
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         SERVER MANAGEMENT ENDPOINTS                          │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+1. GET /api/servers
+   CONNECTION: None (Discord API only)
+   PURPOSE: Fetches user's guilds from Discord API
+   OPERATIONS: No database operations
+
+2. GET /api/servers/[guildId]/settings
+   CONNECTION: ServerSettings.findOne({ guildId })
+   PURPOSE: Retrieves server settings, creates default if not exists
+   OPERATIONS:
+     - READ: ServerSettings.findOne({ guildId })
+     - WRITE: new ServerSettings({ guildId }).save() (if not exists)
+
+3. POST /api/servers/[guildId]/settings
+   CONNECTION: ServerSettings.findOneAndUpdate({ guildId })
+   PURPOSE: Updates server settings
+   OPERATIONS:
+     - WRITE: ServerSettings.findOneAndUpdate({ guildId }, allowedFields, { upsert: true })
+
+4. GET /api/servers/[guildId]/stats
+   CONNECTION: None (Discord API only)
+   PURPOSE: Fetches guild statistics from Discord API
+   OPERATIONS: No database operations
+
+5. GET /api/servers/[guildId]/channels-and-roles
+   CONNECTION: None (Discord API only)
+   PURPOSE: Fetches channels and roles from Discord API
+   OPERATIONS: No database operations
+
+================================================================================
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         GENERAL SETTINGS ENDPOINT                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+6. GET /api/servers/[guildId]/general
+   CONNECTION: ServerSettings.findOne({ guildId })
+   PURPOSE: Retrieves general server configuration
+   DATA READ:
+     - prefix (command prefix)
+     - configuration.botNickname
+     - configuration.timezone
+     - configuration.automod (entire object)
+     - configuration.logging (entire object)
+   OPERATIONS:
+     - READ: ServerSettings.findOne({ guildId })
+     - WRITE: ServerSettings.create({ guildId }) (if not exists)
+
+7. PUT /api/servers/[guildId]/general
+   CONNECTION: ServerSettings.findOneAndUpdate({ guildId })
+   PURPOSE: Updates general server settings
+   DATA WRITTEN:
+     - prefix
+     - configuration.botNickname
+     - configuration.timezone
+     - configuration.automod.* (all automod settings)
+     - configuration.logging.* (all logging settings)
+   OPERATIONS:
+     - WRITE: ServerSettings.findOneAndUpdate({ guildId }, { $set: updateFields }, { upsert: true })
+
+================================================================================
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          MODULE MANAGEMENT ENDPOINTS                         │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+8. GET /api/servers/[guildId]/modules
+   CONNECTION: ServerSettings.findOne({ guildId })
+   PURPOSE: Retrieves enabled/disabled status of all modules
+   MODULES READ:
+     - modules.moderation.enabled
+     - modules.automod.enabled
+     - modules.antiRaid.enabled
+     - modules.logging.enabled
+     - modules.roleManagement.enabled
+     - modules.memberManagement.enabled
+     - modules.announcements.enabled
+     - modules.customCommands.enabled
+     - modules.fun.enabled
+     - modules.utilities.enabled
+     - modules.analytics.enabled
+   OPERATIONS:
+     - READ: ServerSettings.findOne({ guildId })
+     - WRITE: ServerSettings.create({ guildId }) (if not exists)
+
+9. PUT /api/servers/[guildId]/modules
+   CONNECTION: ServerSettings.findOneAndUpdate({ guildId })
+   PURPOSE: Toggle modules on/off
+   DATA WRITTEN:
+     - modules.{moduleName}.enabled (for each module)
+   OPERATIONS:
+     - WRITE: ServerSettings.findOneAndUpdate({ guildId }, { $set: updates }, { upsert: true })
+
+================================================================================
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                      INDIVIDUAL MODULE SETTINGS ENDPOINTS                    │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+10. GET /api/servers/[guildId]/modules/[module]
+    CONNECTION: ServerSettings.findOne({ guildId })
+    PURPOSE: Retrieves specific module configuration and command settings
+    MODULES SUPPORTED:
+      - moderation, automod, anti-raid (antiRaid), logging, role-management (roleManagement)
+      - member-management (memberManagement), announcements, custom-commands (customCommands)
+      - fun, utilities, analytics
+    DATA READ:
+      - modules.{module}.enabled
+      - modules.{module}.commands.* (all command configurations)
+      - modules.customCommands.command.* (for custom commands module only)
+    OPERATIONS:
+      - READ: ServerSettings.findOne({ guildId })
+
+11. PUT /api/servers/[guildId]/modules/[module]
+    CONNECTION: ServerSettings.findOneAndUpdate({ guildId })
+    PURPOSE: Updates specific module and its command configurations
+    DATA WRITTEN:
+      - modules.{module}.enabled
+      - modules.{module}.commands.{commandName}.enabled
+      - modules.{module}.commands.{commandName}.allowedChannels
+      - modules.{module}.commands.{commandName}.ignoredChannels
+      - modules.{module}.commands.{commandName}.allowedRoles
+      - modules.{module}.commands.{commandName}.ignoredRoles
+      - modules.customCommands.command.* (for custom commands: trigger, title, description, color, footer, thumbnailUrl, imageUrl, fields)
+    OPERATIONS:
+      - WRITE: ServerSettings.findOneAndUpdate({ guildId }, { $set: updates }, { upsert: true })
+
+================================================================================
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        INDIVIDUAL COMMAND SETTINGS                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+12. GET /api/servers/[guildId]/commands/[command]
+    CONNECTION: ServerSettings.findOne({ guildId })
+    PURPOSE: Retrieves settings for a specific command
+    DATA READ:
+      - modules.*.commands.{command}.enabled
+      - modules.*.commands.{command}.allowedChannels
+      - modules.*.commands.{command}.ignoredChannels
+      - modules.*.commands.{command}.allowedRoles
+      - modules.*.commands.{command}.ignoredRoles
+    OPERATIONS:
+      - READ: ServerSettings.findOne({ guildId })
+
+13. PUT /api/servers/[guildId]/commands/[command]
+    CONNECTION: ServerSettings.findOneAndUpdate({ guildId })
+    PURPOSE: Updates settings for a specific command
+    DATA WRITTEN:
+      - modules.{moduleName}.commands.{command}.enabled
+      - modules.{moduleName}.commands.{command}.allowedChannels
+      - modules.{moduleName}.commands.{command}.ignoredChannels
+      - modules.{moduleName}.commands.{command}.allowedRoles
+      - modules.{moduleName}.commands.{command}.ignoredRoles
+    OPERATIONS:
+      - WRITE: ServerSettings.findOneAndUpdate({ guildId }, { $set: updateFields }, { upsert: true })
+
+================================================================================
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                      CONFIGURATION ENDPOINTS (ADVANCED)                      │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+14. GET /api/servers/[guildId]/configuration/anti-raid
+    CONNECTION: ServerSettings.findOne({ guildId })
+    PURPOSE: Retrieves anti-raid protection settings
+    DATA READ:
+      - configuration.antiraid.enabled
+      - configuration.antiraid.protectionLevel
+      - configuration.antiraid.accountAge
+      - configuration.antiraid.joinRateLimit
+      - configuration.antiraid.joinRateWindow
+      - configuration.antiraid.verificationLevel
+      - configuration.antiraid.autoKickNewAccounts
+      - configuration.antiraid.kickOnRateExceeded
+      - configuration.antiraid.enabledBy
+      - configuration.antiraid.enabledAt
+      - configuration.antiraid.lastUpdatedBy
+      - configuration.antiraid.lastUpdatedAt
+    OPERATIONS:
+      - READ: ServerSettings.findOne({ guildId })
+      - WRITE: ServerSettings.create({ guildId }) (if not exists)
+
+15. PUT /api/servers/[guildId]/configuration/anti-raid
+    CONNECTION: ServerSettings.findOneAndUpdate({ guildId })
+    PURPOSE: Updates anti-raid protection settings
+    DATA WRITTEN:
+      - configuration.antiraid.enabled
+      - configuration.antiraid.protectionLevel
+      - configuration.antiraid.accountAge
+      - configuration.antiraid.joinRateLimit
+      - configuration.antiraid.joinRateWindow
+      - configuration.antiraid.verificationLevel
+      - configuration.antiraid.autoKickNewAccounts
+      - configuration.antiraid.kickOnRateExceeded
+      - configuration.antiraid.enabledBy (auto-set from session)
+      - configuration.antiraid.enabledAt (auto-set to Date.now())
+      - configuration.antiraid.lastUpdatedBy (auto-set from session)
+      - configuration.antiraid.lastUpdatedAt (auto-set to Date.now())
+    OPERATIONS:
+      - WRITE: ServerSettings.findOneAndUpdate({ guildId }, { $set: updateFields }, { upsert: true })
+
+16. GET /api/servers/[guildId]/configuration/verification
+    CONNECTION: ServerSettings.findOne({ guildId })
+    PURPOSE: Retrieves server verification system settings
+    DATA READ:
+      - configuration.verification.enabled
+      - configuration.verification.verificationMethod
+      - configuration.verification.verificationChannel
+      - configuration.verification.messageTitle
+      - configuration.verification.messageDescription
+      - configuration.verification.messageColor
+      - configuration.verification.verifiedRole
+      - configuration.verification.unverifiedRole
+      - configuration.verification.rulesText
+      - configuration.verification.accountAgeRequirement
+      - configuration.verification.requireServerAgreement
+      - configuration.verification.multipleSteps
+      - configuration.verification.welcomeDM
+      - configuration.verification.welcomeDMMessage
+      - configuration.verification.additionalRoles
+      - configuration.verification.removeVerificationMessages
+      - configuration.verification.antiAltProtection
+      - configuration.verification.kickUnverifiedAfter
+      - configuration.verification.verificationBypassRoles
+      - configuration.verification.verificationCooldown
+    OPERATIONS:
+      - READ: ServerSettings.findOne({ guildId })
+      - WRITE: ServerSettings.create({ guildId }) (if not exists)
+
+17. PUT /api/servers/[guildId]/configuration/verification
+    CONNECTION: ServerSettings.findOneAndUpdate({ guildId })
+    PURPOSE: Updates server verification system settings
+    DATA WRITTEN: (All fields from GET endpoint above)
+      - configuration.verification.enabled
+      - configuration.verification.verificationMethod
+      - configuration.verification.verificationChannel
+      - configuration.verification.messageTitle
+      - configuration.verification.messageDescription
+      - configuration.verification.messageColor
+      - configuration.verification.verifiedRole
+      - configuration.verification.unverifiedRole
+      - configuration.verification.rulesText
+      - configuration.verification.accountAgeRequirement
+      - configuration.verification.requireServerAgreement
+      - configuration.verification.multipleSteps
+      - configuration.verification.welcomeDM
+      - configuration.verification.welcomeDMMessage
+      - configuration.verification.additionalRoles
+      - configuration.verification.removeVerificationMessages
+      - configuration.verification.antiAltProtection
+      - configuration.verification.kickUnverifiedAfter
+      - configuration.verification.verificationBypassRoles
+      - configuration.verification.verificationCooldown
+    OPERATIONS:
+      - WRITE: ServerSettings.findOneAndUpdate({ guildId }, { $set: updateFields }, { upsert: true })
+
+18. GET /api/servers/[guildId]/configuration/reaction-roles
+    CONNECTION: ServerSettings.findOne({ guildId })
+    PURPOSE: Retrieves reaction role system settings
+    DATA READ:
+      - configuration.reactionRoles.enabled
+      - configuration.reactionRoles.panels[] (array of reaction role panels)
+        - panels[].id
+        - panels[].title
+        - panels[].description
+        - panels[].color
+        - panels[].channelId
+        - panels[].messageId
+        - panels[].panelType
+        - panels[].roleEmojiPairs[] (array of role-emoji pairs)
+          - roleEmojiPairs[].roleId
+          - roleEmojiPairs[].emoji
+      - configuration.reactionRoles.roleLimit
+      - configuration.reactionRoles.requiredRole
+      - configuration.reactionRoles.blacklistedRoles
+      - configuration.reactionRoles.allowRoleStacking
+      - configuration.reactionRoles.autoDeleteReactions
+      - configuration.reactionRoles.dmOnRoleChange
+      - configuration.reactionRoles.dmMessage
+      - configuration.reactionRoles.rolePersistence
+      - configuration.reactionRoles.reactionCooldown
+    OPERATIONS:
+      - READ: ServerSettings.findOne({ guildId })
+      - WRITE: ServerSettings.create({ guildId }) (if not exists)
+
+19. PUT /api/servers/[guildId]/configuration/reaction-roles
+    CONNECTION: ServerSettings.findOneAndUpdate({ guildId })
+    PURPOSE: Updates reaction role system settings
+    DATA WRITTEN: (All fields from GET endpoint above)
+      - configuration.reactionRoles.enabled
+      - configuration.reactionRoles.panels (entire array)
+      - configuration.reactionRoles.roleLimit
+      - configuration.reactionRoles.requiredRole
+      - configuration.reactionRoles.blacklistedRoles
+      - configuration.reactionRoles.allowRoleStacking
+      - configuration.reactionRoles.autoDeleteReactions
+      - configuration.reactionRoles.dmOnRoleChange
+      - configuration.reactionRoles.dmMessage
+      - configuration.reactionRoles.rolePersistence
+      - configuration.reactionRoles.reactionCooldown
+    OPERATIONS:
+      - WRITE: ServerSettings.findOneAndUpdate({ guildId }, { $set: updateFields }, { upsert: true })
+
+================================================================================
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           SETUP WIZARD ENDPOINT                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+20. GET /api/servers/[guildId]/setup
+    CONNECTION: ServerSettings.findOne({ guildId })
+    PURPOSE: Retrieves complete server settings for setup wizard
+    OPERATIONS:
+      - READ: ServerSettings.findOne({ guildId })
+      - WRITE: ServerSettings.create({ guildId }) (if not exists)
+
+21. PUT /api/servers/[guildId]/setup
+    CONNECTION: ServerSettings.findOneAndUpdate({ guildId })
+    PURPOSE: Updates setup wizard settings
+    DATA WRITTEN:
+      - moderation.logChannel
+      - welcome.channel
+      - welcome.message
+      - welcome.enabled
+      - goodbye.channel
+      - goodbye.message
+      - goodbye.enabled
+      - roles.defaultRoles
+      - roles.modRoles
+    OPERATIONS:
+      - WRITE: ServerSettings.findOneAndUpdate({ guildId }, { $set: updateFields }, { upsert: true })
+
+================================================================================
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           BOT STATUS ENDPOINTS                               │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+22. GET /api/bot-status
+    CONNECTION: In-memory storage (No MongoDB)
+    PURPOSE: Returns bot online/offline status
+    OPERATIONS: No database operations (uses in-memory lastHeartbeat variable)
+
+23. POST /api/bot-status
+    CONNECTION: In-memory storage (No MongoDB)
+    PURPOSE: Receives heartbeat from bot to update status
+    OPERATIONS: No database operations (updates in-memory lastHeartbeat variable)
+
+24. GET /api/bot-stats
+    CONNECTION: In-memory storage (No MongoDB)
+    PURPOSE: Returns bot statistics (server count, member count, command count)
+    OPERATIONS: No database operations (uses in-memory botStats object)
+
+25. POST /api/bot-stats
+    CONNECTION: In-memory storage (No MongoDB)
+    PURPOSE: Receives statistics updates from bot
+    OPERATIONS: No database operations (updates in-memory botStats object)
+
+================================================================================
+                        DETAILED COMMAND CONFIGURATIONS
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         MODERATION COMMANDS MODULE                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+MODULE PATH: modules.moderation
+MODULE TOGGLE: modules.moderation.enabled
+
+COMMANDS:
+  1. ban
+     PATH: modules.moderation.commands.ban
+     OPTIONS:
+       - enabled (Boolean)
+       - allowedChannels (Array of channel IDs)
+       - ignoredChannels (Array of channel IDs)
+       - allowedRoles (Array of role IDs)
+       - ignoredRoles (Array of role IDs)
+
+  2. softban
+     PATH: modules.moderation.commands.softban
+     OPTIONS: (Same as ban)
+
+  3. unban
+     PATH: modules.moderation.commands.unban
+     OPTIONS: (Same as ban)
+
+  4. kick
+     PATH: modules.moderation.commands.kick
+     OPTIONS: (Same as ban)
+
+  5. mute
+     PATH: modules.moderation.commands.mute
+     OPTIONS: (Same as ban)
+
+  6. unmute
+     PATH: modules.moderation.commands.unmute
+     OPTIONS: (Same as ban)
+
+  7. tempmute
+     PATH: modules.moderation.commands.tempmute
+     OPTIONS: (Same as ban)
+
+  8. timeout
+     PATH: modules.moderation.commands.timeout
+     OPTIONS: (Same as ban)
+
+  9. untimeout
+     PATH: modules.moderation.commands.untimeout
+     OPTIONS: (Same as ban)
+
+  10. warn
+      PATH: modules.moderation.commands.warn
+      OPTIONS: (Same as ban)
+
+  11. warnings
+      PATH: modules.moderation.commands.warnings
+      OPTIONS: (Same as ban)
+
+  12. clearwarnings
+      PATH: modules.moderation.commands.clearwarnings
+      OPTIONS: (Same as ban)
+
+  13. clear
+      PATH: modules.moderation.commands.clear
+      OPTIONS: (Same as ban)
+
+  14. slowmode
+      PATH: modules.moderation.commands.slowmode
+      OPTIONS: (Same as ban)
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           AUTOMOD COMMANDS MODULE                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+MODULE PATH: modules.automod
+MODULE TOGGLE: modules.automod.enabled
+
+COMMANDS:
+  1. automodenable
+     PATH: modules.automod.commands.automodenable
+     OPTIONS: (Same as ban)
+
+  2. automoddisable
+     PATH: modules.automod.commands.automoddisable
+     OPTIONS: (Same as ban)
+
+  3. antilink
+     PATH: modules.automod.commands.antilink
+     OPTIONS: (Same as ban)
+
+  4. antiinvite
+     PATH: modules.automod.commands.antiinvite
+     OPTIONS: (Same as ban)
+
+  5. antispam
+     PATH: modules.automod.commands.antispam
+     OPTIONS: (Same as ban)
+
+  6. antimention
+     PATH: modules.automod.commands.antimention
+     OPTIONS: (Same as ban)
+
+  7. antizalgo
+     PATH: modules.automod.commands.antizalgo
+     OPTIONS: (Same as ban)
+
+  8. antiswear
+     PATH: modules.automod.commands.antiswear
+     OPTIONS: (Same as ban)
+
+  9. antiflood
+     PATH: modules.automod.commands.antiflood
+     OPTIONS: (Same as ban)
+
+  10. capsfilter
+      PATH: modules.automod.commands.capsfilter
+      OPTIONS: (Same as ban)
+
+  11. duplicatefilter
+      PATH: modules.automod.commands.duplicatefilter
+      OPTIONS: (Same as ban)
+
+  12. regexfilter
+      PATH: modules.automod.commands.regexfilter
+      OPTIONS: (Same as ban)
+
+  13. automodlogs
+      PATH: modules.automod.commands.automodlogs
+      OPTIONS: (Same as ban)
+
+AUTOMOD CONFIGURATION SETTINGS:
+  PATH: configuration.automod
+  SETTINGS:
+    - enabled (Master toggle)
+    - antiLinkEnabled
+    - antiInviteEnabled
+    - antiSpamEnabled
+    - antiMentionEnabled
+    - antiFloodEnabled
+    - antiZalgoEnabled
+    - antiSwearEnabled
+    - capsFilterEnabled
+    - spamMessageCount
+    - spamTimeWindow
+    - mentionLimit
+    - capsPercentage
+    - floodMessageCount
+    - floodTimeWindow
+    - zalgoLimit
+    - whitelistedChannels
+    - whitelistedRoles
+    - autoWhitelistModerators
+    - deleteMessage
+    - sendWarning
+    - warningDuration
+    - dmUser
+    - autoTimeoutEnabled
+    - autoTimeoutViolations
+    - autoTimeoutWindow
+    - autoTimeoutDuration
+    - escalatingPunishments
+    - logChannel
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         ANTI-RAID COMMANDS MODULE                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+MODULE PATH: modules.antiRaid
+MODULE TOGGLE: modules.antiRaid.enabled
+
+COMMANDS:
+  1. antiraidenable
+     PATH: modules.antiRaid.commands.antiraidenable
+     OPTIONS: (Same as ban)
+
+  2. antiraiddisable
+     PATH: modules.antiRaid.commands.antiraiddisable
+     OPTIONS: (Same as ban)
+
+  3. antiraidlevel
+     PATH: modules.antiRaid.commands.antiraidlevel
+     OPTIONS: (Same as ban)
+
+  4. joinrate
+     PATH: modules.antiRaid.commands.joinrate
+     OPTIONS: (Same as ban)
+
+  5. verificationenable
+     PATH: modules.antiRaid.commands.verificationenable
+     OPTIONS: (Same as ban)
+
+  6. verificationdisable
+     PATH: modules.antiRaid.commands.verificationdisable
+     OPTIONS: (Same as ban)
+
+  7. lockdown
+     PATH: modules.antiRaid.commands.lockdown
+     OPTIONS: (Same as ban)
+
+  8. unlockdown
+     PATH: modules.antiRaid.commands.unlockdown
+     OPTIONS: (Same as ban)
+
+ANTI-RAID CONFIGURATION SETTINGS:
+  PATH: configuration.antiraid
+  SETTINGS:
+    - enabled (Master toggle)
+    - protectionLevel (low, medium, high, extreme, custom)
+    - accountAge (in milliseconds)
+    - joinRateLimit
+    - joinRateWindow (in milliseconds)
+    - verificationLevel (0-4)
+    - autoKickNewAccounts
+    - kickOnRateExceeded
+    - enabledBy (User ID)
+    - enabledAt (Date)
+    - lastUpdatedBy (User ID)
+    - lastUpdatedAt (Date)
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          LOGGING COMMANDS MODULE                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+MODULE PATH: modules.logging
+MODULE TOGGLE: modules.logging.enabled
+
+COMMANDS:
+  1. modlogenable
+     PATH: modules.logging.commands.modlogenable
+     OPTIONS: (Same as ban)
+
+  2. modlogdisable
+     PATH: modules.logging.commands.modlogdisable
+     OPTIONS: (Same as ban)
+
+  3. messagelog
+     PATH: modules.logging.commands.messagelog
+     OPTIONS: (Same as ban)
+
+  4. editlog
+     PATH: modules.logging.commands.editlog
+     OPTIONS: (Same as ban)
+
+  5. deletelog
+     PATH: modules.logging.commands.deletelog
+     OPTIONS: (Same as ban)
+
+  6. joinlog
+     PATH: modules.logging.commands.joinlog
+     OPTIONS: (Same as ban)
+
+  7. leavelog
+     PATH: modules.logging.commands.leavelog
+     OPTIONS: (Same as ban)
+
+  8. voicelog
+     PATH: modules.logging.commands.voicelog
+     OPTIONS: (Same as ban)
+
+  9. rolelog
+     PATH: modules.logging.commands.rolelog
+     OPTIONS: (Same as ban)
+
+  10. nicknamelog
+      PATH: modules.logging.commands.nicknamelog
+      OPTIONS: (Same as ban)
+
+LOGGING CONFIGURATION SETTINGS:
+  PATH: configuration.logging
+  SETTINGS:
+    - enabled (Master toggle)
+    - automodLogChannel
+    - logAutomodViolations
+    - logAutomodActions
+    - logAutomodFilters
+    - antiRaidChannel
+    - logRaidDetections
+    - logRaidActions
+    - logJoinPatterns
+    - moderationChannel
+    - memberChannel
+    - messageChannel
+    - channelLogsChannel
+    - roleLogsChannel
+    - voiceChannel
+    - serverChannel
+    - warnsEnabled
+    - kicksEnabled
+    - bansEnabled
+    - unbansEnabled
+    - timeoutsEnabled
+    - untimeoutsEnabled
+    - softbansEnabled
+    - channelLocksEnabled
+    - lockdownsEnabled
+    - slowmodeEnabled
+    - messagePurgeEnabled
+    - automodActionsEnabled
+    - memberJoinEnabled
+    - memberLeaveEnabled
+    - roleUpdatesEnabled
+    - nicknameChangesEnabled
+    - usernameChangesEnabled
+    - messageDeleteEnabled
+    - messageEditEnabled
+    - bulkDeleteEnabled
+    - messageAttachmentsEnabled
+    - channelCreateEnabled
+    - channelDeleteEnabled
+    - channelUpdateEnabled
+    - roleCreateEnabled
+    - roleDeleteEnabled
+    - roleUpdateEnabled
+    - voiceJoinEnabled
+    - voiceLeaveEnabled
+    - voiceMoveEnabled
+    - voiceMuteDeafenEnabled
+    - voiceStreamingEnabled
+    - serverUpdateEnabled
+    - emojiEnabled
+    - stickerEnabled
+    - webhookEnabled
+    - inviteEnabled
+    - integrationEnabled
+    - verificationChannel
+    - trackVerificationMetrics
+    - logFailedVerificationAttempts
+    - ignoredChannels
+    - ignoredRoles
+    - ignoredUsers
+    - includeBotActions
+    - logMessageContent
+    - logEmbedUrls
+    - retentionPeriod
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                      ROLE MANAGEMENT COMMANDS MODULE                         │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+MODULE PATH: modules.roleManagement
+MODULE TOGGLE: modules.roleManagement.enabled
+
+COMMANDS:
+  1. rolecreate
+     PATH: modules.roleManagement.commands.rolecreate
+     OPTIONS: (Same as ban)
+
+  2. roledelete
+     PATH: modules.roleManagement.commands.roledelete
+     OPTIONS: (Same as ban)
+
+  3. rolelist
+     PATH: modules.roleManagement.commands.rolelist
+     OPTIONS: (Same as ban)
+
+  4. autorolestatus
+     PATH: modules.roleManagement.commands.autorolestatus
+     OPTIONS: (Same as ban)
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                     MEMBER MANAGEMENT COMMANDS MODULE                        │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+MODULE PATH: modules.memberManagement
+MODULE TOGGLE: modules.memberManagement.enabled
+
+COMMANDS:
+  1. userinfo
+     PATH: modules.memberManagement.commands.userinfo
+     OPTIONS: (Same as ban)
+
+  2. useravatar
+     PATH: modules.memberManagement.commands.useravatar
+     OPTIONS: (Same as ban)
+
+  3. userbanner
+     PATH: modules.memberManagement.commands.userbanner
+     OPTIONS: (Same as ban)
+
+  4. userroles
+     PATH: modules.memberManagement.commands.userroles
+     OPTIONS: (Same as ban)
+
+  5. pruneusers
+     PATH: modules.memberManagement.commands.pruneusers
+     OPTIONS: (Same as ban)
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                       ANNOUNCEMENTS COMMANDS MODULE                          │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+MODULE PATH: modules.announcements
+MODULE TOGGLE: modules.announcements.enabled
+
+COMMANDS:
+  1. announce
+     PATH: modules.announcements.commands.announce
+     OPTIONS: (Same as ban)
+
+  2. creategiveaway
+     PATH: modules.announcements.commands.creategiveaway
+     OPTIONS: (Same as ban)
+
+  3. giveawaydraw
+     PATH: modules.announcements.commands.giveawaydraw
+     OPTIONS: (Same as ban)
+
+  4. poll
+     PATH: modules.announcements.commands.poll
+     OPTIONS: (Same as ban)
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                      CUSTOM COMMANDS COMMANDS MODULE                         │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+MODULE PATH: modules.customCommands
+MODULE TOGGLE: modules.customCommands.enabled
+
+COMMANDS: Dynamic (user-created commands stored in modules.customCommands.commands)
+
+CUSTOM COMMAND CONFIGURATION:
+  PATH: modules.customCommands.command
+  SETTINGS:
+    - trigger (command trigger text)
+    - title (embed title)
+    - description (embed description)
+    - color (embed color hex)
+    - footer (embed footer text)
+    - thumbnailUrl (embed thumbnail URL)
+    - imageUrl (embed image URL)
+    - fields[] (array of embed fields)
+      - fields[].name
+      - fields[].value
+      - fields[].inline
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                            FUN COMMANDS MODULE                               │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+MODULE PATH: modules.fun
+MODULE TOGGLE: modules.fun.enabled
+
+COMMANDS:
+  1. meme
+     PATH: modules.fun.commands.meme
+     OPTIONS: (Same as ban)
+
+  2. 8ball
+     PATH: modules.fun.commands.8ball
+     OPTIONS: (Same as ban)
+
+  3. coinflip
+     PATH: modules.fun.commands.coinflip
+     OPTIONS: (Same as ban)
+
+  4. dice
+     PATH: modules.fun.commands.dice
+     OPTIONS: (Same as ban)
+
+  5. joke
+     PATH: modules.fun.commands.joke
+     OPTIONS: (Same as ban)
+
+  6. rps
+     PATH: modules.fun.commands.rps
+     OPTIONS: (Same as ban)
+
+  7. rate
+     PATH: modules.fun.commands.rate
+     OPTIONS: (Same as ban)
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         UTILITIES COMMANDS MODULE                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+MODULE PATH: modules.utilities
+MODULE TOGGLE: modules.utilities.enabled
+
+COMMANDS:
+  1. serverinfo
+     PATH: modules.utilities.commands.serverinfo
+     OPTIONS: (Same as ban)
+
+  2. channelinfo
+     PATH: modules.utilities.commands.channelinfo
+     OPTIONS: (Same as ban)
+
+  3. roleinfo
+     PATH: modules.utilities.commands.roleinfo
+     OPTIONS: (Same as ban)
+
+  4. emojilist
+     PATH: modules.utilities.commands.emojilist
+     OPTIONS: (Same as ban)
+
+  5. ping
+     PATH: modules.utilities.commands.ping
+     OPTIONS: (Same as ban)
+
+  6. invite
+     PATH: modules.utilities.commands.invite
+     OPTIONS: (Same as ban)
+
+  7. help
+     PATH: modules.utilities.commands.help
+     OPTIONS: (Same as ban)
+
+  8. support
+     PATH: modules.utilities.commands.support
+     OPTIONS: (Same as ban)
+
+  9. dashboard
+     PATH: modules.utilities.commands.dashboard
+     OPTIONS: (Same as ban)
+
+  10. ignoredchannels
+      PATH: modules.utilities.commands.ignoredchannels
+      OPTIONS: (Same as ban)
+
+  11. ignoredroles
+      PATH: modules.utilities.commands.ignoredroles
+      OPTIONS: (Same as ban)
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         ANALYTICS COMMANDS MODULE                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+MODULE PATH: modules.analytics
+MODULE TOGGLE: modules.analytics.enabled
+
+COMMANDS:
+  1. analyticsserver
+     PATH: modules.analytics.commands.analyticsserver
+     OPTIONS: (Same as ban)
+
+  2. analyticsgrowth
+     PATH: modules.analytics.commands.analyticsgrowth
+     OPTIONS: (Same as ban)
+
+================================================================================
+                    VERIFICATION SYSTEM CONFIGURATION
+================================================================================
+
+PATH: configuration.verification
+MODULE TOGGLE: configuration.verification.enabled
+
+VERIFICATION METHODS:
+  - reaction
+  - button
+  - captcha
+  - manual
+
+SETTINGS:
+  - enabled (Master toggle)
+  - verificationMethod (reaction, button, captcha, manual)
+  - verificationChannel (Channel ID)
+  - messageTitle
+  - messageDescription
+  - messageColor (Hex color)
+  - verifiedRole (Role ID)
+  - unverifiedRole (Role ID)
+  - rulesText
+  - accountAgeRequirement (in days)
+  - requireServerAgreement (Boolean)
+  - multipleSteps (Boolean)
+  - welcomeDM (Boolean)
+  - welcomeDMMessage
+  - additionalRoles (Array of Role IDs)
+  - removeVerificationMessages (Boolean)
+  - antiAltProtection (Boolean)
+  - kickUnverifiedAfter (in hours, 0 = disabled)
+  - verificationBypassRoles (Array of Role IDs)
+  - verificationCooldown (in seconds)
+
+================================================================================
+                    REACTION ROLES SYSTEM CONFIGURATION
+================================================================================
+
+PATH: configuration.reactionRoles
+MODULE TOGGLE: configuration.reactionRoles.enabled
+
+PANEL TYPES:
+  - single (can only have one role from panel)
+  - multiple (can have multiple roles from panel)
+  - remove-on-unreact (removes role when unreacting)
+
+SETTINGS:
+  - enabled (Master toggle)
+  - panels[] (Array of reaction role panels)
+    - panels[].id
+    - panels[].title
+    - panels[].description
+    - panels[].color (Hex color)
+    - panels[].channelId
+    - panels[].messageId
+    - panels[].panelType (single, multiple, remove-on-unreact)
+    - panels[].roleEmojiPairs[]
+      - roleEmojiPairs[].roleId
+      - roleEmojiPairs[].emoji
+  - roleLimit (0 = unlimited)
+  - requiredRole (Role ID)
+  - blacklistedRoles (Array of Role IDs)
+  - allowRoleStacking (Boolean)
+  - autoDeleteReactions (Boolean)
+  - dmOnRoleChange (Boolean)
+  - dmMessage
+  - rolePersistence (Boolean)
+  - reactionCooldown (in seconds)
+
+================================================================================
+                    GENERAL SERVER CONFIGURATION
+================================================================================
+
+PATH: configuration
+SETTINGS:
+  - botNickname (String)
+  - timezone (String, default: 'UTC')
+
+PREFIX SETTING:
+  PATH: prefix
+  DEFAULT: '!'
+
+================================================================================
+                        WHAT STILL NEEDS TO BE CONNECTED
+================================================================================
+
+⚠️ IN-MEMORY DATA (NEEDS MONGODB IMPLEMENTATION):
+
+1. BOT STATUS TRACKING
+   CURRENT: In-memory variable in app/api/bot-status/route.ts
+   NEEDED: MongoDB collection to store bot heartbeat/status
+   SUGGESTED COLLECTION: BotStatus
+   FIELDS:
+     - lastHeartbeat (Date)
+     - online (Boolean)
+     - uptime (Number)
+
+2. BOT STATISTICS
+   CURRENT: In-memory object in app/api/bot-stats/route.ts
+   NEEDED: MongoDB collection to store bot statistics
+   SUGGESTED COLLECTION: BotStats
+   FIELDS:
+     - serverCount (Number)
+     - memberCount (Number)
+     - commandCount (Number)
+     - lastUpdate (Date)
+
+⚠️ FIELDS DEFINED IN SCHEMA BUT NOT ACTIVELY USED:
+
+3. WELCOME/GOODBYE SYSTEM
+   SCHEMA PATHS: (referenced in setup endpoint but not in main schema)
+     - welcome.channel
+     - welcome.message
+     - welcome.enabled
+     - goodbye.channel
+     - goodbye.message
+     - goodbye.enabled
+   STATUS: Partially implemented in setup endpoint, but not in main ServerSettings schema
+
+4. ROLES CONFIGURATION
+   SCHEMA PATHS: (referenced in setup endpoint but not in main schema)
+     - roles.defaultRoles
+     - roles.modRoles
+   STATUS: Partially implemented in setup endpoint, but not in main ServerSettings schema
+
+5. MODERATION LOG CHANNEL
+   SCHEMA PATH: (referenced in setup endpoint but not in main schema)
+     - moderation.logChannel
+   STATUS: Referenced but not in main configuration schema
+
+⚠️ FEATURES THAT NEED ADDITIONAL COLLECTIONS:
+
+6. WARNING SYSTEM DATA
+   CURRENT: Command exists (warn, warnings, clearwarnings) but no data storage
+   NEEDED: MongoDB collection to store user warnings
+   SUGGESTED COLLECTION: Warnings
+   FIELDS:
+     - guildId (String)
+     - userId (String)
+     - moderatorId (String)
+     - reason (String)
+     - timestamp (Date)
+     - active (Boolean)
+
+7. MODERATION CASES/LOGS
+   CURRENT: Logging module exists but no case storage
+   NEEDED: MongoDB collection to store moderation actions
+   SUGGESTED COLLECTION: ModerationCases
+   FIELDS:
+     - guildId (String)
+     - caseId (Number)
+     - userId (String)
+     - moderatorId (String)
+     - action (String: ban, kick, mute, etc.)
+     - reason (String)
+     - timestamp (Date)
+     - duration (Number, for timed punishments)
+     - evidence (Array of URLs)
+
+8. AUTOMOD VIOLATION TRACKING
+   CURRENT: Automod configuration exists but no violation tracking
+   NEEDED: MongoDB collection to track automod violations
+   SUGGESTED COLLECTION: AutomodViolations
+   FIELDS:
+     - guildId (String)
+     - userId (String)
+     - violationType (String)
+     - content (String)
+     - timestamp (Date)
+     - action (String)
+     - channel (String)
+
+9. GIVEAWAYS
+   CURRENT: Commands exist (creategiveaway, giveawaydraw) but no data storage
+   NEEDED: MongoDB collection to store active giveaways
+   SUGGESTED COLLECTION: Giveaways
+   FIELDS:
+     - guildId (String)
+     - channelId (String)
+     - messageId (String)
+     - prize (String)
+     - winnerCount (Number)
+     - endTime (Date)
+     - hostId (String)
+     - participants (Array of User IDs)
+     - winners (Array of User IDs)
+     - active (Boolean)
+
+10. POLLS
+    CURRENT: Command exists (poll) but no data storage
+    NEEDED: MongoDB collection to store active polls
+    SUGGESTED COLLECTION: Polls
+    FIELDS:
+      - guildId (String)
+      - channelId (String)
+      - messageId (String)
+      - question (String)
+      - options (Array of Strings)
+      - votes (Object: optionIndex -> Array of User IDs)
+      - endTime (Date)
+      - creatorId (String)
+      - active (Boolean)
+
+11. SCHEDULED MESSAGES
+    CURRENT: Not implemented
+    NEEDED: MongoDB collection to store scheduled messages
+    SUGGESTED COLLECTION: ScheduledMessages
+    FIELDS:
+      - guildId (String)
+      - channelId (String)
+      - content (String)
+      - scheduledTime (Date)
+      - creatorId (String)
+      - recurring (Boolean)
+      - recurringInterval (String)
+      - sent (Boolean)
+
+12. ANALYTICS/GROWTH DATA
+    CURRENT: Commands exist (analyticsserver, analyticsgrowth) but no data storage
+    NEEDED: MongoDB collection to track server analytics over time
+    SUGGESTED COLLECTION: ServerAnalytics
+    FIELDS:
+      - guildId (String)
+      - timestamp (Date)
+      - memberCount (Number)
+      - messageCount (Number)
+      - activeUsers (Number)
+      - joinCount (Number)
+      - leaveCount (Number)
+
+13. TEMPORARY MUTES/TIMEOUTS TRACKING
+    CURRENT: Commands exist (tempmute, timeout) but no active timeout tracking
+    NEEDED: MongoDB collection to track and manage active timeouts
+    SUGGESTED COLLECTION: ActiveTimeouts
+    FIELDS:
+      - guildId (String)
+      - userId (String)
+      - moderatorId (String)
+      - reason (String)
+      - startTime (Date)
+      - endTime (Date)
+      - type (String: mute, timeout)
+      - active (Boolean)
+
+14. RAID DETECTION EVENTS
+    CURRENT: Anti-raid configuration exists but no event tracking
+    NEEDED: MongoDB collection to track raid detection events
+    SUGGESTED COLLECTION: RaidEvents
+    FIELDS:
+      - guildId (String)
+      - timestamp (Date)
+      - joinCount (Number)
+      - timeWindow (Number)
+      - suspiciousAccounts (Array of User IDs)
+      - actionTaken (String)
+      - severity (String)
+
+================================================================================
+                              SUMMARY STATISTICS
+================================================================================
+
+TOTAL API ENDPOINTS: 25
+  - Endpoints with MongoDB: 21
+  - Endpoints without MongoDB: 4 (bot-stats, bot-status, stats, channels-and-roles)
+
+TOTAL MODULES: 11
+  - moderation
+  - automod
+  - antiRaid
+  - logging
+  - roleManagement
+  - memberManagement
+  - announcements
+  - customCommands
+  - fun
+  - utilities
+  - analytics
+
+TOTAL COMMANDS: 82+
+  - Moderation: 14 commands
+  - Automod: 13 commands
+  - Anti-Raid: 8 commands
+  - Logging: 10 commands
+  - Role Management: 4 commands
+  - Member Management: 5 commands
+  - Announcements: 4 commands
+  - Custom Commands: Dynamic/unlimited
+  - Fun: 7 commands
+  - Utilities: 11 commands
+  - Analytics: 2 commands
+
+CONFIGURATION SYSTEMS: 5
+  - Anti-Raid Configuration
+  - Automod Configuration
+  - Logging Configuration
+  - Verification System
+  - Reaction Roles System
+
+MONGODB COLLECTIONS IN USE: 1
+  - ServerSettings (main collection with all server configurations)
+
+MONGODB COLLECTIONS NEEDED: 14+
+  - BotStatus
+  - BotStats
+  - Warnings
+  - ModerationCases
+  - AutomodViolations
+  - Giveaways
+  - Polls
+  - ScheduledMessages
+  - ServerAnalytics
+  - ActiveTimeouts
+  - RaidEvents
+  - Welcome/Goodbye settings (needs to be added to ServerSettings schema)
+  - Roles configuration (needs to be added to ServerSettings schema)
+  - Message logs (optional, for logging module)
+
+================================================================================
+           COMMANDS EXPECTING MONGODB COLLECTIONS BUT NOT CONNECTED ********************************************************************
+================================================================================
+
+The following commands are defined and have configuration settings in the
+ServerSettings model, but lack dedicated MongoDB collections to store their
+operational data. These commands are currently NON-FUNCTIONAL or partially
+functional without proper data persistence.
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         WARNING SYSTEM COMMANDS                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+COMMANDS:
+  - warn (modules.moderation.commands.warn)
+  - warnings (modules.moderation.commands.warnings)
+  - clearwarnings (modules.moderation.commands.clearwarnings) // DELETE \\
+
+CURRENT STATUS: ❌ NOT CONNECTED
+  - Commands are configured in ServerSettings
+  - No Warnings collection exists to store warning data
+
+REQUIRED COLLECTION: Warnings
+REQUIRED FIELDS:
+  - _id (ObjectId)
+  - guildId (String) - Server ID
+  - userId (String) - User who was warned
+  - moderatorId (String) - Moderator who issued warning
+  - reason (String) - Reason for warning
+  - timestamp (Date) - When warning was issued
+  - caseId (Number) - Warning case number
+  - active (Boolean) - Whether warning is still active
+  - expiresAt (Date, optional) - Auto-expiry date
+
+OPERATIONS NEEDED:
+  - warn: INSERT new warning document
+  - warnings: FIND all warnings for a user
+  - clearwarnings: UPDATE warnings to set active = false OR DELETE warnings
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         GIVEAWAY SYSTEM COMMANDS                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+COMMANDS:
+  - creategiveaway (modules.announcements.commands.creategiveaway)
+  - giveawaydraw (modules.announcements.commands.giveawaydraw)
+
+CURRENT STATUS: ❌ NOT CONNECTED
+  - Commands are configured in ServerSettings
+  - No Giveaways collection exists to store giveaway data
+
+REQUIRED COLLECTION: Giveaways
+REQUIRED FIELDS:
+  - _id (ObjectId)
+  - guildId (String) - Server ID
+  - channelId (String) - Channel where giveaway is posted
+  - messageId (String) - Message ID of giveaway embed
+  - prize (String) - Prize description
+  - winnerCount (Number) - Number of winners to draw
+  - endTime (Date) - When giveaway ends
+  - hostId (String) - User who created giveaway
+  - participants (Array[String]) - User IDs of participants
+  - winners (Array[String]) - User IDs of winners (after draw)
+  - requirements (Object) - Optional requirements (role, age, etc.)
+  - active (Boolean) - Whether giveaway is still active
+  - createdAt (Date) - When giveaway was created
+
+OPERATIONS NEEDED:
+  - creategiveaway: INSERT new giveaway document
+  - giveawaydraw: FIND giveaway, UPDATE with winners, set active = false
+  - Bot should FIND all active giveaways and check endTime periodically
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                            POLL SYSTEM COMMAND                               │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+COMMANDS:
+  - poll (modules.announcements.commands.poll)
+
+CURRENT STATUS: ❌ NOT CONNECTED
+  - Command is configured in ServerSettings
+  - No Polls collection exists to store poll data
+
+REQUIRED COLLECTION: Polls
+REQUIRED FIELDS:
+  - _id (ObjectId)
+  - guildId (String) - Server ID
+  - channelId (String) - Channel where poll is posted
+  - messageId (String) - Message ID of poll embed
+  - question (String) - Poll question
+  - options (Array[String]) - Poll options
+  - votes (Object) - Map of optionIndex -> Array of User IDs
+  - allowMultipleVotes (Boolean) - Whether users can vote multiple times
+  - endTime (Date, optional) - When poll ends (null = no end time)
+  - creatorId (String) - User who created poll
+  - active (Boolean) - Whether poll is still active
+  - createdAt (Date) - When poll was created
+
+OPERATIONS NEEDED:
+  - poll: INSERT new poll document
+  - Bot reactions: UPDATE votes when users react
+  - Bot should FIND poll by messageId to track votes
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                     TEMPORARY PUNISHMENT COMMANDS                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+COMMANDS:
+  - tempmute (modules.moderation.commands.tempmute)
+  - timeout (modules.moderation.commands.timeout)
+
+CURRENT STATUS: ❌ NOT CONNECTED
+  - Commands are configured in ServerSettings
+  - No ActiveTimeouts collection exists to track active punishments
+
+REQUIRED COLLECTION: ActiveTimeouts
+REQUIRED FIELDS:
+  - _id (ObjectId)
+  - guildId (String) - Server ID
+  - userId (String) - User who is timed out
+  - moderatorId (String) - Moderator who issued timeout
+  - reason (String) - Reason for timeout
+  - type (String) - Type: "mute", "timeout"
+  - startTime (Date) - When timeout started
+  - endTime (Date) - When timeout expires
+  - roleId (String, optional) - Mute role ID (for mutes)
+  - active (Boolean) - Whether timeout is still active
+  - caseId (Number) - Case number reference
+
+OPERATIONS NEEDED:
+  - tempmute/timeout: INSERT new timeout document
+  - untimeout/unmute: FIND timeout, UPDATE active = false
+  - Bot should FIND all active timeouts periodically and remove expired ones
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         ANALYTICS SYSTEM COMMANDS                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+COMMANDS:
+  - analyticsserver (modules.analytics.commands.analyticsserver)
+  - analyticsgrowth (modules.analytics.commands.analyticsgrowth)
+
+CURRENT STATUS: ❌ NOT CONNECTED
+  - Commands are configured in ServerSettings
+  - No ServerAnalytics collection exists to store historical data
+
+REQUIRED COLLECTION: ServerAnalytics
+REQUIRED FIELDS:
+  - _id (ObjectId)
+  - guildId (String) - Server ID
+  - timestamp (Date) - When snapshot was taken
+  - memberCount (Number) - Total member count
+  - memberCountOnline (Number) - Online member count
+  - textChannelCount (Number) - Number of text channels
+  - voiceChannelCount (Number) - Number of voice channels
+  - roleCount (Number) - Number of roles
+  - messageCount (Number, optional) - Messages sent in period
+  - activeUsers (Number, optional) - Active users in period
+  - joinCount (Number) - Members who joined in period
+  - leaveCount (Number) - Members who left in period
+  - botCommands (Number, optional) - Commands executed in period
+
+OPERATIONS NEEDED:
+  - Bot should INSERT analytics snapshot periodically (hourly/daily)
+  - analyticsserver: FIND recent snapshots to display current stats
+  - analyticsgrowth: FIND historical snapshots to calculate growth trends
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                     MODERATION LOGGING COMMANDS                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+COMMANDS (ALL MODERATION COMMANDS):
+  - ban, softban, unban, kick (modules.moderation.commands.*)
+  - mute, unmute, tempmute (modules.moderation.commands.*)
+  - timeout, untimeout (modules.moderation.commands.*)
+  - warn, warnings, clearwarnings (modules.moderation.commands.*)
+  - clear, slowmode (modules.moderation.commands.*)
+  - lockdown, unlockdown (modules.antiRaid.commands.*)
+
+CURRENT STATUS: ⚠️ PARTIALLY CONNECTED
+  - Commands are configured in ServerSettings
+  - Logging channels are configured in configuration.logging
+  - No ModerationCases collection to store case history
+
+REQUIRED COLLECTION: ModerationCases
+REQUIRED FIELDS:
+  - _id (ObjectId)
+  - guildId (String) - Server ID
+  - caseId (Number) - Sequential case number
+  - userId (String) - User who was moderated
+  - moderatorId (String) - Moderator who took action
+  - action (String) - Action type: "ban", "kick", "mute", "warn", etc.
+  - reason (String) - Reason for action
+  - duration (Number, optional) - Duration in seconds (for temp actions)
+  - evidence (Array[String], optional) - URLs to evidence (screenshots, etc.)
+  - timestamp (Date) - When action was taken
+  - active (Boolean) - Whether action is still in effect
+  - endTime (Date, optional) - When temp action expires
+  - channelId (String, optional) - Channel where action occurred
+  - messageCount (Number, optional) - Messages deleted (for clear command)
+
+OPERATIONS NEEDED:
+  - ALL MODERATION COMMANDS: INSERT new case document after action
+  - warnings: FIND cases where action = "warn" for a user
+  - Bot should track sequential caseId per server
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        AUTOMOD VIOLATION TRACKING                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+COMMANDS (AUTOMOD FILTERS):
+  - antilink, antiinvite, antispam (modules.automod.commands.*)
+  - antimention, antizalgo, antiswear (modules.automod.commands.*)
+  - antiflood, capsfilter, duplicatefilter, regexfilter (modules.automod.commands.*)
+
+CURRENT STATUS: ⚠️ PARTIALLY CONNECTED
+  - Filters are configured in configuration.automod
+  - No AutomodViolations collection to track violations
+
+REQUIRED COLLECTION: AutomodViolations
+REQUIRED FIELDS:
+  - _id (ObjectId)
+  - guildId (String) - Server ID
+  - userId (String) - User who violated filter
+  - violationType (String) - Type: "spam", "link", "invite", "mention", etc.
+  - content (String) - Message content that triggered filter
+  - channelId (String) - Channel where violation occurred
+  - messageId (String, optional) - Message ID (if not deleted)
+  - timestamp (Date) - When violation occurred
+  - action (String) - Action taken: "delete", "warn", "timeout", "none"
+  - severity (Number) - Severity level 1-10
+
+OPERATIONS NEEDED:
+  - Bot automod filters: INSERT violation document when triggered
+  - automodlogs command: FIND recent violations for a user/server
+  - Auto-timeout logic: FIND violation count in time window, trigger timeout
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          RAID DETECTION TRACKING                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+CONFIGURATION SYSTEM:
+  - Anti-Raid (configuration.antiraid)
+  - Commands: antiraidenable, antiraiddisable, antiraidlevel, joinrate, etc.
+
+CURRENT STATUS: ⚠️ PARTIALLY CONNECTED
+  - Anti-raid settings stored in configuration.antiraid
+  - No RaidEvents collection to track detection events
+
+REQUIRED COLLECTION: RaidEvents
+REQUIRED FIELDS:
+  - _id (ObjectId)
+  - guildId (String) - Server ID
+  - timestamp (Date) - When raid was detected
+  - joinCount (Number) - Number of joins in window
+  - timeWindow (Number) - Time window in seconds
+  - suspiciousAccounts (Array[Object]) - Suspicious user details
+    - userId (String)
+    - accountAge (Number) - Account age in milliseconds
+    - username (String)
+    - joinedAt (Date)
+  - actionTaken (String) - Action: "kick", "ban", "none"
+  - severity (String) - Severity: "low", "medium", "high", "extreme"
+  - resolved (Boolean) - Whether raid was resolved
+  - resolvedAt (Date, optional) - When raid ended
+  - affectedUsers (Number) - Number of users kicked/banned
+
+OPERATIONS NEEDED:
+  - Bot raid detection: INSERT raid event when threshold exceeded
+  - Anti-raid dashboard: FIND recent raid events to display history
+  - Bot should track join patterns and UPDATE event as it evolves
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                       CUSTOM COMMANDS DATA STORAGE                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+MODULE: Custom Commands (modules.customCommands)
+
+CURRENT STATUS: ⚠️ PARTIALLY CONNECTED
+  - Custom command template stored in modules.customCommands.command
+  - No proper storage for multiple custom commands
+  - modules.customCommands.commands exists but structure unclear
+
+ISSUE:
+  - Schema shows: commands: {} (empty object)
+  - Should store multiple custom commands with unique triggers
+  - Current implementation only stores ONE command template
+
+REQUIRED STRUCTURE:
+  modules.customCommands.commands should be:
+  {
+    "trigger1": {
+      title: String,
+      description: String,
+      color: String,
+      footer: String,
+      thumbnailUrl: String,
+      imageUrl: String,
+      fields: Array
+    },
+    "trigger2": { ... },
+    ...
+  }
+
+ALTERNATIVE: Separate CustomCommands Collection
+REQUIRED FIELDS:
+  - _id (ObjectId)
+  - guildId (String) - Server ID
+  - trigger (String) - Command trigger
+  - title (String) - Embed title
+  - description (String) - Embed description
+  - color (String) - Embed color
+  - footer (String) - Embed footer
+  - thumbnailUrl (String) - Embed thumbnail
+  - imageUrl (String) - Embed image
+  - fields (Array[Object]) - Embed fields
+  - createdBy (String) - User who created command
+  - createdAt (Date) - When command was created
+  - usageCount (Number) - How many times command was used
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          SCHEDULED MESSAGES                                  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+CURRENT STATUS: ❌ NOT IMPLEMENTED
+  - No commands defined in schema
+  - Feature commonly requested for Discord bots
+
+REQUIRED COLLECTION: ScheduledMessages
+REQUIRED FIELDS:
+  - _id (ObjectId)
+  - guildId (String) - Server ID
+  - channelId (String) - Channel to send message
+  - content (String) - Message content
+  - embed (Object, optional) - Embed configuration
+  - scheduledTime (Date) - When to send message
+  - creatorId (String) - User who scheduled message
+  - recurring (Boolean) - Whether message repeats
+  - recurringInterval (String, optional) - Interval: "daily", "weekly", "monthly"
+  - sent (Boolean) - Whether message was sent
+  - sentAt (Date, optional) - When message was actually sent
+  - active (Boolean) - Whether schedule is active
+
+OPERATIONS NEEDED:
+  - Bot should FIND scheduled messages where scheduledTime <= now AND sent = false
+  - After sending: UPDATE sent = true, sentAt = now
+  - For recurring: UPDATE scheduledTime to next occurrence
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                     ROLE PERSISTENCE SYSTEM                                  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+CONFIGURATION: configuration.reactionRoles.rolePersistence
+
+CURRENT STATUS: ⚠️ CONFIGURED BUT NOT CONNECTED
+  - Setting exists in reaction roles configuration
+  - No UserRoles collection to track role history
+
+REQUIRED COLLECTION: UserRoles
+REQUIRED FIELDS:
+  - _id (ObjectId)
+  - guildId (String) - Server ID
+  - userId (String) - User ID
+  - roleIds (Array[String]) - Roles user should have
+  - lastUpdated (Date) - When role list was last updated
+  - persistent (Boolean) - Whether roles persist on rejoin
+
+OPERATIONS NEEDED:
+  - Bot on role change: UPDATE or INSERT user role list
+  - Bot on member join: FIND user roles, re-add persistent roles
+  - Bot should sync periodically to handle manual role changes
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         MESSAGE LOGGING SYSTEM                               │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+CONFIGURATION: configuration.logging (message-related events)
+RELEVANT SETTINGS:
+  - messageDeleteEnabled
+  - messageEditEnabled
+  - bulkDeleteEnabled
+  - messageAttachmentsEnabled
+
+CURRENT STATUS: ⚠️ CONFIGURED BUT NOT CONNECTED
+  - Logging channels configured
+  - No MessageLogs collection to store message history
+
+REQUIRED COLLECTION: MessageLogs
+REQUIRED FIELDS:
+  - _id (ObjectId)
+  - guildId (String) - Server ID
+  - messageId (String) - Discord message ID
+  - channelId (String) - Channel ID
+  - userId (String) - User who sent message
+  - content (String) - Message content
+  - embeds (Array[Object], optional) - Embed data
+  - attachments (Array[Object], optional) - Attachment URLs and data
+  - createdAt (Date) - When message was sent
+  - editedAt (Date, optional) - When message was last edited
+  - deletedAt (Date, optional) - When message was deleted
+  - previousContent (Array[String], optional) - Previous content versions
+
+OPERATIONS NEEDED:
+  - Bot on message send: INSERT message document
+  - Bot on message edit: UPDATE message, push old content to previousContent
+  - Bot on message delete: UPDATE deletedAt field
+  - Logging commands: FIND messages for user/channel
+
+================================================================================
+                              CRITICAL SUMMARY
+================================================================================
+
+TOTAL COMMANDS EXPECTING MONGODB BUT NOT CONNECTED: 30+
+
+BY CATEGORY:
+  ✅ FULLY CONNECTED: 60+ commands (configuration only)
+  ⚠️  PARTIALLY CONNECTED: 15+ commands (config exists, no data storage)
+  ❌ NOT CONNECTED: 15+ commands (completely non-functional)
+
+REQUIRED COLLECTIONS TO IMPLEMENT: 14
+  1. ✅ ServerSettings (EXISTS - stores all configuration)
+  2. ❌ Warnings (MISSING - for warning system)
+  3. ❌ Giveaways (MISSING - for giveaway system)
+  4. ❌ Polls (MISSING - for poll system)
+  5. ❌ ActiveTimeouts (MISSING - for temporary punishments)
+  6. ❌ ServerAnalytics (MISSING - for analytics tracking)
+  7. ❌ ModerationCases (MISSING - for moderation history)
+  8. ❌ AutomodViolations (MISSING - for automod tracking)
+  9. ❌ RaidEvents (MISSING - for raid detection tracking)
+  10. ❌ CustomCommands (OPTIONAL - better structure for custom commands)
+  11. ❌ ScheduledMessages (MISSING - not implemented at all)
+  12. ❌ UserRoles (MISSING - for role persistence)
+  13. ❌ MessageLogs (MISSING - for message history)
+  14. ❌ BotStats (MISSING - currently in-memory)
+  15. ❌ BotStatus (MISSING - currently in-memory)
+
+PRIORITY IMPLEMENTATION ORDER:
+  1. HIGH PRIORITY:
+     - ModerationCases (all moderation commands depend on this)
+     - Warnings (warn system completely broken without it)
+     - ActiveTimeouts (temp punishments need tracking)
+     - BotStats & BotStatus (move from in-memory to persistent)
+
+  2. MEDIUM PRIORITY:
+     - AutomodViolations (needed for escalating punishments)
+     - RaidEvents (needed for anti-raid analytics)
+     - CustomCommands (improve current implementation)
+     - Giveaways (commonly used feature)
+
+  3. LOW PRIORITY:
+     - Polls (nice to have)
+     - ServerAnalytics (for advanced analytics)
+     - MessageLogs (for advanced logging)
+     - UserRoles (for role persistence feature)
+     - ScheduledMessages (feature not yet implemented)
+
+ACTION REQUIRED:
+  1. Create Mongoose schemas for each collection above
+  2. Update API routes to interact with new collections
+  3. Update bot code to write data to collections
+  4. Create migration scripts to move in-memory data to MongoDB
+  5. Add cleanup/maintenance jobs for expired data
+
+================================================================================
+                              END OF DOCUMENT
+================================================================================
+
+Generated: January 8, 2026
+Database: lumo-bot
+Framework: Next.js 15 with MongoDB (Mongoose ODM)
+Authentication: NextAuth.js with Discord OAuth

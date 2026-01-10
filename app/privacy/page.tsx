@@ -44,7 +44,7 @@ export default function PrivacyPolicy() {
               For the purposes of UK data protection legislation, the data controller is Luno Bot. You can contact us at:
             </p>
             <p className="text-slate-700 leading-relaxed mb-4">
-              Email: <a href="mailto:support@luno.bot" className="text-orange-600 hover:text-orange-700 underline">support@luno.bot</a><br />
+              Email: <a href="mailto:legal@luno.bot" className="text-orange-600 hover:text-orange-700 underline">legal@luno.bot</a><br />
               Discord: <a href="https://discord.gg/shGCTRhwez" className="text-orange-600 hover:text-orange-700 underline" target="_blank" rel="noopener noreferrer">discord.gg/shGCTRhwez</a>
             </p>
           </section>
@@ -59,7 +59,7 @@ export default function PrivacyPolicy() {
               <li><strong>Server Information:</strong> Server ID, server name, server icon, channel IDs, channel names, role IDs, role names</li>
               <li><strong>Message Data:</strong> Message IDs, message content (only when necessary for moderation features), message timestamps, author IDs</li>
               <li><strong>Member Data:</strong> Member IDs, join dates, role assignments, nickname changes</li>
-              <li><strong>Moderation Actions:</strong> Warnings, bans, kicks, mutes, and other moderation actions performed through the bot</li>
+              <li><strong>Moderation Actions:</strong> Bans, kicks, timeouts, and other moderation actions performed through the bot</li>
             </ul>
 
             <h3 className="text-xl font-bold text-slate-900 mb-3 mt-6">3.2 Information You Provide</h3>
@@ -161,7 +161,7 @@ export default function PrivacyPolicy() {
               <li><strong>Right to Lodge a Complaint:</strong> You can complain to the Information Commissioner's Office (ICO) if you believe we have violated your rights</li>
             </ul>
             <p className="text-slate-700 leading-relaxed mb-4">
-              To exercise any of these rights, please contact us at <a href="mailto:support@luno.bot" className="text-orange-600 hover:text-orange-700 underline">support@luno.bot</a>. We will respond to your request within one month.
+              To exercise any of these rights, please contact us at <a href="mailto:legal@luno.bot" className="text-orange-600 hover:text-orange-700 underline">legal@luno.bot</a>. We will respond to your request within one month.
             </p>
           </section>
 
@@ -213,7 +213,7 @@ export default function PrivacyPolicy() {
               If you have any questions, concerns, or requests regarding this Privacy Policy or our data practices, please contact us at:
             </p>
             <p className="text-slate-700 leading-relaxed mb-4">
-              Email: <a href="mailto:support@luno.bot" className="text-orange-600 hover:text-orange-700 underline">support@luno.bot</a><br />
+              Email: <a href="mailto:legal@luno.bot" className="text-orange-600 hover:text-orange-700 underline">legal@luno.bot</a><br />
               Discord: <a href="https://discord.gg/shGCTRhwez" className="text-orange-600 hover:text-orange-700 underline" target="_blank" rel="noopener noreferrer">discord.gg/shGCTRhwez</a>
             </p>
           </section>

@@ -39,7 +39,7 @@ export default function GDPRNotice() {
             <h2 className="text-2xl font-bold text-slate-900 mb-4">2. Data Controller Information</h2>
             <p className="text-slate-700 leading-relaxed mb-4">
               <strong>Data Controller:</strong> Luno Bot<br />
-              <strong>Contact Email:</strong> <a href="mailto:support@luno.bot" className="text-orange-600 hover:text-orange-700 underline">support@luno.bot</a><br />
+              <strong>Contact Email:</strong> <a href="mailto:legal@luno.bot" className="text-orange-600 hover:text-orange-700 underline">legal@luno.bot</a><br />
               <strong>Discord Server:</strong> <a href="https://discord.gg/shGCTRhwez" className="text-orange-600 hover:text-orange-700 underline" target="_blank" rel="noopener noreferrer">discord.gg/shGCTRhwez</a>
             </p>
             <p className="text-slate-700 leading-relaxed mb-4">
@@ -87,7 +87,7 @@ export default function GDPRNotice() {
 
             <h3 className="text-xl font-bold text-slate-900 mb-3 mt-6">3.5 Moderation Data</h3>
             <ul className="list-disc pl-6 text-slate-700 leading-relaxed mb-4 space-y-2">
-              <li>Warnings, bans, kicks, and mutes</li>
+              <li>Bans, kicks, and timeouts</li>
               <li>Moderation reasons and notes</li>
               <li>Moderator responsible for actions</li>
               <li>Timestamps of moderation actions</li>
@@ -239,7 +239,7 @@ export default function GDPRNotice() {
               To exercise any of your rights, please contact us at:
             </p>
             <p className="text-slate-700 leading-relaxed mb-4">
-              Email: <a href="mailto:support@luno.bot" className="text-orange-600 hover:text-orange-700 underline">support@luno.bot</a><br />
+              Email: <a href="mailto:legal@luno.bot" className="text-orange-600 hover:text-orange-700 underline">legal@luno.bot</a><br />
               Discord: <a href="https://discord.gg/shGCTRhwez" className="text-orange-600 hover:text-orange-700 underline" target="_blank" rel="noopener noreferrer">discord.gg/shGCTRhwez</a>
             </p>
             <p className="text-slate-700 leading-relaxed mb-4">
@@ -388,7 +388,7 @@ export default function GDPRNotice() {
               For any questions, concerns, or to exercise your rights under UK GDPR, please contact us at:
             </p>
             <p className="text-slate-700 leading-relaxed mb-4">
-              Email: <a href="mailto:support@luno.bot" className="text-orange-600 hover:text-orange-700 underline">support@luno.bot</a><br />
+              Email: <a href="mailto:legal@luno.bot" className="text-orange-600 hover:text-orange-700 underline">legal@luno.bot</a><br />
               Discord: <a href="https://discord.gg/shGCTRhwez" className="text-orange-600 hover:text-orange-700 underline" target="_blank" rel="noopener noreferrer">discord.gg/shGCTRhwez</a>
             </p>
           </section>

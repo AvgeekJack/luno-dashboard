@@ -123,7 +123,7 @@ export default function HomePage() {
                 </div>
                 <h3 className="text-2xl font-bold mb-3 text-[#0f172a]">Powerful Moderation</h3>
                 <p className="text-slate-600 leading-relaxed">
-                  Keep your server safe with comprehensive moderation tools including warns, kicks, bans, mutes, and automated modlogs. Track all mod actions with detailed logs showing who did what and when.
+                  Keep your server safe with comprehensive moderation tools including warns, kicks, bans, and timeouts. Track all mod actions with detailed logs showing who did what and when.
                 </p>
               </div>
 
@@ -252,7 +252,6 @@ export default function HomePage() {
                   <div className="space-y-3 font-mono text-sm">
                     <div className="text-orange-400">/warn @User Rule Violation</div>
                     <div className="text-slate-400 pl-4">→ Warning issued to @User</div>
-                    <div className="text-slate-400 pl-4">→ Total warnings: 2/3</div>
                     <div className="text-orange-400 mt-4">/ban @BadActor Raiding</div>
                     <div className="text-slate-400 pl-4">→ User banned permanently</div>
                     <div className="text-slate-400 pl-4">→ Reason: Raiding</div>
@@ -267,13 +266,13 @@ export default function HomePage() {
                       <svg className="w-6 h-6 text-orange-500 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
-                      <span className="leading-relaxed">Modlogs let your mods take responsibility for their actions</span>
+                      <span className="leading-relaxed">Moderation logs let your mods take responsibility for their actions</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <svg className="w-6 h-6 text-orange-500 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
-                      <span className="leading-relaxed">All mod commands: warns, kicks, bans, mutes, timeouts (timed or permanent)</span>
+                      <span className="leading-relaxed">All mod commands: warns, kicks, bans, timeouts (timed or permanent)</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <svg className="w-6 h-6 text-orange-500 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -285,7 +284,7 @@ export default function HomePage() {
                       <svg className="w-6 h-6 text-orange-500 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
-                      <span className="leading-relaxed">Sticky roles prevent users from leaving to remove their mute</span>
+                      <span className="leading-relaxed">Sticky roles persist even when users rejoin the server</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <svg className="w-6 h-6 text-orange-500 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -506,8 +505,8 @@ export default function HomePage() {
                 <h3 className="text-2xl font-bold mb-3">Moderation</h3>
                 <div className="space-y-2 text-sm opacity-90">
                   <p>/ban • /kick • /warn</p>
-                  <p>/mute • /timeout • /unmute</p>
-                  <p>/clear • /slowmode • /lock</p>
+                  <p>/timeout • /clear • /slowmode</p>
+                  <p>/lock • /unlock</p>
                 </div>
               </div>
               <div className="bg-white border-2 border-slate-200 p-6 rounded-2xl">

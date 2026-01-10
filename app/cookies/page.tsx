@@ -275,7 +275,7 @@ export default function CookiePolicy() {
               If you have any questions or concerns about our use of cookies, please contact us at:
             </p>
             <p className="text-slate-700 leading-relaxed mb-4">
-              Email: <a href="mailto:support@luno.bot" className="text-orange-600 hover:text-orange-700 underline">support@luno.bot</a><br />
+              Email: <a href="mailto:legal@luno.bot" className="text-orange-600 hover:text-orange-700 underline">legal@luno.bot</a><br />
               Discord: <a href="https://discord.gg/shGCTRhwez" className="text-orange-600 hover:text-orange-700 underline" target="_blank" rel="noopener noreferrer">discord.gg/shGCTRhwez</a>
             </p>
           </section>

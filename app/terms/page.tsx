@@ -163,7 +163,7 @@ export default function TermsOfService() {
               Any dispute arising out of or in connection with these terms, including any question regarding their existence, validity, or termination, shall be subject to the exclusive jurisdiction of the courts of England and Wales.
             </p>
             <p className="text-slate-700 leading-relaxed mb-4">
-              Before pursuing any legal action, we encourage you to contact us at <a href="mailto:support@luno.bot" className="text-orange-600 hover:text-orange-700 underline">support@luno.bot</a> to attempt to resolve the dispute informally.
+              Before pursuing any legal action, we encourage you to contact us at <a href="mailto:legal@luno.bot" className="text-orange-600 hover:text-orange-700 underline">legal@luno.bot</a> to attempt to resolve the dispute informally.
             </p>
           </section>
 
@@ -187,7 +187,7 @@ export default function TermsOfService() {
               If you have any questions, concerns, or complaints regarding these Terms of Service, please contact us at:
             </p>
             <p className="text-slate-700 leading-relaxed mb-4">
-              Email: <a href="mailto:support@luno.bot" className="text-orange-600 hover:text-orange-700 underline">support@luno.bot</a><br />
+              Email: <a href="mailto:legal@luno.bot" className="text-orange-600 hover:text-orange-700 underline">legal@luno.bot</a><br />
               Discord: <a href="https://discord.gg/shGCTRhwez" className="text-orange-600 hover:text-orange-700 underline" target="_blank" rel="noopener noreferrer">discord.gg/shGCTRhwez</a>
             </p>
           </section>
