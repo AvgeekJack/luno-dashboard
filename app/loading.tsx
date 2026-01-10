@@ -41,20 +41,6 @@ export default function Loading() {
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes spin-slow {
-          from {
-            transform: rotate(0deg);
-          }
-          to {
-            transform: rotate(-360deg);
-          }
-        }
-        .animate-spin-slow {
-          animation: spin-slow 2s linear infinite;
-        }
-      `}</style>
     </div>
   );
 }
