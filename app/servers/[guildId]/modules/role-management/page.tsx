@@ -11,9 +11,8 @@ import { Switch } from '@/components/ui/switch';
 
 const ROLE_MANAGEMENT_COMMANDS = [
   { name: '/role create', description: 'Create a new role', enabled: true },
-  { name: '/role delete', description: 'Delete an existing role', enabled: true },
+  { name: '/role remove', description: 'Delete an existing role', enabled: true },
   { name: '/role list', description: 'List all roles in the server', enabled: true },
-  { name: '/autorole status', description: 'Check autorole status', enabled: true },
 ];
 
 export default function RoleManagementPage() {

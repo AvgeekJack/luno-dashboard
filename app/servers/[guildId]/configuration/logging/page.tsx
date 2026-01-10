@@ -832,7 +832,7 @@ export default function LoggingPage() {
                   <div className="grid gap-3">
                     {[
                       { key: 'roleCreate', label: 'Role Create', desc: 'New roles created' },
-                      { key: 'roleDelete', label: 'Role Delete', desc: 'Roles deleted' },
+                      { key: 'roleRemove', label: 'Role Remove', desc: 'Roles deleted' },
                       { key: 'roleUpdate', label: 'Role Update', desc: 'Role permissions, color, name changed' },
                     ].map(item => (
                       <div key={item.key} className="flex items-center gap-3 p-4 rounded-lg border border-orange-100">
