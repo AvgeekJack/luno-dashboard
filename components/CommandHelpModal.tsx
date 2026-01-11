@@ -48,7 +48,7 @@ const COMMAND_INFO: Record<string, { usage: string; description: string; permiss
   '/user roles': { usage: '/user roles {USER}', description: 'List all roles assigned to a user', permissions: 'None' },
   '/prune users': { usage: '/prune users {DAYS}', description: 'Remove inactive members who haven\'t been active for specified days', permissions: 'Kick Members' },
   '/announce': { usage: '/announce {CHANNEL} {MESSAGE}', description: 'Send an announcement to a specified channel', permissions: 'Manage Server' },
-  '/creategiveaway': { usage: '/creategiveaway {PRIZE} {DURATION} {WINNERS}', description: 'Create a new giveaway', permissions: 'Manage Server' },
+  '/giveaway create': { usage: '/giveaway create {PRIZE} {DURATION} {WINNERS}', description: 'Create a new giveaway', permissions: 'Manage Server' },
   '/giveawaydraw': { usage: '/giveawaydraw {GIVEAWAY_ID}', description: 'Manually draw winners for a giveaway', permissions: 'Manage Server' },
   '/poll': { usage: '/poll {QUESTION} {OPTIONS}', description: 'Create a poll for members to vote on', permissions: 'Manage Server' },
   '/schedule message': { usage: '/schedule message {CHANNEL} {TIME} {MESSAGE}', description: 'Schedule a message to be sent at a specific time', permissions: 'Manage Server' },

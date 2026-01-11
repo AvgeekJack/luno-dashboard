@@ -119,7 +119,7 @@ export async function PUT(
         userinfo: 'memberManagement', useravatar: 'memberManagement',
         userbanner: 'memberManagement', userroles: 'memberManagement',
         pruneusers: 'memberManagement',
-        announce: 'announcements', creategiveaway: 'announcements',
+        announce: 'announcements', giveawaycreate: 'announcements',
         giveawaydraw: 'announcements', poll: 'announcements',
         meme: 'fun', '8ball': 'fun', coinflip: 'fun', dice: 'fun',
         joke: 'fun', rps: 'fun', rate: 'fun',
