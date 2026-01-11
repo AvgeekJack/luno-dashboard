@@ -4,7 +4,7 @@ import { authOptions } from '@/lib/auth';
 import connectDB from '@/lib/mongoose';
 import ServerSettings from '@/lib/models/ServerSettings';
 
-// Map new command names to existing MongoDB field names
+// Map new command names to existing MongoDB field names 
 const COMMAND_ALIASES: Record<string, string> = {
   'giveawaycreate': 'creategiveaway',
 };
