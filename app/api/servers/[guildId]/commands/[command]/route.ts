@@ -4,6 +4,11 @@ import { authOptions } from '@/lib/auth';
 import connectDB from '@/lib/mongoose';
 import ServerSettings from '@/lib/models/ServerSettings';
 
+// Map new command names to existing MongoDB field names
+const COMMAND_ALIASES: Record<string, string> = {
+  'giveawaycreate': 'creategiveaway',
+};
+
 // GET endpoint to fetch command settings
 export async function GET(
   request: NextRequest,
@@ -20,6 +25,9 @@ export async function GET(
     await connectDB();
     const settings = await ServerSettings.findOne({ guildId });
     
+    // Map command alias to actual MongoDB field name
+    const actualCommand = COMMAND_ALIASES[command] || command;
+    
     if (!settings) {
       return NextResponse.json({
         enabled: true,
@@ -35,8 +43,8 @@ export async function GET(
     for (const [moduleName, moduleData] of Object.entries(settings.modules)) {
       if (moduleData && typeof moduleData === 'object' && 'commands' in moduleData) {
         const commands = (moduleData as any).commands;
-        if (commands && commands[command]) {
-          commandData = commands[command];
+        if (commands && commands[actualCommand]) {
+          commandData = commands[actualCommand];
           break;
         }
       }
@@ -83,6 +91,9 @@ export async function PUT(
     const body = await request.json();
     await connectDB();
 
+    // Map command alias to actual MongoDB field name
+    const actualCommand = COMMAND_ALIASES[command] || command;
+
     // Find which module this command belongs to
     const settings = await ServerSettings.findOne({ guildId });
     let moduleName = null;
@@ -91,7 +102,7 @@ export async function PUT(
       for (const [module, moduleData] of Object.entries(settings.modules)) {
         if (moduleData && typeof moduleData === 'object' && 'commands' in moduleData) {
           const commands = (moduleData as any).commands;
-          if (commands && commands[command]) {
+          if (commands && commands[actualCommand]) {
             moduleName = module;
             break;
           }
@@ -119,7 +130,7 @@ export async function PUT(
         userinfo: 'memberManagement', useravatar: 'memberManagement',
         userbanner: 'memberManagement', userroles: 'memberManagement',
         pruneusers: 'memberManagement',
-        announce: 'announcements', giveawaycreate: 'announcements',
+        announce: 'announcements', creategiveaway: 'announcements',
         giveawaydraw: 'announcements', poll: 'announcements',
         meme: 'fun', '8ball': 'fun', coinflip: 'fun', dice: 'fun',
         joke: 'fun', rps: 'fun', rate: 'fun',
@@ -130,7 +141,7 @@ export async function PUT(
         schedulemessage: 'scheduler',
         analyticsserver: 'analytics',
       };
-      moduleName = moduleMap[command];
+      moduleName = moduleMap[actualCommand];
     }
 
     if (!moduleName) {
@@ -140,7 +151,7 @@ export async function PUT(
       );
     }
 
-    const updatePath = `modules.${moduleName}.commands.${command}`;
+    const updatePath = `modules.${moduleName}.commands.${actualCommand}`;
     const updatedSettings = await ServerSettings.findOneAndUpdate(
       { guildId },
       {
