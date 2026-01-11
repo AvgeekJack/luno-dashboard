@@ -11,7 +11,7 @@ import { Switch } from '@/components/ui/switch';
 
 const ANNOUNCEMENT_COMMANDS = [
   { name: '/announce', description: 'Send an announcement to a channel', enabled: true },
-  { name: '/creategiveaway', description: 'Create a new giveaway', enabled: true },
+  { name: '/giveaway create', description: 'Create a new giveaway', enabled: true },
   { name: '/giveawaydraw', description: 'Draw winners for a giveaway', enabled: true },
   { name: '/poll', description: 'Create a poll for members to vote', enabled: true },
 ];
