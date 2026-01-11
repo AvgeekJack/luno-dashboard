@@ -1246,7 +1246,7 @@ functional without proper data persistence.
 COMMANDS:
   - warn (modules.moderation.commands.warn)
   - warnings (modules.moderation.commands.warnings)
-  - clearwarnings (modules.moderation.commands.clearwarnings) // DELETE \\
+  - clearwarnings (modules.moderation.commands.clearwarnings)
 
 CURRENT STATUS: ❌ NOT CONNECTED
   - Commands are configured in ServerSettings
