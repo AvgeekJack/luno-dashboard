@@ -96,6 +96,25 @@ const ServerSettingsSchema = new mongoose.Schema({
         ignoredroles: { enabled: { type: Boolean, default: true }, allowedChannels: { type: [String], default: [] }, ignoredChannels: { type: [String], default: [] }, allowedRoles: { type: [String], default: [] }, ignoredRoles: { type: [String], default: [] } },
       }
     },
+    notifications: {
+      enabled: { type: Boolean, default: false },
+      welcomeMessage: {
+        enabled: { type: Boolean, default: false },
+        channel: { type: String, default: '' },
+        title: { type: String, default: 'Welcome to {server}!' },
+        description: { type: String, default: 'Hey {user}, welcome to **{server}**! You are member #{memberCount}.' },
+        color: { type: String, default: '#f97316' },
+        footer: { type: String, default: 'Enjoy your stay!' }
+      },
+      leaveMessage: {
+        enabled: { type: Boolean, default: false },
+        channel: { type: String, default: '' },
+        title: { type: String, default: 'Member Left' },
+        description: { type: String, default: '{user} has left the server. We now have {memberCount} members.' },
+        color: { type: String, default: '#f97316' },
+        footer: { type: String, default: 'Goodbye!' }
+      }
+    },
   },
   configuration: {
     botNickname: { type: String, default: null },

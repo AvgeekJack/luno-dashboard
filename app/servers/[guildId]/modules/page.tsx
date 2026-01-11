@@ -27,7 +27,7 @@ export default function ModulesPage() {
     { key: 'customCommands', label: 'Custom Commands', desc: 'Create custom bot commands.' },
     { key: 'fun', label: 'Fun', desc: 'Fun and meme commands.' },
     { key: 'utilities', label: 'Utilities', desc: 'Utility and helper commands.' },
-    { key: 'analytics', label: 'Analytics', desc: 'View server analytics and stats.' },
+    { key: 'notifications', label: 'Notifications', desc: 'Welcome and leave messages.' },
   ];
 
   useEffect(() => {

@@ -60,6 +60,29 @@ export async function GET(
       });
     }
 
+    // For notifications module, return welcome and leave message configs
+    if (moduleKey === 'notifications') {
+      return NextResponse.json({
+        enabled,
+        welcomeMessage: moduleData?.welcomeMessage ?? {
+          enabled: false,
+          channel: '',
+          title: 'Welcome to {server}!',
+          description: 'Hey {user}, welcome to **{server}**! You are member #{memberCount}.',
+          color: '#f97316',
+          footer: 'Enjoy your stay!'
+        },
+        leaveMessage: moduleData?.leaveMessage ?? {
+          enabled: false,
+          channel: '',
+          title: 'Member Left',
+          description: '{user} has left the server. We now have {memberCount} members.',
+          color: '#f97316',
+          footer: 'Goodbye!'
+        }
+      });
+    }
+
     return NextResponse.json({ enabled, commands: remappedCommands });
   } catch (error) {
     console.error('Error fetching module:', error);
@@ -117,6 +140,50 @@ export async function PUT(
       }
       if (Array.isArray(commandData.fields)) {
         updates[`modules.${moduleKey}.command.fields`] = commandData.fields;
+      }
+    }
+
+    // Handle notifications module specific data
+    if (moduleKey === 'notifications') {
+      if (body.welcomeMessage) {
+        if (body.welcomeMessage.enabled !== undefined) {
+          updates[`modules.${moduleKey}.welcomeMessage.enabled`] = body.welcomeMessage.enabled;
+        }
+        if (body.welcomeMessage.channel !== undefined) {
+          updates[`modules.${moduleKey}.welcomeMessage.channel`] = body.welcomeMessage.channel;
+        }
+        if (body.welcomeMessage.title !== undefined) {
+          updates[`modules.${moduleKey}.welcomeMessage.title`] = body.welcomeMessage.title;
+        }
+        if (body.welcomeMessage.description !== undefined) {
+          updates[`modules.${moduleKey}.welcomeMessage.description`] = body.welcomeMessage.description;
+        }
+        if (body.welcomeMessage.color !== undefined) {
+          updates[`modules.${moduleKey}.welcomeMessage.color`] = body.welcomeMessage.color;
+        }
+        if (body.welcomeMessage.footer !== undefined) {
+          updates[`modules.${moduleKey}.welcomeMessage.footer`] = body.welcomeMessage.footer;
+        }
+      }
+      if (body.leaveMessage) {
+        if (body.leaveMessage.enabled !== undefined) {
+          updates[`modules.${moduleKey}.leaveMessage.enabled`] = body.leaveMessage.enabled;
+        }
+        if (body.leaveMessage.channel !== undefined) {
+          updates[`modules.${moduleKey}.leaveMessage.channel`] = body.leaveMessage.channel;
+        }
+        if (body.leaveMessage.title !== undefined) {
+          updates[`modules.${moduleKey}.leaveMessage.title`] = body.leaveMessage.title;
+        }
+        if (body.leaveMessage.description !== undefined) {
+          updates[`modules.${moduleKey}.leaveMessage.description`] = body.leaveMessage.description;
+        }
+        if (body.leaveMessage.color !== undefined) {
+          updates[`modules.${moduleKey}.leaveMessage.color`] = body.leaveMessage.color;
+        }
+        if (body.leaveMessage.footer !== undefined) {
+          updates[`modules.${moduleKey}.leaveMessage.footer`] = body.leaveMessage.footer;
+        }
       }
     }
 
@@ -179,6 +246,29 @@ export async function PUT(
           thumbnailUrl: '',
           imageUrl: '',
           fields: [],
+        }
+      });
+    }
+
+    if (moduleKey === 'notifications') {
+      return NextResponse.json({
+        success: true,
+        enabled,
+        welcomeMessage: moduleData?.welcomeMessage ?? {
+          enabled: false,
+          channel: '',
+          title: 'Welcome to {server}!',
+          description: 'Hey {user}, welcome to **{server}**! You are member #{memberCount}.',
+          color: '#f97316',
+          footer: 'Enjoy your stay!'
+        },
+        leaveMessage: moduleData?.leaveMessage ?? {
+          enabled: false,
+          channel: '',
+          title: 'Member Left',
+          description: '{user} has left the server. We now have {memberCount} members.',
+          color: '#f97316',
+          footer: 'Goodbye!'
         }
       });
     }

@@ -8,6 +8,7 @@ const MODULE_LIST = [
   'moderation', 'roleManagement',
   'memberManagement', 'announcements',
   'customCommands', 'fun', 'utilities',
+  'notifications',
 ];
 
 export async function GET(
