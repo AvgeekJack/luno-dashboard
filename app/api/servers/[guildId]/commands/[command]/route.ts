@@ -120,11 +120,6 @@ export async function PUT(
         clear: 'moderation', slowmode: 'moderation',
         lock: 'moderation', unlock: 'moderation',
         lockdown: 'moderation', unlockdown: 'moderation',
-        automodenable: 'automod', automoddisable: 'automod',
-        antilink: 'automod', antiinvite: 'automod', antispam: 'automod',
-        antimention: 'automod', antizalgo: 'automod', antiswear: 'automod',
-        antiflood: 'automod', capsfilter: 'automod', duplicatefilter: 'automod',
-        regexfilter: 'automod', automodlogs: 'automod',
         rolecreate: 'roleManagement', roledelete: 'roleManagement',
         rolelist: 'roleManagement', autorolestatus: 'roleManagement',
         userinfo: 'memberManagement', useravatar: 'memberManagement',
@@ -139,7 +134,6 @@ export async function PUT(
         help: 'utilities', support: 'utilities', dashboard: 'utilities',
         ignoredchannels: 'utilities', ignoredroles: 'utilities',
         schedulemessage: 'scheduler',
-        analyticsserver: 'analytics',
       };
       moduleName = moduleMap[actualCommand];
     }
