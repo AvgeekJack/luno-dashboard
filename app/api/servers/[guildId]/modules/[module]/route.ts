@@ -4,6 +4,16 @@ import { authOptions } from '@/lib/auth';
 import connectDB from '@/lib/mongoose';
 import ServerSettings from '@/lib/models/ServerSettings';
 
+// Map new command names to existing MongoDB field names
+const COMMAND_ALIASES: Record<string, string> = {
+  'giveawaycreate': 'creategiveaway',
+};
+
+// Reverse mapping for GET responses
+const REVERSE_ALIASES: Record<string, string> = {
+  'creategiveaway': 'giveawaycreate',
+};
+
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ guildId: string; module: string }> }
@@ -23,13 +33,20 @@ export async function GET(
     
     const moduleData = settings?.modules?.[moduleKey];
     const enabled = moduleData?.enabled ?? true;
-    const commands = moduleData?.commands ?? {};
+    let commands = moduleData?.commands ?? {};
+
+    // Remap command keys for frontend (e.g., creategiveaway -> giveawaycreate)
+    const remappedCommands: Record<string, any> = {};
+    for (const [key, value] of Object.entries(commands)) {
+      const newKey = REVERSE_ALIASES[key] || key;
+      remappedCommands[newKey] = value;
+    }
 
     // For custom commands module, return the custom commands list
     if (moduleKey === 'customCommands') {
       return NextResponse.json({ 
         enabled, 
-        commands,
+        commands: remappedCommands,
         command: moduleData?.command ?? {
           trigger: '',
           title: '',
@@ -43,7 +60,7 @@ export async function GET(
       });
     }
 
-    return NextResponse.json({ enabled, commands });
+    return NextResponse.json({ enabled, commands: remappedCommands });
   } catch (error) {
     console.error('Error fetching module:', error);
     return NextResponse.json({ error: 'Failed to fetch module' }, { status: 500 });
@@ -106,23 +123,25 @@ export async function PUT(
     // Update commands if provided
     if (body.commands && typeof body.commands === 'object') {
       Object.keys(body.commands).forEach(commandName => {
+        // Map command names back to MongoDB field names
+        const actualCommandName = COMMAND_ALIASES[commandName] || commandName;
         const commandData = body.commands[commandName];
         if (typeof commandData === 'object') {
           // Update individual command properties
           if (typeof commandData.enabled === 'boolean') {
-            updates[`modules.${moduleKey}.commands.${commandName}.enabled`] = commandData.enabled;
+            updates[`modules.${moduleKey}.commands.${actualCommandName}.enabled`] = commandData.enabled;
           }
           if (Array.isArray(commandData.allowedChannels)) {
-            updates[`modules.${moduleKey}.commands.${commandName}.allowedChannels`] = commandData.allowedChannels;
+            updates[`modules.${moduleKey}.commands.${actualCommandName}.allowedChannels`] = commandData.allowedChannels;
           }
           if (Array.isArray(commandData.ignoredChannels)) {
-            updates[`modules.${moduleKey}.commands.${commandName}.ignoredChannels`] = commandData.ignoredChannels;
+            updates[`modules.${moduleKey}.commands.${actualCommandName}.ignoredChannels`] = commandData.ignoredChannels;
           }
           if (Array.isArray(commandData.allowedRoles)) {
-            updates[`modules.${moduleKey}.commands.${commandName}.allowedRoles`] = commandData.allowedRoles;
+            updates[`modules.${moduleKey}.commands.${actualCommandName}.allowedRoles`] = commandData.allowedRoles;
           }
           if (Array.isArray(commandData.ignoredRoles)) {
-            updates[`modules.${moduleKey}.commands.${commandName}.ignoredRoles`] = commandData.ignoredRoles;
+            updates[`modules.${moduleKey}.commands.${actualCommandName}.ignoredRoles`] = commandData.ignoredRoles;
           }
         }
       });
@@ -136,14 +155,21 @@ export async function PUT(
 
     const moduleData = settings?.modules?.[moduleKey];
     const enabled = moduleData?.enabled ?? true;
-    const commands = moduleData?.commands ?? {};
+    let commands = moduleData?.commands ?? {};
+
+    // Remap command keys for frontend response
+    const remappedCommands: Record<string, any> = {};
+    for (const [key, value] of Object.entries(commands)) {
+      const newKey = REVERSE_ALIASES[key] || key;
+      remappedCommands[newKey] = value;
+    }
 
     // Return appropriate data based on module type
     if (moduleKey === 'customCommands') {
       return NextResponse.json({ 
         success: true, 
         enabled, 
-        commands,
+        commands: remappedCommands,
         command: moduleData?.command ?? {
           trigger: '',
           title: '',
@@ -157,7 +183,7 @@ export async function PUT(
       });
     }
 
-    return NextResponse.json({ success: true, enabled, commands });
+    return NextResponse.json({ success: true, enabled, commands: remappedCommands });
   } catch (error) {
     console.error('Error updating module:', error);
     return NextResponse.json({ error: 'Failed to update module' }, { status: 500 });
