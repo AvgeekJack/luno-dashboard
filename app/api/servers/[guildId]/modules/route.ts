@@ -5,10 +5,9 @@ import connectDB from '@/lib/mongoose';
 import ServerSettings from '@/lib/models/ServerSettings';
 
 const MODULE_LIST = [
-  'moderation', 'automod', 'antiRaid', 'logging', 'roleManagement',
+  'moderation', 'roleManagement',
   'memberManagement', 'announcements',
   'customCommands', 'fun', 'utilities',
-  'analytics',
 ];
 
 export async function GET(

@@ -21,9 +21,6 @@ export default function ModulesPage() {
 
   const moduleList = [
     { key: 'moderation', label: 'Moderation', desc: 'Warn, kick, and ban members.' },
-    { key: 'automod', label: 'Automod', desc: 'Auto-filter spam and profanity.' },
-    { key: 'antiRaid', label: 'Anti-Raid', desc: 'Protect against server raids.' },
-    { key: 'logging', label: 'Logging', desc: 'Log member and message activity.' },
     { key: 'roleManagement', label: 'Role Management', desc: 'Auto-assign and manage roles.' },
     { key: 'memberManagement', label: 'Member Management', desc: 'Change member usernames and profile pictures.' },
     { key: 'announcements', label: 'Announcements', desc: 'Send and manage announcements.' },
