@@ -32,7 +32,7 @@ export default function Footer() {
             <div className="flex justify-center gap-3">
               {/* Discord link */}
               <a
-                href="https://discord.gg/lunobot"
+                href="https://discord.com/invite/shGCTRhwezt"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Join Luno Discord"
@@ -44,7 +44,7 @@ export default function Footer() {
               </a>
               {/* Twitter link */}
               <a
-                href="https://twitter.com/lunobotxyz"
+                href="https://x.com/lunobotdiscord"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Luno Twitter"

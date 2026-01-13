@@ -16,6 +16,9 @@ interface Guild {
 export default function ServersPage() {
   const { data: session, status } = useSession();
   const [guilds, setGuilds] = useState<Guild[]>([]);
+
+  // Defensive: ensure guilds is always an array
+  const safeGuilds = Array.isArray(guilds) ? guilds : [];
   const router = useRouter();
   const inviteBase = process.env.NEXT_PUBLIC_DISCORD_INVITE_URL || '#';
 
@@ -55,8 +58,8 @@ export default function ServersPage() {
     );
   }
 
-  const botGuilds = guilds.filter(g => g.inBot);
-  const notInBot = guilds.filter(g => g.inBot === false || g.inBot === undefined);
+  const botGuilds = safeGuilds.filter(g => g.inBot);
+  const notInBot = safeGuilds.filter(g => g.inBot === false || g.inBot === undefined);
 
   const renderInBot = (title: string, items: Guild[], emptyText: string) => (
     <div className="space-y-4 w-full">
