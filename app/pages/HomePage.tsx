@@ -668,7 +668,7 @@ export default function HomePage() {
                   <li><Link href="#features" className="hover:text-orange-400 transition-colors">Features</Link></li>
                   <li><Link href="#commands" className="hover:text-orange-400 transition-colors">Commands</Link></li>
                   <li><Link href="/servers" className="hover:text-orange-400 transition-colors">Dashboard</Link></li>
-                  <li><a href="https://docs.luno.bot" target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 transition-colors">Documentation</a></li>
+                  <li><a href="https://docs.lunobot.xyz" target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 transition-colors">Documentation</a></li>
                 </ul>
               </div>
 
@@ -676,9 +676,9 @@ export default function HomePage() {
                 <h4 className="font-bold text-lg mb-4">SUPPORT</h4>
                 <ul className="space-y-3 text-slate-400">
                   <li><a href="https://discord.gg/shGCTRhwez" target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 transition-colors">Discord Server</a></li>
-                  <li><a href="https://docs.luno.bot/faq" target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 transition-colors">FAQ</a></li>
-                  <li><a href="https://docs.luno.bot/guides" target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 transition-colors">Guides</a></li>
-                  <li><a href="mailto:support@luno.bot" className="hover:text-orange-400 transition-colors">Contact Us</a></li>
+                  <li><a href="https://docs.lunobot.xyz/faq" target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 transition-colors">FAQ</a></li>
+                  <li><a href="https://docs.lunobot.xyz/guides" target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 transition-colors">Guides</a></li>
+                  <li><a href="https://docs.lunobot.xyz/contact" target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 transition-colors">Contact Us</a></li>
                 </ul>
               </div>
 
