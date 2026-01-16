@@ -50,24 +50,6 @@ const ServerSettingsSchema = new mongoose.Schema({
         poll: { enabled: { type: Boolean, default: true }, allowedChannels: { type: [String], default: [] }, ignoredChannels: { type: [String], default: [] }, allowedRoles: { type: [String], default: [] }, ignoredRoles: { type: [String], default: [] } },
       }
     },
-    customCommands: {
-      enabled: { type: Boolean, default: false },
-      commands: {},
-      command: {
-        trigger: { type: String, default: '' },
-        title: { type: String, default: '' },
-        description: { type: String, default: '' },
-        color: { type: String, default: '#f97316' },
-        footer: { type: String, default: '' },
-        thumbnailUrl: { type: String, default: '' },
-        imageUrl: { type: String, default: '' },
-        fields: [{
-          name: { type: String },
-          value: { type: String },
-          inline: { type: Boolean, default: false }
-        }]
-      }
-    },
     fun: {
       enabled: { type: Boolean, default: false },
       commands: {

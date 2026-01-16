@@ -142,12 +142,12 @@ export default function HomePage() {
               <div className="bg-gradient-to-br from-orange-50 to-white p-8 rounded-2xl border border-orange-100 shadow-sm hover:shadow-md transition-all">
                 <div className="w-14 h-14 bg-orange-500 rounded-xl flex items-center justify-center mb-5">
                   <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
                   </svg>
                 </div>
-                <h3 className="text-2xl font-bold mb-3 text-[#0f172a]">Custom Commands</h3>
+                <h3 className="text-2xl font-bold mb-3 text-[#0f172a]">Advanced Configuration</h3>
                 <p className="text-slate-600 leading-relaxed">
-                  Create powerful custom commands with variables, embeds, random lists, and advanced logic. Share your creations with the community and execute other commands from within your tags.
+                  Fine-tune your server settings with advanced configuration options. Control permissions, channels, roles, and automate responses to create the perfect Discord environment for your community.
                 </p>
               </div>
 

@@ -42,24 +42,6 @@ export async function GET(
       remappedCommands[newKey] = value;
     }
 
-    // For custom commands module, return the custom commands list
-    if (moduleKey === 'customCommands') {
-      return NextResponse.json({ 
-        enabled, 
-        commands: remappedCommands,
-        command: moduleData?.command ?? {
-          trigger: '',
-          title: '',
-          description: '',
-          color: '#f97316',
-          footer: '',
-          thumbnailUrl: '',
-          imageUrl: '',
-          fields: [],
-        }
-      });
-    }
-
     // For notifications module, return welcome and leave message configs
     if (moduleKey === 'notifications') {
       return NextResponse.json({
@@ -112,35 +94,6 @@ export async function PUT(
     // Update module enabled state
     if (typeof body.enabled === 'boolean') {
       updates[`modules.${moduleKey}.enabled`] = body.enabled;
-    }
-
-    // Handle custom commands module specific data
-    if (moduleKey === 'customCommands' && body.command) {
-      const commandData = body.command;
-      if (commandData.trigger !== undefined) {
-        updates[`modules.${moduleKey}.command.trigger`] = commandData.trigger;
-      }
-      if (commandData.title !== undefined) {
-        updates[`modules.${moduleKey}.command.title`] = commandData.title;
-      }
-      if (commandData.description !== undefined) {
-        updates[`modules.${moduleKey}.command.description`] = commandData.description;
-      }
-      if (commandData.color !== undefined) {
-        updates[`modules.${moduleKey}.command.color`] = commandData.color;
-      }
-      if (commandData.footer !== undefined) {
-        updates[`modules.${moduleKey}.command.footer`] = commandData.footer;
-      }
-      if (commandData.thumbnailUrl !== undefined) {
-        updates[`modules.${moduleKey}.command.thumbnailUrl`] = commandData.thumbnailUrl;
-      }
-      if (commandData.imageUrl !== undefined) {
-        updates[`modules.${moduleKey}.command.imageUrl`] = commandData.imageUrl;
-      }
-      if (Array.isArray(commandData.fields)) {
-        updates[`modules.${moduleKey}.command.fields`] = commandData.fields;
-      }
     }
 
     // Handle notifications module specific data
@@ -232,24 +185,6 @@ export async function PUT(
     }
 
     // Return appropriate data based on module type
-    if (moduleKey === 'customCommands') {
-      return NextResponse.json({ 
-        success: true, 
-        enabled, 
-        commands: remappedCommands,
-        command: moduleData?.command ?? {
-          trigger: '',
-          title: '',
-          description: '',
-          color: '#f97316',
-          footer: '',
-          thumbnailUrl: '',
-          imageUrl: '',
-          fields: [],
-        }
-      });
-    }
-
     if (moduleKey === 'notifications') {
       return NextResponse.json({
         success: true,

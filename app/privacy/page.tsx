@@ -65,7 +65,7 @@ export default function PrivacyPolicy() {
             <h3 className="text-xl font-bold text-slate-900 mb-3 mt-6">3.2 Information You Provide</h3>
             <ul className="list-disc pl-6 text-slate-700 leading-relaxed mb-4 space-y-2">
               <li>Configuration settings and preferences for your server</li>
-              <li>Custom commands and automated responses you create</li>
+              <li>Module settings and automated responses you configure</li>
               <li>Welcome messages, farewell messages, and other custom content</li>
               <li>Support requests and communications with us</li>
             </ul>

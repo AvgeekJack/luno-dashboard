@@ -7,7 +7,7 @@ import ServerSettings from '@/lib/models/ServerSettings';
 const MODULE_LIST = [
   'moderation', 'roleManagement',
   'memberManagement', 'announcements',
-  'customCommands', 'fun', 'utilities',
+  'fun', 'utilities',
   'notifications',
 ];
 

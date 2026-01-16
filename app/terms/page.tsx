@@ -46,7 +46,7 @@ export default function TermsOfService() {
             <ul className="list-disc pl-6 text-slate-700 leading-relaxed mb-4 space-y-2">
               <li>Automated moderation features</li>
               <li>Server management tools</li>
-              <li>Custom commands and configurations</li>
+              <li>Advanced configurations and settings</li>
               <li>Logging and analytics</li>
               <li>Web dashboard for configuration</li>
             </ul>
