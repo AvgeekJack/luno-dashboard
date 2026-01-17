@@ -19,11 +19,6 @@ const UTILITIES_COMMANDS = [
   { name: '/help', description: 'Display help menu', enabled: true },
   { name: '/support', description: 'Get support server link', enabled: true },
   { name: '/dashboard', description: 'Get dashboard link', enabled: true },
-  { name: '/ignored channels', description: 'List ignored channels', enabled: true },
-  { name: '/ignored roles', description: 'List ignored roles', enabled: true },
-  { name: '/schedule message', description: 'Schedule a message', enabled: true },
-  { name: '/analytics server', description: 'View server analytics', enabled: true },
-  { name: '/analytics growth', description: 'View growth analytics', enabled: true },
 ];
 
 export default function UtilitiesPage() {
