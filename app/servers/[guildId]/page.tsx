@@ -153,7 +153,7 @@ export default function ServerSettings() {
       )}
 
       {/* Sidebar */}
-      <aside className={`fixed md:static left-0 top-0 h-screen w-64 bg-white/90 border-r border-orange-100 shadow-sm overflow-y-auto flex flex-col z-40 transition-transform duration-300 ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
+      <aside className={`fixed md:static left-0 top-0 h-screen w-64 bg-white border-r border-orange-100 shadow-lg md:shadow-sm overflow-y-auto flex flex-col z-40 transition-transform duration-300 ease-in-out ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
           <div className="p-4 sm:p-6 border-b border-orange-100">
             <Link href="/" className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity">
               <img src="/luno-logo.png" alt="Luno Bot" className="w-8 h-8 sm:w-10 sm:h-10 object-contain" />
@@ -330,7 +330,8 @@ export default function ServerSettings() {
           </nav>
       </aside>
 
-      <main className="flex-1 md:ml-64 py-8 sm:py-12 px-4 sm:px-6 md:px-8 flex justify-center pt-20 md:pt-12">
+      <main className="flex-1 md:ml-64 py-8 sm:py-12 px-4 sm:px-6 md:px-8 pt-20 md:pt-12">
+        <div className="max-w-6xl mx-auto">
         <div className="w-full max-w-6xl space-y-3 sm:space-y-4 md:space-y-6">
           <div className="space-y-1">
             <p className="text-xs sm:text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">Settings</p>
@@ -419,6 +420,7 @@ export default function ServerSettings() {
               </div>
             </div>
           </div>
+        </div>
         </div>
       </main>
     </div>

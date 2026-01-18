@@ -11,35 +11,37 @@ export default function HomePage() {
     <div className="min-h-screen bg-white text-[#0f172a] flex flex-col items-center">
       {/* Navigation */}
       <nav className="fixed top-0 w-full bg-white/90 backdrop-blur border-b border-orange-100 z-50 flex justify-center">
-        <div className="w-full max-w-7xl px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
+        <div className="w-full max-w-7xl px-3 sm:px-6 py-2.5 sm:py-4 flex items-center justify-between">
           <div className="flex items-center gap-2 sm:gap-3">
-            <img src="/luno-logo.png" alt="Luno Bot" className="w-8 h-8 sm:w-10 sm:h-10" />
+            <img src="/luno-logo.png" alt="Luno Bot" className="w-7 h-7 sm:w-10 sm:h-10" />
             <div className="text-left">
-              <span className="block text-lg sm:text-xl font-bold tracking-tight">LUNO</span>
-              <span className="hidden sm:block text-sm text-slate-500">Dashboard</span>
+              <span className="block text-base sm:text-xl font-bold tracking-tight">LUNO</span>
+              <span className="hidden sm:block text-xs sm:text-sm text-slate-500">Dashboard</span>
             </div>
           </div>
-          <div className="flex flex-wrap items-center justify-end gap-2 sm:gap-4 md:gap-6">
+          <div className="flex items-center gap-1.5 sm:gap-4 md:gap-6">
             <Link href="#features" className="hidden md:inline text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">Features</Link>
             <Link href="#commands" className="hidden md:inline text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">Commands</Link>
             <Link href="#about" className="hidden md:inline text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">About</Link>
             <a href="https://discord.gg/shGCTRhwez" target="_blank" rel="noopener noreferrer" className="hidden sm:inline text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">Support</a>
             {session ? (
               <>
-                <Link href="/servers" className="bg-orange-500 text-white px-3 sm:px-6 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold shadow hover:bg-orange-600 transition-colors">
+                <Link href="/servers" className="bg-orange-500 text-white px-2.5 sm:px-6 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold shadow hover:bg-orange-600 transition-colors whitespace-nowrap">
                   Dashboard
                 </Link>
                 {session.user && (
-                  <UserDropdown 
-                    userName={session.user.name || 'User'}
-                    userImage={session.user.image ?? undefined}
-                  />
+                  <div className="flex items-center gap-1.5">
+                    <UserDropdown 
+                      userName={session.user.name || 'User'}
+                      userImage={session.user.image ?? undefined}
+                    />
+                  </div>
                 )}
               </>
             ) : (
               <button
                 onClick={() => signIn('discord')}
-                className="bg-slate-900 text-white px-4 sm:px-8 py-2 sm:py-3 rounded-xl text-xs sm:text-sm font-semibold shadow-md hover:bg-slate-800 transition-colors"
+                className="bg-slate-900 text-white px-3 sm:px-8 py-1.5 sm:py-3 rounded-xl text-xs sm:text-sm font-semibold shadow-md hover:bg-slate-800 transition-colors whitespace-nowrap"
               >
                 Login
               </button>
