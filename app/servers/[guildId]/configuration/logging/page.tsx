@@ -489,7 +489,7 @@ export default function LoggingPage() {
                     <p className="text-sm text-slate-600">Configure where automod violations and actions are logged. Leave empty to disable logging for AutoMod.</p>
                   </div>
 
-                  <div className="flex items-center gap-3 p-4 rounded-lg border border-amber-200 bg-white">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-4 rounded-lg border border-amber-200 bg-white">
                     <div className="flex-1">
                       <p className="font-semibold text-slate-800 text-sm">AutoMod Log Channel</p>
                       <p className="text-xs text-slate-500">All automod actions and violations will be logged here</p>
@@ -497,7 +497,7 @@ export default function LoggingPage() {
                     <select 
                       value={settings.automodLogChannel || ''} 
                       onChange={(e) => updateSetting('automodLogChannel', e.target.value || null)}
-                      className="w-48 px-3 py-2 border border-amber-300 rounded-lg text-sm bg-white"
+                      className="w-full sm:w-48 px-3 py-2 border border-amber-300 rounded-lg text-sm bg-white"
                     >
                       <option value="">Select channel...</option>
                       {channels.map(ch => (
@@ -549,7 +549,7 @@ export default function LoggingPage() {
                     <p className="text-sm text-slate-600">Configure where anti-raid alerts and actions are logged. Leave empty to disable alerts for Anti-Raid.</p>
                   </div>
 
-                  <div className="flex items-center gap-3 p-4 rounded-lg border border-red-200 bg-white">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-4 rounded-lg border border-red-200 bg-white">
                     <div className="flex-1">
                       <p className="font-semibold text-slate-800 text-sm">Anti-Raid Alert Channel</p>
                       <p className="text-xs text-slate-500">All anti-raid detections and actions will be logged here</p>
@@ -557,7 +557,7 @@ export default function LoggingPage() {
                     <select 
                       value={settings.antiRaidChannel || ''} 
                       onChange={(e) => updateSetting('antiRaidChannel', e.target.value || null)}
-                      className="w-48 px-3 py-2 border border-red-300 rounded-lg text-sm bg-white"
+                      className="w-full sm:w-48 px-3 py-2 border border-red-300 rounded-lg text-sm bg-white"
                     >
                       <option value="">Select channel...</option>
                       {channels.map(ch => (
@@ -609,7 +609,7 @@ export default function LoggingPage() {
                     <p className="text-sm text-slate-600">Configure where verification events and metrics are logged. Tracks successful verifications, failures, and security events. Configure the full <Link href={`/servers/${gid}/configuration/verification`} className="text-blue-600 hover:text-blue-700 underline">Verification System</Link> settings separately.</p>
                   </div>
 
-                  <div className="flex items-center gap-3 p-4 rounded-lg border border-blue-200 bg-white">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-4 rounded-lg border border-blue-200 bg-white">
                     <div className="flex-1">
                       <p className="font-semibold text-slate-800 text-sm">Verification Log Channel</p>
                       <p className="text-xs text-slate-500">All verification events will be logged here</p>
@@ -617,7 +617,7 @@ export default function LoggingPage() {
                     <select 
                       value={settings.verificationChannel || ''} 
                       onChange={(e) => updateSetting('verificationChannel', e.target.value || null)}
-                      className="w-48 px-3 py-2 border border-blue-300 rounded-lg text-sm bg-white"
+                      className="w-full sm:w-48 px-3 py-2 border border-blue-300 rounded-lg text-sm bg-white"
                     >
                       <option value="">Select channel...</option>
                       {channels.map(ch => (
