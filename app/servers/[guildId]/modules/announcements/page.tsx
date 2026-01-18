@@ -209,7 +209,7 @@ export default function AnnouncementsPage() {
               )}
             </details>
             <details className="text-slate-700" open={configOpen}>
-              <summary className="flex items-center justify-between px-3 py-6 cursor-pointer select-none hover:bg-orange-50 transition-colors" onClick={(e) => { e.preventDefault(); setConfigOpen(!configOpen); }}>
+              <summary className="flex items-center justify-between px-3 py-6 cursor-pointer select-none transition-colors" onClick={(e) => { e.preventDefault(); setConfigOpen(!configOpen); }}>
                 <span className="flex items-center gap-3">
                   Configuration
                 </span>
