@@ -332,7 +332,7 @@ export default function LoggingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-orange-50 text-[#0f172a] flex">
+    <div className="min-h-screen bg-orange-50 text-[#0f172a] flex overflow-x-hidden">
       {/* Mobile Menu Button */}
       <button 
         className="md:hidden fixed top-4 left-4 z-[60] bg-white p-2 rounded-lg shadow-lg border border-orange-100"
@@ -359,7 +359,7 @@ export default function LoggingPage() {
       {/* Sidebar */}
       <aside className={`fixed left-0 top-0 h-screen w-64 bg-white/90 border-r border-orange-100 shadow-sm overflow-y-auto flex flex-col z-[50] transition-transform duration-300 ease-in-out ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
           <div className="p-6 border-b border-orange-100">
-            <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+            <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity ml-12 md:ml-0">
               <img src="/luno-logo.png" alt="Luno Bot" className="w-10 h-10 object-contain" />
               <span className="text-xl font-bold text-[#0f172a]">Luno</span>
             </Link>
@@ -653,17 +653,17 @@ export default function LoggingPage() {
 
                 {/* Moderation Logs Section */}
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                     <div className="space-y-1">
                       <h2 className="text-xl font-semibold text-[#0f172a]">Moderation Logs</h2>
                       <p className="text-sm text-slate-600">Actions by staff members</p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-slate-600">Log to:</span>
+                      <span className="text-sm text-slate-600 whitespace-nowrap">Log to:</span>
                       <select 
                         value={settings.moderationChannel || ''} 
                         onChange={(e) => updateSetting('moderationChannel', e.target.value || null)}
-                        className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white"
+                        className="flex-1 md:w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white"
                       >
                         <option value="">Select channel...</option>
                         {channels.map(ch => (
@@ -703,17 +703,17 @@ export default function LoggingPage() {
 
                 {/* Member Logs Section */}
                 <div className="space-y-4 border-t border-orange-100 pt-8">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                     <div className="space-y-1">
                       <h2 className="text-xl font-semibold text-[#0f172a]">Member Logs</h2>
                       <p className="text-sm text-slate-600">Member activity</p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-slate-600">Log to:</span>
+                      <span className="text-sm text-slate-600 whitespace-nowrap">Log to:</span>
                       <select 
                         value={settings.memberChannel || ''} 
                         onChange={(e) => updateSetting('memberChannel', e.target.value || null)}
-                        className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white"
+                        className="flex-1 md:w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white"
                       >
                         <option value="">Select channel...</option>
                         {channels.map(ch => (
@@ -747,17 +747,17 @@ export default function LoggingPage() {
 
                 {/* Message Logs Section */}
                 <div className="space-y-4 border-t border-orange-100 pt-8">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                     <div className="space-y-1">
                       <h2 className="text-xl font-semibold text-[#0f172a]">Message Logs</h2>
                       <p className="text-sm text-slate-600">Message activity</p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-slate-600">Log to:</span>
+                      <span className="text-sm text-slate-600 whitespace-nowrap">Log to:</span>
                       <select 
                         value={settings.messageChannel || ''} 
                         onChange={(e) => updateSetting('messageChannel', e.target.value || null)}
-                        className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white"
+                        className="flex-1 md:w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white"
                       >
                         <option value="">Select channel...</option>
                         {channels.map(ch => (
@@ -789,17 +789,17 @@ export default function LoggingPage() {
 
                 {/* Channel Logs Section */}
                 <div className="space-y-4 border-t border-orange-100 pt-8">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                     <div className="space-y-1">
                       <h2 className="text-xl font-semibold text-[#0f172a]">Channel Logs</h2>
                       <p className="text-sm text-slate-600">Server structure</p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-slate-600">Log to:</span>
+                      <span className="text-sm text-slate-600 whitespace-nowrap">Log to:</span>
                       <select 
                         value={settings.channelLogsChannel || ''} 
                         onChange={(e) => updateSetting('channelLogsChannel', e.target.value || null)}
-                        className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white"
+                        className="flex-1 md:w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white"
                       >
                         <option value="">Select channel...</option>
                         {channels.map(ch => (
@@ -831,17 +831,17 @@ export default function LoggingPage() {
 
                 {/* Role Logs Section */}
                 <div className="space-y-4 border-t border-orange-100 pt-8">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                     <div className="space-y-1">
                       <h2 className="text-xl font-semibold text-[#0f172a]">Role Logs</h2>
                       <p className="text-sm text-slate-600">Role management</p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-slate-600">Log to:</span>
+                      <span className="text-sm text-slate-600 whitespace-nowrap">Log to:</span>
                       <select 
                         value={settings.roleLogsChannel || ''} 
                         onChange={(e) => updateSetting('roleLogsChannel', e.target.value || null)}
-                        className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white"
+                        className="flex-1 md:w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white"
                       >
                         <option value="">Select channel...</option>
                         {channels.map(ch => (
@@ -873,17 +873,17 @@ export default function LoggingPage() {
 
                 {/* Voice Logs Section */}
                 <div className="space-y-4 border-t border-orange-100 pt-8">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                     <div className="space-y-1">
                       <h2 className="text-xl font-semibold text-[#0f172a]">Voice Logs</h2>
                       <p className="text-sm text-slate-600">Voice activity</p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-slate-600">Log to:</span>
+                      <span className="text-sm text-slate-600 whitespace-nowrap">Log to:</span>
                       <select 
                         value={settings.voiceChannel || ''} 
                         onChange={(e) => updateSetting('voiceChannel', e.target.value || null)}
-                        className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white"
+                        className="flex-1 md:w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white"
                       >
                         <option value="">Select channel...</option>
                         {channels.map(ch => (
@@ -917,17 +917,17 @@ export default function LoggingPage() {
 
                 {/* Server Logs Section */}
                 <div className="space-y-4 border-t border-orange-100 pt-8">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                     <div className="space-y-1">
                       <h2 className="text-xl font-semibold text-[#0f172a]">Server Logs</h2>
                       <p className="text-sm text-slate-600">Server changes</p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-slate-600">Log to:</span>
+                      <span className="text-sm text-slate-600 whitespace-nowrap">Log to:</span>
                       <select 
                         value={settings.serverChannel || ''} 
                         onChange={(e) => updateSetting('serverChannel', e.target.value || null)}
-                        className="w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white"
+                        className="flex-1 md:w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white"
                       >
                         <option value="">Select channel...</option>
                         {channels.map(ch => (
