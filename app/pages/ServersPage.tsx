@@ -59,29 +59,29 @@ export default function ServersPage() {
   const notInBot = guilds.filter(g => g.inBot === false || g.inBot === undefined);
 
   const renderInBot = (title: string, items: Guild[], emptyText: string) => (
-    <div className="space-y-4 w-full">
+    <div className="space-y-4 w-full px-2">
       <div className="text-left">
-        <h2 className="text-2xl font-bold text-[#0f172a]">{title}</h2>
+        <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a]">{title}</h2>
       </div>
       {items.length === 0 ? (
-        <div className="text-slate-500 text-sm">{emptyText}</div>
+        <div className="text-slate-500 text-xs sm:text-sm">{emptyText}</div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-center">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 justify-center">
           {items.map(guild => (
             <Link key={guild.id} href={`/servers/${guild.id}`}>
-              <div className="bg-white p-6 rounded-xl border border-orange-100 hover:border-orange-300 transition-colors shadow-sm hover:shadow cursor-pointer text-center">
+              <div className="bg-white p-5 sm:p-6 rounded-xl border border-orange-100 hover:border-orange-300 transition-colors shadow-sm hover:shadow cursor-pointer text-center">
                 {guild.icon ? (
                   <img
                     src={`https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`}
                     alt={guild.name}
-                    className="w-16 h-16 rounded-full mx-auto mb-4"
+                    className="w-14 h-14 sm:w-16 sm:h-16 rounded-full mx-auto mb-3 sm:mb-4"
                   />
                 ) : (
-                  <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-amber-400 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-bold text-white">
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-orange-500 to-amber-400 rounded-full mx-auto mb-3 sm:mb-4 flex items-center justify-center text-xl sm:text-2xl font-bold text-white">
                     {guild.name.charAt(0)}
                   </div>
                 )}
-                <h3 className="text-lg font-semibold text-slate-800">{guild.name}</h3>
+                <h3 className="text-base sm:text-lg font-semibold text-slate-800">{guild.name}</h3>
               </div>
             </Link>
           ))}
@@ -91,28 +91,28 @@ export default function ServersPage() {
   );
 
   const renderNotInBot = (title: string, items: Guild[], emptyText: string) => (
-    <div className="space-y-4 w-full">
+    <div className="space-y-4 w-full px-2">
       <div className="text-left">
-        <h2 className="text-2xl font-bold text-[#0f172a]">{title}</h2>
+        <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a]">{title}</h2>
       </div>
       {items.length === 0 ? (
-        <div className="text-slate-500 text-sm">{emptyText}</div>
+        <div className="text-slate-500 text-xs sm:text-sm">{emptyText}</div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-center">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 justify-center">
           {items.map(guild => (
-            <div key={guild.id} className="bg-white p-6 rounded-xl border border-orange-100 hover:border-orange-300 transition-colors shadow-sm hover:shadow text-center space-y-3">
+            <div key={guild.id} className="bg-white p-5 sm:p-6 rounded-xl border border-orange-100 hover:border-orange-300 transition-colors shadow-sm hover:shadow text-center space-y-2 sm:space-y-3">
               {guild.icon ? (
                 <img
                   src={`https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`}
                   alt={guild.name}
-                  className="w-16 h-16 rounded-full mx-auto"
+                  className="w-14 h-14 sm:w-16 sm:h-16 rounded-full mx-auto"
                 />
               ) : (
-                <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-amber-400 rounded-full mx-auto flex items-center justify-center text-2xl font-bold text-white">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-orange-500 to-amber-400 rounded-full mx-auto flex items-center justify-center text-xl sm:text-2xl font-bold text-white">
                   {guild.name.charAt(0)}
                 </div>
               )}
-              <h3 className="text-lg font-semibold text-slate-800">{guild.name}</h3>
+              <h3 className="text-base sm:text-lg font-semibold text-slate-800">{guild.name}</h3>
               <button
                 onClick={() => {
                   const url = inviteUrl(guild.id);
@@ -123,7 +123,7 @@ export default function ServersPage() {
                     router.push(`/servers/${guild.id}`);
                   }, 300);
                 }}
-                className="inline-flex items-center justify-center w-full bg-orange-500 text-white px-4 py-2 rounded-lg font-semibold shadow hover:bg-orange-600 transition-colors disabled:opacity-60"
+                className="inline-flex items-center justify-center w-full bg-orange-500 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-sm font-semibold shadow hover:bg-orange-600 transition-colors disabled:opacity-60"
               >
                 Add to Server
               </button>
@@ -135,13 +135,13 @@ export default function ServersPage() {
   );
 
   return (
-    <div className="min-h-screen bg-white text-[#0f172a] pt-36 pb-16 px-6 md:px-10 flex justify-center">
+    <div className="min-h-screen bg-white text-[#0f172a] pt-24 sm:pt-32 md:pt-36 pb-12 sm:pb-16 px-4 sm:px-6 md:px-10 flex justify-center">
       <ServerHeader />
-      <div className="w-full max-w-6xl space-y-12 flex flex-col items-center">
-        <div className="text-center space-y-3">
-          <p className="text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">Servers</p>
-          <h1 className="text-4xl font-bold">Your connected Discord servers</h1>
-          <p className="text-slate-600">Select a server to manage settings and automation.</p>
+      <div className="w-full max-w-6xl space-y-8 sm:space-y-12 flex flex-col items-center">
+        <div className="text-center space-y-2 sm:space-y-3 px-2">
+          <p className="text-xs sm:text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">Servers</p>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">Your connected Discord servers</h1>
+          <p className="text-sm sm:text-base text-slate-600">Select a server to manage settings and automation.</p>
         </div>
 
         {renderInBot('Servers Luno is In', botGuilds, 'Luno is not in any of your manageable servers yet.')}

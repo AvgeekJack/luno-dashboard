@@ -11,22 +11,22 @@ export default function HomePage() {
     <div className="min-h-screen bg-white text-[#0f172a] flex flex-col items-center">
       {/* Navigation */}
       <nav className="fixed top-0 w-full bg-white/90 backdrop-blur border-b border-orange-100 z-50 flex justify-center">
-        <div className="w-full max-w-7xl px-6 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-center">
-          <div className="flex items-center justify-center md:justify-start gap-3 w-full md:w-auto">
-            <img src="/luno-logo.png" alt="Luno Bot" className="w-10 h-10" />
+        <div className="w-full max-w-7xl px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <img src="/luno-logo.png" alt="Luno Bot" className="w-8 h-8 sm:w-10 sm:h-10" />
             <div className="text-left">
-              <span className="block text-xl font-bold tracking-tight">LUNO</span>
-              <span className="block text-sm text-slate-500">Dashboard</span>
+              <span className="block text-lg sm:text-xl font-bold tracking-tight">LUNO</span>
+              <span className="hidden sm:block text-sm text-slate-500">Dashboard</span>
             </div>
           </div>
-          <div className="flex flex-wrap items-center justify-center md:justify-end gap-4 md:gap-6 w-full md:w-auto">
-            <Link href="#features" className="text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">Features</Link>
-            <Link href="#commands" className="text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">Commands</Link>
-            <Link href="#about" className="text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">About</Link>
-            <a href="https://discord.gg/shGCTRhwez" target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">Support</a>
+          <div className="flex flex-wrap items-center justify-end gap-2 sm:gap-4 md:gap-6">
+            <Link href="#features" className="hidden md:inline text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">Features</Link>
+            <Link href="#commands" className="hidden md:inline text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">Commands</Link>
+            <Link href="#about" className="hidden md:inline text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">About</Link>
+            <a href="https://discord.gg/shGCTRhwez" target="_blank" rel="noopener noreferrer" className="hidden sm:inline text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">Support</a>
             {session ? (
               <>
-                <Link href="/servers" className="bg-orange-500 text-white px-6 py-2 rounded-full text-sm font-semibold shadow hover:bg-orange-600 transition-colors">
+                <Link href="/servers" className="bg-orange-500 text-white px-3 sm:px-6 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold shadow hover:bg-orange-600 transition-colors">
                   Dashboard
                 </Link>
                 {session.user && (
@@ -39,9 +39,9 @@ export default function HomePage() {
             ) : (
               <button
                 onClick={() => signIn('discord')}
-                className="bg-slate-900 text-white px-8 py-3 rounded-xl text-sm font-semibold shadow-md hover:bg-slate-800 transition-colors"
+                className="bg-slate-900 text-white px-4 sm:px-8 py-2 sm:py-3 rounded-xl text-xs sm:text-sm font-semibold shadow-md hover:bg-slate-800 transition-colors"
               >
-                Login with Discord
+                Login
               </button>
             )}
           </div>
@@ -50,25 +50,25 @@ export default function HomePage() {
 
       <main className="w-full flex flex-col items-center flex-1">
         {/* Hero Section */}
-        <section className="w-full min-h-[90vh] pt-32 pb-24 px-6 bg-gradient-to-b from-orange-50 via-white to-white flex items-center justify-center">
+        <section className="w-full min-h-[90vh] pt-24 sm:pt-32 pb-16 sm:pb-24 px-4 sm:px-6 bg-gradient-to-b from-orange-50 via-white to-white flex items-center justify-center">
           <div className="w-full max-w-6xl mx-auto">
-            <div className="text-center max-w-4xl mx-auto mb-16">
-              <h1 className="text-6xl md:text-7xl font-bold mb-6 text-[#0f172a] leading-tight">
+            <div className="text-center max-w-4xl mx-auto mb-12 sm:mb-16">
+              <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 text-[#0f172a] leading-tight">
                 The Discord Bot that does it all. <span className="text-orange-500">Automatically</span>
               </h1>
-              <p className="text-xl md:text-2xl text-slate-600 mb-10 leading-relaxed">
+              <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-slate-600 mb-6 sm:mb-10 leading-relaxed px-2">
                 A fully customizable server moderation Discord bot for your Discord server that features a simple and intuitive web dashboard. Server management just got a whole lot easier.
               </p>
-              <div className="flex flex-col sm:flex-row justify-center gap-4 mb-12">
+              <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 mb-8 sm:mb-12 px-4">
                 {session ? (
-                  <Link href="/servers" className="bg-orange-500 text-white px-10 py-4 rounded-full text-lg font-semibold shadow-lg hover:bg-orange-600 hover:shadow-xl transition-all inline-block text-center">
+                  <Link href="/servers" className="bg-orange-500 text-white px-8 sm:px-10 py-3 sm:py-4 rounded-full text-base sm:text-lg font-semibold shadow-lg hover:bg-orange-600 hover:shadow-xl transition-all inline-block text-center">
                     Go to Dashboard
                   </Link>
                 ) : (
                   <>
                     <button
                       onClick={() => signIn('discord')}
-                      className="bg-white text-slate-900 px-10 py-4 rounded-full text-lg font-semibold border-2 border-slate-200 shadow-md hover:border-orange-500 hover:shadow-lg transition-all"
+                      className="bg-white text-slate-900 px-8 sm:px-10 py-3 sm:py-4 rounded-full text-base sm:text-lg font-semibold border-2 border-slate-200 shadow-md hover:border-orange-500 hover:shadow-lg transition-all"
                     >
                       Login with Discord
                     </button>
@@ -77,26 +77,26 @@ export default function HomePage() {
               </div>
               
               {/* Key Features Highlights */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
-                <div className="bg-white rounded-2xl p-6 border border-orange-100 shadow-sm">
-                  <div className="text-3xl font-bold text-orange-500 mb-2">⚡</div>
-                  <div className="text-lg font-bold text-slate-800 mb-1">Lightning Fast</div>
-                  <div className="text-sm text-slate-600">Instant responses & minimal latency</div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 max-w-5xl mx-auto px-2">
+                <div className="bg-white rounded-2xl p-4 sm:p-6 border border-orange-100 shadow-sm">
+                  <div className="text-2xl sm:text-3xl font-bold text-orange-500 mb-2">⚡</div>
+                  <div className="text-base sm:text-lg font-bold text-slate-800 mb-1">Lightning Fast</div>
+                  <div className="text-xs sm:text-sm text-slate-600">Instant responses & minimal latency</div>
                 </div>
-                <div className="bg-white rounded-2xl p-6 border border-orange-100 shadow-sm">
-                  <div className="text-3xl font-bold text-orange-500 mb-2">🛡️</div>
-                  <div className="text-lg font-bold text-slate-800 mb-1">24/7 Uptime</div>
-                  <div className="text-sm text-slate-600">Always online & reliable</div>
+                <div className="bg-white rounded-2xl p-4 sm:p-6 border border-orange-100 shadow-sm">
+                  <div className="text-2xl sm:text-3xl font-bold text-orange-500 mb-2">🛡️</div>
+                  <div className="text-base sm:text-lg font-bold text-slate-800 mb-1">24/7 Uptime</div>
+                  <div className="text-xs sm:text-sm text-slate-600">Always online & reliable</div>
                 </div>
-                <div className="bg-white rounded-2xl p-6 border border-orange-100 shadow-sm">
-                  <div className="text-3xl font-bold text-orange-500 mb-2">🎨</div>
-                  <div className="text-lg font-bold text-slate-800 mb-1">Fully Custom</div>
-                  <div className="text-sm text-slate-600">Tailor every feature to your needs</div>
+                <div className="bg-white rounded-2xl p-4 sm:p-6 border border-orange-100 shadow-sm">
+                  <div className="text-2xl sm:text-3xl font-bold text-orange-500 mb-2">🎨</div>
+                  <div className="text-base sm:text-lg font-bold text-slate-800 mb-1">Fully Custom</div>
+                  <div className="text-xs sm:text-sm text-slate-600">Tailor every feature to your needs</div>
                 </div>
-                <div className="bg-white rounded-2xl p-6 border border-orange-100 shadow-sm">
-                  <div className="text-3xl font-bold text-orange-500 mb-2">🔒</div>
-                  <div className="text-lg font-bold text-slate-800 mb-1">Secure</div>
-                  <div className="text-sm text-slate-600">Your data privacy is our priority</div>
+                <div className="bg-white rounded-2xl p-4 sm:p-6 border border-orange-100 shadow-sm">
+                  <div className="text-2xl sm:text-3xl font-bold text-orange-500 mb-2">🔒</div>
+                  <div className="text-base sm:text-lg font-bold text-slate-800 mb-1">Secure</div>
+                  <div className="text-xs sm:text-sm text-slate-600">Your data privacy is our priority</div>
                 </div>
               </div>
             </div>
@@ -104,164 +104,164 @@ export default function HomePage() {
         </section>
 
         {/* Features Section */}
-        <section id="features" className="w-full py-24 px-6 bg-white flex justify-center">
+        <section id="features" className="w-full py-16 sm:py-24 px-4 sm:px-6 bg-white flex justify-center">
           <div className="w-full max-w-7xl">
-            <div className="text-center mb-16">
-              <h2 className="text-5xl font-bold mb-4 text-[#0f172a]">Why Luno?</h2>
-              <p className="text-xl text-slate-600 max-w-3xl mx-auto">
+            <div className="text-center mb-12 sm:mb-16">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4 text-[#0f172a]">Why Luno?</h2>
+              <p className="text-base sm:text-lg md:text-xl text-slate-600 max-w-3xl mx-auto px-4">
                 Everything you need to manage, moderate, and engage your Discord community in one powerful bot.
               </p>
             </div>
 
             {/* Feature Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
-              <div className="bg-gradient-to-br from-orange-50 to-white p-8 rounded-2xl border border-orange-100 shadow-sm hover:shadow-md transition-all">
-                <div className="w-14 h-14 bg-orange-500 rounded-xl flex items-center justify-center mb-5">
-                  <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-16 sm:mb-20">
+              <div className="bg-gradient-to-br from-orange-50 to-white p-6 sm:p-8 rounded-2xl border border-orange-100 shadow-sm hover:shadow-md transition-all">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 bg-orange-500 rounded-xl flex items-center justify-center mb-4 sm:mb-5">
+                  <svg className="w-6 h-6 sm:w-7 sm:h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                   </svg>
                 </div>
-                <h3 className="text-2xl font-bold mb-3 text-[#0f172a]">Powerful Moderation</h3>
-                <p className="text-slate-600 leading-relaxed">
+                <h3 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3 text-[#0f172a]">Powerful Moderation</h3>
+                <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
                   Keep your server safe with comprehensive moderation tools including warns, kicks, bans, and timeouts. Track all mod actions with detailed logs showing who did what and when.
                 </p>
               </div>
 
-              <div className="bg-gradient-to-br from-orange-50 to-white p-8 rounded-2xl border border-orange-100 shadow-sm hover:shadow-md transition-all">
-                <div className="w-14 h-14 bg-orange-500 rounded-xl flex items-center justify-center mb-5">
-                  <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="bg-gradient-to-br from-orange-50 to-white p-6 sm:p-8 rounded-2xl border border-orange-100 shadow-sm hover:shadow-md transition-all">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 bg-orange-500 rounded-xl flex items-center justify-center mb-4 sm:mb-5">
+                  <svg className="w-6 h-6 sm:w-7 sm:h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                   </svg>
                 </div>
-                <h3 className="text-2xl font-bold mb-3 text-[#0f172a]">Advanced AutoMod</h3>
-                <p className="text-slate-600 leading-relaxed">
+                <h3 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3 text-[#0f172a]">Advanced AutoMod</h3>
+                <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
                   Automatically filter spam, bad links, attachments, mentions, and inappropriate content. Set custom rules with configurable punishments, rate limits, and whitelisted roles or channels.
                 </p>
               </div>
 
-              <div className="bg-gradient-to-br from-orange-50 to-white p-8 rounded-2xl border border-orange-100 shadow-sm hover:shadow-md transition-all">
-                <div className="w-14 h-14 bg-orange-500 rounded-xl flex items-center justify-center mb-5">
-                  <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="bg-gradient-to-br from-orange-50 to-white p-6 sm:p-8 rounded-2xl border border-orange-100 shadow-sm hover:shadow-md transition-all">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 bg-orange-500 rounded-xl flex items-center justify-center mb-4 sm:mb-5">
+                  <svg className="w-6 h-6 sm:w-7 sm:h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
                   </svg>
                 </div>
-                <h3 className="text-2xl font-bold mb-3 text-[#0f172a]">Advanced Configuration</h3>
-                <p className="text-slate-600 leading-relaxed">
+                <h3 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3 text-[#0f172a]">Advanced Configuration</h3>
+                <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
                   Fine-tune your server settings with advanced configuration options. Control permissions, channels, roles, and automate responses to create the perfect Discord environment for your community.
                 </p>
               </div>
 
-              <div className="bg-gradient-to-br from-orange-50 to-white p-8 rounded-2xl border border-orange-100 shadow-sm hover:shadow-md transition-all">
-                <div className="w-14 h-14 bg-orange-500 rounded-xl flex items-center justify-center mb-5">
-                  <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="bg-gradient-to-br from-orange-50 to-white p-6 sm:p-8 rounded-2xl border border-orange-100 shadow-sm hover:shadow-md transition-all">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 bg-orange-500 rounded-xl flex items-center justify-center mb-4 sm:mb-5">
+                  <svg className="w-6 h-6 sm:w-7 sm:h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
                   </svg>
                 </div>
-                <h3 className="text-2xl font-bold mb-3 text-[#0f172a]">Comprehensive Logging</h3>
-                <p className="text-slate-600 leading-relaxed">
+                <h3 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3 text-[#0f172a]">Comprehensive Logging</h3>
+                <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
                   Track deleted messages, edited messages, member updates, role changes, joins, leaves, bans, channel updates, and more. Split logging into separate channels to stay organized.
                 </p>
               </div>
 
-              <div className="bg-gradient-to-br from-orange-50 to-white p-8 rounded-2xl border border-orange-100 shadow-sm hover:shadow-md transition-all">
-                <div className="w-14 h-14 bg-orange-500 rounded-xl flex items-center justify-center mb-5">
-                  <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="bg-gradient-to-br from-orange-50 to-white p-6 sm:p-8 rounded-2xl border border-orange-100 shadow-sm hover:shadow-md transition-all">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 bg-orange-500 rounded-xl flex items-center justify-center mb-4 sm:mb-5">
+                  <svg className="w-6 h-6 sm:w-7 sm:h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                   </svg>
                 </div>
-                <h3 className="text-2xl font-bold mb-3 text-[#0f172a]">Welcome Messages</h3>
-                <p className="text-slate-600 leading-relaxed">
+                <h3 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3 text-[#0f172a]">Welcome Messages</h3>
+                <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
                   Greet new members with customizable welcome messages, farewell messages, and ban announcements. Send DMs upon joining and use embeds with variables for a personal touch.
                 </p>
               </div>
 
-              <div className="bg-gradient-to-br from-orange-50 to-white p-8 rounded-2xl border border-orange-100 shadow-sm hover:shadow-md transition-all">
-                <div className="w-14 h-14 bg-orange-500 rounded-xl flex items-center justify-center mb-5">
-                  <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="bg-gradient-to-br from-orange-50 to-white p-6 sm:p-8 rounded-2xl border border-orange-100 shadow-sm hover:shadow-md transition-all">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 bg-orange-500 rounded-xl flex items-center justify-center mb-4 sm:mb-5">
+                  <svg className="w-6 h-6 sm:w-7 sm:h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
                   </svg>
                 </div>
-                <h3 className="text-2xl font-bold mb-3 text-[#0f172a]">Granular Permissions</h3>
-                <p className="text-slate-600 leading-relaxed">
+                <h3 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3 text-[#0f172a]">Granular Permissions</h3>
+                <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
                   Fine-tune command permissions with role and channel restrictions. Manage commands in bulk from the dashboard, redirect outputs, and apply global rules across all commands effortlessly.
                 </p>
               </div>
             </div>
 
             {/* Detailed Feature Showcases */}
-            <div className="space-y-24 mt-24">
+            <div className="space-y-16 sm:space-y-24 mt-16 sm:mt-24">
               {/* AutoMod Showcase */}
-              <div className="grid md:grid-cols-2 gap-12 items-center">
+              <div className="grid md:grid-cols-2 gap-8 sm:gap-12 items-center">
                 <div>
-                  <h3 className="text-4xl font-bold mb-6 text-[#0f172a]">AutoMod</h3>
-                  <ul className="space-y-4 text-slate-600">
-                    <li className="flex items-start gap-3">
-                      <svg className="w-6 h-6 text-orange-500 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 text-[#0f172a]">AutoMod</h3>
+                  <ul className="space-y-3 sm:space-y-4 text-sm sm:text-base text-slate-600">
+                    <li className="flex items-start gap-2 sm:gap-3">
+                      <svg className="w-5 h-5 sm:w-6 sm:h-6 text-orange-500 flex-shrink-0 mt-0.5 sm:mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                       <span className="leading-relaxed">Punish bad links, spam, attachment spam, and mention spam automatically</span>
                     </li>
-                    <li className="flex items-start gap-3">
-                      <svg className="w-6 h-6 text-orange-500 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <li className="flex items-start gap-2 sm:gap-3">
+                      <svg className="w-5 h-5 sm:w-6 sm:h-6 text-orange-500 flex-shrink-0 mt-0.5 sm:mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                       <span className="leading-relaxed">Select custom punishments per-rule being broken</span>
                     </li>
-                    <li className="flex items-start gap-3">
-                      <svg className="w-6 h-6 text-orange-500 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <li className="flex items-start gap-2 sm:gap-3">
+                      <svg className="w-5 h-5 sm:w-6 sm:h-6 text-orange-500 flex-shrink-0 mt-0.5 sm:mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                       <span className="leading-relaxed">Delete dangerous file formats and filter inappropriate content</span>
                     </li>
-                    <li className="flex items-start gap-3">
-                      <svg className="w-6 h-6 text-orange-500 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <li className="flex items-start gap-2 sm:gap-3">
+                      <svg className="w-5 h-5 sm:w-6 sm:h-6 text-orange-500 flex-shrink-0 mt-0.5 sm:mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                       <span className="leading-relaxed">Mark channels as media-only to require links or attachments</span>
                     </li>
-                    <li className="flex items-start gap-3">
-                      <svg className="w-6 h-6 text-orange-500 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <li className="flex items-start gap-2 sm:gap-3">
+                      <svg className="w-5 h-5 sm:w-6 sm:h-6 text-orange-500 flex-shrink-0 mt-0.5 sm:mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                       <span className="leading-relaxed">Whitelist roles and channels to bypass rules</span>
                     </li>
-                    <li className="flex items-start gap-3">
-                      <svg className="w-6 h-6 text-orange-500 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <li className="flex items-start gap-2 sm:gap-3">
+                      <svg className="w-5 h-5 sm:w-6 sm:h-6 text-orange-500 flex-shrink-0 mt-0.5 sm:mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                       <span className="leading-relaxed">Custom rate limits for fine-tuned control</span>
                     </li>
                   </ul>
                 </div>
-                <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-8 shadow-2xl border border-slate-700">
-                  <div className="space-y-3 font-mono text-sm">
+                <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-4 sm:p-6 md:p-8 shadow-2xl border border-slate-700">
+                  <div className="space-y-2 sm:space-y-3 font-mono text-xs sm:text-sm">
                     <div className="text-green-400">✓ Spam filter active</div>
                     <div className="text-green-400">✓ Link filter enabled</div>
                     <div className="text-green-400">✓ Mention spam protection on</div>
-                    <div className="text-orange-400 mt-6">⚠ User @Spammer violated spam rule</div>
-                    <div className="text-slate-400 pl-4">→ Action: 10 minute timeout</div>
-                    <div className="text-slate-400 pl-4">→ Deleted 5 messages</div>
-                    <div className="text-slate-400 pl-4">→ Logged to #mod-logs</div>
+                    <div className="text-orange-400 mt-4 sm:mt-6">⚠ User @Spammer violated spam rule</div>
+                    <div className="text-slate-400 pl-3 sm:pl-4">→ Action: 10 minute timeout</div>
+                    <div className="text-slate-400 pl-3 sm:pl-4">→ Deleted 5 messages</div>
+                    <div className="text-slate-400 pl-3 sm:pl-4">→ Logged to #mod-logs</div>
                   </div>
                 </div>
               </div>
 
               {/* Moderation Showcase */}
-              <div className="grid md:grid-cols-2 gap-12 items-center">
-                <div className="order-2 md:order-1 bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-8 shadow-2xl border border-slate-700">
-                  <div className="space-y-3 font-mono text-sm">
+              <div className="grid md:grid-cols-2 gap-8 sm:gap-12 items-center">
+                <div className="order-2 md:order-1 bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-4 sm:p-6 md:p-8 shadow-2xl border border-slate-700">
+                  <div className="space-y-2 sm:space-y-3 font-mono text-xs sm:text-sm">
                     <div className="text-orange-400">/warn @User Rule Violation</div>
-                    <div className="text-slate-400 pl-4">→ Warning issued to @User</div>
-                    <div className="text-orange-400 mt-4">/ban @BadActor Raiding</div>
-                    <div className="text-slate-400 pl-4">→ User banned permanently</div>
-                    <div className="text-slate-400 pl-4">→ Reason: Raiding</div>
-                    <div className="text-slate-400 pl-4">→ Moderator: @Admin</div>
-                    <div className="text-green-400 mt-4">✓ All actions logged to modlog</div>
+                    <div className="text-slate-400 pl-3 sm:pl-4">→ Warning issued to @User</div>
+                    <div className="text-orange-400 mt-3 sm:mt-4">/ban @BadActor Raiding</div>
+                    <div className="text-slate-400 pl-3 sm:pl-4">→ User banned permanently</div>
+                    <div className="text-slate-400 pl-3 sm:pl-4">→ Reason: Raiding</div>
+                    <div className="text-slate-400 pl-3 sm:pl-4">→ Moderator: @Admin</div>
+                    <div className="text-green-400 mt-3 sm:mt-4">✓ All actions logged to modlog</div>
                   </div>
                 </div>
                 <div className="order-1 md:order-2">
-                  <h3 className="text-4xl font-bold mb-6 text-[#0f172a]">Powerful Moderation</h3>
-                  <ul className="space-y-4 text-slate-600">
+                  <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 text-[#0f172a]">Powerful Moderation</h3>
+                  <ul className="space-y-3 sm:space-y-4 text-sm sm:text-base text-slate-600">
                     <li className="flex items-start gap-3">
                       <svg className="w-6 h-6 text-orange-500 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
