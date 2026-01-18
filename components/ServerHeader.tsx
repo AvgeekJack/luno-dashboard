@@ -29,15 +29,9 @@ export default function ServerHeader({ guildId }: ServerHeaderProps) {
           <div className="flex items-center gap-2 sm:gap-4">
             <Link 
               href="/servers"
-              className="hidden sm:flex px-3 sm:px-4 py-1.5 sm:py-2 bg-orange-500 text-white rounded-lg font-semibold hover:bg-orange-600 transition-colors text-xs sm:text-sm"
+              className="hidden sm:flex px-4 py-2 bg-orange-500 text-white rounded-lg font-semibold hover:bg-orange-600 transition-colors text-sm"
             >
               Manage Servers
-            </Link>
-            <Link 
-              href="/servers"
-              className="sm:hidden px-3 py-1.5 bg-orange-500 text-white rounded-lg font-semibold hover:bg-orange-600 transition-colors text-xs"
-            >
-              Servers
             </Link>
             <UserDropdown 
               userName={session.user.name || 'User'}

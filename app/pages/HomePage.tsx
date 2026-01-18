@@ -26,16 +26,14 @@ export default function HomePage() {
             <a href="https://discord.gg/shGCTRhwez" target="_blank" rel="noopener noreferrer" className="hidden sm:inline text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">Support</a>
             {session ? (
               <>
-                <Link href="/servers" className="bg-orange-500 text-white px-2.5 sm:px-6 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold shadow hover:bg-orange-600 transition-colors whitespace-nowrap">
+                <Link href="/servers" className="hidden sm:inline bg-orange-500 text-white px-6 py-2 rounded-full text-sm font-semibold shadow hover:bg-orange-600 transition-colors whitespace-nowrap">
                   Dashboard
                 </Link>
                 {session.user && (
-                  <div className="flex items-center gap-1.5">
-                    <UserDropdown 
-                      userName={session.user.name || 'User'}
-                      userImage={session.user.image ?? undefined}
-                    />
-                  </div>
+                  <UserDropdown 
+                    userName={session.user.name || 'User'}
+                    userImage={session.user.image ?? undefined}
+                  />
                 )}
               </>
             ) : (
