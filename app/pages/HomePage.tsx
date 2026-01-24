@@ -3,121 +3,23 @@
 import { useSession, signIn } from 'next-auth/react';
 import Link from 'next/link';
 import UserDropdown from '@/components/UserDropdown';
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-
-interface BotStats {
-  serverCount: number;
-  memberCount: number;
-  commandCount: number;
-  lastUpdate: number | null;
-}
-
-interface ActivityItem {
-  id: string;
-  type: 'ban' | 'members' | 'automod' | 'activity' | 'role';
-  title: string;
-  description: string;
-  timestamp: string;
-  icon: string;
-  iconColor: string;
-}
 
 export default function HomePage() {
   const { data: session } = useSession();
-  const router = useRouter();
-  const [botStats, setBotStats] = useState<BotStats>({ serverCount: 0, memberCount: 0, commandCount: 0, lastUpdate: null });
-  const [botOnline, setBotOnline] = useState<boolean>(false);
-  const [loading, setLoading] = useState(true);
-
-  // Fetch bot stats and status
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const [statsRes, statusRes] = await Promise.all([
-          fetch('/api/bot-stats'),
-          fetch('/api/bot-status')
-        ]);
-        const statsData = await statsRes.json();
-        const statusData = await statusRes.json();
-        
-        setBotStats(statsData);
-        setBotOnline(statusData.online);
-        setLoading(false);
-      } catch (error) {
-        console.error('Failed to fetch bot data:', error);
-        setLoading(false);
-      }
-    };
-
-    fetchStats();
-    const interval = setInterval(fetchStats, 10000); // Update every 10 seconds
-
-    return () => clearInterval(interval);
-  }, []);
-
-  // Mock activity data - in production, this would come from your backend
-  const recentActivity: ActivityItem[] = [
-    {
-      id: '1',
-      type: 'ban',
-      title: 'User Banned',
-      description: '@ModTeam banned @SpamUser123 for spam',
-      timestamp: '5 minutes ago',
-      icon: '🚫',
-      iconColor: 'bg-red-100 text-red-600'
-    },
-    {
-      id: '2',
-      type: 'members',
-      title: 'New Members',
-      description: '15 new members joined the server',
-      timestamp: '23 minutes ago',
-      icon: '✅',
-      iconColor: 'bg-green-100 text-green-600'
-    },
-    {
-      id: '3',
-      type: 'automod',
-      title: 'Automod Alert',
-      description: 'Deleted 8 spam messages in #general',
-      timestamp: '1 hour ago',
-      icon: '⚠️',
-      iconColor: 'bg-yellow-100 text-yellow-600'
-    },
-    {
-      id: '4',
-      type: 'activity',
-      title: 'Server Activity Peak',
-      description: 'Reached 420 active users simultaneously',
-      timestamp: '2 hours ago',
-      icon: '📊',
-      iconColor: 'bg-blue-100 text-blue-600'
-    },
-    {
-      id: '5',
-      type: 'role',
-      title: 'Role Update',
-      description: '@Admin updated moderator permissions',
-      timestamp: '3 hours ago',
-      icon: '🛡️',
-      iconColor: 'bg-purple-100 text-purple-600'
-    }
-  ];
 
   return (
-    <div className="min-h-screen bg-gray-50 text-[#0f172a]">
+    <div className="min-h-screen bg-white text-[#0f172a] flex flex-col items-center">
       {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-white border-b border-gray-200 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <img src="/luno-logo.png" alt="Luno Bot" className="w-10 h-10" />
+      <nav className="fixed top-0 w-full bg-white/90 backdrop-blur border-b border-orange-100 z-50 flex justify-center">
+        <div className="w-full max-w-7xl px-3 sm:px-6 py-2.5 sm:py-4 flex items-center justify-between">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <img src="/luno-logo.png" alt="Luno Bot" className="w-7 h-7 sm:w-10 sm:h-10" />
             <div className="text-left">
-              <span className="block text-xl font-bold tracking-tight">LUNO</span>
-              <span className="text-sm text-slate-500">Dashboard</span>
+              <span className="block text-base sm:text-xl font-bold tracking-tight">LUNO</span>
+              <span className="hidden sm:block text-xs sm:text-sm text-slate-500">Dashboard</span>
             </div>
           </div>
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-1.5 sm:gap-4 md:gap-6">
             <Link href="#features" className="hidden md:inline text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">Features</Link>
             <Link href="#commands" className="hidden md:inline text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">Commands</Link>
             <Link href="#about" className="hidden md:inline text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">About</Link>
@@ -125,7 +27,7 @@ export default function HomePage() {
             {session ? (
               <>
                 <Link href="/servers" className="hidden sm:inline bg-orange-500 text-white px-6 py-2 rounded-full text-sm font-semibold shadow hover:bg-orange-600 transition-colors whitespace-nowrap">
-                  My Servers
+                  Dashboard
                 </Link>
                 {session.user && (
                   <UserDropdown 
@@ -137,7 +39,7 @@ export default function HomePage() {
             ) : (
               <button
                 onClick={() => signIn('discord')}
-                className="bg-slate-900 text-white px-8 py-3 rounded-xl text-sm font-semibold shadow-md hover:bg-slate-800 transition-colors whitespace-nowrap"
+                className="bg-slate-900 text-white px-3 sm:px-8 py-1.5 sm:py-3 rounded-xl text-xs sm:text-sm font-semibold shadow-md hover:bg-slate-800 transition-colors whitespace-nowrap"
               >
                 Login
               </button>
@@ -146,165 +48,9 @@ export default function HomePage() {
         </div>
       </nav>
 
-      {/* Main Dashboard Content */}
-      {session ? (
-        <main className="pt-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full pb-12">
-          {/* Dashboard Header */}
-          <div className="mb-8 mt-6">
-            <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-2">Dashboard</h1>
-            <p className="text-slate-600">Overview of your server's activity and statistics</p>
-          </div>
-
-          {/* Stats Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            {/* Total Members Card */}
-            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex items-start justify-between mb-4">
-                <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                </div>
-                <span className="text-green-600 text-sm font-semibold">+12.5%</span>
-              </div>
-              <div className="text-sm text-slate-500 mb-1">Total Members</div>
-              <div className="text-3xl font-bold text-slate-900">
-                {loading ? '...' : botStats.memberCount.toLocaleString()}
-              </div>
-            </div>
-
-            {/* Messages Today Card */}
-            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex items-start justify-between mb-4">
-                <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                  </svg>
-                </div>
-                <span className="text-green-600 text-sm font-semibold">+8.3%</span>
-              </div>
-              <div className="text-sm text-slate-500 mb-1">Messages Today</div>
-              <div className="text-3xl font-bold text-slate-900">12,453</div>
-            </div>
-
-            {/* Mod Actions Card */}
-            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex items-start justify-between mb-4">
-                <div className="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                  </svg>
-                </div>
-                <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full font-medium">Today</span>
-              </div>
-              <div className="text-sm text-slate-500 mb-1">Mod Actions</div>
-              <div className="text-3xl font-bold text-slate-900">23</div>
-            </div>
-
-            {/* Active Now Card */}
-            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex items-start justify-between mb-4">
-                <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                  </svg>
-                </div>
-                <span className="text-sm text-green-600 bg-green-50 px-2 py-1 rounded-full font-medium">Online</span>
-              </div>
-              <div className="text-sm text-slate-500 mb-1">Active Now</div>
-              <div className="text-3xl font-bold text-slate-900">342</div>
-            </div>
-          </div>
-
-          {/* Two Column Layout for Recent Activity and Quick Actions */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Recent Activity - Takes 2 columns */}
-            <div className="lg:col-span-2 bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
-              <h2 className="text-xl font-bold text-slate-900 mb-6">Recent Activity</h2>
-              <div className="space-y-4">
-                {recentActivity.map((activity) => (
-                  <div key={activity.id} className="flex items-start gap-4 pb-4 border-b border-gray-100 last:border-0 last:pb-0">
-                    <div className={`w-10 h-10 ${activity.iconColor} rounded-lg flex items-center justify-center flex-shrink-0`}>
-                      <span className="text-lg">{activity.icon}</span>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-slate-900 mb-1">{activity.title}</h3>
-                      <p className="text-sm text-slate-600 mb-1">{activity.description}</p>
-                      <p className="text-xs text-slate-400">{activity.timestamp}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Quick Actions and Server Status - Takes 1 column */}
-            <div className="space-y-6">
-              {/* Quick Actions */}
-              <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
-                <h2 className="text-xl font-bold text-slate-900 mb-4">Quick Actions</h2>
-                <div className="space-y-3">
-                  <Link href="/servers" className="flex items-center gap-3 w-full bg-orange-500 hover:bg-orange-600 text-white px-4 py-3 rounded-lg font-medium transition-colors">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                    </svg>
-                    <span>Moderation</span>
-                  </Link>
-                  <Link href="/servers" className="flex items-center gap-3 w-full bg-gray-100 hover:bg-gray-200 text-slate-700 px-4 py-3 rounded-lg font-medium transition-colors">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                    <span>Manage Roles</span>
-                  </Link>
-                  <Link href="/servers" className="flex items-center gap-3 w-full bg-gray-100 hover:bg-gray-200 text-slate-700 px-4 py-3 rounded-lg font-medium transition-colors">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                    </svg>
-                    <span>View Logs</span>
-                  </Link>
-                  <Link href="/servers" className="flex items-center gap-3 w-full bg-gray-100 hover:bg-gray-200 text-slate-700 px-4 py-3 rounded-lg font-medium transition-colors">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                    </svg>
-                    <span>Analytics</span>
-                  </Link>
-                </div>
-              </div>
-
-              {/* Server Status */}
-              <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
-                <h2 className="text-xl font-bold text-slate-900 mb-4">Server Status</h2>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-slate-600">Automod</span>
-                    <span className="flex items-center gap-2 text-green-600 font-medium text-sm">
-                      <span className="w-2 h-2 bg-green-600 rounded-full"></span>
-                      Active
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-slate-600">Logging</span>
-                    <span className="flex items-center gap-2 text-green-600 font-medium text-sm">
-                      <span className="w-2 h-2 bg-green-600 rounded-full"></span>
-                      Active
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-slate-600">Anti-Raid</span>
-                    <span className="flex items-center gap-2 text-green-600 font-medium text-sm">
-                      <span className="w-2 h-2 bg-green-600 rounded-full"></span>
-                      Active
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </main>
-      ) : (
-        // Landing page for non-logged-in users
-        <main className="w-full flex flex-col items-center flex-1">
-          {/* Hero Section */}
-          <section className="w-full min-h-[90vh] pt-24 sm:pt-32 pb-16 sm:pb-24 px-4 sm:px-6 bg-gradient-to-b from-orange-50 via-white to-white flex items-center justify-center">
+      <main className="w-full flex flex-col items-center flex-1">
+        {/* Hero Section */}
+        <section className="w-full min-h-[90vh] pt-24 sm:pt-32 pb-16 sm:pb-24 px-4 sm:px-6 bg-gradient-to-b from-orange-50 via-white to-white flex items-center justify-center">
           <div className="w-full max-w-6xl mx-auto">
             <div className="text-center max-w-4xl mx-auto mb-12 sm:mb-16">
               <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 text-[#0f172a] leading-tight">
@@ -959,8 +705,7 @@ export default function HomePage() {
             </div>
           </div>
         </footer>
-        </main>
-      )}
+      </main>
     </div>
   );
 }

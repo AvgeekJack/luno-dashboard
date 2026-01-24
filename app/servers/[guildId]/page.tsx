@@ -28,6 +28,16 @@ interface ServerStats {
   roles: number | null;
 }
 
+interface ActivityItem {
+  id: string;
+  type: 'ban' | 'members' | 'automod' | 'activity' | 'role';
+  title: string;
+  description: string;
+  timestamp: string;
+  icon: string;
+  iconColor: string;
+}
+
 export default function ServerSettings() {
   const { data: session, status } = useSession();
   const { guildId } = useParams();
@@ -119,6 +129,55 @@ export default function ServerSettings() {
       });
   }, [session, status, guildId, router]);
 
+  // Mock activity data - in production, this would come from your backend
+  const recentActivity: ActivityItem[] = [
+    {
+      id: '1',
+      type: 'ban',
+      title: 'User Banned',
+      description: '@ModTeam banned @SpamUser123 for spam',
+      timestamp: '5 minutes ago',
+      icon: '🚫',
+      iconColor: 'bg-red-100 text-red-600'
+    },
+    {
+      id: '2',
+      type: 'members',
+      title: 'New Members',
+      description: '15 new members joined the server',
+      timestamp: '23 minutes ago',
+      icon: '✅',
+      iconColor: 'bg-green-100 text-green-600'
+    },
+    {
+      id: '3',
+      type: 'automod',
+      title: 'Automod Alert',
+      description: 'Deleted 8 spam messages in #general',
+      timestamp: '1 hour ago',
+      icon: '⚠️',
+      iconColor: 'bg-yellow-100 text-yellow-600'
+    },
+    {
+      id: '4',
+      type: 'activity',
+      title: 'Server Activity Peak',
+      description: 'Reached 420 active users simultaneously',
+      timestamp: '2 hours ago',
+      icon: '📊',
+      iconColor: 'bg-blue-100 text-blue-600'
+    },
+    {
+      id: '5',
+      type: 'role',
+      title: 'Role Update',
+      description: '@Admin updated moderator permissions',
+      timestamp: '3 hours ago',
+      icon: '🛡️',
+      iconColor: 'bg-purple-100 text-purple-600'
+    }
+  ];
+
   if (loading) {
     return <div className="flex min-h-screen items-center justify-center text-[#0f172a]">Loading...</div>;
   }
@@ -128,7 +187,7 @@ export default function ServerSettings() {
   }
 
   return (
-    <div className="min-h-screen bg-orange-50 text-[#0f172a] flex flex-col md:flex-row">
+    <div className="min-h-screen bg-gray-50 text-[#0f172a] flex flex-col md:flex-row">
       {/* Mobile Menu Button */}
       <button 
         className="md:hidden fixed top-4 left-4 z-[60] bg-white p-2 rounded-lg shadow-lg border border-orange-100"
@@ -334,92 +393,155 @@ export default function ServerSettings() {
           </nav>
       </aside>
 
-      <main className="flex-1 md:ml-64 py-8 sm:py-12 px-4 sm:px-6 md:px-8 pt-20 md:pt-12 flex justify-center">
-        <div className="w-full max-w-6xl space-y-3 sm:space-y-4 md:space-y-6">
-          <div className="space-y-1">
-            <p className="text-xs sm:text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">Settings</p>
-            <h1 className="text-2xl sm:text-3xl font-bold">{serverName ?? 'Server'}</h1>
+      <main className="flex-1 md:ml-0 py-8 sm:py-12 px-4 sm:px-6 md:px-8 pt-20 md:pt-8 bg-gray-50">
+        <div className="w-full max-w-7xl mx-auto space-y-8">
+          {/* Dashboard Header */}
+          <div className="mb-8">
+            <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-2">Dashboard</h1>
+            <p className="text-slate-600">Overview of your server's activity and statistics</p>
           </div>
 
-          <div className="bg-white border border-orange-100 rounded-2xl shadow-sm p-4 sm:p-6 md:p-8 space-y-6 sm:space-y-8">
-            <div className="flex items-center justify-between flex-wrap gap-3">
-              <div className="space-y-1">
-                <h2 className="text-lg sm:text-xl font-semibold text-[#0f172a]">Dashboard</h2>
-                <p className="text-sm sm:text-base text-slate-600">At-a-glance view of your bot configuration.</p>
+          {/* Stats Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Total Members Card */}
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-start justify-between mb-4">
+                <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                </div>
+                <span className="text-green-600 text-sm font-semibold">+12.5%</span>
               </div>
-              <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm font-semibold text-slate-700">
-                {botOnline === null ? (
-                  <span className="flex items-center gap-1.5 sm:gap-2 rounded-full bg-slate-50 px-2 sm:px-3 py-1 border border-slate-200">
-                    <span className="h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-slate-400 animate-pulse" aria-hidden /> Checking...
-                  </span>
-                ) : botOnline ? (
-                  <span className="flex items-center gap-1.5 sm:gap-2 rounded-full bg-green-50 px-2 sm:px-3 py-1 border border-green-200">
-                    <span className="h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-green-500" aria-hidden /> Bot Online
-                  </span>
-                ) : (
-                  <span className="flex items-center gap-1.5 sm:gap-2 rounded-full bg-red-50 px-2 sm:px-3 py-1 border border-red-200">
-                    <span className="h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-red-500" aria-hidden /> Bot Offline
-                  </span>
-                )}
+              <div className="text-sm text-slate-500 mb-1">Total Members</div>
+              <div className="text-3xl font-bold text-slate-900">
+                {stats?.members?.toLocaleString() ?? '—'}
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
-              <div className="rounded-xl border border-orange-100 bg-orange-50/50 p-3 sm:p-4 shadow-sm">
-                <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Prefix</p>
-                <p className="text-xl sm:text-2xl font-bold text-[#0f172a]">{settings.prefix || '!'}</p>
-                <p className="text-xs text-slate-600">Current command prefix</p>
+            {/* Messages Today Card */}
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-start justify-between mb-4">
+                <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                  </svg>
+                </div>
+                <span className="text-green-600 text-sm font-semibold">+8.3%</span>
               </div>
-              <div className="rounded-xl border border-orange-100 bg-white p-3 sm:p-4 shadow-sm">
-                <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Bot Nickname</p>
-                <p className="text-base sm:text-lg font-semibold text-[#0f172a]">{settings.configuration?.botNickname || 'Not set'}</p>
-                <p className="text-xs text-slate-600">Custom bot nickname</p>
+              <div className="text-sm text-slate-500 mb-1">Messages Today</div>
+              <div className="text-3xl font-bold text-slate-900">12,453</div>
+            </div>
+
+            {/* Mod Actions Card */}
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-start justify-between mb-4">
+                <div className="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
+                </div>
+                <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full font-medium">Today</span>
               </div>
-              <div className="rounded-xl border border-orange-100 bg-white p-3 sm:p-4 shadow-sm sm:col-span-2 md:col-span-1">
-                <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Timezone</p>
-                <p className="text-base sm:text-lg font-semibold text-[#0f172a]">{settings.configuration?.timezone || 'UTC'}</p>
-                <p className="text-xs text-slate-600">Server timezone</p>
+              <div className="text-sm text-slate-500 mb-1">Mod Actions</div>
+              <div className="text-3xl font-bold text-slate-900">23</div>
+            </div>
+
+            {/* Active Now Card */}
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-start justify-between mb-4">
+                <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                  </svg>
+                </div>
+                <span className="text-sm text-green-600 bg-green-50 px-2 py-1 rounded-full font-medium">Online</span>
               </div>
+              <div className="text-sm text-slate-500 mb-1">Active Now</div>
+              <div className="text-3xl font-bold text-slate-900">{stats?.presences ?? '—'}</div>
             </div>
           </div>
 
-          <div className="rounded-xl border border-orange-100 bg-orange-50/60 p-4 sm:p-5 shadow-sm space-y-3 sm:space-y-4">
-            <div className="flex items-center justify-between flex-wrap gap-3">
-              <div>
-                <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Server Info</p>
-                <p className="text-xs sm:text-sm text-slate-700">Guild ID: {String(guildId)}</p>
+          {/* Two Column Layout for Recent Activity and Quick Actions */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Recent Activity - Takes 2 columns */}
+            <div className="lg:col-span-2 bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+              <h2 className="text-xl font-bold text-slate-900 mb-6">Recent Activity</h2>
+              <div className="space-y-4">
+                {recentActivity.map((activity) => (
+                  <div key={activity.id} className="flex items-start gap-4 pb-4 border-b border-gray-100 last:border-0 last:pb-0">
+                    <div className={`w-10 h-10 ${activity.iconColor} rounded-lg flex items-center justify-center flex-shrink-0`}>
+                      <span className="text-lg">{activity.icon}</span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-semibold text-slate-900 mb-1">{activity.title}</h3>
+                      <p className="text-sm text-slate-600 mb-1">{activity.description}</p>
+                      <p className="text-xs text-slate-400">{activity.timestamp}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3 text-xs sm:text-sm text-slate-700">
-              <div className="rounded-lg bg-white border border-orange-100 p-3 sm:p-4 shadow-sm">
-                <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Members</p>
-                <p className="text-lg sm:text-xl font-bold text-[#0f172a]">{stats?.members ?? '—'}</p>
-                <p className="text-xs text-slate-600">Total members</p>
+
+            {/* Quick Actions and Server Status - Takes 1 column */}
+            <div className="space-y-6">
+              {/* Quick Actions */}
+              <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+                <h2 className="text-xl font-bold text-slate-900 mb-4">Quick Actions</h2>
+                <div className="space-y-3">
+                  <Link href={`/servers/${guildId}/modules/moderation`} className="flex items-center gap-3 w-full bg-orange-500 hover:bg-orange-600 text-white px-4 py-3 rounded-lg font-medium transition-colors">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                    <span>Moderation</span>
+                  </Link>
+                  <Link href={`/servers/${guildId}/modules/role-management`} className="flex items-center gap-3 w-full bg-gray-100 hover:bg-gray-200 text-slate-700 px-4 py-3 rounded-lg font-medium transition-colors">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    <span>Manage Roles</span>
+                  </Link>
+                  <Link href={`/servers/${guildId}/logs`} className="flex items-center gap-3 w-full bg-gray-100 hover:bg-gray-200 text-slate-700 px-4 py-3 rounded-lg font-medium transition-colors">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                    <span>View Logs</span>
+                  </Link>
+                  <Link href={`/servers/${guildId}`} className="flex items-center gap-3 w-full bg-gray-100 hover:bg-gray-200 text-slate-700 px-4 py-3 rounded-lg font-medium transition-colors">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                    <span>Analytics</span>
+                  </Link>
+                </div>
               </div>
-              <div className="rounded-lg bg-white border border-orange-100 p-3 sm:p-4 shadow-sm">
-                <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Presences</p>
-                <p className="text-lg sm:text-xl font-bold text-[#0f172a]">{stats?.presences ?? '—'}</p>
-                <p className="text-xs text-slate-600">Online/active</p>
-              </div>
-              <div className="rounded-lg bg-white border border-orange-100 p-3 sm:p-4 shadow-sm">
-                <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Text Channels</p>
-                <p className="text-lg sm:text-xl font-bold text-[#0f172a]">{stats?.textChannels ?? '—'}</p>
-                <p className="text-xs text-slate-600">Channel count</p>
-              </div>
-              <div className="rounded-lg bg-white border border-orange-100 p-3 sm:p-4 shadow-sm">
-                <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Voice Channels</p>
-                <p className="text-lg sm:text-xl font-bold text-[#0f172a]">{stats?.voiceChannels ?? '—'}</p>
-                <p className="text-xs text-slate-600">Channel count</p>
-              </div>
-              <div className="rounded-lg bg-white border border-orange-100 p-3 sm:p-4 shadow-sm">
-                <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Categories</p>
-                <p className="text-lg sm:text-xl font-bold text-[#0f172a]">{stats?.categories ?? '—'}</p>
-                <p className="text-xs text-slate-600">Organizers</p>
-              </div>
-              <div className="rounded-lg bg-white border border-orange-100 p-3 sm:p-4 shadow-sm">
-                <p className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">Roles</p>
-                <p className="text-lg sm:text-xl font-bold text-[#0f172a]">{stats?.roles ?? '—'}</p>
-                <p className="text-xs text-slate-600">Configured roles</p>
+
+              {/* Server Status */}
+              <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+                <h2 className="text-xl font-bold text-slate-900 mb-4">Server Status</h2>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-600">Automod</span>
+                    <span className="flex items-center gap-2 text-green-600 font-medium text-sm">
+                      <span className="w-2 h-2 bg-green-600 rounded-full"></span>
+                      Active
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-600">Logging</span>
+                    <span className="flex items-center gap-2 text-green-600 font-medium text-sm">
+                      <span className="w-2 h-2 bg-green-600 rounded-full"></span>
+                      Active
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-600">Anti-Raid</span>
+                    <span className="flex items-center gap-2 text-green-600 font-medium text-sm">
+                      <span className="w-2 h-2 bg-green-600 rounded-full"></span>
+                      Active
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
