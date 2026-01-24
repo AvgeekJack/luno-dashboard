@@ -224,7 +224,10 @@ export default function VerificationPage() {
           </Link>
           <details className="text-slate-800" open={settingsOpen}>
             <summary className="flex items-center justify-between px-3 py-6 cursor-pointer select-none" onClick={(e) => { e.preventDefault(); setSettingsOpen(!settingsOpen); }}>
-              <span className="flex items-center gap-3"><img src="/settings.png" alt="" className="w-5 h-5" />Settings</span>
+              <span className="flex items-center gap-3">
+                <img src="/settings.png" alt="" className="w-5 h-5" />
+                Settings
+              </span>
               <span className="text-xs text-orange-600">▾</span>
             </summary>
             {settingsOpen && (
@@ -240,7 +243,10 @@ export default function VerificationPage() {
           </details>
           <details className="text-slate-800" open={configOpen}>
             <summary className="flex items-center justify-between px-3 py-6 cursor-pointer select-none" onClick={(e) => { e.preventDefault(); setConfigOpen(!configOpen); }}>
-              <span className="flex items-center gap-3"><img src="/configuration.png" alt="" className="w-4 h-4 sm:w-5 sm:h-5" />Configuration</span>
+              <span className="flex items-center gap-3">
+                <img src="/configuration.png" alt="" className="w-5 h-5" />
+                Configuration
+              </span>
               <span className="text-xs text-orange-600">▾</span>
             </summary>
             {configOpen && (
@@ -265,7 +271,10 @@ export default function VerificationPage() {
           </details>
           <details className="text-slate-800" open={modulesOpen}>
             <summary className="flex items-center justify-between px-3 py-6 cursor-pointer select-none" onClick={(e) => { e.preventDefault(); setModulesOpen(!modulesOpen); }}>
-              <span className="flex items-center gap-3"><img src="/modules.png" alt="" className="w-5 h-5" />Modules</span>
+              <span className="flex items-center gap-3">
+                <img src="/modules.png" alt="" className="w-5 h-5" />
+                Modules
+              </span>
               <span className="text-xs text-orange-600">▾</span>
             </summary>
             {modulesOpen && (
