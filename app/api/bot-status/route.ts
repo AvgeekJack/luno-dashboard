@@ -1,24 +1,45 @@
 import { NextResponse } from 'next/server';
+import dbConnect from '@/lib/mongoose';
+import mongoose from 'mongoose';
 
-// In-memory storage for bot heartbeat
-let lastHeartbeat: number = 0;
+// MongoDB schema for bot status
+const BotStatusSchema = new mongoose.Schema({
+  botId: { type: String, required: true, default: 'luno-bot' },
+  lastHeartbeat: { type: Number, required: true },
+  updatedAt: { type: Date, default: Date.now }
+});
+
+const BotStatus = mongoose.models.BotStatus || mongoose.model('BotStatus', BotStatusSchema);
 
 export async function GET() {
   try {
+    await dbConnect();
+    
+    const status = await BotStatus.findOne({ botId: 'luno-bot' });
+    
+    if (!status) {
+      console.log('[Bot Status] No heartbeat record found');
+      return NextResponse.json({ 
+        online: false,
+        lastHeartbeat: null,
+        timeSinceLastHeartbeat: null
+      });
+    }
+    
     const now = Date.now();
-    const timeSinceLastHeartbeat = now - lastHeartbeat;
+    const timeSinceLastHeartbeat = now - status.lastHeartbeat;
     
     // Bot sends heartbeat every 30 seconds, consider offline after 45 seconds
-    const isOnline = lastHeartbeat > 0 && timeSinceLastHeartbeat < 45000;
+    const isOnline = timeSinceLastHeartbeat < 45000;
     
-    console.log('[Bot Status] GET - Last heartbeat:', lastHeartbeat ? new Date(lastHeartbeat).toISOString() : 'Never', 
+    console.log('[Bot Status] GET - Last heartbeat:', new Date(status.lastHeartbeat).toISOString(), 
                 'Time since:', timeSinceLastHeartbeat, 'ms', 
                 'Online:', isOnline);
     
     return NextResponse.json({ 
       online: isOnline,
-      lastHeartbeat: lastHeartbeat || null,
-      timeSinceLastHeartbeat: lastHeartbeat ? timeSinceLastHeartbeat : null
+      lastHeartbeat: status.lastHeartbeat,
+      timeSinceLastHeartbeat: timeSinceLastHeartbeat
     });
   } catch (error) {
     console.error('Bot status check error:', error);
@@ -29,12 +50,24 @@ export async function GET() {
 // Simple POST endpoint - no auth required for simplicity
 export async function POST(request: Request) {
   try {
-    lastHeartbeat = Date.now();
-    console.log('[Bot Status] ✅ Heartbeat received at:', new Date(lastHeartbeat).toISOString());
+    await dbConnect();
+    
+    const now = Date.now();
+    
+    await BotStatus.findOneAndUpdate(
+      { botId: 'luno-bot' },
+      { 
+        lastHeartbeat: now,
+        updatedAt: new Date()
+      },
+      { upsert: true, new: true }
+    );
+    
+    console.log('[Bot Status] ✅ Heartbeat saved to MongoDB at:', new Date(now).toISOString());
     
     return NextResponse.json({ 
       success: true,
-      timestamp: lastHeartbeat
+      timestamp: now
     });
   } catch (error: any) {
     console.error('[Bot Status] Error:', error);
