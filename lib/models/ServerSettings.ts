@@ -100,6 +100,7 @@ const ServerSettingsSchema = new mongoose.Schema({
   configuration: {
     botNickname: { type: String, default: null },
     timezone: { type: String, default: 'UTC' },
+    updatesChannel: { type: String, default: null },
     automod: {
       // Master Toggle
       enabled: { type: Boolean, default: false },

@@ -48,3 +48,24 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ gui
 
   return NextResponse.json(settings);
 }
+
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ guildId: string }> }) {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const { guildId } = await params;
+  const body = await req.json();
+
+  await dbConnect();
+
+  const settings = await ServerSettings.findOneAndUpdate(
+    { guildId },
+    body,
+    { new: true, upsert: true }
+  );
+
+  return NextResponse.json(settings);
+}
