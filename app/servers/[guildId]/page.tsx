@@ -54,21 +54,27 @@ export default function ServerSettings() {
   const [saving, setSaving] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Poll bot status every 10 seconds
+  // Poll bot status every 5 seconds for more responsive updates
   useEffect(() => {
     const checkBotStatus = async () => {
       try {
         const res = await fetch('/api/bot-status');
+        if (!res.ok) {
+          throw new Error('Failed to fetch bot status');
+        }
         const data = await res.json();
+        console.log('[Dashboard] Bot status:', data);
         setBotOnline(data.online);
       } catch (error) {
-        console.error('Failed to check bot status:', error);
+        console.error('[Dashboard] Failed to check bot status:', error);
         setBotOnline(false);
       }
     };
 
+    // Check immediately on mount
     checkBotStatus();
-    const interval = setInterval(checkBotStatus, 10000); // Check every 10 seconds
+    // Then check every 5 seconds
+    const interval = setInterval(checkBotStatus, 5000);
 
     return () => clearInterval(interval);
   }, []);

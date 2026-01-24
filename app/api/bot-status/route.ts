@@ -8,8 +8,12 @@ export async function GET() {
     const now = Date.now();
     const timeSinceLastHeartbeat = now - lastHeartbeat;
     
-    // Consider bot online if heartbeat was within last 60 seconds
-    const isOnline = lastHeartbeat > 0 && timeSinceLastHeartbeat < 60000;
+    // Bot sends heartbeat every 30 seconds, consider offline after 45 seconds
+    const isOnline = lastHeartbeat > 0 && timeSinceLastHeartbeat < 45000;
+    
+    console.log('[Bot Status] GET - Last heartbeat:', lastHeartbeat ? new Date(lastHeartbeat).toISOString() : 'Never', 
+                'Time since:', timeSinceLastHeartbeat, 'ms', 
+                'Online:', isOnline);
     
     return NextResponse.json({ 
       online: isOnline,
