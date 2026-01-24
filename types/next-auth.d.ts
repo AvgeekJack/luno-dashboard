@@ -4,6 +4,7 @@ declare module 'next-auth' {
   interface Session {
     accessToken?: string;
     guilds?: any[];
+    error?: string;
     user?: {
       id?: string;
       username?: string;
