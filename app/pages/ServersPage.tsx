@@ -28,9 +28,26 @@ export default function ServersPage() {
   useEffect(() => {
     if (session) {
       fetch('/api/servers')
-        .then(res => res.json())
-        .then(data => setGuilds(data))
-        .catch(err => console.error(err));
+        .then(res => {
+          if (!res.ok) {
+            console.error('Failed to fetch servers:', res.status);
+            return [];
+          }
+          return res.json();
+        })
+        .then(data => {
+          // Ensure data is an array before setting it
+          if (Array.isArray(data)) {
+            setGuilds(data);
+          } else {
+            console.error('Received non-array data from /api/servers:', data);
+            setGuilds([]);
+          }
+        })
+        .catch(err => {
+          console.error('Error fetching servers:', err);
+          setGuilds([]);
+        });
     }
   }, [session]);
 
