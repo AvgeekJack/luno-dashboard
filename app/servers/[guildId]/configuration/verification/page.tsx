@@ -240,7 +240,7 @@ export default function VerificationPage() {
           </details>
           <details className="text-slate-800" open={configOpen}>
             <summary className="flex items-center justify-between px-3 py-6 cursor-pointer select-none" onClick={(e) => { e.preventDefault(); setConfigOpen(!configOpen); }}>
-              <span className="flex items-center gap-3">Configuration</span>
+              <span className="flex items-center gap-3"><img src="/configuration.png" alt="" className="w-4 h-4 sm:w-5 sm:h-5" />Configuration</span>
               <span className="text-xs text-orange-600">▾</span>
             </summary>
             {configOpen && (
