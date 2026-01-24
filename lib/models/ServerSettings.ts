@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 const ServerSettingsSchema = new mongoose.Schema({
   guildId: { type: String, required: true, unique: true },
   prefix: { type: String, default: '!' },
+  premium: { type: Boolean, default: false },
   modules: {
     moderation: {
       enabled: { type: Boolean, default: true },

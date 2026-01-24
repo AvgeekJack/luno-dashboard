@@ -4,6 +4,8 @@ A full-stack web dashboard for managing Discord bot settings, similar to Dyno.
 
 ## Features
 
+// Trigger redeploy: minor edit
+
 - Discord OAuth2 login to verify server management permissions
 - Server-specific dashboard for each managed server
 - Edit bot settings: prefix, moderation, welcome messages
@@ -140,3 +142,9 @@ Feel free to contribute improvements or additional features.
 ## License
 
 MIT
+
+
+On branch master
+Your branch is up to date with 'origin/master'.
+
+nothing to commit, working tree clean
