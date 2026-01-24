@@ -16,8 +16,6 @@ interface Guild {
 export default function ServersPage() {
   const { data: session, status } = useSession();
   const [guilds, setGuilds] = useState<Guild[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const inviteBase = process.env.NEXT_PUBLIC_DISCORD_INVITE_URL || '#';
 
@@ -29,71 +27,27 @@ export default function ServersPage() {
 
   useEffect(() => {
     if (session) {
-      // Check if token is expired
-      if ((session as any).error === 'TokenExpired') {
-        console.log('Token expired, forcing re-authentication');
-        setError('Your session has expired. Redirecting to login...');
-        setTimeout(() => signIn('discord'), 1000);
-        return;
-      }
-      
-      console.log('Fetching servers with session');
-      setLoading(true);
-      setError(null);
       fetch('/api/servers')
         .then(res => {
-          console.log('API response status:', res.status);
           if (!res.ok) {
-            return res.json().then(errData => {
-              console.error('API Error:', errData);
-              const errorMsg = errData.error || 'Failed to fetch servers';
-              
-              // If unauthorized (expired token), force re-authentication
-              if (res.status === 401) {
-                setError('Authentication expired. Redirecting to login...');
-                setLoading(false);
-                setTimeout(() => signIn('discord'), 2000);
-                return [];
-              } else {
-                setError(`${errorMsg} (Status: ${res.status})`);
-                setLoading(false);
-                return [];
-              }
-            }).catch(() => {
-              // If we can't even parse the error, it's definitely a problem
-              setError('Server error occurred');
-              setLoading(false);
-              return [];
-            });
+            console.error('Failed to fetch servers:', res.status);
+            return [];
           }
           return res.json();
         })
         .then(data => {
-          console.log('Received data from API:', data);
           // Ensure data is an array before setting it
           if (Array.isArray(data)) {
-            console.log('Setting guilds:', data.length, 'guilds');
             setGuilds(data);
-            setError(null);
-          } else if (data && typeof data === 'object' && 'error' in data) {
-            console.error('Received error from API:', data);
-            setError(data.error as string);
-            setGuilds([]);
           } else {
             console.error('Received non-array data from /api/servers:', data);
-            setError('Received invalid data format from server');
             setGuilds([]);
           }
-          setLoading(false);
         })
         .catch(err => {
           console.error('Error fetching servers:', err);
-          setError(`Network error: ${err.message}`);
           setGuilds([]);
-          setLoading(false);
         });
-    } else {
-      console.log('No session available yet');
     }
   }, [session]);
 
@@ -205,46 +159,6 @@ export default function ServersPage() {
           <p className="text-xs sm:text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">Servers</p>
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">Your connected Discord servers</h1>
           <p className="text-sm sm:text-base text-slate-600">Select a server to manage settings and automation.</p>
-        </div>
-
-        {/* Error and Loading States */}
-        {error && (
-          <div className="w-full bg-red-50 border border-red-200 rounded-xl p-4 sm:p-6">
-            <div className="flex items-start gap-3">
-              <svg className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <div className="flex-1">
-                <h3 className="text-sm font-semibold text-red-800">Error Loading Servers</h3>
-                <p className="text-sm text-red-700 mt-1">{error}</p>
-                <button 
-                  onClick={() => signIn('discord')}
-                  className="mt-3 bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-700 transition-colors"
-                >
-                  Re-authenticate with Discord
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {loading && (
-          <div className="w-full bg-blue-50 border border-blue-200 rounded-xl p-4 text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="text-sm text-blue-700 mt-2">Loading your servers...</p>
-          </div>
-        )}
-
-        {/* Debug info - remove this later */}
-        <div className="w-full bg-slate-100 p-4 rounded-lg text-sm">
-          <p><strong>Debug Info:</strong></p>
-          <p>Session status: {status}</p>
-          <p>Session exists: {session ? 'Yes' : 'No'}</p>
-          <p>Loading: {loading ? 'Yes' : 'No'}</p>
-          <p>Error: {error || 'None'}</p>
-          <p>Total guilds: {guilds.length}</p>
-          <p>Guilds with bot: {botGuilds.length}</p>
-          <p>Guilds without bot: {notInBot.length}</p>
         </div>
 
         {renderInBot('Servers Luno is In', botGuilds, 'Luno is not in any of your manageable servers yet.')}
