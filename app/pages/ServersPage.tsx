@@ -27,17 +27,24 @@ export default function ServersPage() {
 
   useEffect(() => {
     if (session) {
+      console.log('Fetching servers with session:', session);
       fetch('/api/servers')
         .then(res => {
+          console.log('API response status:', res.status);
           if (!res.ok) {
             console.error('Failed to fetch servers:', res.status);
-            return [];
+            return res.json().then(errData => {
+              console.error('Error data:', errData);
+              return [];
+            });
           }
           return res.json();
         })
         .then(data => {
+          console.log('Received data from API:', data);
           // Ensure data is an array before setting it
           if (Array.isArray(data)) {
+            console.log('Setting guilds:', data.length, 'guilds');
             setGuilds(data);
           } else {
             console.error('Received non-array data from /api/servers:', data);
@@ -48,6 +55,8 @@ export default function ServersPage() {
           console.error('Error fetching servers:', err);
           setGuilds([]);
         });
+    } else {
+      console.log('No session available yet');
     }
   }, [session]);
 
@@ -159,6 +168,16 @@ export default function ServersPage() {
           <p className="text-xs sm:text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">Servers</p>
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">Your connected Discord servers</h1>
           <p className="text-sm sm:text-base text-slate-600">Select a server to manage settings and automation.</p>
+        </div>
+
+        {/* Debug info - remove this later */}
+        <div className="w-full bg-slate-100 p-4 rounded-lg text-sm">
+          <p><strong>Debug Info:</strong></p>
+          <p>Session status: {status}</p>
+          <p>Session exists: {session ? 'Yes' : 'No'}</p>
+          <p>Total guilds: {guilds.length}</p>
+          <p>Guilds with bot: {botGuilds.length}</p>
+          <p>Guilds without bot: {notInBot.length}</p>
         </div>
 
         {renderInBot('Servers Luno is In', botGuilds, 'Luno is not in any of your manageable servers yet.')}
