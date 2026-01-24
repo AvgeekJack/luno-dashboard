@@ -94,6 +94,33 @@ export async function GET() {
 
     console.log('[/api/servers] User manages', managedGuilds.length, 'guilds');
 
+    // Fetch member counts for guilds the bot is in
+    const guildMemberCounts = new Map<string, number>();
+    if (botToken && botGuildIds.size > 0) {
+      try {
+        console.log('[/api/servers] Fetching member counts for bot guilds');
+        const memberCountPromises = Array.from(botGuildIds).map(async (guildId) => {
+          try {
+            const guildRes = await fetch(`https://discord.com/api/guilds/${guildId}?with_counts=true`, {
+              headers: { Authorization: `Bot ${botToken}` },
+            });
+            if (guildRes.ok) {
+              const guildData = await guildRes.json();
+              if (guildData.approximate_member_count) {
+                guildMemberCounts.set(guildId, guildData.approximate_member_count);
+              }
+            }
+          } catch (err) {
+            console.warn('[/api/servers] Failed to fetch member count for guild:', guildId);
+          }
+        });
+        await Promise.all(memberCountPromises);
+        console.log('[/api/servers] Fetched member counts for', guildMemberCounts.size, 'guilds');
+      } catch (err) {
+        console.warn('[/api/servers] Error fetching member counts:', err);
+      }
+    }
+
     const guildsWithMembership = managedGuilds.map((guild: any) => ({
       id: guild.id,
       name: guild.name,
@@ -101,6 +128,7 @@ export async function GET() {
       owner: guild.owner,
       permissions: guild.permissions,
       inBot: botGuildIds.size > 0 ? botGuildIds.has(guild.id) : undefined,
+      memberCount: guildMemberCounts.get(guild.id) || null,
     }));
 
     console.log('[/api/servers] Returning', guildsWithMembership.length, 'guilds');

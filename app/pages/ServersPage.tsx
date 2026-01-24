@@ -11,11 +11,13 @@ interface Guild {
   name: string;
   icon: string | null;
   inBot?: boolean;
+  memberCount?: number | null;
 }
 
 export default function ServersPage() {
   const { data: session, status } = useSession();
   const [guilds, setGuilds] = useState<Guild[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const router = useRouter();
   const inviteBase = process.env.NEXT_PUBLIC_DISCORD_INVITE_URL || '#';
 
@@ -82,101 +84,149 @@ export default function ServersPage() {
     );
   }
 
-  const botGuilds = guilds.filter(g => g.inBot);
-  const notInBot = guilds.filter(g => g.inBot === false || g.inBot === undefined);
-
-  const renderInBot = (title: string, items: Guild[], emptyText: string) => (
-    <div className="space-y-4 w-full px-2">
-      <div className="text-left">
-        <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a]">{title}</h2>
-      </div>
-      {items.length === 0 ? (
-        <div className="text-slate-500 text-xs sm:text-sm">{emptyText}</div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 justify-center">
-          {items.map(guild => (
-            <Link key={guild.id} href={`/servers/${guild.id}`}>
-              <div className="bg-white p-5 sm:p-6 rounded-xl border border-orange-100 hover:border-orange-300 transition-colors shadow-sm hover:shadow cursor-pointer text-center">
-                {guild.icon ? (
-                  <img
-                    src={`https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`}
-                    alt={guild.name}
-                    className="w-14 h-14 sm:w-16 sm:h-16 rounded-full mx-auto mb-3 sm:mb-4"
-                  />
-                ) : (
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-orange-500 to-amber-400 rounded-full mx-auto mb-3 sm:mb-4 flex items-center justify-center text-xl sm:text-2xl font-bold text-white">
-                    {guild.name.charAt(0)}
-                  </div>
-                )}
-                <h3 className="text-base sm:text-lg font-semibold text-slate-800">{guild.name}</h3>
-              </div>
-            </Link>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-
-  const renderNotInBot = (title: string, items: Guild[], emptyText: string) => (
-    <div className="space-y-4 w-full px-2">
-      <div className="text-left">
-        <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a]">{title}</h2>
-      </div>
-      {items.length === 0 ? (
-        <div className="text-slate-500 text-xs sm:text-sm">{emptyText}</div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 justify-center">
-          {items.map(guild => (
-            <div key={guild.id} className="bg-white p-5 sm:p-6 rounded-xl border border-orange-100 hover:border-orange-300 transition-colors shadow-sm hover:shadow text-center space-y-2 sm:space-y-3">
-              {guild.icon ? (
-                <img
-                  src={`https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`}
-                  alt={guild.name}
-                  className="w-14 h-14 sm:w-16 sm:h-16 rounded-full mx-auto"
-                />
-              ) : (
-                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-orange-500 to-amber-400 rounded-full mx-auto flex items-center justify-center text-xl sm:text-2xl font-bold text-white">
-                  {guild.name.charAt(0)}
-                </div>
-              )}
-              <h3 className="text-base sm:text-lg font-semibold text-slate-800">{guild.name}</h3>
-              <button
-                onClick={() => {
-                  const url = inviteUrl(guild.id);
-                  if (url !== '#') {
-                    window.open(url, '_blank', 'noopener,noreferrer');
-                  }
-                  setTimeout(() => {
-                    router.push(`/servers/${guild.id}`);
-                  }, 300);
-                }}
-                className="inline-flex items-center justify-center w-full bg-orange-500 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-sm font-semibold shadow hover:bg-orange-600 transition-colors disabled:opacity-60"
-              >
-                Add to Server
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
+  const botGuilds = guilds.filter(g => g.inBot && g.name.toLowerCase().includes(searchQuery.toLowerCase()));
+  const notInBot = guilds.filter(g => (g.inBot === false || g.inBot === undefined) && g.name.toLowerCase().includes(searchQuery.toLowerCase()));
 
   return (
-    <div className="min-h-screen bg-white text-[#0f172a] pt-24 sm:pt-32 md:pt-36 pb-12 sm:pb-16 px-4 sm:px-6 md:px-10 flex justify-center">
+    <div className="min-h-screen bg-gray-50 text-[#0f172a]">
       <ServerHeader />
-      <div className="w-full max-w-6xl space-y-8 sm:space-y-12 flex flex-col items-center">
-        <div className="text-center space-y-2 sm:space-y-3 px-2">
-          <p className="text-xs sm:text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">Servers</p>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">Your connected Discord servers</h1>
-          <p className="text-sm sm:text-base text-slate-600">Select a server to manage settings and automation.</p>
-        </div>
+      
+      <main className="pt-24 sm:pt-28 pb-12 sm:pb-16 px-4 sm:px-6 md:px-8">
+        <div className="max-w-7xl mx-auto">
+          {/* Header Section */}
+          <div className="text-center mb-8 sm:mb-10">
+            <p className="text-xs sm:text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold mb-2">SERVERS</p>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-3">Your connected Discord servers</h1>
+            <p className="text-base sm:text-lg text-slate-600">Select a server to manage settings and automation.</p>
+          </div>
 
-        {renderInBot('Servers Luno is In', botGuilds, 'Luno is not in any of your manageable servers yet.')}
-        <div className="w-full py-[7.5px]">
-          <div className="w-full border-t-[2.5px] border-orange-200" />
+          {/* Search Bar */}
+          <div className="max-w-2xl mx-auto mb-10 sm:mb-12">
+            <div className="relative">
+              <svg className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input
+                type="text"
+                placeholder="Search servers..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 sm:py-4 bg-white border border-gray-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+              />
+            </div>
+          </div>
+
+          {/* Servers Luno is In */}
+          <div className="mb-12 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-6">Servers Luno is In</h2>
+            {botGuilds.length === 0 ? (
+              <div className="text-center py-12 bg-white rounded-2xl border border-gray-200">
+                <p className="text-slate-500">
+                  {searchQuery ? 'No servers found matching your search.' : 'Luno is not in any of your manageable servers yet.'}
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {botGuilds.map(guild => (
+                  <Link key={guild.id} href={`/servers/${guild.id}`}>
+                    <div className="bg-white rounded-2xl border border-gray-200 p-6 hover:shadow-lg hover:border-orange-300 transition-all cursor-pointer group">
+                      <div className="flex flex-col items-center text-center">
+                        {guild.icon ? (
+                          <img
+                            src={`https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png?size=128`}
+                            alt={guild.name}
+                            className="w-16 h-16 rounded-2xl mb-4 group-hover:scale-110 transition-transform"
+                          />
+                        ) : (
+                          <div className="w-16 h-16 bg-orange-500 rounded-2xl mb-4 flex items-center justify-center text-2xl font-bold text-white group-hover:scale-110 transition-transform">
+                            {guild.name.charAt(0).toUpperCase()}
+                          </div>
+                        )}
+                        <h3 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-orange-600 transition-colors">{guild.name}</h3>
+                        {guild.memberCount && (
+                          <div className="flex items-center gap-1.5 text-sm text-slate-500">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                            <span>{guild.memberCount.toLocaleString()} members</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Divider */}
+          <div className="mb-12 sm:mb-16">
+            <div className="text-center">
+              <span className="inline-block bg-gray-200 text-slate-600 text-xs sm:text-sm font-semibold px-4 py-2 rounded-full uppercase tracking-wider">
+                Available to Add
+              </span>
+            </div>
+          </div>
+
+          {/* Servers Luno is Not In */}
+          <div>
+            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-6">Servers Luno is Not In</h2>
+            {notInBot.length === 0 ? (
+              <div className="text-center py-12 bg-white rounded-2xl border border-gray-200">
+                <p className="text-slate-500">
+                  {searchQuery ? 'No servers found matching your search.' : 'Luno is already in all your manageable servers!'}
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {notInBot.map(guild => (
+                  <div key={guild.id} className="bg-white rounded-2xl border border-gray-200 p-6 hover:shadow-lg hover:border-orange-300 transition-all">
+                    <div className="flex flex-col items-center text-center">
+                      {guild.icon ? (
+                        <img
+                          src={`https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png?size=128`}
+                          alt={guild.name}
+                          className="w-16 h-16 rounded-2xl mb-4"
+                        />
+                      ) : (
+                        <div className="w-16 h-16 bg-orange-500 rounded-2xl mb-4 flex items-center justify-center text-2xl font-bold text-white">
+                          {guild.name.charAt(0).toUpperCase()}
+                        </div>
+                      )}
+                      <h3 className="text-lg font-bold text-slate-900 mb-3">{guild.name}</h3>
+                      {guild.memberCount && (
+                        <div className="flex items-center gap-1.5 text-sm text-slate-500 mb-4">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                          </svg>
+                          <span>{guild.memberCount.toLocaleString()} members</span>
+                        </div>
+                      )}
+                      <button
+                        onClick={() => {
+                          const url = inviteUrl(guild.id);
+                          if (url !== '#') {
+                            window.open(url, '_blank', 'noopener,noreferrer');
+                          }
+                          setTimeout(() => {
+                            router.push(`/servers/${guild.id}`);
+                          }, 300);
+                        }}
+                        className="w-full bg-orange-500 text-white px-6 py-3 rounded-xl text-sm font-semibold shadow hover:bg-orange-600 transition-colors flex items-center justify-center gap-2"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                        </svg>
+                        Add to Server
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
-        {renderNotInBot('Servers Luno is Not In', notInBot, 'Invite Luno to these servers to manage them here.')}
-      </div>
+      </main>
     </div>
   );
 }
