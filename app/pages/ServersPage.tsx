@@ -27,8 +27,18 @@ export default function ServersPage() {
 
   useEffect(() => {
     if (session) {
-      fetch('/api/servers')
+      fetch('/api/servers', {
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
         .then(res => {
+          if (res.status === 401) {
+            console.error('Unauthorized - re-authenticating');
+            signIn('discord');
+            return [];
+          }
           if (!res.ok) {
             console.error('Failed to fetch servers:', res.status);
             return [];
