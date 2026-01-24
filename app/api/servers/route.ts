@@ -8,6 +8,7 @@ export async function GET(req: NextRequest) {
     const session = await getServerSession(authOptions);
 
     if (!session || !session.accessToken) {
+      console.log('Session check failed:', { hasSession: !!session, hasAccessToken: !!session?.accessToken });
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
