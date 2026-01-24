@@ -256,6 +256,7 @@ export default function CommandsPage() {
           <details className="text-slate-800" open={settingsOpen}>
             <summary className="flex items-center justify-between px-3 py-6 cursor-pointer select-none" onClick={(e) => { e.preventDefault(); setSettingsOpen(!settingsOpen); }}>
               <span className="flex items-center gap-3">
+                <img src="/settings-icon.svg" alt="" className="w-5 h-5" />
                 Settings
               </span>
               <span className="text-xs text-orange-600">▾</span>
@@ -269,6 +270,7 @@ export default function CommandsPage() {
                   Setup
                 </Link>
                 <Link href={`/servers/${guildId}/commands`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 bg-orange-100 text-orange-700 transition-colors text-left ${settingsOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '100ms'}} onClick={() => setMobileMenuOpen(false)}>
+                  <img src="/commands-icon.svg" alt="" className="w-4 h-4" />
                   Commands
                 </Link>
               </div>
@@ -304,6 +306,7 @@ export default function CommandsPage() {
           <details className="text-slate-800" open={modulesOpen}>
             <summary className="flex items-center justify-between px-3 py-6 cursor-pointer select-none" onClick={(e) => { e.preventDefault(); setModulesOpen(!modulesOpen); }}>
               <span className="flex items-center gap-3">
+                <img src="/modules-icon.svg" alt="" className="w-5 h-5" />
                 Modules
               </span>
               <span className="text-xs text-orange-600">▾</span>

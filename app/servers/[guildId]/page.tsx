@@ -182,6 +182,7 @@ export default function ServerSettings() {
             <details className="text-slate-800" open={settingsOpen}>
               <summary className="flex items-center justify-between px-2 sm:px-3 py-4 sm:py-6 cursor-pointer select-none bg-white hover:bg-orange-50/30 transition-colors rounded-lg" onClick={(e) => { e.preventDefault(); setSettingsOpen(!settingsOpen); }}>
                 <span className="flex items-center gap-2 sm:gap-3">
+                  <img src="/settings-icon.svg" alt="" className="w-4 h-4 sm:w-5 sm:h-5" />
                   Settings
                 </span>
                 <span className="text-xs text-orange-600">▾</span>
@@ -262,6 +263,7 @@ export default function ServerSettings() {
             <details className="text-slate-800" open={modulesOpen}>
               <summary className="flex items-center justify-between px-2 sm:px-3 py-4 sm:py-6 cursor-pointer select-none bg-white hover:bg-orange-50/30 transition-colors rounded-lg" onClick={(e) => { e.preventDefault(); setModulesOpen(!modulesOpen); }}>
                 <span className="flex items-center gap-2 sm:gap-3">
+                  <img src="/modules-icon.svg" alt="" className="w-4 h-4 sm:w-5 sm:h-5" />
                   Modules
                 </span>
                 <span className="text-xs text-orange-600">▾</span>
