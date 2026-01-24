@@ -11,6 +11,7 @@ interface Settings {
   configuration?: {
     botNickname: string;
     timezone: string;
+    updatesChannel?: string;
     automod?: {
       enabled: boolean;
     };
@@ -415,18 +416,6 @@ export default function ServerSettings() {
               <h2 className="text-xl font-bold text-slate-900 mb-6">BOT SETTINGS</h2>
               
               <div className="space-y-6">
-                {/* Disable Warnings Checkbox */}
-                <div className="flex items-start gap-3">
-                  <input
-                    type="checkbox"
-                    id="disableWarnings"
-                    className="mt-1 w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
-                  />
-                  <label htmlFor="disableWarnings" className="text-sm text-slate-600 cursor-pointer">
-                    Disable warnings for disabled commands/modules
-                  </label>
-                </div>
-
                 {/* Two Column Grid for Form Fields */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Command Prefix */}
@@ -436,13 +425,13 @@ export default function ServerSettings() {
                     </label>
                     <input
                       type="text"
-                      value={settings?.prefix || '!'}
+                      value={settings?.prefix || ''}
                       onChange={(e) => {
                         if (settings) {
                           setSettings({ ...settings, prefix: e.target.value });
                         }
                       }}
-                      className="w-full px-4 py-2.5 bg-slate-700 text-white border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      className="w-full px-4 py-2.5 bg-white text-slate-900 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                       placeholder="!"
                     />
                   </div>
@@ -467,7 +456,7 @@ export default function ServerSettings() {
                           });
                         }
                       }}
-                      className="w-full px-4 py-2.5 bg-slate-700 text-white border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      className="w-full px-4 py-2.5 bg-white text-slate-900 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                       placeholder="Enter bot nickname"
                     />
                   </div>
@@ -477,23 +466,29 @@ export default function ServerSettings() {
                     <label className="block text-sm font-medium text-slate-700 mb-2">
                       Updates Channel
                     </label>
-                    <select className="w-full px-4 py-2.5 bg-slate-700 text-slate-400 border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent appearance-none cursor-pointer">
-                      <option>Select...</option>
+                    <select
+                      value={settings?.configuration?.updatesChannel || ''}
+                      onChange={(e) => {
+                        if (settings) {
+                          setSettings({
+                            ...settings,
+                            configuration: {
+                              ...settings.configuration,
+                              updatesChannel: e.target.value,
+                              botNickname: settings.configuration?.botNickname || '',
+                              timezone: settings.configuration?.timezone || 'UTC'
+                            }
+                          });
+                        }
+                      }}
+                      className="w-full px-4 py-2.5 bg-white text-slate-900 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent appearance-none cursor-pointer"
+                    >
+                      <option value="">Select...</option>
                       {channels.map((channel) => (
                         <option key={channel.id} value={channel.id}>
                           #{channel.name}
                         </option>
                       ))}
-                    </select>
-                  </div>
-
-                  {/* Manager Roles */}
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
-                      Manager Roles (Owner/Administrator Only)
-                    </label>
-                    <select className="w-full px-4 py-2.5 bg-slate-700 text-slate-400 border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent appearance-none cursor-pointer">
-                      <option>Select...</option>
                     </select>
                   </div>
 
@@ -512,12 +507,13 @@ export default function ServerSettings() {
                               configuration: {
                                 ...settings.configuration,
                                 timezone: e.target.value,
-                                botNickname: settings.configuration?.botNickname || ''
+                                botNickname: settings.configuration?.botNickname || '',
+                                updatesChannel: settings.configuration?.updatesChannel || ''
                               }
                             });
                           }
                         }}
-                        className="flex-1 px-4 py-2.5 bg-slate-700 text-white border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent appearance-none cursor-pointer"
+                        className="flex-1 px-4 py-2.5 bg-white text-slate-900 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent appearance-none cursor-pointer"
                       >
                         <option value="UTC">UTC</option>
                         <option value="America/New_York">America/New_York</option>
@@ -537,12 +533,13 @@ export default function ServerSettings() {
                               configuration: {
                                 ...settings.configuration,
                                 timezone: timezone,
-                                botNickname: settings.configuration?.botNickname || ''
+                                botNickname: settings.configuration?.botNickname || '',
+                                updatesChannel: settings.configuration?.updatesChannel || ''
                               }
                             });
                           }
                         }}
-                        className="px-6 py-2.5 bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg transition-colors"
+                        className="px-6 py-2.5 bg-orange-500 hover:bg-orange-600 text-white font-medium rounded-lg transition-colors"
                       >
                         Detect
                       </button>
@@ -564,7 +561,8 @@ export default function ServerSettings() {
                             prefix: settings.prefix,
                             configuration: {
                               botNickname: settings.configuration?.botNickname,
-                              timezone: settings.configuration?.timezone
+                              timezone: settings.configuration?.timezone,
+                              updatesChannel: settings.configuration?.updatesChannel
                             }
                           })
                         });
@@ -579,7 +577,7 @@ export default function ServerSettings() {
                       }
                     }}
                     disabled={saving}
-                    className="bg-red-500 hover:bg-red-600 text-white px-8 py-2.5 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-2.5 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {saving ? 'Saving...' : 'Save'}
                   </button>
