@@ -37,16 +37,6 @@ interface ServerStats {
   roles: number | null;
 }
 
-interface ActivityItem {
-  id: string;
-  type: 'ban' | 'members' | 'automod' | 'activity' | 'role';
-  title: string;
-  description: string;
-  timestamp: string;
-  icon: string;
-  iconColor: string;
-}
-
 export default function ServerSettings() {
   const { data: session, status } = useSession();
   const { guildId } = useParams();
@@ -137,55 +127,6 @@ export default function ServerSettings() {
         console.error(err);
       });
   }, [session, status, guildId, router]);
-
-  // Mock activity data - in production, this would come from your backend
-  const recentActivity: ActivityItem[] = [
-    {
-      id: '1',
-      type: 'ban',
-      title: 'User Banned',
-      description: '@ModTeam banned @SpamUser123 for spam',
-      timestamp: '5 minutes ago',
-      icon: '🚫',
-      iconColor: 'bg-red-100 text-red-600'
-    },
-    {
-      id: '2',
-      type: 'members',
-      title: 'New Members',
-      description: '15 new members joined the server',
-      timestamp: '23 minutes ago',
-      icon: '✅',
-      iconColor: 'bg-green-100 text-green-600'
-    },
-    {
-      id: '3',
-      type: 'automod',
-      title: 'Automod Alert',
-      description: 'Deleted 8 spam messages in #general',
-      timestamp: '1 hour ago',
-      icon: '⚠️',
-      iconColor: 'bg-yellow-100 text-yellow-600'
-    },
-    {
-      id: '4',
-      type: 'activity',
-      title: 'Server Activity Peak',
-      description: 'Reached 420 active users simultaneously',
-      timestamp: '2 hours ago',
-      icon: '📊',
-      iconColor: 'bg-blue-100 text-blue-600'
-    },
-    {
-      id: '5',
-      type: 'role',
-      title: 'Role Update',
-      description: '@Admin updated moderator permissions',
-      timestamp: '3 hours ago',
-      icon: '🛡️',
-      iconColor: 'bg-purple-100 text-purple-600'
-    }
-  ];
 
   if (loading) {
     return <div className="flex min-h-screen items-center justify-center text-[#0f172a]">Loading...</div>;
@@ -467,24 +408,182 @@ export default function ServerSettings() {
             </div>
           </div>
 
-          {/* Two Column Layout for Recent Activity and Quick Actions */}
+          {/* Two Column Layout for Bot Settings and Quick Actions */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Recent Activity - Takes 2 columns */}
+            {/* Bot Settings - Takes 2 columns */}
             <div className="lg:col-span-2 bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
-              <h2 className="text-xl font-bold text-slate-900 mb-6">Recent Activity</h2>
-              <div className="space-y-4">
-                {recentActivity.map((activity) => (
-                  <div key={activity.id} className="flex items-start gap-4 pb-4 border-b border-gray-100 last:border-0 last:pb-0">
-                    <div className={`w-10 h-10 ${activity.iconColor} rounded-lg flex items-center justify-center flex-shrink-0`}>
-                      <span className="text-lg">{activity.icon}</span>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-slate-900 mb-1">{activity.title}</h3>
-                      <p className="text-sm text-slate-600 mb-1">{activity.description}</p>
-                      <p className="text-xs text-slate-400">{activity.timestamp}</p>
+              <h2 className="text-xl font-bold text-slate-900 mb-6">BOT SETTINGS</h2>
+              
+              <div className="space-y-6">
+                {/* Disable Warnings Checkbox */}
+                <div className="flex items-start gap-3">
+                  <input
+                    type="checkbox"
+                    id="disableWarnings"
+                    className="mt-1 w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
+                  />
+                  <label htmlFor="disableWarnings" className="text-sm text-slate-600 cursor-pointer">
+                    Disable warnings for disabled commands/modules
+                  </label>
+                </div>
+
+                {/* Two Column Grid for Form Fields */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Command Prefix */}
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                      Command Prefix
+                    </label>
+                    <input
+                      type="text"
+                      value={settings?.prefix || '!'}
+                      onChange={(e) => {
+                        if (settings) {
+                          setSettings({ ...settings, prefix: e.target.value });
+                        }
+                      }}
+                      className="w-full px-4 py-2.5 bg-slate-700 text-white border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      placeholder="!"
+                    />
+                  </div>
+
+                  {/* Nickname */}
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                      Nickname
+                    </label>
+                    <input
+                      type="text"
+                      value={settings?.configuration?.botNickname || ''}
+                      onChange={(e) => {
+                        if (settings) {
+                          setSettings({
+                            ...settings,
+                            configuration: {
+                              ...settings.configuration,
+                              botNickname: e.target.value,
+                              timezone: settings.configuration?.timezone || 'UTC'
+                            }
+                          });
+                        }
+                      }}
+                      className="w-full px-4 py-2.5 bg-slate-700 text-white border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      placeholder="Enter bot nickname"
+                    />
+                  </div>
+
+                  {/* Updates Channel */}
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                      Updates Channel
+                    </label>
+                    <select className="w-full px-4 py-2.5 bg-slate-700 text-slate-400 border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent appearance-none cursor-pointer">
+                      <option>Select...</option>
+                      {channels.map((channel) => (
+                        <option key={channel.id} value={channel.id}>
+                          #{channel.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Manager Roles */}
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                      Manager Roles (Owner/Administrator Only)
+                    </label>
+                    <select className="w-full px-4 py-2.5 bg-slate-700 text-slate-400 border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent appearance-none cursor-pointer">
+                      <option>Select...</option>
+                    </select>
+                  </div>
+
+                  {/* Timezone with Detect Button */}
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                      Timezone
+                    </label>
+                    <div className="flex gap-3">
+                      <select
+                        value={settings?.configuration?.timezone || 'UTC'}
+                        onChange={(e) => {
+                          if (settings) {
+                            setSettings({
+                              ...settings,
+                              configuration: {
+                                ...settings.configuration,
+                                timezone: e.target.value,
+                                botNickname: settings.configuration?.botNickname || ''
+                              }
+                            });
+                          }
+                        }}
+                        className="flex-1 px-4 py-2.5 bg-slate-700 text-white border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent appearance-none cursor-pointer"
+                      >
+                        <option value="UTC">UTC</option>
+                        <option value="America/New_York">America/New_York</option>
+                        <option value="America/Los_Angeles">America/Los_Angeles</option>
+                        <option value="America/Chicago">America/Chicago</option>
+                        <option value="Europe/London">Europe/London</option>
+                        <option value="Europe/Paris">Europe/Paris</option>
+                        <option value="Asia/Tokyo">Asia/Tokyo</option>
+                        <option value="Australia/Sydney">Australia/Sydney</option>
+                      </select>
+                      <button
+                        onClick={() => {
+                          const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                          if (settings) {
+                            setSettings({
+                              ...settings,
+                              configuration: {
+                                ...settings.configuration,
+                                timezone: timezone,
+                                botNickname: settings.configuration?.botNickname || ''
+                              }
+                            });
+                          }
+                        }}
+                        className="px-6 py-2.5 bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg transition-colors"
+                      >
+                        Detect
+                      </button>
                     </div>
                   </div>
-                ))}
+                </div>
+
+                {/* Save Button */}
+                <div className="pt-2">
+                  <button
+                    onClick={async () => {
+                      if (!settings) return;
+                      setSaving(true);
+                      try {
+                        const res = await fetch(`/api/servers/${guildId}/settings`, {
+                          method: 'PUT',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({
+                            prefix: settings.prefix,
+                            configuration: {
+                              botNickname: settings.configuration?.botNickname,
+                              timezone: settings.configuration?.timezone
+                            }
+                          })
+                        });
+                        if (res.ok) {
+                          alert('Settings saved successfully!');
+                        }
+                      } catch (error) {
+                        console.error('Failed to save settings:', error);
+                        alert('Failed to save settings');
+                      } finally {
+                        setSaving(false);
+                      }
+                    }}
+                    disabled={saving}
+                    className="bg-red-500 hover:bg-red-600 text-white px-8 py-2.5 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {saving ? 'Saving...' : 'Save'}
+                  </button>
+                </div>
               </div>
             </div>
 
