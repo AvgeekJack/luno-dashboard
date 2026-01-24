@@ -359,26 +359,7 @@ export default function ServerSettings() {
           </div>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-
-            {/* Bot Status Card */}
-            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex items-start justify-between mb-4">
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors ${
-                  botOnline === null ? 'bg-gray-400' : botOnline ? 'bg-green-500' : 'bg-red-500'
-                }`}>
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                </div>
-              </div>
-              <div className="text-sm text-slate-500 mb-1">Bot Status</div>
-              <div className={`text-3xl font-bold transition-colors ${
-                botOnline === null ? 'text-gray-500' : botOnline ? 'text-green-600' : 'text-red-600'
-              }`}>
-                {botOnline === null ? 'Loading...' : botOnline ? 'Online' : 'Offline'}
-              </div>
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
             {/* Total Members Card */}
             <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
