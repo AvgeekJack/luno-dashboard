@@ -348,14 +348,16 @@ export default function NotificationsPage() {
                 </div>
               </div>
 
-              <div className="bg-blue-50 border border-blue-200 rounded-md p-3">
-                <p className="text-sm text-blue-900 font-medium mb-1">Available Variables:</p>
-                <div className="text-sm text-blue-800 space-y-1">
-                  <div><code className="bg-blue-100 px-1 rounded">{'{user}'}</code> - Mentions the user</div>
-                  <div><code className="bg-blue-100 px-1 rounded">{'{server}'}</code> - Server name</div>
-                  <div><code className="bg-blue-100 px-1 rounded">{'{memberCount}'}</code> - Total member count</div>
+              {premium && (
+                <div className="bg-blue-50 border border-blue-200 rounded-md p-3">
+                  <p className="text-sm text-blue-900 font-medium mb-1">Available Variables:</p>
+                  <div className="text-sm text-blue-800 space-y-1">
+                    <div><code className="bg-blue-100 px-1 rounded">{'{user}'}</code> - Mentions the user</div>
+                    <div><code className="bg-blue-100 px-1 rounded">{'{server}'}</code> - Server name</div>
+                    <div><code className="bg-blue-100 px-1 rounded">{'{memberCount}'}</code> - Total member count</div>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
             <div>
