@@ -8,6 +8,7 @@ import Link from 'next/link';
 interface Settings {
   guildId: string;
   prefix: string;
+  premium?: boolean;
   configuration?: {
     botNickname: string;
     timezone: string;
@@ -389,18 +390,18 @@ export default function ServerSettings() {
               <div className="text-3xl font-bold text-slate-900">{stats?.presences ?? '—'}</div>
             </div>
 
-            {/* Text Channels Card */}
+            {/* Premium Status Card */}
             <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
               <div className="flex items-start justify-between mb-4">
-                <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center">
+                <div className={`w-12 h-12 ${settings?.premium ? 'bg-yellow-500' : 'bg-slate-400'} rounded-xl flex items-center justify-center`}>
                   <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
                   </svg>
                 </div>
               </div>
-              <div className="text-sm text-slate-500 mb-1">Text Channels</div>
+              <div className="text-sm text-slate-500 mb-1">Premium Status</div>
               <div className="text-3xl font-bold text-slate-900">
-                {stats?.textChannels?.toLocaleString() ?? '—'}
+                {settings?.premium ? 'Server Enrolled' : 'Not Enrolled'}
               </div>
             </div>
 

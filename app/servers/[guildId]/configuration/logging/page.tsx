@@ -650,54 +650,7 @@ export default function LoggingPage() {
             </div>
           )}
 
-          {/* Member Logs Card */}
-          {settings.enabled && (
-            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
-              <div className="mb-6">
-                <h2 className="text-lg font-semibold text-[#0f172a]">Member Logs</h2>
-                <p className="text-sm text-slate-500">Member activity</p>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                  <div className="flex-1">
-                    <p className="font-semibold text-slate-900">Member Log Channel</p>
-                    <p className="text-sm text-slate-500">All member events will be logged here</p>
-                  </div>
-                  <select 
-                    value={settings.memberChannel || ''} 
-                    onChange={(e) => updateSetting('memberChannel', e.target.value || null)}
-                    className="w-full sm:w-48 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  >
-                    <option value="">Select channel...</option>
-                    {channels.map(ch => (
-                      <option key={ch.id} value={ch.id}>#{ch.name}</option>
-                    ))}
-                  </select>
-                </div>
-
-                {[
-                  { key: 'memberJoin', label: 'Member Join', desc: 'New members joining' },
-                  { key: 'memberLeave', label: 'Member Leave', desc: 'Members leaving/kicked/banned' },
-                  { key: 'roleUpdates', label: 'Role Updates', desc: 'Role additions/removals to members' },
-                  { key: 'nicknameChanges', label: 'Nickname Changes', desc: 'Nickname updates (by user or staff)' },
-                  { key: 'usernameChanges', label: 'Username Changes', desc: 'Username changes (when Discord updates)' },
-                ].map(item => (
-                  <div key={item.key} className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                    <Switch 
-                      checked={!!settings[`${item.key}Enabled` as keyof LoggingSettings]} 
-                      onCheckedChange={(checked) => updateSetting(`${item.key}Enabled` as any, checked)}
-                    />
-                    <div className="flex-1">
-                      <p className="font-semibold text-slate-900">{item.label}</p>
-                      <p className="text-sm text-slate-500">{item.desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
+      
           {/* Message Logs Card */}
           {settings.enabled && (
             <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
