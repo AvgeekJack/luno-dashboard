@@ -450,9 +450,9 @@ export default function ReactionRolesPage() {
           </div>
 
           {settings.enabled && (
-            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
-              <div className="space-y-6">
-                {/* Panels Management */}
+            <>
+              {/* Panels Management */}
+              <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <h3 className="text-lg font-semibold text-[#0f172a]">Reaction Role Panels</h3>
@@ -757,40 +757,42 @@ export default function ReactionRolesPage() {
                     )}
                   </div>
                 </div>
+              </div>
 
-                {/* Role Assignment Settings */}
-                <div className="space-y-4 border-t border-orange-100 pt-8">
+              {/* Role Assignment Settings */}
+              <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+                <div className="space-y-4">
                   <h3 className="text-lg font-semibold text-[#0f172a]">Role Assignment Settings</h3>
                   
                   <div className="grid md:grid-cols-2 gap-4">
-                    <div className="p-4 rounded-lg border border-orange-100 space-y-2">
+                    <div className="p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
                       <label className="block text-sm font-semibold text-slate-800">Role Limit Per User</label>
                       <input 
                         type="number" 
                         value={settings.roleLimit} 
                         onChange={(e) => updateSetting('roleLimit', parseInt(e.target.value) || 0)}
-                        className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm"
+                        className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm"
                         min="0"
                       />
                       <p className="text-xs text-slate-500">Maximum roles from a single panel (0 = unlimited)</p>
                     </div>
 
-                    <div className="relative p-4 rounded-lg border border-orange-100 space-y-2">
+                    <div className="relative p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
                       <label className="block text-sm font-semibold text-slate-800">Required Role</label>
                       <button
                         onClick={() => setShowRequiredRoleDropdown(!showRequiredRoleDropdown)}
-                        className="w-full px-3 py-2 border-2 border-dashed border-orange-300 rounded-lg text-sm text-left hover:border-orange-400 transition bg-orange-50/50"
+                        className="w-full px-3 py-2 border-2 border-dashed border-slate-300 rounded-lg text-sm text-left hover:border-slate-400 transition bg-white"
                       >
                         {settings.requiredRole ? getRoleName(settings.requiredRole) : '+ Select Role (Optional)'}
                       </button>
                       {showRequiredRoleDropdown && (
-                        <div className="absolute z-50 left-0 right-0 mt-2 bg-white border border-orange-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                        <div className="absolute z-50 left-0 right-0 mt-2 bg-white border border-slate-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                           <button
                             onClick={() => {
                               updateSetting('requiredRole', null);
                               setShowRequiredRoleDropdown(false);
                             }}
-                            className="w-full px-4 py-2 text-left hover:bg-orange-50 text-sm transition text-slate-500"
+                            className="w-full px-4 py-2 text-left hover:bg-slate-50 text-sm transition text-slate-500"
                           >
                             None
                           </button>
@@ -801,7 +803,7 @@ export default function ReactionRolesPage() {
                                 updateSetting('requiredRole', role.id);
                                 setShowRequiredRoleDropdown(false);
                               }}
-                              className="w-full px-4 py-2 text-left hover:bg-orange-50 text-sm transition"
+                              className="w-full px-4 py-2 text-left hover:bg-slate-50 text-sm transition"
                             >
                               {role.name}
                             </button>
@@ -812,13 +814,13 @@ export default function ReactionRolesPage() {
                     </div>
                   </div>
 
-                  <div className="relative p-4 rounded-lg border border-orange-100 space-y-2">
+                  <div className="relative p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
                     <label className="block text-sm font-semibold text-slate-800">Blacklisted Roles</label>
                     <div className="space-y-2">
                       {settings.blacklistedRoles.length > 0 && (
-                        <div className="flex flex-wrap gap-2 p-3 bg-slate-50 rounded-lg border border-slate-200">
+                        <div className="flex flex-wrap gap-2 p-3 bg-white rounded-lg border border-slate-300">
                           {settings.blacklistedRoles.map(roleId => (
-                            <div key={roleId} className="px-3 py-1 bg-white border border-slate-300 rounded-full text-sm flex items-center gap-2">
+                            <div key={roleId} className="px-3 py-1 bg-slate-50 border border-slate-300 rounded-full text-sm flex items-center gap-2">
                               <span className="font-medium">{getRoleName(roleId)}</span>
                               <button
                                 onClick={() => updateSetting('blacklistedRoles', settings.blacklistedRoles.filter(r => r !== roleId))}
@@ -832,12 +834,12 @@ export default function ReactionRolesPage() {
                       )}
                       <button
                         onClick={() => setShowBlacklistDropdown(!showBlacklistDropdown)}
-                        className="w-full px-3 py-2 border-2 border-dashed border-orange-300 rounded-lg text-sm text-left hover:border-orange-400 transition bg-orange-50/50"
+                        className="w-full px-3 py-2 border-2 border-dashed border-slate-300 rounded-lg text-sm text-left hover:border-slate-400 transition bg-white"
                       >
                         + Add Blacklisted Role
                       </button>
                       {showBlacklistDropdown && (
-                        <div className="absolute z-50 left-0 right-0 mt-2 bg-white border border-orange-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                        <div className="absolute z-50 left-0 right-0 mt-2 bg-white border border-slate-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                           {roles.filter(r => !settings.blacklistedRoles.includes(r.id)).map(role => (
                             <button
                               key={role.id}
@@ -845,7 +847,7 @@ export default function ReactionRolesPage() {
                                 updateSetting('blacklistedRoles', [...settings.blacklistedRoles, role.id]);
                                 setShowBlacklistDropdown(false);
                               }}
-                              className="w-full px-4 py-2 text-left hover:bg-orange-50 text-sm transition"
+                              className="w-full px-4 py-2 text-left hover:bg-slate-50 text-sm transition"
                             >
                               {role.name}
                             </button>
@@ -856,7 +858,7 @@ export default function ReactionRolesPage() {
                     <p className="text-xs text-slate-500">Users with these roles cannot access reaction roles</p>
                   </div>
 
-                  <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
+                  <div className="flex items-center justify-between p-4 rounded-lg border border-slate-200 bg-slate-50">
                     <div>
                       <p className="font-semibold text-slate-800 text-sm">Allow Role Stacking</p>
                       <p className="text-xs text-slate-500">Can user have multiple roles from same panel</p>
@@ -867,13 +869,66 @@ export default function ReactionRolesPage() {
                     />
                   </div>
                 </div>
+              </div>
 
-                {/* Advanced Options */}
-                <div className="space-y-4 border-t border-orange-100 pt-8">
+              {/* Advanced Options */}
+              <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8 relative">
+                {!settings.premium && (
+                  <div className="absolute inset-0 bg-orange-50/95 backdrop-blur-[2px] rounded-xl z-10 flex items-center justify-center p-8">
+                    <div className="max-w-lg text-center">
+                      <div className="w-16 h-16 bg-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <img src="/premium-icon.svg" alt="Premium" className="w-10 h-10" />
+                      </div>
+                      <h3 className="text-xl font-bold text-slate-900 mb-3">Advanced Options</h3>
+                      <p className="text-slate-700 mb-6 text-sm">Unlock advanced reaction role settings including auto-delete reactions, DM notifications, role persistence, and custom cooldown timers for your server.</p>
+                      <div className="grid grid-cols-2 gap-x-8 gap-y-2 mb-6 text-left">
+                        <div className="flex items-center gap-2">
+                          <div className="w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                            </svg>
+                          </div>
+                          <span className="text-sm text-slate-800">Auto-delete reactions</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                            </svg>
+                          </div>
+                          <span className="text-sm text-slate-800">DM notifications</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                            </svg>
+                          </div>
+                          <span className="text-sm text-slate-800">Role persistence</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                            </svg>
+                          </div>
+                          <span className="text-sm text-slate-800">Reaction cooldowns</span>
+                        </div>
+                      </div>
+                      <button className="w-full px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition shadow-lg flex items-center justify-center gap-2">
+                        <img src="/premium-icon.svg" alt="" className="w-5 h-5" />
+                        Upgrade to Premium
+                        <span>→</span>
+                      </button>
+                      <p className="text-xs text-slate-600 mt-3">Starting at $4.99/month • Cancel anytime</p>
+                    </div>
+                  </div>
+                )}
+                <div className="space-y-4">
                   <h3 className="text-lg font-semibold text-[#0f172a]">Advanced Options</h3>
                   
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
+                    <div className="flex items-center justify-between p-4 rounded-lg border border-slate-200 bg-slate-50">
                       <div>
                         <p className="font-semibold text-slate-800 text-sm">Auto-delete Reactions</p>
                         <p className="text-xs text-slate-500">Remove user's reaction after role is assigned</p>
@@ -884,7 +939,7 @@ export default function ReactionRolesPage() {
                       />
                     </div>
 
-                    <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
+                    <div className="flex items-center justify-between p-4 rounded-lg border border-slate-200 bg-slate-50">
                       <div>
                         <p className="font-semibold text-slate-800 text-sm">DM on Role Change</p>
                         <p className="text-xs text-slate-500">Send user a DM when role is added/removed</p>
@@ -896,20 +951,20 @@ export default function ReactionRolesPage() {
                     </div>
 
                     {settings.dmOnRoleChange && (
-                      <div className="p-4 rounded-lg border border-orange-100 space-y-2">
+                      <div className="p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
                         <label className="block text-sm font-semibold text-slate-800">DM Message</label>
                         <textarea
                           value={settings.dmMessage}
                           onChange={(e) => updateSetting('dmMessage', e.target.value)}
                           placeholder="You have been given the {role} role!"
                           rows={2}
-                          className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm"
+                          className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm"
                         />
                         <p className="text-xs text-slate-500">Use {'{role}'} as placeholder for role name</p>
                       </div>
                     )}
 
-                    <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
+                    <div className="flex items-center justify-between p-4 rounded-lg border border-slate-200 bg-slate-50">
                       <div>
                         <p className="font-semibold text-slate-800 text-sm">Role Persistence</p>
                         <p className="text-xs text-slate-500">Re-add roles if user leaves and rejoins</p>
@@ -920,13 +975,13 @@ export default function ReactionRolesPage() {
                       />
                     </div>
 
-                    <div className="p-4 rounded-lg border border-orange-100 space-y-2">
+                    <div className="p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
                       <label className="block text-sm font-semibold text-slate-800">Reaction Cooldown</label>
                       <input 
                         type="number" 
                         value={settings.reactionCooldown} 
                         onChange={(e) => updateSetting('reactionCooldown', parseInt(e.target.value) || 0)}
-                        className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm"
+                        className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm"
                         min="0"
                       />
                       <p className="text-xs text-slate-500">Seconds between reactions (0 = no cooldown)</p>
@@ -934,7 +989,7 @@ export default function ReactionRolesPage() {
                   </div>
                 </div>
               </div>
-            </div>
+            </>
           )}
         </div>
       </main>
