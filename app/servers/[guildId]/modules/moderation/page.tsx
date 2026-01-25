@@ -289,7 +289,7 @@ export default function ModerationPage() {
       </aside>
 
       <main className="flex-1 ml-0 md:ml-64 py-12 px-4 md:px-8 pt-20 md:pt-12 flex justify-center">
-        <div className="w-full max-w-4xl space-y-6">
+        <div className="w-full max-w-6xl space-y-6">
           <div className="space-y-1">
             <p className="text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">MODULES</p>
             <h1 className="text-3xl font-bold">Moderation</h1>
@@ -301,10 +301,12 @@ export default function ModerationPage() {
                 <h2 className="text-lg font-semibold text-[#0f172a]">Moderation Commands</h2>
                 <p className="text-sm text-slate-500">Configure and manage moderation commands for your server</p>
               </div>
-              <Switch 
-                checked={moduleEnabled} 
-                onCheckedChange={handleModuleToggle}
-              />
+              <div className="pt-1">
+                <Switch 
+                  checked={moduleEnabled} 
+                  onCheckedChange={handleModuleToggle}
+                />
+              </div>
             </div>
 
             <div 
