@@ -184,8 +184,8 @@ export default function ManageSubscriptionPage() {
                 </p>
               </div>
 
-              <div> className="flex-1">
-                    <p className="font-semibold text-yellow-800">Auto-Renewal Disabled
+              <div>
+                <p className="text-sm text-slate-600 mb-1">Subscription ID</p>
                 <p className="text-sm font-mono text-slate-700">{subscription.id}</p>
               </div>
 
@@ -206,8 +206,8 @@ export default function ManageSubscriptionPage() {
                   <svg className="w-6 h-6 text-yellow-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                   </svg>
-                  <div>
-                    <p className="font-semibold text-yellow-800">Subscription Scheduled for Cancellation</p>
+                  <div className="flex-1">
+                    <p className="font-semibold text-yellow-800">Auto-Renewal Disabled</p>
                     <p className="text-sm text-yellow-700 mt-1">
                       Your subscription will end on {formatDate(subscription.currentPeriodEnd)}. You will retain access until then.
                     </p>
@@ -220,10 +220,17 @@ export default function ManageSubscriptionPage() {
           {/* Auto-Renewal Control */}
           <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
             <h3 className="text-xl font-bold text-slate-900 mb-4">Auto-Renewal</h3>
-            <p className="text-slate-600 mb-6">Need Help?</h3>
-              <p className="text-slate-600 mb-4">
-                If you have any questions about your subscription or need assistance, feel free to contact our support team.
-              </p'Your subscription will renew automatically'}
+            <p className="text-slate-600 mb-6">
+              Control whether your subscription automatically renews at the end of each billing period.
+            </p>
+            
+            <div className="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
+              <div>
+                <p className="font-semibold text-slate-900">Automatic Renewal</p>
+                <p className="text-sm text-slate-600 mt-1">
+                  {subscription.cancelAtPeriodEnd 
+                    ? 'Your subscription will not renew automatically' 
+                    : 'Your subscription will renew automatically'}
                 </p>
               </div>
               <div className="flex items-center gap-3">
@@ -251,22 +258,13 @@ export default function ManageSubscriptionPage() {
             </div>
           </div>
 
-          {/* Additional Actions */}
-          {!subscription.cancelAtPeriodEnd && (
-            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
-              <h3 className="text-xl font-bold text-slate-900 mb-4">Cancel Subscription</h3>
-              <p className="text-slate-600 mb-6">
-                If you cancel your subscription, you will retain access to premium features until the end of your current billing period.
-              </p>
-              <button
-                onClick={handleCancelSubscription}
-                disabled={canceling}
-                className="px-6 py-3 bg-red-500 hover:bg-red-600 disabled:bg-red-300 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition"
-              >
-                {canceling ? 'Canceling...' : 'Cancel Subscription'}
-              </button>
-            </div>
-          )}
+          {/* Help Section */}
+          <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+            <h3 className="text-xl font-bold text-slate-900 mb-4">Need Help?</h3>
+            <p className="text-slate-600 mb-4">
+              If you have any questions about your subscription or need assistance, feel free to contact our support team.
+            </p>
+          </div>
         </div>
       </div>
     </div>
