@@ -442,7 +442,7 @@ export default function AntiRaidPage() {
                     <div className="w-16 h-16 bg-orange-500 rounded-xl flex items-center justify-center mx-auto shadow-lg">
                       <img src="/premium-icon.svg" alt="Premium" className="w-10 h-10" />
                     </div>
-                    <p className="text-lg font-semibold text-slate-900">This Feature Requires A Premium Subscription</p>
+                    <p className="text-lg font-semibold text-slate-900">Custom Settings Requires A Premium Subscription</p>
                   </div>
                 </div>
               )}
