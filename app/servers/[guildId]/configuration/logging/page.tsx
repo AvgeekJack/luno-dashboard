@@ -465,30 +465,33 @@ export default function LoggingPage() {
             <h1 className="text-4xl font-bold text-[#0f172a]">Logging</h1>
           </div>
 
-          {/* Logging Configuration Card */}
-          <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8 space-y-6">
+          <div className="bg-white border border-orange-100 rounded-2xl shadow-sm p-6 md:p-8 space-y-8">
             {/* Master Toggle */}
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-lg font-semibold text-[#0f172a]">Logging Configuration</h2>
-                <p className="text-sm text-slate-500">Configure event logging for your server.</p>
+            <div className="flex items-start justify-between gap-4">
+              <div className="space-y-1">
+                <h2 className="text-xl font-semibold text-[#0f172a]">Logging Configuration</h2>
+                <p className="text-slate-600">Configure event logging for your server.</p>
               </div>
-              <Switch 
-                checked={settings.enabled} 
-                onCheckedChange={(checked) => updateSetting('enabled', checked)}
-                className="scale-125"
-              />
+              <div className="flex items-center gap-2">
+                <Switch 
+                  checked={settings.enabled} 
+                  onCheckedChange={(checked) => updateSetting('enabled', checked)}
+                  className="scale-150"
+                />
+              </div>
             </div>
-          </div>
-          </div>
 
-          {/* AutoMod Log Channel Card */}
-          {settings.enabled && (
-            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
-              <div className="mb-6">
-                <h2 className="text-lg font-semibold text-[#0f172a]">AutoMod Logging Channel</h2>
-                <p className="text-sm text-slate-500">Configure where automod violations and actions are logged. Leave empty to disable logging for AutoMod.</p>
-              </div>
+            <div 
+              className={`overflow-hidden transition-all duration-700 ${settings.enabled ? 'max-h-[50000px] opacity-100' : 'max-h-0 opacity-0'}`}
+              style={{ transitionProperty: 'max-height, opacity' }}
+            >
+              <div className="space-y-8 border-t border-orange-100 pt-8">
+                {/* AutoMod Log Channel */}
+                <div className="space-y-4 bg-amber-50 p-6 rounded-lg border border-amber-200">
+                  <div className="space-y-1">
+                    <h2 className="text-xl font-semibold text-[#0f172a]">AutoMod Logging Channel</h2>
+                    <p className="text-sm text-slate-600">Configure where automod violations and actions are logged. Leave empty to disable logging for AutoMod.</p>
+                  </div>
 
                   <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-4 rounded-lg border border-amber-200 bg-white">
                     <div className="flex-1">
@@ -1135,7 +1138,7 @@ export default function LoggingPage() {
                 </div>
               </div>
             </div>
-          )}
+          </div>
         </div>
       </main>
 
