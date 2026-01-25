@@ -61,7 +61,8 @@ export default function PremiumPage() {
 
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.error || 'Failed to create checkout session');
+        const errorMessage = errorData.details || errorData.message || errorData.error || 'Failed to create checkout session';
+        throw new Error(errorMessage);
       }
 
       const { url } = await res.json();
