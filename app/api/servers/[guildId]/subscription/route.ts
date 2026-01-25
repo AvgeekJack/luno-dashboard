@@ -42,14 +42,17 @@ export async function GET(
       serverSettings.stripeSubscriptionId
     );
 
+    // Cast to access properties
+    const sub = subscription as any;
+
     // Return subscription details
     return NextResponse.json({
       id: subscription.id,
       status: subscription.status,
-      currentPeriodStart: (subscription as any).current_period_start,
-      currentPeriodEnd: (subscription as any).current_period_end,
-      cancelAtPeriodEnd: (subscription as any).cancel_at_period_end,
-      canceledAt: (subscription as any).canceled_at,
+      currentPeriodStart: sub.current_period_start,
+      currentPeriodEnd: sub.current_period_end,
+      cancelAtPeriodEnd: sub.cancel_at_period_end || false,
+      canceledAt: sub.canceled_at,
       amount: subscription.items.data[0]?.price.unit_amount || 0,
       currency: subscription.items.data[0]?.price.currency || 'usd',
       interval: subscription.items.data[0]?.price.recurring?.interval || 'month',

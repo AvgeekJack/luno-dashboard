@@ -24,6 +24,7 @@ export default function ManageSubscriptionPage() {
   const [loading, setLoading] = useState(true);
   const [subscription, setSubscription] = useState<SubscriptionData | null>(null);
   const [canceling, setCanceling] = useState(false);
+  const [reactivating, setReactivating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -57,7 +58,7 @@ export default function ManageSubscriptionPage() {
   }, [guildId]);
 
   const handleCancelSubscription = async () => {
-    if (!confirm('Are you sure you want to cancel your subscription? You will retain access until the end of your billing period.')) {
+    if (!confirm('Are you sure you want to turn off auto-renewal? You will retain access until the end of your billing period.')) {
       return;
     }
 
@@ -73,12 +74,34 @@ export default function ManageSubscriptionPage() {
 
       const data = await res.json();
       setSubscription(prev => prev ? { ...prev, cancelAtPeriodEnd: true } : null);
-      alert('Subscription cancelled. You will retain access until ' + new Date(data.currentPeriodEnd * 1000).toLocaleDateString());
+      alert('Auto-renewal disabled. You will retain access until ' + new Date(data.currentPeriodEnd * 1000).toLocaleDateString());
     } catch (error) {
       console.error('Failed to cancel subscription:', error);
-      alert('Failed to cancel subscription. Please try again.');
+      alert('Failed to disable auto-renewal. Please try again.');
     } finally {
       setCanceling(false);
+    }
+  };
+
+  const handleReactivateSubscription = async () => {
+    setReactivating(true);
+    try {
+      const res = await fetch(`/api/servers/${guildId}/subscription/reactivate`, {
+        method: 'POST',
+      });
+
+      if (!res.ok) {
+        throw new Error('Failed to reactivate subscription');
+      }
+
+      const data = await res.json();
+      setSubscription(prev => prev ? { ...prev, cancelAtPeriodEnd: false } : null);
+      alert('Auto-renewal enabled. Your subscription will continue after ' + new Date(data.currentPeriodEnd * 1000).toLocaleDateString());
+    } catch (error) {
+      console.error('Failed to reactivate subscription:', error);
+      alert('Failed to enable auto-renewal. Please try again.');
+    } finally {
+      setReactivating(false);
     }
   };
 
@@ -161,8 +184,8 @@ export default function ManageSubscriptionPage() {
                 </p>
               </div>
 
-              <div>
-                <p className="text-sm text-slate-600 mb-1">Subscription ID</p>
+              <div> className="flex-1">
+                    <p className="font-semibold text-yellow-800">Auto-Renewal Disabled
                 <p className="text-sm font-mono text-slate-700">{subscription.id}</p>
               </div>
 
@@ -194,7 +217,41 @@ export default function ManageSubscriptionPage() {
             )}
           </div>
 
-          {/* Actions */}
+          {/* Auto-Renewal Control */}
+          <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+            <h3 className="text-xl font-bold text-slate-900 mb-4">Auto-Renewal</h3>
+            <p className="text-slate-600 mb-6">Need Help?</h3>
+              <p className="text-slate-600 mb-4">
+                If you have any questions about your subscription or need assistance, feel free to contact our support team.
+              </p'Your subscription will renew automatically'}
+                </p>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className={`text-sm font-semibold ${subscription.cancelAtPeriodEnd ? 'text-red-600' : 'text-green-600'}`}>
+                  {subscription.cancelAtPeriodEnd ? 'OFF' : 'ON'}
+                </span>
+                {subscription.cancelAtPeriodEnd ? (
+                  <button
+                    onClick={handleReactivateSubscription}
+                    disabled={reactivating}
+                    className="px-4 py-2 bg-green-500 hover:bg-green-600 disabled:bg-green-300 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition"
+                  >
+                    {reactivating ? 'Enabling...' : 'Enable Auto-Renewal'}
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleCancelSubscription}
+                    disabled={canceling}
+                    className="px-4 py-2 bg-red-500 hover:bg-red-600 disabled:bg-red-300 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition"
+                  >
+                    {canceling ? 'Disabling...' : 'Disable Auto-Renewal'}
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Additional Actions */}
           {!subscription.cancelAtPeriodEnd && (
             <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
               <h3 className="text-xl font-bold text-slate-900 mb-4">Cancel Subscription</h3>

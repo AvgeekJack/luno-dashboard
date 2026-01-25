@@ -43,10 +43,12 @@ export async function POST(
       { cancel_at_period_end: true }
     );
 
+    const sub = subscription as any;
+
     return NextResponse.json({
       success: true,
-      cancelAtPeriodEnd: (subscription as any).cancel_at_period_end,
-      currentPeriodEnd: (subscription as any).current_period_end,
+      cancelAtPeriodEnd: sub.cancel_at_period_end,
+      currentPeriodEnd: sub.current_period_end,
     });
 
   } catch (error) {
