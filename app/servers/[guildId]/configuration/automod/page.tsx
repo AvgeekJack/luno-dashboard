@@ -478,7 +478,7 @@ export default function AutomodPage() {
 
           {/* Thresholds & Limits Card */}
           {settings.enabled && (
-          <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
             <div className="mb-6">
               <h2 className="text-lg font-semibold text-[#0f172a]">Thresholds & Limits</h2>
               <p className="text-sm text-slate-500">Configure detection sensitivity</p>
@@ -581,13 +581,12 @@ export default function AutomodPage() {
                 </div>
               </div>
             </div>
-          </div>
           )}
 
           {/* Whitelist System Card */}
           {settings.enabled && (
-          <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
-            <div className="mb-6">
+            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+              <div className="mb-6">
               <h2 className="text-lg font-semibold text-[#0f172a]">Whitelist System</h2>
               <p className="text-sm text-slate-500">Exempt channels, roles, or users</p>
             </div>
@@ -671,13 +670,12 @@ export default function AutomodPage() {
                 </div>
               </div>
             </div>
-          </div>
           )}
 
           {/* Action Settings Card */}
           {settings.enabled && (
-          <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
-            <div className="mb-6">
+            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+              <div className="mb-6">
               <h2 className="text-lg font-semibold text-[#0f172a]">Action Settings</h2>
               <p className="text-sm text-slate-500">Configure how AutoMod responds to violations</p>
             </div>
@@ -772,7 +770,6 @@ export default function AutomodPage() {
                 </div>
               </div>
             </div>
-          </div>
           )}
         </div>
       </main>
