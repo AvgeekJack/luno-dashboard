@@ -49,10 +49,14 @@ export async function GET(
       current_period_start: sub.current_period_start,
       current_period_end: sub.current_period_end,
       cancel_at_period_end: sub.cancel_at_period_end,
+      types: {
+        start: typeof sub.current_period_start,
+        end: typeof sub.current_period_end,
+      }
     });
 
     // Return subscription details with explicit number conversion
-    return NextResponse.json({
+    const responseData = {
       id: subscription.id,
       status: subscription.status,
       currentPeriodStart: Number(sub.current_period_start),
@@ -62,7 +66,11 @@ export async function GET(
       amount: subscription.items.data[0]?.price.unit_amount || 0,
       currency: subscription.items.data[0]?.price.currency || 'usd',
       interval: subscription.items.data[0]?.price.recurring?.interval || 'month',
-    });
+    };
+
+    console.log('[Subscription API] Sending response:', responseData);
+
+    return NextResponse.json(responseData);
 
   } catch (error) {
     console.error('[Subscription] Error fetching subscription:', error);

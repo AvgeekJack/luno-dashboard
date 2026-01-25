@@ -56,6 +56,7 @@ export default function ManageSubscriptionPage() {
           throw new Error('Failed to fetch subscription');
         }
         const data = await res.json();
+        console.log('[Frontend] Subscription data received:', data);
         setSubscription(data);
       } catch (error) {
         console.error('Failed to fetch subscription:', error);
@@ -70,6 +71,7 @@ export default function ManageSubscriptionPage() {
         const res = await fetch(`/api/servers/${guildId}/billing`);
         if (res.ok) {
           const data = await res.json();
+          console.log('[Frontend] Billing data received:', data);
           setBillingHistory(data.invoices || []);
         }
       } catch (error) {

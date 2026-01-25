@@ -43,6 +43,16 @@ export async function GET(
       limit: 10,
     });
 
+    console.log('[Billing API] Sample invoice data:', invoices.data[0] ? {
+      created: invoices.data[0].created,
+      period_start: invoices.data[0].period_start,
+      period_end: invoices.data[0].period_end,
+      types: {
+        created: typeof invoices.data[0].created,
+        period_start: typeof invoices.data[0].period_start,
+      }
+    } : 'No invoices');
+
     // Return invoice details with explicit number conversion
     const billingHistory = invoices.data.map((invoice: any) => ({
       id: invoice.id,
@@ -55,6 +65,8 @@ export async function GET(
       periodStart: Number(invoice.period_start),
       periodEnd: Number(invoice.period_end),
     }));
+
+    console.log('[Billing API] Sample converted data:', billingHistory[0]);
 
     return NextResponse.json({ invoices: billingHistory });
 
