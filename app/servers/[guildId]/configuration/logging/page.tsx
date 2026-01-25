@@ -465,680 +465,703 @@ export default function LoggingPage() {
             <h1 className="text-4xl font-bold text-[#0f172a]">Logging</h1>
           </div>
 
-          <div className="bg-white border border-orange-100 rounded-2xl shadow-sm p-6 md:p-8 space-y-8">
+          {/* Logging Configuration Card */}
+          <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8 space-y-6">
             {/* Master Toggle */}
-            <div className="flex items-start justify-between gap-4">
-              <div className="space-y-1">
-                <h2 className="text-xl font-semibold text-[#0f172a]">Logging Configuration</h2>
-                <p className="text-slate-600">Configure event logging for your server.</p>
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-semibold text-[#0f172a]">Logging Configuration</h2>
+                <p className="text-sm text-slate-500">Configure event logging for your server.</p>
               </div>
-              <div className="flex items-center gap-2">
-                <Switch 
-                  checked={settings.enabled} 
-                  onCheckedChange={(checked) => updateSetting('enabled', checked)}
-                  className="scale-150"
-                />
-              </div>
-            </div>
-
-            <div 
-              className={`overflow-hidden transition-all duration-700 ${settings.enabled ? 'max-h-[50000px] opacity-100' : 'max-h-0 opacity-0'}`}
-              style={{ transitionProperty: 'max-height, opacity' }}
-            >
-              <div className="space-y-8 border-t border-orange-100 pt-8">
-                {/* AutoMod Log Channel */}
-                <div className="space-y-4 bg-amber-50 p-6 rounded-lg border border-amber-200">
-                  <div className="space-y-1">
-                    <h2 className="text-xl font-semibold text-[#0f172a]">AutoMod Logging Channel</h2>
-                    <p className="text-sm text-slate-600">Configure where automod violations and actions are logged. Leave empty to disable logging for AutoMod.</p>
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-4 rounded-lg border border-amber-200 bg-white">
-                    <div className="flex-1">
-                      <p className="font-semibold text-slate-800 text-sm">AutoMod Log Channel</p>
-                      <p className="text-xs text-slate-500">All automod actions and violations will be logged here</p>
-                    </div>
-                    <select 
-                      value={settings.automodLogChannel || ''} 
-                      onChange={(e) => updateSetting('automodLogChannel', e.target.value || null)}
-                      className="w-full sm:w-48 px-3 py-2 border border-amber-300 rounded-lg text-sm bg-white"
-                    >
-                      <option value="">Select channel...</option>
-                      {channels.map(ch => (
-                        <option key={ch.id} value={ch.id}>#{ch.name}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3 p-4 rounded-lg border border-amber-100">
-                      <button type="button" onClick={() => updateSetting('logAutomodViolations', !settings.logAutomodViolations)}
-                        className={`${settings.logAutomodViolations ? 'bg-amber-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
-                        <span className={`${settings.logAutomodViolations ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
-                      </button>
-                      <div className="flex-1">
-                        <p className="font-semibold text-slate-800 text-sm">Log AutoMod Violations</p>
-                        <p className="text-xs text-slate-500">Track when users trigger automod filters</p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-3 p-4 rounded-lg border border-amber-100">
-                      <button type="button" onClick={() => updateSetting('logAutomodActions', !settings.logAutomodActions)}
-                        className={`${settings.logAutomodActions ? 'bg-amber-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
-                        <span className={`${settings.logAutomodActions ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
-                      </button>
-                      <div className="flex-1">
-                        <p className="font-semibold text-slate-800 text-sm">Log AutoMod Actions</p>
-                        <p className="text-xs text-slate-500">Track actions taken by automod (deletes, timeouts, etc.)</p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-3 p-4 rounded-lg border border-amber-100">
-                      <button type="button" onClick={() => updateSetting('logAutomodFilters', !settings.logAutomodFilters)}
-                        className={`${settings.logAutomodFilters ? 'bg-amber-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
-                        <span className={`${settings.logAutomodFilters ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
-                      </button>
-                      <div className="flex-1">
-                        <p className="font-semibold text-slate-800 text-sm">Log Filter Triggers</p>
-                        <p className="text-xs text-slate-500">Log which specific filters were triggered</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Anti-Raid Log Channel */}
-                <div className="space-y-4 bg-red-50 p-6 rounded-lg border border-red-200">
-                  <div className="space-y-1">
-                    <h2 className="text-xl font-semibold text-[#0f172a]">Anti-Raid Alert Channel</h2>
-                    <p className="text-sm text-slate-600">Configure where anti-raid alerts and actions are logged. Leave empty to disable alerts for Anti-Raid.</p>
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-4 rounded-lg border border-red-200 bg-white">
-                    <div className="flex-1">
-                      <p className="font-semibold text-slate-800 text-sm">Anti-Raid Alert Channel</p>
-                      <p className="text-xs text-slate-500">All anti-raid detections and actions will be logged here</p>
-                    </div>
-                    <select 
-                      value={settings.antiRaidChannel || ''} 
-                      onChange={(e) => updateSetting('antiRaidChannel', e.target.value || null)}
-                      className="w-full sm:w-48 px-3 py-2 border border-red-300 rounded-lg text-sm bg-white"
-                    >
-                      <option value="">Select channel...</option>
-                      {channels.map(ch => (
-                        <option key={ch.id} value={ch.id}>#{ch.name}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3 p-4 rounded-lg border border-red-100">
-                      <button type="button" onClick={() => updateSetting('logRaidDetections', !settings.logRaidDetections)}
-                        className={`${settings.logRaidDetections ? 'bg-red-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
-                        <span className={`${settings.logRaidDetections ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
-                      </button>
-                      <div className="flex-1">
-                        <p className="font-semibold text-slate-800 text-sm">Log Raid Detections</p>
-                        <p className="text-xs text-slate-500">Track when potential raids are detected</p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-3 p-4 rounded-lg border border-red-100">
-                      <button type="button" onClick={() => updateSetting('logRaidActions', !settings.logRaidActions)}
-                        className={`${settings.logRaidActions ? 'bg-red-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
-                        <span className={`${settings.logRaidActions ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
-                      </button>
-                      <div className="flex-1">
-                        <p className="font-semibold text-slate-800 text-sm">Log Anti-Raid Actions</p>
-                        <p className="text-xs text-slate-500">Track actions taken during raid mitigation (kicks, bans, lockdowns)</p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-3 p-4 rounded-lg border border-red-100">
-                      <button type="button" onClick={() => updateSetting('logJoinPatterns', !settings.logJoinPatterns)}
-                        className={`${settings.logJoinPatterns ? 'bg-red-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
-                        <span className={`${settings.logJoinPatterns ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
-                      </button>
-                      <div className="flex-1">
-                        <p className="font-semibold text-slate-800 text-sm">Log Join Patterns</p>
-                        <p className="text-xs text-slate-500">Monitor suspicious join patterns and member influx rates</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Verification Logs Section */}
-                <div className="space-y-4 bg-blue-50 p-6 rounded-lg border border-blue-200">
-                  <div className="space-y-1">
-                    <h2 className="text-xl font-semibold text-[#0f172a]">Verification Logging</h2>
-                    <p className="text-sm text-slate-600">Configure where verification events and metrics are logged. Tracks successful verifications, failures, and security events. Configure the full <Link href={`/servers/${gid}/configuration/verification`} className="text-blue-600 hover:text-blue-700 underline">Verification System</Link> settings separately.</p>
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-4 rounded-lg border border-blue-200 bg-white">
-                    <div className="flex-1">
-                      <p className="font-semibold text-slate-800 text-sm">Verification Log Channel</p>
-                      <p className="text-xs text-slate-500">All verification events will be logged here</p>
-                    </div>
-                    <select 
-                      value={settings.verificationChannel || ''} 
-                      onChange={(e) => updateSetting('verificationChannel', e.target.value || null)}
-                      className="w-full sm:w-48 px-3 py-2 border border-blue-300 rounded-lg text-sm bg-white"
-                    >
-                      <option value="">Select channel...</option>
-                      {channels.map(ch => (
-                        <option key={ch.id} value={ch.id}>#{ch.name}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3 p-4 rounded-lg border border-blue-100">
-                      <button type="button" onClick={() => updateSetting('trackVerificationMetrics', !settings.trackVerificationMetrics)}
-                        className={`${settings.trackVerificationMetrics ? 'bg-blue-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
-                        <span className={`${settings.trackVerificationMetrics ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
-                      </button>
-                      <div className="flex-1">
-                        <p className="font-semibold text-slate-800 text-sm">Track Verification Metrics</p>
-                        <p className="text-xs text-slate-500">Log statistics about verification success rates and timing</p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-3 p-4 rounded-lg border border-blue-100">
-                      <button type="button" onClick={() => updateSetting('logFailedVerificationAttempts', !settings.logFailedVerificationAttempts)}
-                        className={`${settings.logFailedVerificationAttempts ? 'bg-blue-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
-                        <span className={`${settings.logFailedVerificationAttempts ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
-                      </button>
-                      <div className="flex-1">
-                        <p className="font-semibold text-slate-800 text-sm">Log Failed Verification Attempts</p>
-                        <p className="text-xs text-slate-500">Track users who fail verification (account age, rules agreement, etc.)</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Moderation Logs Section */}
-                <div className="space-y-4">
-                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-                    <div className="space-y-1">
-                      <h2 className="text-xl font-semibold text-[#0f172a]">Moderation Logs</h2>
-                      <p className="text-sm text-slate-600">Actions by staff members</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-slate-600 whitespace-nowrap">Log to:</span>
-                      <select 
-                        value={settings.moderationChannel || ''} 
-                        onChange={(e) => updateSetting('moderationChannel', e.target.value || null)}
-                        className="flex-1 md:w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white"
-                      >
-                        <option value="">Select channel...</option>
-                        {channels.map(ch => (
-                          <option key={ch.id} value={ch.id}>#{ch.name}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="grid gap-3">
-                    {[
-                      { key: 'warns', label: 'Warns', desc: 'User warnings issued' },
-                      { key: 'kicks', label: 'Kicks', desc: 'User kicks' },
-                      { key: 'bans', label: 'Bans', desc: 'User bans' },
-                      { key: 'unbans', label: 'Unbans', desc: 'User unbans' },
-                      { key: 'timeouts', label: 'Timeouts/Mutes', desc: 'Temporary mutes/timeouts' },
-                      { key: 'untimeouts', label: 'Untimeouts/Unmutes', desc: 'Mute removals' },
-                      { key: 'softbans', label: 'Softbans', desc: 'Softbans (kick + delete messages)' },
-                      { key: 'channelLocks', label: 'Channel Locks', desc: 'Channel lock/unlock actions' },
-                      { key: 'lockdowns', label: 'Lockdowns', desc: 'Server lockdown/unlockdown' },
-                      { key: 'slowmode', label: 'Slowmode', desc: 'Slowmode changes' },
-                      { key: 'messagePurge', label: 'Message Purge/Clear', desc: 'Bulk message deletions' },
-                    ].map(item => (
-                      <div key={item.key} className="flex items-center gap-3 p-4 rounded-lg border border-orange-100">
-                        <button type="button" onClick={() => updateSetting(`${item.key}Enabled` as any, !settings[`${item.key}Enabled` as keyof LoggingSettings])}
-                          className={`${settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
-                          <span className={`${settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
-                        </button>
-                        <div className="flex-1">
-                          <p className="font-semibold text-slate-800 text-sm">{item.label}</p>
-                          <p className="text-xs text-slate-500">{item.desc}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Member Logs Section */}
-                <div className="space-y-4 border-t border-orange-100 pt-8">
-                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-                    <div className="space-y-1">
-                      <h2 className="text-xl font-semibold text-[#0f172a]">Member Logs</h2>
-                      <p className="text-sm text-slate-600">Member activity</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-slate-600 whitespace-nowrap">Log to:</span>
-                      <select 
-                        value={settings.memberChannel || ''} 
-                        onChange={(e) => updateSetting('memberChannel', e.target.value || null)}
-                        className="flex-1 md:w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white"
-                      >
-                        <option value="">Select channel...</option>
-                        {channels.map(ch => (
-                          <option key={ch.id} value={ch.id}>#{ch.name}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="grid gap-3">
-                    {[
-                      { key: 'memberJoin', label: 'Member Join', desc: 'New members joining' },
-                      { key: 'memberLeave', label: 'Member Leave', desc: 'Members leaving/kicked/banned' },
-                      { key: 'roleUpdates', label: 'Role Updates', desc: 'Role additions/removals to members' },
-                      { key: 'nicknameChanges', label: 'Nickname Changes', desc: 'Nickname updates (by user or staff)' },
-                      { key: 'usernameChanges', label: 'Username Changes', desc: 'Username changes (when Discord updates)' },
-                    ].map(item => (
-                      <div key={item.key} className="flex items-center gap-3 p-4 rounded-lg border border-orange-100">
-                        <button type="button" onClick={() => updateSetting(`${item.key}Enabled` as any, !settings[`${item.key}Enabled` as keyof LoggingSettings])}
-                          className={`${settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
-                          <span className={`${settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
-                        </button>
-                        <div className="flex-1">
-                          <p className="font-semibold text-slate-800 text-sm">{item.label}</p>
-                          <p className="text-xs text-slate-500">{item.desc}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Message Logs Section */}
-                <div className="space-y-4 border-t border-orange-100 pt-8">
-                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-                    <div className="space-y-1">
-                      <h2 className="text-xl font-semibold text-[#0f172a]">Message Logs</h2>
-                      <p className="text-sm text-slate-600">Message activity</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-slate-600 whitespace-nowrap">Log to:</span>
-                      <select 
-                        value={settings.messageChannel || ''} 
-                        onChange={(e) => updateSetting('messageChannel', e.target.value || null)}
-                        className="flex-1 md:w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white"
-                      >
-                        <option value="">Select channel...</option>
-                        {channels.map(ch => (
-                          <option key={ch.id} value={ch.id}>#{ch.name}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="grid gap-3">
-                    {[
-                      { key: 'messageDelete', label: 'Message Delete', desc: 'Deleted messages (with content)' },
-                      { key: 'messageEdit', label: 'Message Edit', desc: 'Edited messages (before/after)' },
-                      { key: 'messageAttachments', label: 'Message Attachments', desc: 'Track image/file shares' },
-                    ].map(item => (
-                      <div key={item.key} className="flex items-center gap-3 p-4 rounded-lg border border-orange-100">
-                        <button type="button" onClick={() => updateSetting(`${item.key}Enabled` as any, !settings[`${item.key}Enabled` as keyof LoggingSettings])}
-                          className={`${settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
-                          <span className={`${settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
-                        </button>
-                        <div className="flex-1">
-                          <p className="font-semibold text-slate-800 text-sm">{item.label}</p>
-                          <p className="text-xs text-slate-500">{item.desc}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Channel Logs Section */}
-                <div className="space-y-4 border-t border-orange-100 pt-8">
-                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-                    <div className="space-y-1">
-                      <h2 className="text-xl font-semibold text-[#0f172a]">Channel Logs</h2>
-                      <p className="text-sm text-slate-600">Server structure</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-slate-600 whitespace-nowrap">Log to:</span>
-                      <select 
-                        value={settings.channelLogsChannel || ''} 
-                        onChange={(e) => updateSetting('channelLogsChannel', e.target.value || null)}
-                        className="flex-1 md:w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white"
-                      >
-                        <option value="">Select channel...</option>
-                        {channels.map(ch => (
-                          <option key={ch.id} value={ch.id}>#{ch.name}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="grid gap-3">
-                    {[
-                      { key: 'channelCreate', label: 'Channel Create', desc: 'New channels created' },
-                      { key: 'channelDelete', label: 'Channel Delete', desc: 'Channels deleted' },
-                      { key: 'channelUpdate', label: 'Channel Update', desc: 'Channel name, topic, permissions changed' },
-                    ].map(item => (
-                      <div key={item.key} className="flex items-center gap-3 p-4 rounded-lg border border-orange-100">
-                        <button type="button" onClick={() => updateSetting(`${item.key}Enabled` as any, !settings[`${item.key}Enabled` as keyof LoggingSettings])}
-                          className={`${settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
-                          <span className={`${settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
-                        </button>
-                        <div className="flex-1">
-                          <p className="font-semibold text-slate-800 text-sm">{item.label}</p>
-                          <p className="text-xs text-slate-500">{item.desc}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Role Logs Section */}
-                <div className="space-y-4 border-t border-orange-100 pt-8">
-                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-                    <div className="space-y-1">
-                      <h2 className="text-xl font-semibold text-[#0f172a]">Role Logs</h2>
-                      <p className="text-sm text-slate-600">Role management</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-slate-600 whitespace-nowrap">Log to:</span>
-                      <select 
-                        value={settings.roleLogsChannel || ''} 
-                        onChange={(e) => updateSetting('roleLogsChannel', e.target.value || null)}
-                        className="flex-1 md:w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white"
-                      >
-                        <option value="">Select channel...</option>
-                        {channels.map(ch => (
-                          <option key={ch.id} value={ch.id}>#{ch.name}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="grid gap-3">
-                    {[
-                      { key: 'roleCreate', label: 'Role Create', desc: 'New roles created' },
-                      { key: 'roleRemove', label: 'Role Remove', desc: 'Roles deleted' },
-                      { key: 'roleUpdate', label: 'Role Update', desc: 'Role permissions, color, name changed' },
-                    ].map(item => (
-                      <div key={item.key} className="flex items-center gap-3 p-4 rounded-lg border border-orange-100">
-                        <button type="button" onClick={() => updateSetting(`${item.key}Enabled` as any, !settings[`${item.key}Enabled` as keyof LoggingSettings])}
-                          className={`${settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
-                          <span className={`${settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
-                        </button>
-                        <div className="flex-1">
-                          <p className="font-semibold text-slate-800 text-sm">{item.label}</p>
-                          <p className="text-xs text-slate-500">{item.desc}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Voice Logs Section */}
-                <div className="space-y-4 border-t border-orange-100 pt-8">
-                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-                    <div className="space-y-1">
-                      <h2 className="text-xl font-semibold text-[#0f172a]">Voice Logs</h2>
-                      <p className="text-sm text-slate-600">Voice activity</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-slate-600 whitespace-nowrap">Log to:</span>
-                      <select 
-                        value={settings.voiceChannel || ''} 
-                        onChange={(e) => updateSetting('voiceChannel', e.target.value || null)}
-                        className="flex-1 md:w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white"
-                      >
-                        <option value="">Select channel...</option>
-                        {channels.map(ch => (
-                          <option key={ch.id} value={ch.id}>#{ch.name}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="grid gap-3">
-                    {[
-                      { key: 'voiceJoin', label: 'Voice Join', desc: 'User joins voice channel' },
-                      { key: 'voiceLeave', label: 'Voice Leave', desc: 'User leaves voice channel' },
-                      { key: 'voiceMove', label: 'Voice Move', desc: 'User moved between channels' },
-                      { key: 'voiceMuteDeafen', label: 'Voice Mute/Deafen', desc: 'Server mute/deafen changes' },
-                      { key: 'voiceStreaming', label: 'Voice Streaming/Video', desc: 'User starts streaming/video' },
-                    ].map(item => (
-                      <div key={item.key} className="flex items-center gap-3 p-4 rounded-lg border border-orange-100">
-                        <button type="button" onClick={() => updateSetting(`${item.key}Enabled` as any, !settings[`${item.key}Enabled` as keyof LoggingSettings])}
-                          className={`${settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
-                          <span className={`${settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
-                        </button>
-                        <div className="flex-1">
-                          <p className="font-semibold text-slate-800 text-sm">{item.label}</p>
-                          <p className="text-xs text-slate-500">{item.desc}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Server Logs Section */}
-                <div className="space-y-4 border-t border-orange-100 pt-8">
-                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-                    <div className="space-y-1">
-                      <h2 className="text-xl font-semibold text-[#0f172a]">Server Logs</h2>
-                      <p className="text-sm text-slate-600">Server changes</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-slate-600 whitespace-nowrap">Log to:</span>
-                      <select 
-                        value={settings.serverChannel || ''} 
-                        onChange={(e) => updateSetting('serverChannel', e.target.value || null)}
-                        className="flex-1 md:w-48 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white"
-                      >
-                        <option value="">Select channel...</option>
-                        {channels.map(ch => (
-                          <option key={ch.id} value={ch.id}>#{ch.name}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="grid gap-3">
-                    {[
-                      { key: 'serverUpdate', label: 'Server Update', desc: 'Server name, icon, region changed' },
-                      { key: 'emoji', label: 'Emoji Create/Delete/Update', desc: 'Emoji changes' },
-                      { key: 'sticker', label: 'Sticker Create/Delete/Update', desc: 'Sticker changes' },
-                      { key: 'webhook', label: 'Webhook Create/Delete/Update', desc: 'Webhook changes' },
-                      { key: 'invite', label: 'Invite Create/Delete', desc: 'Invite link tracking' },
-                      { key: 'integration', label: 'Integration Updates', desc: 'Bot integrations added/removed' },
-                    ].map(item => (
-                      <div key={item.key} className="flex items-center gap-3 p-4 rounded-lg border border-orange-100">
-                        <button type="button" onClick={() => updateSetting(`${item.key}Enabled` as any, !settings[`${item.key}Enabled` as keyof LoggingSettings])}
-                          className={`${settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition flex-shrink-0`}>
-                          <span className={`${settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
-                        </button>
-                        <div className="flex-1">
-                          <p className="font-semibold text-slate-800 text-sm">{item.label}</p>
-                          <p className="text-xs text-slate-500">{item.desc}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Advanced Options Section */}
-                <div className="space-y-4 border-t border-orange-100 pt-8">
-                  <div className="space-y-1">
-                    <h2 className="text-xl font-semibold text-[#0f172a]">Advanced Logging Options</h2>
-                    <p className="text-sm text-slate-600">Configure advanced logging behavior</p>
-                  </div>
-
-                  <div className="space-y-3">
-                    <div className="p-4 rounded-lg border border-orange-100 space-y-2">
-                      <label className="block text-sm font-semibold text-slate-800">Log Ignored Channels</label>
-                      <div className="space-y-2">
-                        {settings.ignoredChannels.map((channelId, idx) => (
-                          <div key={idx} className="flex items-center gap-2">
-                            <select 
-                              value={channelId} 
-                              onChange={(e) => {
-                                const newIgnored = [...settings.ignoredChannels];
-                                newIgnored[idx] = e.target.value;
-                                updateSetting('ignoredChannels', newIgnored);
-                              }}
-                              className="flex-1 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white"
-                            >
-                              <option value="">Select channel...</option>
-                              {channels.map(ch => (
-                                <option key={ch.id} value={ch.id}>#{ch.name}</option>
-                              ))}
-                            </select>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                const newIgnored = settings.ignoredChannels.filter((_, i) => i !== idx);
-                                updateSetting('ignoredChannels', newIgnored);
-                              }}
-                              className="px-3 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition text-sm font-medium"
-                            >
-                              Remove
-                            </button>
-                          </div>
-                        ))}
-                        <button
-                          type="button"
-                          onClick={() => updateSetting('ignoredChannels', [...settings.ignoredChannels, ''])}
-                          className="w-full px-3 py-2 border-2 border-dashed border-orange-300 rounded-lg text-orange-600 hover:border-orange-400 hover:text-orange-700 transition text-sm font-medium"
-                        >
-                          + Add Channel
-                        </button>
-                      </div>
-                      <p className="text-xs text-slate-500">Channels to exclude from logging</p>
-                    </div>
-
-                    <div className="p-4 rounded-lg border border-orange-100 space-y-2">
-                      <label className="block text-sm font-semibold text-slate-800">Log Ignored Roles</label>
-                      <div className="space-y-2">
-                        {settings.ignoredRoles.map((roleId, idx) => (
-                          <div key={idx} className="flex items-center gap-2">
-                            <select 
-                              value={roleId} 
-                              onChange={(e) => {
-                                const newIgnored = [...settings.ignoredRoles];
-                                newIgnored[idx] = e.target.value;
-                                updateSetting('ignoredRoles', newIgnored);
-                              }}
-                              className="flex-1 px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white"
-                            >
-                              <option value="">Select role...</option>
-                              {roles.map(role => (
-                                <option key={role.id} value={role.id}>@{role.name}</option>
-                              ))}
-                            </select>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                const newIgnored = settings.ignoredRoles.filter((_, i) => i !== idx);
-                                updateSetting('ignoredRoles', newIgnored);
-                              }}
-                              className="px-3 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition text-sm font-medium"
-                            >
-                              Remove
-                            </button>
-                          </div>
-                        ))}
-                        <button
-                          type="button"
-                          onClick={() => updateSetting('ignoredRoles', [...settings.ignoredRoles, ''])}
-                          className="w-full px-3 py-2 border-2 border-dashed border-orange-300 rounded-lg text-orange-600 hover:border-orange-400 hover:text-orange-700 transition text-sm font-medium"
-                        >
-                          + Add Role
-                        </button>
-                      </div>
-                      <p className="text-xs text-slate-500">Roles to exclude from logging (e.g., bots)</p>
-                    </div>
-
-                    <div className="p-4 rounded-lg border border-orange-100 space-y-2">
-                      <label className="block text-sm font-semibold text-slate-800">Log Ignored Users</label>
-                      <div className="space-y-2">
-                        {settings.ignoredUsers.map((userId, idx) => (
-                          <div key={idx} className="flex items-center gap-2">
-                            <input 
-                              type="text"
-                              value={userId} 
-                              onChange={(e) => {
-                                const newIgnored = [...settings.ignoredUsers];
-                                newIgnored[idx] = e.target.value;
-                                updateSetting('ignoredUsers', newIgnored);
-                              }}
-                              placeholder="Enter user ID or search..."
-                              className="flex-1 px-3 py-2 border border-orange-200 rounded-lg text-sm"
-                            />
-                            <button
-                              type="button"
-                              onClick={() => {
-                                const newIgnored = settings.ignoredUsers.filter((_, i) => i !== idx);
-                                updateSetting('ignoredUsers', newIgnored);
-                              }}
-                              className="px-3 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition text-sm font-medium"
-                            >
-                              Remove
-                            </button>
-                          </div>
-                        ))}
-                        <button
-                          type="button"
-                          onClick={() => updateSetting('ignoredUsers', [...settings.ignoredUsers, ''])}
-                          className="w-full px-3 py-2 border-2 border-dashed border-orange-300 rounded-lg text-orange-600 hover:border-orange-400 hover:text-orange-700 transition text-sm font-medium"
-                        >
-                          + Add User
-                        </button>
-                      </div>
-                      <p className="text-xs text-slate-500">Specific users to exclude (enter Discord user ID)</p>
-                    </div>
-
-                    <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
-                      <div>
-                        <p className="font-semibold text-slate-800 text-sm">Include Bot Actions</p>
-                        <p className="text-xs text-slate-500">Toggle logging bot actions</p>
-                      </div>
-                      <button type="button" onClick={() => updateSetting('includeBotActions', !settings.includeBotActions)}
-                        className={`${settings.includeBotActions ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition`}>
-                        <span className={`${settings.includeBotActions ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
-                      </button>
-                    </div>
-
-                    <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
-                      <div>
-                        <p className="font-semibold text-slate-800 text-sm">Log Message Content</p>
-                        <p className="text-xs text-slate-500">Toggle storing message content (privacy)</p>
-                      </div>
-                      <button type="button" onClick={() => updateSetting('logMessageContent', !settings.logMessageContent)}
-                        className={`${settings.logMessageContent ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition`}>
-                        <span className={`${settings.logMessageContent ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
-                      </button>
-                    </div>
-
-                    <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
-                      <div>
-                        <p className="font-semibold text-slate-800 text-sm">Log Embed/Attachment URLs</p>
-                        <p className="text-xs text-slate-500">Store links from deleted messages</p>
-                      </div>
-                      <button type="button" onClick={() => updateSetting('logEmbedUrls', !settings.logEmbedUrls)}
-                        className={`${settings.logEmbedUrls ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition`}>
-                        <span className={`${settings.logEmbedUrls ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
-                      </button>
-                    </div>
-
-                    <div className="p-4 rounded-lg border border-orange-100 space-y-2">
-                      <label className="block text-sm font-semibold text-slate-800">Retention Period</label>
-                      <input type="number" value={settings.retentionPeriod} onChange={(e) => updateSetting('retentionPeriod', parseInt(e.target.value))}
-                        className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm" min="1" max="365" />
-                      <p className="text-xs text-slate-500">How long to keep logs (days)</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <Switch 
+                checked={settings.enabled} 
+                onCheckedChange={(checked) => updateSetting('enabled', checked)}
+                className="scale-125"
+              />
             </div>
           </div>
+
+          {/* AutoMod Log Channel Card */}
+          {settings.enabled && (
+            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+              <div className="mb-6">
+                <h2 className="text-lg font-semibold text-[#0f172a]">AutoMod Logging Channel</h2>
+                <p className="text-sm text-slate-500">Configure where automod violations and actions are logged. Leave empty to disable logging for AutoMod.</p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
+                  <div className="flex-1">
+                    <p className="font-semibold text-slate-900">AutoMod Log Channel</p>
+                    <p className="text-sm text-slate-500">All automod actions and violations will be logged here</p>
+                  </div>
+                  <select 
+                    value={settings.automodLogChannel || ''} 
+                    onChange={(e) => updateSetting('automodLogChannel', e.target.value || null)}
+                    className="w-full sm:w-48 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  >
+                    <option value="">Select channel...</option>
+                    {channels.map(ch => (
+                      <option key={ch.id} value={ch.id}>#{ch.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
+                  <Switch 
+                    checked={settings.logAutomodViolations} 
+                    onCheckedChange={(checked) => updateSetting('logAutomodViolations', checked)}
+                  />
+                  <div className="flex-1">
+                    <p className="font-semibold text-slate-900">Log AutoMod Violations</p>
+                    <p className="text-sm text-slate-500">Track when users trigger automod filters</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
+                  <Switch 
+                    checked={settings.logAutomodActions} 
+                    onCheckedChange={(checked) => updateSetting('logAutomodActions', checked)}
+                  />
+                  <div className="flex-1">
+                    <p className="font-semibold text-slate-900">Log AutoMod Actions</p>
+                    <p className="text-sm text-slate-500">Track actions taken by automod (deletes, timeouts, etc.)</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
+                  <Switch 
+                    checked={settings.logAutomodFilters} 
+                    onCheckedChange={(checked) => updateSetting('logAutomodFilters', checked)}
+                  />
+                  <div className="flex-1">
+                    <p className="font-semibold text-slate-900">Log Filter Triggers</p>
+                    <p className="text-sm text-slate-500">Log which specific filters were triggered</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Anti-Raid Alert Channel Card */}
+          {settings.enabled && (
+            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+              <div className="mb-6">
+                <h2 className="text-lg font-semibold text-[#0f172a]">Anti-Raid Alert Channel</h2>
+                <p className="text-sm text-slate-500">Configure where anti-raid alerts and actions are logged. Leave empty to disable alerts for Anti-Raid.</p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
+                  <div className="flex-1">
+                    <p className="font-semibold text-slate-900">Anti-Raid Alert Channel</p>
+                    <p className="text-sm text-slate-500">All anti-raid detections and actions will be logged here</p>
+                  </div>
+                  <select 
+                    value={settings.antiRaidChannel || ''} 
+                    onChange={(e) => updateSetting('antiRaidChannel', e.target.value || null)}
+                    className="w-full sm:w-48 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  >
+                    <option value="">Select channel...</option>
+                    {channels.map(ch => (
+                      <option key={ch.id} value={ch.id}>#{ch.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
+                  <Switch 
+                    checked={settings.logRaidDetections} 
+                    onCheckedChange={(checked) => updateSetting('logRaidDetections', checked)}
+                  />
+                  <div className="flex-1">
+                    <p className="font-semibold text-slate-900">Log Raid Detections</p>
+                    <p className="text-sm text-slate-500">Record when potential raids are detected</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
+                  <Switch 
+                    checked={settings.logRaidActions} 
+                    onCheckedChange={(checked) => updateSetting('logRaidActions', checked)}
+                  />
+                  <div className="flex-1">
+                    <p className="font-semibold text-slate-900">Log Raid Actions</p>
+                    <p className="text-sm text-slate-500">Log actions taken in response to raids</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Verification Log Channel Card */}
+          {settings.enabled && (
+            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+              <div className="mb-6">
+                <h2 className="text-lg font-semibold text-[#0f172a]">Verification Log Channel</h2>
+                <p className="text-sm text-slate-500">Configure where verification events are logged. Leave empty to disable Verification logs.</p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
+                  <div className="flex-1">
+                    <p className="font-semibold text-slate-900">Verification Log Channel</p>
+                    <p className="text-sm text-slate-500">User verification successes and failures will be logged here</p>
+                  </div>
+                  <select 
+                    value={settings.verificationChannel || ''} 
+                    onChange={(e) => updateSetting('verificationChannel', e.target.value || null)}
+                    className="w-full sm:w-48 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  >
+                    <option value="">Select channel...</option>
+                    {channels.map(ch => (
+                      <option key={ch.id} value={ch.id}>#{ch.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
+                  <Switch 
+                    checked={settings.trackVerificationMetrics} 
+                    onCheckedChange={(checked) => updateSetting('trackVerificationMetrics', checked)}
+                  />
+                  <div className="flex-1">
+                    <p className="font-semibold text-slate-900">Track Verification Metrics</p>
+                    <p className="text-sm text-slate-500">Log statistics about verification success rates and timing</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
+                  <Switch 
+                    checked={settings.logFailedVerificationAttempts} 
+                    onCheckedChange={(checked) => updateSetting('logFailedVerificationAttempts', checked)}
+                  />
+                  <div className="flex-1">
+                    <p className="font-semibold text-slate-900">Log Failed Verification Attempts</p>
+                    <p className="text-sm text-slate-500">Track users who fail verification (account age, rules agreement, etc.)</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Moderation Logs Card */}
+          {settings.enabled && (
+            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+              <div className="mb-6">
+                <h2 className="text-lg font-semibold text-[#0f172a]">Moderation Logs</h2>
+                <p className="text-sm text-slate-500">Actions by staff members</p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
+                  <div className="flex-1">
+                    <p className="font-semibold text-slate-900">Moderation Log Channel</p>
+                    <p className="text-sm text-slate-500">All moderation actions will be logged here</p>
+                  </div>
+                  <select 
+                    value={settings.moderationChannel || ''} 
+                    onChange={(e) => updateSetting('moderationChannel', e.target.value || null)}
+                    className="w-full sm:w-48 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  >
+                    <option value="">Select channel...</option>
+                    {channels.map(ch => (
+                      <option key={ch.id} value={ch.id}>#{ch.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {[
+                  { key: 'warns', label: 'Warns', desc: 'User warnings issued' },
+                  { key: 'kicks', label: 'Kicks', desc: 'User kicks' },
+                  { key: 'bans', label: 'Bans', desc: 'User bans' },
+                  { key: 'unbans', label: 'Unbans', desc: 'User unbans' },
+                  { key: 'timeouts', label: 'Timeouts/Mutes', desc: 'Temporary mutes/timeouts' },
+                  { key: 'untimeouts', label: 'Untimeouts/Unmutes', desc: 'Mute removals' },
+                  { key: 'softbans', label: 'Softbans', desc: 'Softbans (kick + delete messages)' },
+                  { key: 'channelLocks', label: 'Channel Locks', desc: 'Channel lock/unlock actions' },
+                  { key: 'lockdowns', label: 'Lockdowns', desc: 'Server lockdown/unlockdown' },
+                  { key: 'slowmode', label: 'Slowmode', desc: 'Slowmode changes' },
+                  { key: 'messagePurge', label: 'Message Purge/Clear', desc: 'Bulk message deletions' },
+                ].map(item => (
+                  <div key={item.key} className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
+                    <Switch 
+                      checked={!!settings[`${item.key}Enabled` as keyof LoggingSettings]} 
+                      onCheckedChange={(checked) => updateSetting(`${item.key}Enabled` as any, checked)}
+                    />
+                    <div className="flex-1">
+                      <p className="font-semibold text-slate-900">{item.label}</p>
+                      <p className="text-sm text-slate-500">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Member Logs Card */}
+          {settings.enabled && (
+            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+              <div className="mb-6">
+                <h2 className="text-lg font-semibold text-[#0f172a]">Member Logs</h2>
+                <p className="text-sm text-slate-500">Member activity</p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
+                  <div className="flex-1">
+                    <p className="font-semibold text-slate-900">Member Log Channel</p>
+                    <p className="text-sm text-slate-500">All member events will be logged here</p>
+                  </div>
+                  <select 
+                    value={settings.memberChannel || ''} 
+                    onChange={(e) => updateSetting('memberChannel', e.target.value || null)}
+                    className="w-full sm:w-48 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  >
+                    <option value="">Select channel...</option>
+                    {channels.map(ch => (
+                      <option key={ch.id} value={ch.id}>#{ch.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {[
+                  { key: 'memberJoin', label: 'Member Join', desc: 'New members joining' },
+                  { key: 'memberLeave', label: 'Member Leave', desc: 'Members leaving/kicked/banned' },
+                  { key: 'roleUpdates', label: 'Role Updates', desc: 'Role additions/removals to members' },
+                  { key: 'nicknameChanges', label: 'Nickname Changes', desc: 'Nickname updates (by user or staff)' },
+                  { key: 'usernameChanges', label: 'Username Changes', desc: 'Username changes (when Discord updates)' },
+                ].map(item => (
+                  <div key={item.key} className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
+                    <Switch 
+                      checked={!!settings[`${item.key}Enabled` as keyof LoggingSettings]} 
+                      onCheckedChange={(checked) => updateSetting(`${item.key}Enabled` as any, checked)}
+                    />
+                    <div className="flex-1">
+                      <p className="font-semibold text-slate-900">{item.label}</p>
+                      <p className="text-sm text-slate-500">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Message Logs Card */}
+          {settings.enabled && (
+            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+              <div className="mb-6">
+                <h2 className="text-lg font-semibold text-[#0f172a]">Message Logs</h2>
+                <p className="text-sm text-slate-500">Message activity</p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
+                  <div className="flex-1">
+                    <p className="font-semibold text-slate-900">Message Log Channel</p>
+                    <p className="text-sm text-slate-500">All message events will be logged here</p>
+                  </div>
+                  <select 
+                    value={settings.messageChannel || ''} 
+                    onChange={(e) => updateSetting('messageChannel', e.target.value || null)}
+                    className="w-full sm:w-48 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  >
+                    <option value="">Select channel...</option>
+                    {channels.map(ch => (
+                      <option key={ch.id} value={ch.id}>#{ch.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {[
+                  { key: 'messageDelete', label: 'Message Delete', desc: 'Deleted messages (with content)' },
+                  { key: 'messageEdit', label: 'Message Edit', desc: 'Edited messages (before/after)' },
+                  { key: 'messageAttachments', label: 'Message Attachments', desc: 'Track image/file shares' },
+                ].map(item => (
+                  <div key={item.key} className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
+                    <Switch 
+                      checked={!!settings[`${item.key}Enabled` as keyof LoggingSettings]} 
+                      onCheckedChange={(checked) => updateSetting(`${item.key}Enabled` as any, checked)}
+                    />
+                    <div className="flex-1">
+                      <p className="font-semibold text-slate-900">{item.label}</p>
+                      <p className="text-sm text-slate-500">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Channel Logs Card */}
+          {settings.enabled && (
+            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+              <div className="mb-6">
+                <h2 className="text-lg font-semibold text-[#0f172a]">Channel Logs</h2>
+                <p className="text-sm text-slate-500">Server structure</p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
+                  <div className="flex-1">
+                    <p className="font-semibold text-slate-900">Channel Log Channel</p>
+                    <p className="text-sm text-slate-500">All channel events will be logged here</p>
+                  </div>
+                  <select 
+                    value={settings.channelLogsChannel || ''} 
+                    onChange={(e) => updateSetting('channelLogsChannel', e.target.value || null)}
+                    className="w-full sm:w-48 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  >
+                    <option value="">Select channel...</option>
+                    {channels.map(ch => (
+                      <option key={ch.id} value={ch.id}>#{ch.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {[
+                  { key: 'channelCreate', label: 'Channel Create', desc: 'New channels created' },
+                  { key: 'channelDelete', label: 'Channel Delete', desc: 'Channels deleted' },
+                  { key: 'channelUpdate', label: 'Channel Update', desc: 'Channel name, topic, permissions changed' },
+                ].map(item => (
+                  <div key={item.key} className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
+                    <Switch 
+                      checked={!!settings[`${item.key}Enabled` as keyof LoggingSettings]} 
+                      onCheckedChange={(checked) => updateSetting(`${item.key}Enabled` as any, checked)}
+                    />
+                    <div className="flex-1">
+                      <p className="font-semibold text-slate-900">{item.label}</p>
+                      <p className="text-sm text-slate-500">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Role Logs Card */}
+          {settings.enabled && (
+            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+              <div className="mb-6">
+                <h2 className="text-lg font-semibold text-[#0f172a]">Role Logs</h2>
+                <p className="text-sm text-slate-500">Role management</p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
+                  <div className="flex-1">
+                    <p className="font-semibold text-slate-900">Role Log Channel</p>
+                    <p className="text-sm text-slate-500">All role events will be logged here</p>
+                  </div>
+                  <select 
+                    value={settings.roleLogsChannel || ''} 
+                    onChange={(e) => updateSetting('roleLogsChannel', e.target.value || null)}
+                    className="w-full sm:w-48 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  >
+                    <option value="">Select channel...</option>
+                    {channels.map(ch => (
+                      <option key={ch.id} value={ch.id}>#{ch.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {[
+                  { key: 'roleCreate', label: 'Role Create', desc: 'New roles created' },
+                  { key: 'roleRemove', label: 'Role Remove', desc: 'Roles deleted' },
+                  { key: 'roleUpdate', label: 'Role Update', desc: 'Role permissions, color, name changed' },
+                ].map(item => (
+                  <div key={item.key} className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
+                    <Switch 
+                      checked={!!settings[`${item.key}Enabled` as keyof LoggingSettings]} 
+                      onCheckedChange={(checked) => updateSetting(`${item.key}Enabled` as any, checked)}
+                    />
+                    <div className="flex-1">
+                      <p className="font-semibold text-slate-900">{item.label}</p>
+                      <p className="text-sm text-slate-500">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Voice Logs Card */}
+          {settings.enabled && (
+            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+              <div className="mb-6">
+                <h2 className="text-lg font-semibold text-[#0f172a]">Voice Logs</h2>
+                <p className="text-sm text-slate-500">Voice activity</p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
+                  <div className="flex-1">
+                    <p className="font-semibold text-slate-900">Voice Log Channel</p>
+                    <p className="text-sm text-slate-500">All voice events will be logged here</p>
+                  </div>
+                  <select 
+                    value={settings.voiceChannel || ''} 
+                    onChange={(e) => updateSetting('voiceChannel', e.target.value || null)}
+                    className="w-full sm:w-48 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  >
+                    <option value="">Select channel...</option>
+                    {channels.map(ch => (
+                      <option key={ch.id} value={ch.id}>#{ch.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {[
+                  { key: 'voiceJoin', label: 'Voice Join', desc: 'User joins voice channel' },
+                  { key: 'voiceLeave', label: 'Voice Leave', desc: 'User leaves voice channel' },
+                  { key: 'voiceMove', label: 'Voice Move', desc: 'User moved between channels' },
+                  { key: 'voiceMuteDeafen', label: 'Voice Mute/Deafen', desc: 'Server mute/deafen changes' },
+                  { key: 'voiceStreaming', label: 'Voice Streaming/Video', desc: 'User starts streaming/video' },
+                ].map(item => (
+                  <div key={item.key} className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
+                    <Switch 
+                      checked={!!settings[`${item.key}Enabled` as keyof LoggingSettings]} 
+                      onCheckedChange={(checked) => updateSetting(`${item.key}Enabled` as any, checked)}
+                    />
+                    <div className="flex-1">
+                      <p className="font-semibold text-slate-900">{item.label}</p>
+                      <p className="text-sm text-slate-500">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Server Logs Card */}
+          {settings.enabled && (
+            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+              <div className="mb-6">
+                <h2 className="text-lg font-semibold text-[#0f172a]">Server Logs</h2>
+                <p className="text-sm text-slate-500">Server changes</p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
+                  <div className="flex-1">
+                    <p className="font-semibold text-slate-900">Server Log Channel</p>
+                    <p className="text-sm text-slate-500">All server events will be logged here</p>
+                  </div>
+                  <select 
+                    value={settings.serverChannel || ''} 
+                    onChange={(e) => updateSetting('serverChannel', e.target.value || null)}
+                    className="w-full sm:w-48 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  >
+                    <option value="">Select channel...</option>
+                    {channels.map(ch => (
+                      <option key={ch.id} value={ch.id}>#{ch.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {[
+                  { key: 'serverUpdate', label: 'Server Update', desc: 'Server name, icon, region changed' },
+                  { key: 'emoji', label: 'Emoji Create/Delete/Update', desc: 'Emoji changes' },
+                  { key: 'sticker', label: 'Sticker Create/Delete/Update', desc: 'Sticker changes' },
+                  { key: 'webhook', label: 'Webhook Create/Delete/Update', desc: 'Webhook changes' },
+                  { key: 'invite', label: 'Invite Create/Delete', desc: 'Invite link tracking' },
+                  { key: 'integration', label: 'Integration Updates', desc: 'Bot integrations added/removed' },
+                ].map(item => (
+                  <div key={item.key} className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
+                    <Switch 
+                      checked={!!settings[`${item.key}Enabled` as keyof LoggingSettings]} 
+                      onCheckedChange={(checked) => updateSetting(`${item.key}Enabled` as any, checked)}
+                    />
+                    <div className="flex-1">
+                      <p className="font-semibold text-slate-900">{item.label}</p>
+                      <p className="text-sm text-slate-500">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Advanced Options Card */}
+          {settings.enabled && (
+            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+              <div className="mb-6">
+                <h2 className="text-lg font-semibold text-[#0f172a]">Advanced Logging Options</h2>
+                <p className="text-sm text-slate-500">Configure advanced logging behavior</p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="p-5 rounded-lg bg-slate-50 border border-slate-200 space-y-3">
+                  <label className="block font-semibold text-slate-900">Log Ignored Channels</label>
+                  <div className="space-y-2">
+                    {settings.ignoredChannels.map((channelId, idx) => (
+                      <div key={idx} className="flex items-center gap-2">
+                        <select 
+                          value={channelId} 
+                          onChange={(e) => {
+                            const newIgnored = [...settings.ignoredChannels];
+                            newIgnored[idx] = e.target.value;
+                            updateSetting('ignoredChannels', newIgnored);
+                          }}
+                          className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        >
+                          <option value="">Select channel...</option>
+                          {channels.map(ch => (
+                            <option key={ch.id} value={ch.id}>#{ch.name}</option>
+                          ))}
+                        </select>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const newIgnored = settings.ignoredChannels.filter((_, i) => i !== idx);
+                            updateSetting('ignoredChannels', newIgnored);
+                          }}
+                          className="px-3 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition text-sm font-medium"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => updateSetting('ignoredChannels', [...settings.ignoredChannels, ''])}
+                      className="w-full px-3 py-2 border-2 border-dashed border-slate-300 rounded-lg text-slate-600 hover:border-slate-400 hover:text-slate-700 transition text-sm font-medium"
+                    >
+                      + Add Channel
+                    </button>
+                  </div>
+                  <p className="text-sm text-slate-500">Channels to exclude from logging</p>
+                </div>
+
+                <div className="p-5 rounded-lg bg-slate-50 border border-slate-200 space-y-3">
+                  <label className="block font-semibold text-slate-900">Log Ignored Roles</label>
+                  <div className="space-y-2">
+                    {settings.ignoredRoles.map((roleId, idx) => (
+                      <div key={idx} className="flex items-center gap-2">
+                        <select 
+                          value={roleId} 
+                          onChange={(e) => {
+                            const newIgnored = [...settings.ignoredRoles];
+                            newIgnored[idx] = e.target.value;
+                            updateSetting('ignoredRoles', newIgnored);
+                          }}
+                          className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        >
+                          <option value="">Select role...</option>
+                          {roles.map(role => (
+                            <option key={role.id} value={role.id}>@{role.name}</option>
+                          ))}
+                        </select>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const newIgnored = settings.ignoredRoles.filter((_, i) => i !== idx);
+                            updateSetting('ignoredRoles', newIgnored);
+                          }}
+                          className="px-3 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition text-sm font-medium"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => updateSetting('ignoredRoles', [...settings.ignoredRoles, ''])}
+                      className="w-full px-3 py-2 border-2 border-dashed border-slate-300 rounded-lg text-slate-600 hover:border-slate-400 hover:text-slate-700 transition text-sm font-medium"
+                    >
+                      + Add Role
+                    </button>
+                  </div>
+                  <p className="text-sm text-slate-500">Roles to exclude from logging (e.g., bots)</p>
+                </div>
+
+                <div className="p-5 rounded-lg bg-slate-50 border border-slate-200 space-y-3">
+                  <label className="block font-semibold text-slate-900">Log Ignored Users</label>
+                  <div className="space-y-2">
+                    {settings.ignoredUsers.map((userId, idx) => (
+                      <div key={idx} className="flex items-center gap-2">
+                        <input 
+                          type="text"
+                          value={userId} 
+                          onChange={(e) => {
+                            const newIgnored = [...settings.ignoredUsers];
+                            newIgnored[idx] = e.target.value;
+                            updateSetting('ignoredUsers', newIgnored);
+                          }}
+                          placeholder="Enter user ID or search..."
+                          className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const newIgnored = settings.ignoredUsers.filter((_, i) => i !== idx);
+                            updateSetting('ignoredUsers', newIgnored);
+                          }}
+                          className="px-3 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition text-sm font-medium"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => updateSetting('ignoredUsers', [...settings.ignoredUsers, ''])}
+                      className="w-full px-3 py-2 border-2 border-dashed border-slate-300 rounded-lg text-slate-600 hover:border-slate-400 hover:text-slate-700 transition text-sm font-medium"
+                    >
+                      + Add User
+                    </button>
+                  </div>
+                  <p className="text-sm text-slate-500">Specific users to exclude (enter Discord user ID)</p>
+                </div>
+
+                <div className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
+                  <Switch 
+                    checked={settings.includeBotActions} 
+                    onCheckedChange={(checked) => updateSetting('includeBotActions', checked)}
+                  />
+                  <div className="flex-1">
+                    <p className="font-semibold text-slate-900">Include Bot Actions</p>
+                    <p className="text-sm text-slate-500">Toggle logging bot actions</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
+                  <Switch 
+                    checked={settings.logMessageContent} 
+                    onCheckedChange={(checked) => updateSetting('logMessageContent', checked)}
+                  />
+                  <div className="flex-1">
+                    <p className="font-semibold text-slate-900">Log Message Content</p>
+                    <p className="text-sm text-slate-500">Toggle storing message content (privacy)</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
+                  <Switch 
+                    checked={settings.logEmbedUrls} 
+                    onCheckedChange={(checked) => updateSetting('logEmbedUrls', checked)}
+                  />
+                  <div className="flex-1">
+                    <p className="font-semibold text-slate-900">Log Embed/Attachment URLs</p>
+                    <p className="text-sm text-slate-500">Store links from deleted messages</p>
+                  </div>
+                </div>
+
+                <div className="p-5 rounded-lg bg-slate-50 border border-slate-200 space-y-3">
+                  <label className="block font-semibold text-slate-900">Retention Period</label>
+                  <input 
+                    type="number" 
+                    value={settings.retentionPeriod} 
+                    onChange={(e) => updateSetting('retentionPeriod', parseInt(e.target.value))}
+                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500" 
+                    min="1" 
+                    max="365" 
+                  />
+                  <p className="text-sm text-slate-500">How long to keep logs (days)</p>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </main>
 
