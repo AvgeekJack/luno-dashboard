@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter, useParams, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import confetti from 'canvas-confetti';
 
 export default function PremiumPage() {
   const { data: session, status } = useSession();
@@ -35,6 +36,11 @@ export default function PremiumPage() {
           const data = await res.json();
           setPremium(data.premium || false);
           setServerName(data.serverName || 'Server');
+          
+          // Trigger confetti if premium
+          if (data.premium) {
+            triggerConfetti();
+          }
         }
       } catch (error) {
         console.error('Failed to fetch settings:', error);
@@ -47,6 +53,39 @@ export default function PremiumPage() {
       fetchData();
     }
   }, [guildId]);
+
+  const triggerConfetti = () => {
+    const duration = 3000;
+    const animationEnd = Date.now() + duration;
+    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+    const randomInRange = (min: number, max: number) => {
+      return Math.random() * (max - min) + min;
+    };
+
+    const interval: any = setInterval(() => {
+      const timeLeft = animationEnd - Date.now();
+
+      if (timeLeft <= 0) {
+        return clearInterval(interval);
+      }
+
+      const particleCount = 50 * (timeLeft / duration);
+
+      confetti({
+        ...defaults,
+        particleCount,
+        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+        colors: ['#ff6b35', '#f7931e', '#fbb034', '#ffcc00', '#fff'],
+      });
+      confetti({
+        ...defaults,
+        particleCount,
+        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+        colors: ['#ff6b35', '#f7931e', '#fbb034', '#ffcc00', '#fff'],
+      });
+    }, 250);
+  };
 
   const handleCheckout = async () => {
     if (!guildId || checkoutLoading) return;
