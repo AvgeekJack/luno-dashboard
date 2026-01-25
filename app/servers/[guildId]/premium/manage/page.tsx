@@ -144,14 +144,17 @@ export default function ManageSubscriptionPage() {
       return 'Invalid Date';
     }
     
-    // Stripe timestamps are in seconds, but check if it's already in milliseconds
-    // If the timestamp is less than a reasonable date (year 2000 = 946684800 seconds),
-    // it's likely in seconds and needs to be converted
-    const milliseconds = numTimestamp < 10000000000 ? numTimestamp * 1000 : numTimestamp;
-    console.log('milliseconds:', milliseconds);
+    // Try direct conversion first (assume it's already milliseconds)
+    let date = new Date(numTimestamp);
+    console.log('Direct date conversion:', date, 'isValid:', !isNaN(date.getTime()));
     
-    const date = new Date(milliseconds);
-    console.log('date object:', date, 'isValid:', !isNaN(date.getTime()));
+    // If the year is before 2000, it's probably in seconds, multiply by 1000
+    if (date.getFullYear() < 2000) {
+      console.log('Year < 2000, multiplying by 1000');
+      numTimestamp = numTimestamp * 1000;
+      date = new Date(numTimestamp);
+      console.log('After multiplication:', date);
+    }
     
     if (isNaN(date.getTime())) {
       console.error('Invalid date created from timestamp:', numTimestamp);
