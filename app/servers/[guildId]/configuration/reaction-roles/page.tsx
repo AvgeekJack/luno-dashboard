@@ -428,6 +428,8 @@ export default function ReactionRolesPage() {
           </div>
 
           {settings.enabled && (
+            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+              <div className="space-y-6">
                 {/* Panels Management */}
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
@@ -863,9 +865,9 @@ export default function ReactionRolesPage() {
                     </div>
                   </div>
                 </div>
-              )}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </main>
 

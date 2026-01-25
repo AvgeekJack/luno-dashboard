@@ -328,8 +328,10 @@ export default function VerificationPage() {
           </div>
 
           {settings.enabled && (
-            {/* Info Box about Verification Logs */}
-            <div className="p-4 rounded-lg border border-blue-200 bg-blue-50 space-y-2">
+            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+              <div className="space-y-6">
+                {/* Info Box about Verification Logs */}
+                <div className="p-4 rounded-lg border border-blue-200 bg-blue-50 space-y-2">
               <div className="flex items-start gap-2">
                 <svg className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -731,9 +733,9 @@ export default function VerificationPage() {
                     </div>
                   </div>
                 </div>
-              )}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </main>
 
