@@ -459,7 +459,7 @@ export default function LoggingPage() {
       </aside>
 
       <main className="flex-1 md:ml-64 py-12 px-4 md:px-8 pt-20 md:pt-12 flex justify-center">
-        <div className="w-full max-w-5xl space-y-6">
+        <div className="w-full max-w-7xl space-y-6">
           <div className="space-y-1">
             <p className="text-xs uppercase tracking-[0.15em] text-orange-500 font-semibold">CONFIGURATION</p>
             <h1 className="text-4xl font-bold text-[#0f172a]">Logging</h1>
@@ -481,8 +481,10 @@ export default function LoggingPage() {
             </div>
           </div>
 
-          {/* AutoMod Log Channel Card */}
-          {settings.enabled && (
+          {/* Grid Container for Logging Sections */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* AutoMod Log Channel Card */}
+            {settings.enabled && (
             <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
               <div className="mb-6">
                 <h2 className="text-lg font-semibold text-[#0f172a]">AutoMod Logging Channel</h2>
@@ -981,8 +983,9 @@ export default function LoggingPage() {
               </div>
             </div>
           )}
+          </div>
 
-          {/* Advanced Options Card */}
+          {/* Advanced Options Card - Full Width */}
           {settings.enabled && (
             <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
               <div className="mb-6">
