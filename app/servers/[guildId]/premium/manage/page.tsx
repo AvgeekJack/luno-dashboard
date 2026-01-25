@@ -132,11 +132,18 @@ export default function ManageSubscriptionPage() {
   };
 
   const formatDate = (timestamp: number) => {
-    return new Date(timestamp * 1000).toLocaleDateString('en-US', {
+    console.log('formatDate input:', timestamp, 'type:', typeof timestamp);
+    const milliseconds = timestamp * 1000;
+    console.log('milliseconds:', milliseconds);
+    const date = new Date(milliseconds);
+    console.log('date object:', date, 'isValid:', !isNaN(date.getTime()));
+    const formatted = date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
     });
+    console.log('formatted:', formatted);
+    return formatted;
   };
 
   const formatAmount = (amount: number, currency: string) => {
@@ -152,16 +159,71 @@ export default function ManageSubscriptionPage() {
 
   if (error || !subscription) {
     return (
-      <div className="flex min-h-screen items-center justify-center text-[#0f172a] p-4">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">No Active Subscription</h1>
-          <p className="text-slate-600 mb-6">{error || 'No subscription found for this server.'}</p>
-          <Link
-            href={`/servers/${guildId}/premium`}
-            className="inline-block px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition"
-          >
-            Back to Premium
-          </Link>
+      <div className="min-h-screen bg-[#f8f9fa] text-[#0f172a] py-12 px-4 md:px-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="mb-6">
+            <Link
+              href={`/servers/${guildId}/premium`}
+              className="text-orange-600 font-semibold hover:text-orange-700 transition-colors"
+            >
+              ← Back to Premium
+            </Link>
+          </div>
+
+          <div className="space-y-6">
+            <div>
+              <h1 className="text-3xl font-bold">Manage Subscription</h1>
+              <p className="text-slate-600 mt-2">View your subscription details and billing history</p>
+            </div>
+
+            {/* No Active Subscription Notice */}
+            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+              <div className="text-center py-6">
+                <h2 className="text-2xl font-bold mb-2">No Active Subscription</h2>
+                <p className="text-slate-600 mb-6">You don't currently have an active premium subscription.</p>
+                <Link
+                  href={`/servers/${guildId}/premium`}
+                  className="inline-block px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition"
+                >
+                  Subscribe to Premium
+                </Link>
+              </div>
+            </div>
+
+            {/* Billing History */}
+            {billingHistory.length > 0 && (
+              <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+                <h3 className="text-xl font-bold text-slate-900 mb-4">Billing History</h3>
+                <div className="space-y-3">
+                  {billingHistory.map((invoice) => (
+                    <div key={invoice.id} className="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
+                      <div className="flex-1">
+                        <p className="font-semibold text-slate-900">
+                          {formatAmount(invoice.amount, invoice.currency)}
+                        </p>
+                        <p className="text-sm text-slate-600">
+                          {formatDate(invoice.created)} • {invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1)}
+                        </p>
+                        <p className="text-xs text-slate-500 mt-1">
+                          Period: {formatDate(invoice.periodStart)} - {formatDate(invoice.periodEnd)}
+                        </p>
+                      </div>
+                      {invoice.hostedInvoiceUrl && (
+                        <a
+                          href={invoice.hostedInvoiceUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition text-sm"
+                        >
+                          View Invoice
+                        </a>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     );
