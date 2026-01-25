@@ -596,57 +596,6 @@ export default function LoggingPage() {
             </div>
           )}
 
-          {/* Verification Log Channel Card */}
-          {settings.enabled && (
-            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
-              <div className="mb-6">
-                <h2 className="text-lg font-semibold text-[#0f172a]">Verification Log Channel</h2>
-                <p className="text-sm text-slate-500">Configure where verification events are logged. Leave empty to disable Verification logs.</p>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                  <div className="flex-1">
-                    <p className="font-semibold text-slate-900">Verification Log Channel</p>
-                    <p className="text-sm text-slate-500">User verification successes and failures will be logged here</p>
-                  </div>
-                  <select 
-                    value={settings.verificationChannel || ''} 
-                    onChange={(e) => updateSetting('verificationChannel', e.target.value || null)}
-                    className="w-full sm:w-48 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  >
-                    <option value="">Select channel...</option>
-                    {channels.map(ch => (
-                      <option key={ch.id} value={ch.id}>#{ch.name}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                  <Switch 
-                    checked={settings.trackVerificationMetrics} 
-                    onCheckedChange={(checked) => updateSetting('trackVerificationMetrics', checked)}
-                  />
-                  <div className="flex-1">
-                    <p className="font-semibold text-slate-900">Track Verification Metrics</p>
-                    <p className="text-sm text-slate-500">Log statistics about verification success rates and timing</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                  <Switch 
-                    checked={settings.logFailedVerificationAttempts} 
-                    onCheckedChange={(checked) => updateSetting('logFailedVerificationAttempts', checked)}
-                  />
-                  <div className="flex-1">
-                    <p className="font-semibold text-slate-900">Log Failed Verification Attempts</p>
-                    <p className="text-sm text-slate-500">Track users who fail verification (account age, rules agreement, etc.)</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
           {/* Moderation Logs Card */}
           {settings.enabled && (
             <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
