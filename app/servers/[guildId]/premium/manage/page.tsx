@@ -133,7 +133,7 @@ export default function ManageSubscriptionPage() {
 
   const formatDate = (timestamp: number | string) => {
     // Convert to number if it's a string
-    const numTimestamp = typeof timestamp === 'string' ? parseInt(timestamp, 10) : timestamp;
+    let numTimestamp = typeof timestamp === 'string' ? parseInt(timestamp, 10) : timestamp;
     console.log('formatDate input:', timestamp, 'type:', typeof timestamp, 'converted:', numTimestamp);
     
     // Check if valid number
@@ -142,8 +142,10 @@ export default function ManageSubscriptionPage() {
       return 'Invalid Date';
     }
     
-    // Convert Unix timestamp (seconds) to milliseconds
-    const milliseconds = numTimestamp * 1000;
+    // Stripe timestamps are in seconds, but check if it's already in milliseconds
+    // If the timestamp is less than a reasonable date (year 2000 = 946684800 seconds),
+    // it's likely in seconds and needs to be converted
+    const milliseconds = numTimestamp < 10000000000 ? numTimestamp * 1000 : numTimestamp;
     console.log('milliseconds:', milliseconds);
     
     const date = new Date(milliseconds);
