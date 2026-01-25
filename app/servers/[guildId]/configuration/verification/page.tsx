@@ -180,7 +180,7 @@ export default function VerificationPage() {
   }
 
   return (
-    <div className="min-h-screen bg-orange-50 text-[#0f172a] flex flex-col md:flex-row">
+    <div className="min-h-screen bg-[#f8f9fa] text-[#0f172a] flex flex-col md:flex-row">
       {/* Mobile Menu Button */}
       <button 
         className="md:hidden fixed top-4 left-4 z-[60] bg-white p-2 rounded-lg shadow-lg border border-orange-100"
@@ -313,24 +313,21 @@ export default function VerificationPage() {
             <h1 className="text-3xl font-bold">Verification</h1>
           </div>
 
-          <div className="bg-white border border-orange-100 rounded-2xl shadow-sm p-6 md:p-8 space-y-8">
-            {/* Master Toggle */}
+          {/* Master Toggle Card */}
+          <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
             <div className="flex items-start justify-between gap-4">
-              <div className="space-y-1">
-                <h2 className="text-xl font-semibold text-[#0f172a]">Verification System</h2>
-                <p className="text-slate-600">Require users to verify before accessing your server</p>
+              <div>
+                <h2 className="text-lg font-semibold text-[#0f172a]">Verification System</h2>
+                <p className="text-sm text-slate-500">Require users to verify before accessing your server</p>
               </div>
               <Switch 
                 checked={settings.enabled} 
                 onCheckedChange={(checked) => updateSetting('enabled', checked)}
-                className="scale-150"
               />
             </div>
+          </div>
 
-            <div 
-              className={`overflow-hidden transition-all duration-700 ${settings.enabled ? 'max-h-[50000px] opacity-100' : 'max-h-0 opacity-0'}`}
-            >
-              <div className="space-y-8 border-t border-orange-100 pt-8 overflow-visible">
+          {settings.enabled && (
             {/* Info Box about Verification Logs */}
             <div className="p-4 rounded-lg border border-blue-200 bg-blue-50 space-y-2">
               <div className="flex items-start gap-2">
@@ -734,7 +731,7 @@ export default function VerificationPage() {
                     </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>

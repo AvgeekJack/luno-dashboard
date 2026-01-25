@@ -286,7 +286,7 @@ export default function ReactionRolesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-orange-50 text-[#0f172a] flex flex-col md:flex-row">
+    <div className="min-h-screen bg-[#f8f9fa] text-[#0f172a] flex flex-col md:flex-row">
       {/* Mobile Menu Button */}
       <button 
         className="md:hidden fixed top-4 left-4 z-[60] bg-white p-2 rounded-lg shadow-lg border border-orange-100"
@@ -413,24 +413,21 @@ export default function ReactionRolesPage() {
             <h1 className="text-3xl font-bold">Reaction Roles</h1>
           </div>
 
-          <div className="bg-white border border-orange-100 rounded-2xl shadow-sm p-6 md:p-8 space-y-8">
-            {/* Master Toggle */}
+          {/* Master Toggle Card */}
+          <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
             <div className="flex items-start justify-between gap-4">
-              <div className="space-y-1">
-                <h2 className="text-xl font-semibold text-[#0f172a]">Reaction Role System</h2>
-                <p className="text-slate-600">Allow users to assign roles by reacting to messages</p>
+              <div>
+                <h2 className="text-lg font-semibold text-[#0f172a]">Reaction Role System</h2>
+                <p className="text-sm text-slate-500">Allow users to assign roles by reacting to messages</p>
               </div>
               <Switch 
                 checked={settings.enabled} 
                 onCheckedChange={(checked) => updateSetting('enabled', checked)}
-                className="scale-150"
               />
             </div>
+          </div>
 
-            <div 
-              className={`overflow-hidden transition-all duration-700 ${settings.enabled ? 'max-h-[50000px] opacity-100' : 'max-h-0 opacity-0'}`}
-            >
-              <div className="space-y-8 border-t border-orange-100 pt-8 overflow-visible">
+          {settings.enabled && (
                 {/* Panels Management */}
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
@@ -866,7 +863,7 @@ export default function ReactionRolesPage() {
                     </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
