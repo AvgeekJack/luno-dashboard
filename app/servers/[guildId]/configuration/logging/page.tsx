@@ -112,6 +112,7 @@ export default function LoggingPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [premium, setPremium] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [configOpen, setConfigOpen] = useState(true);
   const [modulesOpen, setModulesOpen] = useState(false);
@@ -275,14 +276,23 @@ export default function LoggingPage() {
 
     const fetchSettings = async () => {
       try {
-        const response = await fetch(`/api/servers/${gid}/general`);
-        if (response.ok) {
-          const data = await response.json();
+        const [settingsRes, serverSettingsRes] = await Promise.all([
+          fetch(`/api/servers/${gid}/general`),
+          fetch(`/api/servers/${gid}/settings`)
+        ]);
+        
+        if (settingsRes.ok) {
+          const data = await settingsRes.json();
           if (data.configuration?.logging) {
             const loadedSettings = { ...settings, ...data.configuration.logging };
             setSettings(loadedSettings);
             setOriginalSettings(loadedSettings);
           }
+        }
+        
+        if (serverSettingsRes.ok) {
+          const serverData = await serverSettingsRes.json();
+          setPremium(serverData.premium || false);
         }
       } catch (err) {
         console.error(err);
@@ -889,7 +899,58 @@ export default function LoggingPage() {
 
           {/* Advanced Options Card - Full Width */}
           {settings.enabled && (
-            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8 relative">
+              {!premium && (
+                <div className="absolute inset-0 bg-orange-50/95 backdrop-blur-[2px] rounded-xl z-10 flex items-center justify-center p-8">
+                  <div className="max-w-lg text-center">
+                    <div className="w-16 h-16 bg-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                      <img src="/premium-icon.svg" alt="Premium" className="w-10 h-10" />
+                    </div>
+                    <h3 className="text-xl font-bold text-slate-900 mb-3">Advanced Logging Options</h3>
+                    <p className="text-slate-700 mb-6 text-sm">Unlock powerful logging controls including ignored channels, roles, and users, message content logging, and custom retention periods for comprehensive audit trails.</p>
+                    <div className="grid grid-cols-2 gap-x-8 gap-y-2 mb-6 text-left">
+                      <div className="flex items-center gap-2">
+                        <div className="w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+                          <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                          </svg>
+                        </div>
+                        <span className="text-sm text-slate-800">Ignored channels & roles</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+                          <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                          </svg>
+                        </div>
+                        <span className="text-sm text-slate-800">Message content logging</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+                          <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                          </svg>
+                        </div>
+                        <span className="text-sm text-slate-800">Bot action filtering</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+                          <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                          </svg>
+                        </div>
+                        <span className="text-sm text-slate-800">Custom retention periods</span>
+                      </div>
+                    </div>
+                    <button className="w-full px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition shadow-lg flex items-center justify-center gap-2">
+                      <img src="/premium-icon.svg" alt="" className="w-5 h-5" />
+                      Upgrade to Premium
+                      <span>→</span>
+                    </button>
+                    <p className="text-xs text-slate-600 mt-3">Starting at $4.99/month • Cancel anytime</p>
+                  </div>
+                </div>
+              )}
               <div className="mb-6">
                 <h2 className="text-lg font-semibold text-[#0f172a]">Advanced Logging Options</h2>
                 <p className="text-sm text-slate-500">Configure advanced logging behavior</p>
