@@ -328,24 +328,26 @@ export default function VerificationPage() {
           </div>
 
           {settings.enabled && (
-            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
-              <div className="space-y-6">
-                {/* Info Box about Verification Logs */}
+            <>
+              {/* Info Box about Verification Logs */}
+              <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
                 <div className="p-4 rounded-lg border border-blue-200 bg-blue-50 space-y-2">
-              <div className="flex items-start gap-2">
-                <svg className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <div>
-                  <p className="text-sm font-semibold text-blue-900">Verification Logging</p>
-                  <p className="text-xs text-blue-700 mt-1">
-                    Verification logs are now configured on the <Link href={`/servers/${gid}/configuration/logging`} className="font-semibold underline">Logging</Link> page under the configuration section.
-                  </p>
+                  <div className="flex items-start gap-2">
+                    <svg className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div>
+                      <p className="text-sm font-semibold text-blue-900">Verification Logging</p>
+                      <p className="text-xs text-blue-700 mt-1">
+                        Verification logs are now configured on the <Link href={`/servers/${gid}/configuration/logging`} className="font-semibold underline">Logging</Link> page under the configuration section.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
 
-                {/* Verification Method */}
+              {/* Verification Method */}
+              <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold text-[#0f172a]">Verification Method</h3>
                   
@@ -362,7 +364,7 @@ export default function VerificationPage() {
                         className={`p-4 rounded-lg border-2 transition text-left ${
                           settings.verificationMethod === method.value
                             ? 'border-orange-500 bg-orange-50'
-                            : 'border-orange-200 hover:border-orange-300'
+                            : 'border-slate-200 hover:border-slate-300'
                         }`}
                       >
                         <p className="font-bold text-sm text-slate-800">{method.label}</p>
@@ -371,22 +373,24 @@ export default function VerificationPage() {
                     ))}
                   </div>
                 </div>
+              </div>
 
-                {/* Verification Configuration */}
-                <div className="space-y-4 border-t border-orange-100 pt-8">
+              {/* Verification Configuration */}
+              <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+                <div className="space-y-4">
                   <h3 className="text-lg font-semibold text-[#0f172a]">Verification Configuration</h3>
                   
                   <div className="grid md:grid-cols-2 gap-4">
-                    <div className="relative p-4 rounded-lg border border-orange-100 space-y-2">
+                    <div className="relative p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
                       <label className="block text-sm font-semibold text-slate-800">Verification Channel *</label>
                       <button
                         onClick={() => setShowVerificationChannelDropdown(!showVerificationChannelDropdown)}
-                        className="w-full px-3 py-2 border-2 border-dashed border-orange-300 rounded-lg text-sm text-left hover:border-orange-400 transition bg-orange-50/50"
+                        className="w-full px-3 py-2 border-2 border-dashed border-slate-300 rounded-lg text-sm text-left hover:border-slate-400 transition bg-white"
                       >
                         {settings.verificationChannel ? `# ${getChannelName(settings.verificationChannel)}` : '+ Select Channel'}
                       </button>
                       {showVerificationChannelDropdown && (
-                        <div className="absolute z-50 left-0 right-0 mt-2 bg-white border border-orange-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                        <div className="absolute z-50 left-0 right-0 mt-2 bg-white border border-slate-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                           {textChannels.length === 0 ? (
                             <div className="px-4 py-2 text-sm text-slate-500">No text channels found</div>
                           ) : (
@@ -397,7 +401,7 @@ export default function VerificationPage() {
                                   updateSetting('verificationChannel', channel.id);
                                   setShowVerificationChannelDropdown(false);
                                 }}
-                                className="w-full px-4 py-2 text-left hover:bg-orange-50 text-sm transition"
+                                className="w-full px-4 py-2 text-left hover:bg-slate-50 text-sm transition"
                               >
                                 # {channel.name}
                               </button>
@@ -408,16 +412,16 @@ export default function VerificationPage() {
                       <p className="text-xs text-slate-500">Channel where verification message appears</p>
                     </div>
 
-                    <div className="relative p-4 rounded-lg border border-orange-100 space-y-2">
+                    <div className="relative p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
                       <label className="block text-sm font-semibold text-slate-800">Verified Role *</label>
                       <button
                         onClick={() => setShowVerifiedRoleDropdown(!showVerifiedRoleDropdown)}
-                        className="w-full px-3 py-2 border-2 border-dashed border-orange-300 rounded-lg text-sm text-left hover:border-orange-400 transition bg-orange-50/50"
+                        className="w-full px-3 py-2 border-2 border-dashed border-slate-300 rounded-lg text-sm text-left hover:border-slate-400 transition bg-white"
                       >
                         {settings.verifiedRole ? getRoleName(settings.verifiedRole) : '+ Select Role'}
                       </button>
                       {showVerifiedRoleDropdown && (
-                        <div className="absolute z-50 left-0 right-0 mt-2 bg-white border border-orange-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                        <div className="absolute z-50 left-0 right-0 mt-2 bg-white border border-slate-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                           {roles.length === 0 ? (
                             <div className="px-4 py-2 text-sm text-slate-500">No roles found</div>
                           ) : (
@@ -428,7 +432,7 @@ export default function VerificationPage() {
                                   updateSetting('verifiedRole', role.id);
                                   setShowVerifiedRoleDropdown(false);
                                 }}
-                                className="w-full px-4 py-2 text-left hover:bg-orange-50 text-sm transition"
+                                className="w-full px-4 py-2 text-left hover:bg-slate-50 text-sm transition"
                               >
                                 {role.name}
                               </button>
@@ -439,22 +443,22 @@ export default function VerificationPage() {
                       <p className="text-xs text-slate-500">Role given upon verification</p>
                     </div>
 
-                    <div className="relative p-4 rounded-lg border border-orange-100 space-y-2">
+                    <div className="relative p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
                       <label className="block text-sm font-semibold text-slate-800">Unverified Role</label>
                       <button
                         onClick={() => setShowUnverifiedRoleDropdown(!showUnverifiedRoleDropdown)}
-                        className="w-full px-3 py-2 border-2 border-dashed border-orange-300 rounded-lg text-sm text-left hover:border-orange-400 transition bg-orange-50/50"
+                        className="w-full px-3 py-2 border-2 border-dashed border-slate-300 rounded-lg text-sm text-left hover:border-slate-400 transition bg-white"
                       >
                         {settings.unverifiedRole ? getRoleName(settings.unverifiedRole) : '+ Select Role (Optional)'}
                       </button>
                       {showUnverifiedRoleDropdown && (
-                        <div className="absolute z-50 left-0 right-0 mt-2 bg-white border border-orange-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                        <div className="absolute z-50 left-0 right-0 mt-2 bg-white border border-slate-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                           <button
                             onClick={() => {
                               updateSetting('unverifiedRole', null);
                               setShowUnverifiedRoleDropdown(false);
                             }}
-                            className="w-full px-4 py-2 text-left hover:bg-orange-50 text-sm transition text-slate-500"
+                            className="w-full px-4 py-2 text-left hover:bg-slate-50 text-sm transition text-slate-500"
                           >
                             None
                           </button>
@@ -465,7 +469,7 @@ export default function VerificationPage() {
                                 updateSetting('unverifiedRole', role.id);
                                 setShowUnverifiedRoleDropdown(false);
                               }}
-                              className="w-full px-4 py-2 text-left hover:bg-orange-50 text-sm transition"
+                              className="w-full px-4 py-2 text-left hover:bg-slate-50 text-sm transition"
                             >
                               {role.name}
                             </button>
@@ -475,70 +479,72 @@ export default function VerificationPage() {
                       <p className="text-xs text-slate-500">Role before verification (optional)</p>
                     </div>
 
-                    <div className="p-4 rounded-lg border border-orange-100 space-y-2">
+                    <div className="p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
                       <label className="block text-sm font-semibold text-slate-800">Embed Color</label>
                       <input
                         type="color"
                         value={settings.messageColor}
                         onChange={(e) => updateSetting('messageColor', e.target.value)}
-                        className="w-full h-10 border border-orange-200 rounded-lg"
+                        className="w-full h-10 border border-slate-200 rounded-lg"
                       />
                     </div>
                   </div>
 
-                  <div className="p-4 rounded-lg border border-orange-100 space-y-2">
+                  <div className="p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
                     <label className="block text-sm font-semibold text-slate-800">Message Title</label>
                     <input
                       type="text"
                       value={settings.messageTitle}
                       onChange={(e) => updateSetting('messageTitle', e.target.value)}
                       placeholder="Server Verification"
-                      className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm"
+                      className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm"
                     />
                   </div>
 
-                  <div className="p-4 rounded-lg border border-orange-100 space-y-2">
+                  <div className="p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
                     <label className="block text-sm font-semibold text-slate-800">Message Description</label>
                     <textarea
                       value={settings.messageDescription}
                       onChange={(e) => updateSetting('messageDescription', e.target.value)}
                       placeholder="Click the button below to verify and gain access to the server!"
                       rows={3}
-                      className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm"
+                      className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm"
                     />
                   </div>
                 </div>
+              </div>
 
-                {/* Rules & Requirements */}
-                <div className="space-y-4 border-t border-orange-100 pt-8">
+              {/* Rules & Requirements */}
+              <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+                <div className="space-y-4">
                   <h3 className="text-lg font-semibold text-[#0f172a]">Rules & Requirements</h3>
                   
-                  <div className="p-4 rounded-lg border border-orange-100 space-y-2">
+                  <div className="p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
                     <label className="block text-sm font-semibold text-slate-800">Custom Rules Text</label>
                     <textarea
                       value={settings.rulesText}
                       onChange={(e) => updateSetting('rulesText', e.target.value)}
                       placeholder="By verifying, you agree to follow our server rules."
                       rows={4}
-                      className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm"
+                      className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm"
                     />
                     <p className="text-xs text-slate-500">Displayed in verification embed</p>
                   </div>
 
-                  <div className="p-4 rounded-lg border border-orange-100 space-y-2">
+                  <div className="p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
                     <label className="block text-sm font-semibold text-slate-800">Account Age Requirement</label>
                     <input 
                       type="number" 
                       value={settings.accountAgeRequirement} 
                       onChange={(e) => updateSetting('accountAgeRequirement', parseInt(e.target.value) || 0)}
-                      className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm"
+                      className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm"
                       min="0"
                     />
                     <p className="text-xs text-slate-500">Minimum account age in days (0 = no requirement)</p>
                   </div>
 
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
+                    <div className="flex items-center justify-between p-4 rounded-lg border border-slate-200 bg-slate-50">
                       <div>
                         <p className="font-semibold text-slate-800 text-sm">Require Server Agreement</p>
                         <p className="text-xs text-slate-500">User must agree to rules checkbox</p>
@@ -549,7 +555,7 @@ export default function VerificationPage() {
                       />
                     </div>
 
-                    <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
+                    <div className="flex items-center justify-between p-4 rounded-lg border border-slate-200 bg-slate-50">
                       <div>
                         <p className="font-semibold text-slate-800 text-sm">Multiple Verification Steps</p>
                         <p className="text-xs text-slate-500">Optional multi-step verification process</p>
@@ -561,13 +567,15 @@ export default function VerificationPage() {
                     </div>
                   </div>
                 </div>
+              </div>
 
-                {/* Post-Verification Actions */}
-                <div className="space-y-4 border-t border-orange-100 pt-8">
+              {/* Post-Verification Actions */}
+              <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+                <div className="space-y-4">
                   <h3 className="text-lg font-semibold text-[#0f172a]">Post-Verification Actions</h3>
                   
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
+                    <div className="flex items-center justify-between p-4 rounded-lg border border-slate-200 bg-slate-50">
                       <div>
                         <p className="font-semibold text-slate-800 text-sm">Send Welcome DM</p>
                         <p className="text-xs text-slate-500">DM user after successful verification</p>
@@ -579,25 +587,25 @@ export default function VerificationPage() {
                     </div>
 
                     {settings.welcomeDM && (
-                      <div className="p-4 rounded-lg border border-orange-100 space-y-2">
+                      <div className="p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
                         <label className="block text-sm font-semibold text-slate-800">Welcome DM Message</label>
                         <textarea
                           value={settings.welcomeDMMessage}
                           onChange={(e) => updateSetting('welcomeDMMessage', e.target.value)}
                           placeholder="Welcome to the server! You have been verified."
                           rows={3}
-                          className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm"
+                          className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm"
                         />
                       </div>
                     )}
 
-                    <div className="relative p-4 rounded-lg border border-orange-100 space-y-2">
+                    <div className="relative p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
                       <label className="block text-sm font-semibold text-slate-800">Additional Roles</label>
                       <div className="space-y-2">
                         {settings.additionalRoles.length > 0 && (
-                          <div className="flex flex-wrap gap-2 p-3 bg-slate-50 rounded-lg border border-slate-200">
+                          <div className="flex flex-wrap gap-2 p-3 bg-white rounded-lg border border-slate-300">
                             {settings.additionalRoles.map(roleId => (
-                              <div key={roleId} className="px-3 py-1 bg-white border border-slate-300 rounded-full text-sm flex items-center gap-2">
+                              <div key={roleId} className="px-3 py-1 bg-slate-50 border border-slate-300 rounded-full text-sm flex items-center gap-2">
                                 <span className="font-medium">{getRoleName(roleId)}</span>
                                 <button
                                   onClick={() => updateSetting('additionalRoles', settings.additionalRoles.filter(r => r !== roleId))}
@@ -611,12 +619,12 @@ export default function VerificationPage() {
                         )}
                         <button
                           onClick={() => setShowAdditionalRolesDropdown(!showAdditionalRolesDropdown)}
-                          className="w-full px-3 py-2 border-2 border-dashed border-orange-300 rounded-lg text-sm text-left hover:border-orange-400 transition bg-orange-50/50"
+                          className="w-full px-3 py-2 border-2 border-dashed border-slate-300 rounded-lg text-sm text-left hover:border-slate-400 transition bg-white"
                         >
                           + Add Role
                         </button>
                         {showAdditionalRolesDropdown && (
-                          <div className="absolute z-50 left-0 right-0 mt-2 bg-white border border-orange-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                          <div className="absolute z-50 left-0 right-0 mt-2 bg-white border border-slate-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                             {roles.filter(r => !settings.additionalRoles.includes(r.id) && r.id !== settings.verifiedRole).map(role => (
                               <button
                                 key={role.id}
@@ -624,7 +632,7 @@ export default function VerificationPage() {
                                   updateSetting('additionalRoles', [...settings.additionalRoles, role.id]);
                                   setShowAdditionalRolesDropdown(false);
                                 }}
-                                className="w-full px-4 py-2 text-left hover:bg-orange-50 text-sm transition"
+                                className="w-full px-4 py-2 text-left hover:bg-slate-50 text-sm transition"
                               >
                                 {role.name}
                               </button>
@@ -635,7 +643,7 @@ export default function VerificationPage() {
                       <p className="text-xs text-slate-500">Auto-assign additional roles beyond verified role</p>
                     </div>
 
-                    <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
+                    <div className="flex items-center justify-between p-4 rounded-lg border border-slate-200 bg-slate-50">
                       <div>
                         <p className="font-semibold text-slate-800 text-sm">Remove Verification Messages</p>
                         <p className="text-xs text-slate-500">Delete verification messages after completion</p>
@@ -647,13 +655,15 @@ export default function VerificationPage() {
                     </div>
                   </div>
                 </div>
+              </div>
 
-                {/* Security Settings */}
-                <div className="space-y-4 border-t border-orange-100 pt-8">
+              {/* Security Settings */}
+              <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+                <div className="space-y-4">
                   <h3 className="text-lg font-semibold text-[#0f172a]">Security Settings</h3>
                   
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
+                    <div className="flex items-center justify-between p-4 rounded-lg border border-slate-200 bg-slate-50">
                       <div>
                         <p className="font-semibold text-slate-800 text-sm">Anti-Alt Protection</p>
                         <p className="text-xs text-slate-500">Detect potential alternate accounts</p>
@@ -664,25 +674,25 @@ export default function VerificationPage() {
                       />
                     </div>
 
-                    <div className="p-4 rounded-lg border border-orange-100 space-y-2">
+                    <div className="p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
                       <label className="block text-sm font-semibold text-slate-800">Kick Unverified After</label>
                       <input 
                         type="number" 
                         value={settings.kickUnverifiedAfter} 
                         onChange={(e) => updateSetting('kickUnverifiedAfter', parseInt(e.target.value) || 0)}
-                        className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm"
+                        className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm"
                         min="0"
                       />
                       <p className="text-xs text-slate-500">Kick unverified users after X hours (0 = disabled)</p>
                     </div>
 
-                    <div className="relative p-4 rounded-lg border border-orange-100 space-y-2">
+                    <div className="relative p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
                       <label className="block text-sm font-semibold text-slate-800">Verification Bypass Roles</label>
                       <div className="space-y-2">
                         {settings.verificationBypassRoles.length > 0 && (
-                          <div className="flex flex-wrap gap-2 p-3 bg-slate-50 rounded-lg border border-slate-200">
+                          <div className="flex flex-wrap gap-2 p-3 bg-white rounded-lg border border-slate-300">
                             {settings.verificationBypassRoles.map(roleId => (
-                              <div key={roleId} className="px-3 py-1 bg-white border border-slate-300 rounded-full text-sm flex items-center gap-2">
+                              <div key={roleId} className="px-3 py-1 bg-slate-50 border border-slate-300 rounded-full text-sm flex items-center gap-2">
                                 <span className="font-medium">{getRoleName(roleId)}</span>
                                 <button
                                   onClick={() => updateSetting('verificationBypassRoles', settings.verificationBypassRoles.filter(r => r !== roleId))}
@@ -696,12 +706,12 @@ export default function VerificationPage() {
                         )}
                         <button
                           onClick={() => setShowBypassRolesDropdown(!showBypassRolesDropdown)}
-                          className="w-full px-3 py-2 border-2 border-dashed border-orange-300 rounded-lg text-sm text-left hover:border-orange-400 transition bg-orange-50/50"
+                          className="w-full px-3 py-2 border-2 border-dashed border-slate-300 rounded-lg text-sm text-left hover:border-slate-400 transition bg-white"
                         >
                           + Add Bypass Role
                         </button>
                         {showBypassRolesDropdown && (
-                          <div className="absolute z-50 left-0 right-0 mt-2 bg-white border border-orange-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                          <div className="absolute z-50 left-0 right-0 mt-2 bg-white border border-slate-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                             {roles.filter(r => !settings.verificationBypassRoles.includes(r.id)).map(role => (
                               <button
                                 key={role.id}
@@ -709,7 +719,7 @@ export default function VerificationPage() {
                                   updateSetting('verificationBypassRoles', [...settings.verificationBypassRoles, role.id]);
                                   setShowBypassRolesDropdown(false);
                                 }}
-                                className="w-full px-4 py-2 text-left hover:bg-orange-50 text-sm transition"
+                                className="w-full px-4 py-2 text-left hover:bg-slate-50 text-sm transition"
                               >
                                 {role.name}
                               </button>
@@ -720,13 +730,13 @@ export default function VerificationPage() {
                       <p className="text-xs text-slate-500">Roles that bypass verification (moderators, bots)</p>
                     </div>
 
-                    <div className="p-4 rounded-lg border border-orange-100 space-y-2">
+                    <div className="p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
                       <label className="block text-sm font-semibold text-slate-800">Verification Cooldown</label>
                       <input 
                         type="number" 
                         value={settings.verificationCooldown} 
                         onChange={(e) => updateSetting('verificationCooldown', parseInt(e.target.value) || 0)}
-                        className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm"
+                        className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm"
                         min="0"
                       />
                       <p className="text-xs text-slate-500">Seconds between verification attempts (0 = no cooldown)</p>
@@ -734,7 +744,7 @@ export default function VerificationPage() {
                   </div>
                 </div>
               </div>
-            </div>
+            </>
           )}
         </div>
       </main>
