@@ -102,20 +102,20 @@ export default function AntiRaidPage() {
           setChannels(data.channels || []);
         }
 
-        if (settingsRes.ok) {
-          const data = await settingsRes.json();
-          if (data.antiRaid) {
-            const loadedSettings = { ...settings, ...data.antiRaid };
-            setSettings(loadedSettings);
-            setOriginalSettings(loadedSettings);
-          }
-        }
-
         if (generalRes.ok) {
           const data = await generalRes.json();
           if (data.premium !== undefined) {
             setSettings(prev => ({ ...prev, premium: data.premium }));
             setOriginalSettings(prev => ({ ...prev, premium: data.premium }));
+          }
+        }
+
+        if (settingsRes.ok) {
+          const data = await settingsRes.json();
+          if (data.antiRaid) {
+            const loadedSettings = { ...settings, ...data.antiRaid };
+            setSettings(prev => ({ ...prev, ...loadedSettings }));
+            setOriginalSettings(prev => ({ ...prev, ...loadedSettings }));
           }
         }
       } catch (error) {
