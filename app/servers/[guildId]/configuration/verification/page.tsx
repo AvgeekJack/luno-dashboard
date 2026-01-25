@@ -498,36 +498,56 @@ export default function VerificationPage() {
                   </div>
 
                   <div className="relative p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
-                    <label className="block text-sm font-semibold text-slate-800 flex items-center gap-2">
-                      Message Title
-                      {!premium && (
-                        <img src="/premium-icon.svg" alt="Premium" className="w-4 h-4" title="Premium Feature" />
-                      )}
-                    </label>
+                    {!premium && (
+                      <div className="absolute inset-0 bg-orange-50/95 backdrop-blur-[2px] rounded-lg z-10 flex items-start gap-3 p-4">
+                        <div className="flex-shrink-0 w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
+                          <img src="/premium-icon.svg" alt="Premium" className="w-6 h-6" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-bold text-sm text-slate-900 mb-1">Message Title</h4>
+                          <p className="text-xs text-slate-700 mb-3">Customize your verification message title</p>
+                          <button className="w-full px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition text-sm flex items-center justify-center gap-2">
+                            <img src="/premium-icon.svg" alt="" className="w-4 h-4" />
+                            Upgrade to Premium
+                            <span className="text-xs">→</span>
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                    <label className="block text-sm font-semibold text-slate-800">Message Title</label>
                     <input
                       type="text"
                       value={settings.messageTitle}
                       onChange={(e) => updateSetting('messageTitle', e.target.value)}
                       placeholder="Server Verification"
                       className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm"
-                      disabled={!premium}
                     />
                   </div>
 
                   <div className="relative p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
-                    <label className="block text-sm font-semibold text-slate-800 flex items-center gap-2">
-                      Message Description
-                      {!premium && (
-                        <img src="/premium-icon.svg" alt="Premium" className="w-4 h-4" title="Premium Feature" />
-                      )}
-                    </label>
+                    {!premium && (
+                      <div className="absolute inset-0 bg-orange-50/95 backdrop-blur-[2px] rounded-lg z-10 flex items-start gap-3 p-4">
+                        <div className="flex-shrink-0 w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
+                          <img src="/premium-icon.svg" alt="Premium" className="w-6 h-6" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-bold text-sm text-slate-900 mb-1">Message Description</h4>
+                          <p className="text-xs text-slate-700 mb-3">Customize your verification message description</p>
+                          <button className="w-full px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition text-sm flex items-center justify-center gap-2">
+                            <img src="/premium-icon.svg" alt="" className="w-4 h-4" />
+                            Upgrade to Premium
+                            <span className="text-xs">→</span>
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                    <label className="block text-sm font-semibold text-slate-800">Message Description</label>
                     <textarea
                       value={settings.messageDescription}
                       onChange={(e) => updateSetting('messageDescription', e.target.value)}
                       placeholder="Click the button below to verify and gain access to the server!"
                       rows={3}
                       className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm"
-                      disabled={!premium}
                     />
                   </div>
                 </div>
@@ -536,14 +556,53 @@ export default function VerificationPage() {
               {/* Rules & Requirements */}
               <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8 relative">
                 {!premium && (
-                  <div className="absolute inset-0 bg-slate-900/5 backdrop-blur-[2px] rounded-xl z-10 flex items-center justify-center">
-                    <div className="bg-white rounded-xl shadow-2xl p-8 max-w-sm text-center border-2 border-orange-500">
-                      <img src="/premium-icon.svg" alt="Premium" className="w-16 h-16 mx-auto mb-4" />
-                      <h3 className="text-xl font-bold text-slate-900 mb-2">Premium Feature</h3>
-                      <p className="text-slate-600 mb-6">Unlock custom rules and requirements with Luno Premium</p>
-                      <button className="px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-lg hover:from-orange-600 hover:to-orange-700 transition shadow-lg">
+                  <div className="absolute inset-0 bg-orange-50/95 backdrop-blur-[2px] rounded-xl z-10 flex items-center justify-center p-8">
+                    <div className="max-w-lg text-center">
+                      <div className="w-16 h-16 bg-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <img src="/premium-icon.svg" alt="Premium" className="w-10 h-10" />
+                      </div>
+                      <h3 className="text-xl font-bold text-slate-900 mb-3">Custom Rules & Requirements</h3>
+                      <p className="text-slate-700 mb-6 text-sm">To unlock this feature, upgrade to premium and gain access to advanced verification customization with fine-tuned rules parameters and precise requirements tailored to your community.</p>
+                      <div className="grid grid-cols-2 gap-x-8 gap-y-2 mb-6 text-left">
+                        <div className="flex items-center gap-2">
+                          <div className="w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                            </svg>
+                          </div>
+                          <span className="text-sm text-slate-800">Custom rules text</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                            </svg>
+                          </div>
+                          <span className="text-sm text-slate-800">Account age limits</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                            </svg>
+                          </div>
+                          <span className="text-sm text-slate-800">Agreement requirements</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                            </svg>
+                          </div>
+                          <span className="text-sm text-slate-800">Multi-step verification</span>
+                        </div>
+                      </div>
+                      <button className="w-full px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition shadow-lg flex items-center justify-center gap-2">
+                        <img src="/premium-icon.svg" alt="" className="w-5 h-5" />
                         Upgrade to Premium
+                        <span>→</span>
                       </button>
+                      <p className="text-xs text-slate-600 mt-3">Starting at $4.99/month • Cancel anytime</p>
                     </div>
                   </div>
                 )}
