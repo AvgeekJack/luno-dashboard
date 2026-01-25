@@ -311,8 +311,8 @@ export default function ReactionRolesPage() {
       )}
 
       {/* Sidebar */}
-      <aside className={`fixed md:static left-0 top-0 h-screen w-64 bg-white border-r border-orange-100 shadow-lg md:shadow-sm overflow-y-auto flex flex-col z-[50] transition-transform duration-300 ease-in-out ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
-        <div className="p-6 border-b border-orange-100">
+      <aside className={`fixed left-0 top-0 h-screen w-64 bg-white border-r border-slate-200 shadow-sm overflow-y-auto flex flex-col z-[50] transition-transform duration-300 ease-in-out ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
+        <div className="p-6 border-b border-slate-200">
             <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity ml-12 md:ml-0">
             <img src="/luno-logo.png" alt="Luno Bot" className="w-10 h-10 object-contain" />
             <span className="text-xl font-bold text-[#0f172a]">Luno</span>
@@ -406,8 +406,8 @@ export default function ReactionRolesPage() {
         </nav>
       </aside>
 
-      <main className="flex-1 md:ml-64 py-12 px-4 md:px-8 pt-20 md:pt-12 flex justify-center">
-        <div className="w-full max-w-6xl space-y-4 md:space-y-6">
+      <main className="flex-1 ml-0 md:ml-64 py-12 px-4 md:px-8 pt-20 md:pt-12 flex justify-center">
+        <div className="w-full max-w-4xl space-y-6">
           <div className="space-y-1">
             <p className="text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">CONFIGURATION</p>
             <h1 className="text-3xl font-bold">Reaction Roles</h1>
