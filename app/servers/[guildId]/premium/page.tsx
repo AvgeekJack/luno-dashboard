@@ -3,23 +3,7 @@
 import { useSession } from 'next-auth/react';
 import { useRouter, useParams, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import Script from 'next/script';
 import { useState, useEffect } from 'react';
-
-// Declare Stripe custom element for TypeScript
-declare module 'react' {
-  namespace JSX {
-    interface IntrinsicElements {
-      'stripe-buy-button': React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLElement>,
-        HTMLElement
-      > & {
-        'buy-button-id': string;
-        'publishable-key': string;
-      };
-    }
-  }
-}
 
 export default function PremiumPage() {
   const { data: session, status } = useSession();
@@ -33,6 +17,7 @@ export default function PremiumPage() {
   const [configOpen, setConfigOpen] = useState(false);
   const [modulesOpen, setModulesOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
 
   useEffect(() => {
     if (status === 'loading') return;
@@ -63,19 +48,38 @@ export default function PremiumPage() {
     }
   }, [guildId]);
 
+  const handleCheckout = async () => {
+    if (!guildId || checkoutLoading) return;
+    
+    setCheckoutLoading(true);
+    try {
+      const res = await fetch('/api/stripe/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ serverId: guildId }),
+      });
+
+      if (!res.ok) {
+        throw new Error('Failed to create checkout session');
+      }
+
+      const { url } = await res.json();
+      if (url) {
+        window.location.href = url;
+      }
+    } catch (error) {
+      console.error('Checkout error:', error);
+      alert('Failed to start checkout. Please try again.');
+      setCheckoutLoading(false);
+    }
+  };
+
   if (status === 'loading' || loading) {
     return <div className="flex min-h-screen items-center justify-center text-[#0f172a]">Loading...</div>;
   }
 
   return (
-    <>
-      {/* Load Stripe Buy Button Script */}
-      <Script
-        src="https://js.stripe.com/v3/buy-button.js"
-        strategy="lazyOnload"
-      />
-      
-      <div className="min-h-screen bg-[#f8f9fa] text-[#0f172a] flex flex-col md:flex-row">
+    <div className="min-h-screen bg-[#f8f9fa] text-[#0f172a] flex flex-col md:flex-row">
       {/* Mobile Menu Button */}
       <button 
         className="md:hidden fixed top-4 left-4 z-[60] bg-white p-2 rounded-lg shadow-lg border border-slate-200"
@@ -306,13 +310,15 @@ export default function PremiumPage() {
                   </p>
                 </div>
 
-                <div className="w-full flex justify-center">
-                  <stripe-buy-button
-                    buy-button-id="buy_btn_1StYDW3jyqW2IE8dWWjDwRcz"
-                    publishable-key="pk_test_51StXCy3jyqW2IE8d72kK58YsVZ2bmhOEdgOsAyjcZiSB0KzImKWDqxdndE7ry8HeWpHB5dyGUVr9bHg54QHWhq6x006v1QbluZ"
-                  >
-                  </stripe-buy-button>
-                </div>
+                <button 
+                  onClick={handleCheckout}
+                  disabled={checkoutLoading}
+                  className="w-full py-4 bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 disabled:cursor-not-allowed text-white text-lg font-bold rounded-lg transition flex items-center justify-center gap-3 shadow-lg"
+                >
+                  <img src="/premium-icon.svg" alt="" className="w-6 h-6" />
+                  {checkoutLoading ? 'Loading...' : 'Subscribe Now'}
+                  {!checkoutLoading && <span>→</span>}
+                </button>
 
                 <p className="text-center text-sm text-slate-600 mt-4">
                   Cancel anytime • Instant activation • Secure payment
@@ -358,6 +364,5 @@ export default function PremiumPage() {
         </div>
       </main>
     </div>
-    </>
   );
 }
