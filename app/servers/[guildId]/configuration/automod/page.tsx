@@ -377,11 +377,11 @@ export default function AutomodPage() {
 
           {/* Filter Features Card */}
           {settings.enabled && (
-          <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
-            <div className="mb-6">
-              <h2 className="text-lg font-semibold text-[#0f172a]">Filter Features</h2>
-              <p className="text-sm text-slate-500">Enable or disable specific filter types</p>
-            </div>
+            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+              <div className="mb-6">
+                <h2 className="text-lg font-semibold text-[#0f172a]">Filter Features</h2>
+                <p className="text-sm text-slate-500">Enable or disable specific filter types</p>
+              </div>
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
@@ -473,16 +473,15 @@ export default function AutomodPage() {
                 </div>
               </div>
             </div>
-          </div>
           )}
 
           {/* Thresholds & Limits Card */}
           {settings.enabled && (
             <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
-            <div className="mb-6">
-              <h2 className="text-lg font-semibold text-[#0f172a]">Thresholds & Limits</h2>
-              <p className="text-sm text-slate-500">Configure detection sensitivity</p>
-            </div>
+              <div className="mb-6">
+                <h2 className="text-lg font-semibold text-[#0f172a]">Thresholds & Limits</h2>
+                <p className="text-sm text-slate-500">Configure detection sensitivity</p>
+              </div>
 
               <div className="space-y-4">
                 <div>
