@@ -36,6 +36,7 @@ interface AutomodSettings {
   autoTimeoutDuration: number;
   escalatingPunishments: boolean;
   logChannel: string | null;
+  premium?: boolean;
 }
 
 interface Channel {
@@ -126,6 +127,7 @@ export default function AutomodPage() {
     autoTimeoutDuration: 300,
     escalatingPunishments: false,
     logChannel: null,
+    premium: false,
   });
 
   useEffect(() => {
@@ -150,13 +152,26 @@ export default function AutomodPage() {
 
     const fetchSettings = async () => {
       try {
-        const response = await fetch(`/api/servers/${gid}/general`);
-        if (response.ok) {
-          const data = await response.json();
+        const [generalRes, settingsRes] = await Promise.all([
+          fetch(`/api/servers/${gid}/general`),
+          fetch(`/api/servers/${gid}/settings`)
+        ]);
+
+        let premiumStatus = false;
+        if (settingsRes.ok) {
+          const settingsData = await settingsRes.json();
+          premiumStatus = settingsData.premium || false;
+        }
+
+        if (generalRes.ok) {
+          const data = await generalRes.json();
           if (data.configuration?.automod) {
-            const loadedSettings = { ...settings, ...data.configuration.automod };
+            const loadedSettings = { ...settings, ...data.configuration.automod, premium: premiumStatus };
             setSettings(loadedSettings);
             setOriginalSettings(loadedSettings);
+          } else {
+            setSettings(prev => ({ ...prev, premium: premiumStatus }));
+            setOriginalSettings(prev => ({ ...prev, premium: premiumStatus }));
           }
         }
       } catch (err) {
@@ -757,16 +772,63 @@ export default function AutomodPage() {
                   </div>
                 )}
 
-                <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
-                  <div>
-                    <p className="font-semibold text-slate-900">Escalating Punishments</p>
-                    <p className="text-sm text-slate-500">Warn → Timeout → Kick → Ban based on violations</p>
+                {!settings.premium ? (
+                  <div className="relative p-6 rounded-lg bg-orange-50 border border-orange-200 overflow-hidden">
+                    <div className="flex items-start gap-4">
+                      <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <img src="/premium-icon.svg" alt="Premium" className="w-7 h-7" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-base font-bold text-slate-900 mb-1">Escalating Punishments</h3>
+                        <p className="text-sm text-slate-600 mb-4">Automatically increase punishment severity based on violation history</p>
+                        <div className="space-y-2 mb-4">
+                          <div className="flex items-center gap-2">
+                            <div className="w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+                              <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                              </svg>
+                            </div>
+                            <span className="text-sm text-slate-900">Warn → Timeout → Kick → Ban progression</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+                              <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                              </svg>
+                            </div>
+                            <span className="text-sm text-slate-900">Configurable violation thresholds</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+                              <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                              </svg>
+                            </div>
+                            <span className="text-sm text-slate-900">Time-based violation decay</span>
+                          </div>
+                        </div>
+                        <button className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold px-4 py-2.5 rounded-lg flex items-center justify-center gap-2 transition">
+                          <img src="/premium-icon.svg" alt="Premium" className="w-4 h-4" />
+                          Upgrade to Premium
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                  <Switch 
-                    checked={settings.escalatingPunishments} 
-                    onCheckedChange={(checked) => updateSetting('escalatingPunishments', checked)}
-                  />
-                </div>
+                ) : (
+                  <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
+                    <div>
+                      <p className="font-semibold text-slate-900">Escalating Punishments</p>
+                      <p className="text-sm text-slate-500">Warn → Timeout → Kick → Ban based on violations</p>
+                    </div>
+                    <Switch 
+                      checked={settings.escalatingPunishments} 
+                      onCheckedChange={(checked) => updateSetting('escalatingPunishments', checked)}
+                    />
+                  </div>
+                )}
               </div>
             </div>
           )}
