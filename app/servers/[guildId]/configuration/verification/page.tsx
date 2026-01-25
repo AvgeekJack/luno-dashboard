@@ -499,13 +499,13 @@ export default function VerificationPage() {
 
                   <div className="relative p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
                     {!premium && (
-                      <div className="absolute inset-0 bg-orange-50/95 backdrop-blur-[2px] rounded-lg z-10 flex items-start gap-3 p-4">
+                      <div className="absolute inset-0 bg-orange-50/95 backdrop-blur-[2px] rounded-lg z-10 flex items-start gap-3 p-3">
                         <div className="flex-shrink-0 w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
                           <img src="/premium-icon.svg" alt="Premium" className="w-6 h-6" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h4 className="font-bold text-sm text-slate-900 mb-1">Message Title</h4>
-                          <p className="text-xs text-slate-700 mb-3">Customize your verification message title</p>
+                          <h4 className="font-bold text-sm text-slate-900 mb-0.5">Message Title</h4>
+                          <p className="text-xs text-slate-700 mb-2">Customize your verification message title</p>
                           <button className="w-full px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition text-sm flex items-center justify-center gap-2">
                             <img src="/premium-icon.svg" alt="" className="w-4 h-4" />
                             Upgrade to Premium
@@ -526,13 +526,13 @@ export default function VerificationPage() {
 
                   <div className="relative p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
                     {!premium && (
-                      <div className="absolute inset-0 bg-orange-50/95 backdrop-blur-[2px] rounded-lg z-10 flex items-start gap-3 p-4">
+                      <div className="absolute inset-0 bg-orange-50/95 backdrop-blur-[2px] rounded-lg z-10 flex items-start gap-3 p-3">
                         <div className="flex-shrink-0 w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
                           <img src="/premium-icon.svg" alt="Premium" className="w-6 h-6" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h4 className="font-bold text-sm text-slate-900 mb-1">Message Description</h4>
-                          <p className="text-xs text-slate-700 mb-3">Customize your verification message description</p>
+                          <h4 className="font-bold text-sm text-slate-900 mb-0.5">Message Description</h4>
+                          <p className="text-xs text-slate-700 mb-2">Customize your verification message description</p>
                           <button className="w-full px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition text-sm flex items-center justify-center gap-2">
                             <img src="/premium-icon.svg" alt="" className="w-4 h-4" />
                             Upgrade to Premium
