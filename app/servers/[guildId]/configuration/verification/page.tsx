@@ -499,7 +499,7 @@ export default function VerificationPage() {
 
                   <div className="relative p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
                     {!premium && (
-                      <div className="absolute inset-0 bg-orange-50/95 backdrop-blur-[2px] rounded-lg z-10 flex items-start gap-3 p-3">
+                      <div className="absolute inset-0 bg-orange-50/95 backdrop-blur-[2px] rounded-lg z-10 flex items-start gap-3 px-3 pt-3 pb-3">
                         <div className="flex-shrink-0 w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
                           <img src="/premium-icon.svg" alt="Premium" className="w-6 h-6" />
                         </div>
@@ -526,7 +526,7 @@ export default function VerificationPage() {
 
                   <div className="relative p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
                     {!premium && (
-                      <div className="absolute inset-0 bg-orange-50/95 backdrop-blur-[2px] rounded-lg z-10 flex items-start gap-3 p-3">
+                      <div className="absolute inset-0 bg-orange-50/95 backdrop-blur-[2px] rounded-lg z-10 flex items-start gap-3 px-3 pt-3 pb-3">
                         <div className="flex-shrink-0 w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
                           <img src="/premium-icon.svg" alt="Premium" className="w-6 h-6" />
                         </div>
