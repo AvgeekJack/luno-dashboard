@@ -433,9 +433,7 @@ export default function AntiRaidPage() {
                 <div className="absolute inset-0 bg-orange-500/30 backdrop-blur-sm rounded-xl flex items-center justify-center z-10 pointer-events-auto cursor-not-allowed">
                   <div className="text-center space-y-3 pointer-events-none">
                     <div className="w-16 h-16 bg-orange-500 rounded-xl flex items-center justify-center mx-auto shadow-lg">
-                      <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                      </svg>
+                      <img src="/premium-icon.svg" alt="Premium" className="w-10 h-10" />
                     </div>
                     <p className="text-lg font-semibold text-slate-900">This Feature Requires A Premium Subscription</p>
                   </div>
