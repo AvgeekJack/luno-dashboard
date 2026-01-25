@@ -50,6 +50,7 @@ export default function VerificationPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [premium, setPremium] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [configOpen, setConfigOpen] = useState(true);
   const [modulesOpen, setModulesOpen] = useState(false);
@@ -98,9 +99,10 @@ export default function VerificationPage() {
 
     const fetchData = async () => {
       try {
-        const [channelsRes, settingsRes] = await Promise.all([
+        const [channelsRes, settingsRes, serverSettingsRes] = await Promise.all([
           fetch(`/api/servers/${gid}/channels-and-roles`),
-          fetch(`/api/servers/${gid}/configuration/verification`)
+          fetch(`/api/servers/${gid}/configuration/verification`),
+          fetch(`/api/servers/${gid}/settings`)
         ]);
 
         if (channelsRes.ok) {
@@ -116,6 +118,11 @@ export default function VerificationPage() {
             setSettings(loadedSettings);
             setOriginalSettings(loadedSettings);
           }
+        }
+
+        if (serverSettingsRes.ok) {
+          const serverData = await serverSettingsRes.json();
+          setPremium(serverData.premium || false);
         }
       } catch (error) {
         console.error('Failed to fetch data:', error);
@@ -490,32 +497,56 @@ export default function VerificationPage() {
                     </div>
                   </div>
 
-                  <div className="p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
-                    <label className="block text-sm font-semibold text-slate-800">Message Title</label>
+                  <div className="relative p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
+                    <label className="block text-sm font-semibold text-slate-800 flex items-center gap-2">
+                      Message Title
+                      {!premium && (
+                        <img src="/premium-icon.svg" alt="Premium" className="w-4 h-4" title="Premium Feature" />
+                      )}
+                    </label>
                     <input
                       type="text"
                       value={settings.messageTitle}
                       onChange={(e) => updateSetting('messageTitle', e.target.value)}
                       placeholder="Server Verification"
                       className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm"
+                      disabled={!premium}
                     />
                   </div>
 
-                  <div className="p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
-                    <label className="block text-sm font-semibold text-slate-800">Message Description</label>
+                  <div className="relative p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
+                    <label className="block text-sm font-semibold text-slate-800 flex items-center gap-2">
+                      Message Description
+                      {!premium && (
+                        <img src="/premium-icon.svg" alt="Premium" className="w-4 h-4" title="Premium Feature" />
+                      )}
+                    </label>
                     <textarea
                       value={settings.messageDescription}
                       onChange={(e) => updateSetting('messageDescription', e.target.value)}
                       placeholder="Click the button below to verify and gain access to the server!"
                       rows={3}
                       className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm"
+                      disabled={!premium}
                     />
                   </div>
                 </div>
               </div>
 
               {/* Rules & Requirements */}
-              <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+              <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8 relative">
+                {!premium && (
+                  <div className="absolute inset-0 bg-slate-900/5 backdrop-blur-[2px] rounded-xl z-10 flex items-center justify-center">
+                    <div className="bg-white rounded-xl shadow-2xl p-8 max-w-sm text-center border-2 border-orange-500">
+                      <img src="/premium-icon.svg" alt="Premium" className="w-16 h-16 mx-auto mb-4" />
+                      <h3 className="text-xl font-bold text-slate-900 mb-2">Premium Feature</h3>
+                      <p className="text-slate-600 mb-6">Unlock custom rules and requirements with Luno Premium</p>
+                      <button className="px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-lg hover:from-orange-600 hover:to-orange-700 transition shadow-lg">
+                        Upgrade to Premium
+                      </button>
+                    </div>
+                  </div>
+                )}
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold text-[#0f172a]">Rules & Requirements</h3>
                   
