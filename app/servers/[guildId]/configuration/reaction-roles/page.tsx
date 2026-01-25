@@ -239,6 +239,10 @@ export default function ReactionRolesPage() {
   };
 
   const duplicatePanel = (panel: ReactionRolePanel) => {
+    if (!settings.premium && settings.panels.length >= 1) {
+      alert('Upgrade to premium to create more panels!');
+      return;
+    }
     const duplicated: ReactionRolePanel = {
       ...panel,
       id: Date.now().toString(),
@@ -261,6 +265,12 @@ export default function ReactionRolesPage() {
     }
 
     const pairs = newPanel.roleEmojiPairs || [];
+    
+    if (!settings.premium && pairs.length >= 3) {
+      alert('Upgrade to premium to add more than 3 role-emoji pairs per panel!');
+      return;
+    }
+
     setNewPanel({
       ...newPanel,
       roleEmojiPairs: [...pairs, { ...tempRoleEmoji }]
@@ -640,9 +650,14 @@ export default function ReactionRolesPage() {
 
                               <button
                                 onClick={addRoleEmojiPair}
-                                className="w-full px-4 py-2.5 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition text-sm flex items-center justify-center gap-2"
+                                disabled={!settings.premium && (newPanel.roleEmojiPairs || []).length >= 3}
+                                className={`w-full px-4 py-2.5 font-semibold rounded-lg transition text-sm flex items-center justify-center gap-2 ${
+                                  !settings.premium && (newPanel.roleEmojiPairs || []).length >= 3
+                                    ? 'bg-slate-300 text-slate-500 cursor-not-allowed'
+                                    : 'bg-orange-500 hover:bg-orange-600 text-white'
+                                }`}
                               >
-                                <span className="text-lg">+</span> Add Pair
+                                <span className="text-lg">+</span> {!settings.premium && (newPanel.roleEmojiPairs || []).length >= 3 ? 'Premium Required for More' : 'Add Pair'}
                               </button>
                             </div>
                           </div>
@@ -712,7 +727,12 @@ export default function ReactionRolesPage() {
                               </button>
                               <button
                                 onClick={() => duplicatePanel(panel)}
-                                className="px-3 py-1 text-sm font-medium text-green-600 hover:bg-green-50 rounded transition"
+                                disabled={!settings.premium && settings.panels.length >= 1}
+                                className={`px-3 py-1 text-sm font-medium rounded transition ${
+                                  !settings.premium && settings.panels.length >= 1
+                                    ? 'text-slate-400 bg-slate-100 cursor-not-allowed'
+                                    : 'text-green-600 hover:bg-green-50'
+                                }`}
                               >
                                 Clone
                               </button>
