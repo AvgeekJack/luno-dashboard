@@ -32,6 +32,7 @@ interface ReactionRolesSettings {
   dmMessage: string;
   rolePersistence: boolean;
   reactionCooldown: number;
+  premium?: boolean;
 }
 
 interface Channel {
@@ -94,6 +95,7 @@ export default function ReactionRolesPage() {
     dmMessage: 'You have been given the {role} role!',
     rolePersistence: false,
     reactionCooldown: 0,
+    premium: false,
   });
 
   const [originalSettings, setOriginalSettings] = useState<ReactionRolesSettings>(settings);
@@ -107,9 +109,10 @@ export default function ReactionRolesPage() {
 
     const fetchData = async () => {
       try {
-        const [channelsRes, settingsRes] = await Promise.all([
+        const [channelsRes, reactionRolesRes, settingsRes] = await Promise.all([
           fetch(`/api/servers/${gid}/channels-and-roles`),
-          fetch(`/api/servers/${gid}/configuration/reaction-roles`)
+          fetch(`/api/servers/${gid}/configuration/reaction-roles`),
+          fetch(`/api/servers/${gid}/settings`)
         ]);
 
         if (channelsRes.ok) {
@@ -118,13 +121,22 @@ export default function ReactionRolesPage() {
           setRoles(data.roles || []);
         }
 
+        let premiumStatus = false;
         if (settingsRes.ok) {
           const data = await settingsRes.json();
+          premiumStatus = data.premium || false;
+        }
+
+        if (reactionRolesRes.ok) {
+          const data = await reactionRolesRes.json();
           if (data.reactionRoles) {
-            const loadedSettings = { ...settings, ...data.reactionRoles };
+            const loadedSettings = { ...settings, ...data.reactionRoles, premium: premiumStatus };
             setSettings(loadedSettings);
             setOriginalSettings(loadedSettings);
           }
+        } else {
+          setSettings(prev => ({ ...prev, premium: premiumStatus }));
+          setOriginalSettings(prev => ({ ...prev, premium: premiumStatus }));
         }
       } catch (error) {
         console.error('Failed to fetch data:', error);
@@ -434,23 +446,32 @@ export default function ReactionRolesPage() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <h3 className="text-lg font-semibold text-[#0f172a]">Reaction Role Panels</h3>
-                    <button
-                      onClick={() => {
-                        setShowPanelCreator(true);
-                        setEditingPanelId(null);
-                        setNewPanel({
-                          title: '',
-                          description: '',
-                          color: '#5865F2',
-                          channelId: '',
-                          panelType: 'multiple',
-                          roleEmojiPairs: []
-                        });
-                      }}
-                      className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition text-sm"
-                    >
-                      + Create Panel
-                    </button>
+                    {!settings.premium && settings.panels.length >= 1 ? (
+                      <button
+                        className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition text-sm flex items-center gap-2"
+                      >
+                        <img src="/premium-icon.svg" alt="Premium" className="w-4 h-4" />
+                        Upgrade for More Panels
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => {
+                          setShowPanelCreator(true);
+                          setEditingPanelId(null);
+                          setNewPanel({
+                            title: '',
+                            description: '',
+                            color: '#5865F2',
+                            channelId: '',
+                            panelType: 'multiple',
+                            roleEmojiPairs: []
+                          });
+                        }}
+                        className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition text-sm"
+                      >
+                        + Create Panel
+                      </button>
+                    )}
                   </div>
 
                   {/* Panel Creator/Editor Modal */}
