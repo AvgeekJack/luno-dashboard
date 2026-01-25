@@ -412,10 +412,22 @@ export default function AntiRaidPage() {
 
           {/* Custom Settings Card */}
           {settings.enabled && (
-            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8 relative">
               <div className="mb-6">
                 <h2 className="text-lg font-semibold text-[#0f172a]">Custom Settings</h2>
                 <p className="text-sm text-slate-500">Fine-tune protection parameters</p>
+              </div>
+
+              {/* Premium Overlay */}
+              <div className="absolute inset-0 bg-white/80 backdrop-blur-sm rounded-xl flex items-center justify-center z-10">
+                <div className="text-center space-y-3">
+                  <div className="w-16 h-16 bg-orange-500 rounded-xl flex items-center justify-center mx-auto">
+                    <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2L4 7v10l8 5 8-5V7l-8-5z" />
+                    </svg>
+                  </div>
+                  <p className="text-lg font-semibold text-slate-900">This Feature Requires A Premium Subscription</p>
+                </div>
               </div>
               
               <div className="grid md:grid-cols-2 gap-4">

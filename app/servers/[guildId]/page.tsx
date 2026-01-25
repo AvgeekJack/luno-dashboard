@@ -393,9 +393,9 @@ export default function ServerSettings() {
             {/* Premium Status Card */}
             <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
               <div className="flex items-start justify-between mb-4">
-                <div className={`w-12 h-12 ${settings?.premium ? 'bg-yellow-500' : 'bg-slate-400'} rounded-xl flex items-center justify-center`}>
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center">
+                  <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2L4 7v10l8 5 8-5V7l-8-5z" />
                   </svg>
                 </div>
               </div>
