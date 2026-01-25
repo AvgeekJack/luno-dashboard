@@ -51,14 +51,14 @@ export async function GET(
       cancel_at_period_end: sub.cancel_at_period_end,
     });
 
-    // Return subscription details
+    // Return subscription details with explicit number conversion
     return NextResponse.json({
       id: subscription.id,
       status: subscription.status,
-      currentPeriodStart: sub.current_period_start,
-      currentPeriodEnd: sub.current_period_end,
+      currentPeriodStart: Number(sub.current_period_start),
+      currentPeriodEnd: Number(sub.current_period_end),
       cancelAtPeriodEnd: sub.cancel_at_period_end || false,
-      canceledAt: sub.canceled_at,
+      canceledAt: sub.canceled_at ? Number(sub.canceled_at) : null,
       amount: subscription.items.data[0]?.price.unit_amount || 0,
       currency: subscription.items.data[0]?.price.currency || 'usd',
       interval: subscription.items.data[0]?.price.recurring?.interval || 'month',

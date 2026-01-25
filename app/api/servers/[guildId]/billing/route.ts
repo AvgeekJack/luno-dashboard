@@ -43,17 +43,17 @@ export async function GET(
       limit: 10,
     });
 
-    // Return invoice details
+    // Return invoice details with explicit number conversion
     const billingHistory = invoices.data.map((invoice: any) => ({
       id: invoice.id,
       amount: invoice.amount_paid || 0,
       currency: invoice.currency || 'usd',
       status: invoice.status,
-      created: invoice.created,
+      created: Number(invoice.created),
       invoicePdf: invoice.invoice_pdf,
       hostedInvoiceUrl: invoice.hosted_invoice_url,
-      periodStart: invoice.period_start,
-      periodEnd: invoice.period_end,
+      periodStart: Number(invoice.period_start),
+      periodEnd: Number(invoice.period_end),
     }));
 
     return NextResponse.json({ invoices: billingHistory });

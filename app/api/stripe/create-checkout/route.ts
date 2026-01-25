@@ -67,6 +67,12 @@ export async function POST(req: NextRequest) {
         serverId: serverId,
         userId: session.user?.id || 'unknown',
       },
+      subscription_data: {
+        metadata: {
+          serverId: serverId,
+          userId: session.user?.id || 'unknown',
+        },
+      },
       client_reference_id: serverId,
       ...(session.user?.email && { customer_email: session.user.email }),
     });

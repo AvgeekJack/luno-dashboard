@@ -131,12 +131,29 @@ export default function ManageSubscriptionPage() {
     }
   };
 
-  const formatDate = (timestamp: number) => {
-    console.log('formatDate input:', timestamp, 'type:', typeof timestamp);
-    const milliseconds = timestamp * 1000;
+  const formatDate = (timestamp: number | string) => {
+    // Convert to number if it's a string
+    const numTimestamp = typeof timestamp === 'string' ? parseInt(timestamp, 10) : timestamp;
+    console.log('formatDate input:', timestamp, 'type:', typeof timestamp, 'converted:', numTimestamp);
+    
+    // Check if valid number
+    if (isNaN(numTimestamp) || numTimestamp === 0) {
+      console.error('Invalid timestamp:', timestamp);
+      return 'Invalid Date';
+    }
+    
+    // Convert Unix timestamp (seconds) to milliseconds
+    const milliseconds = numTimestamp * 1000;
     console.log('milliseconds:', milliseconds);
+    
     const date = new Date(milliseconds);
     console.log('date object:', date, 'isValid:', !isNaN(date.getTime()));
+    
+    if (isNaN(date.getTime())) {
+      console.error('Invalid date created from timestamp:', numTimestamp);
+      return 'Invalid Date';
+    }
+    
     const formatted = date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
