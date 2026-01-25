@@ -3,17 +3,15 @@ import Stripe from 'stripe';
 import dbConnect from '@/lib/mongoose';
 import ServerSettings from '@/lib/models/ServerSettings';
 
-// Initialize Stripe with secret key
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-
-// Webhook secret for signature verification
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
-
 // Disable body parsing for raw body access (required for Stripe signature verification)
 export const runtime = 'nodejs';
 
 export async function POST(req: NextRequest) {
   try {
+    // Initialize Stripe at runtime
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+
     // Get the raw body as a buffer
     const body = await req.text();
     const signature = req.headers.get('stripe-signature');
