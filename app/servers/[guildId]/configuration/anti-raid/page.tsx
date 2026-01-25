@@ -91,10 +91,10 @@ export default function AntiRaidPage() {
 
     const fetchData = async () => {
       try {
-        const [channelsRes, settingsRes, generalRes] = await Promise.all([
+        const [channelsRes, antiRaidRes, settingsRes] = await Promise.all([
           fetch(`/api/servers/${gid}/channels-and-roles`),
           fetch(`/api/servers/${gid}/configuration/anti-raid`),
-          fetch(`/api/servers/${gid}/general`)
+          fetch(`/api/servers/${gid}/settings`)
         ]);
 
         if (channelsRes.ok) {
@@ -102,21 +102,28 @@ export default function AntiRaidPage() {
           setChannels(data.channels || []);
         }
 
-        if (generalRes.ok) {
-          const data = await generalRes.json();
-          if (data.premium !== undefined) {
-            setSettings(prev => ({ ...prev, premium: data.premium }));
-            setOriginalSettings(prev => ({ ...prev, premium: data.premium }));
-          }
-        }
-
+        let premiumStatus = false;
         if (settingsRes.ok) {
           const data = await settingsRes.json();
+          premiumStatus = data.premium || false;
+          console.log('Premium status from MongoDB:', premiumStatus);
+        }
+
+        if (antiRaidRes.ok) {
+          const data = await antiRaidRes.json();
           if (data.antiRaid) {
-            const loadedSettings = { ...settings, ...data.antiRaid };
-            setSettings(prev => ({ ...prev, ...loadedSettings }));
-            setOriginalSettings(prev => ({ ...prev, ...loadedSettings }));
+            const loadedSettings = { 
+              ...settings, 
+              ...data.antiRaid,
+              premium: premiumStatus 
+            };
+            setSettings(loadedSettings);
+            setOriginalSettings(loadedSettings);
           }
+        } else {
+          // If no anti-raid settings, just set premium
+          setSettings(prev => ({ ...prev, premium: premiumStatus }));
+          setOriginalSettings(prev => ({ ...prev, premium: premiumStatus }));
         }
       } catch (error) {
         console.error('Failed to fetch data:', error);
