@@ -396,6 +396,12 @@ export default function ServerSettings() {
                 <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center">
                   <img src="/premium-icon.svg" alt="Premium" className="w-7 h-7 text-white" />
                 </div>
+                {!settings?.premium && (
+                  <button className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition text-sm flex items-center gap-2">
+                    <img src="/premium-icon.svg" alt="" className="w-4 h-4" />
+                    Enroll Now
+                  </button>
+                )}
               </div>
               <div className="text-sm text-slate-500 mb-1">Premium Status</div>
               <div className="text-3xl font-bold text-slate-900">
