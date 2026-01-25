@@ -207,7 +207,7 @@ export default function AutomodPage() {
   }
 
   return (
-    <div className="min-h-screen bg-orange-50 text-[#0f172a] flex">
+    <div className="min-h-screen bg-[#f8f9fa] text-[#0f172a] flex">
       {/* Mobile Menu Button */}
       <button 
         className="md:hidden fixed top-4 left-4 z-[60] bg-white p-2 rounded-lg shadow-lg border border-orange-100"
@@ -333,13 +333,14 @@ export default function AutomodPage() {
           </nav>
       </aside>
 
-      <main className="flex-1 md:ml-64 py-12 px-4 md:px-8 pt-20 md:pt-12">
+      <main className="flex-1 md:ml-64 py-12 px-4 md:px-8 pt-20 md:pt-12 flex justify-center">
         <div className="w-full max-w-5xl space-y-6">
           <div className="space-y-1">
             <p className="text-xs uppercase tracking-[0.15em] text-orange-500 font-semibold">CONFIGURATION</p>
             <h1 className="text-4xl font-bold text-[#0f172a]">Automod</h1>
           </div>
 
+          {/* Automod Configuration Card */}
           <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8 space-y-6">
             {/* Master Toggle */}
             <div className="flex items-center justify-between">
@@ -370,13 +371,17 @@ export default function AutomodPage() {
                 </div>
               </div>
             </div>
+              </>
+            )}
+          </div>
 
-            {/* Filter Features Section */}
-            <div>
-              <div className="mb-4">
-                <h2 className="text-lg font-semibold text-[#0f172a]">Filter Features</h2>
-                <p className="text-sm text-slate-500">Enable or disable specific filter types</p>
-              </div>
+          {/* Filter Features Card */}
+          {settings.enabled && (
+          <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+            <div className="mb-6">
+              <h2 className="text-lg font-semibold text-[#0f172a]">Filter Features</h2>
+              <p className="text-sm text-slate-500">Enable or disable specific filter types</p>
+            </div>
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
@@ -468,13 +473,16 @@ export default function AutomodPage() {
                 </div>
               </div>
             </div>
+          </div>
+          )}
 
-            {/* Thresholds Section */}
-            <div>
-              <div className="mb-4">
-                <h2 className="text-lg font-semibold text-[#0f172a]">Thresholds & Limits</h2>
-                <p className="text-sm text-slate-500">Configure detection sensitivity</p>
-              </div>
+          {/* Thresholds & Limits Card */}
+          {settings.enabled && (
+          <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+            <div className="mb-6">
+              <h2 className="text-lg font-semibold text-[#0f172a]">Thresholds & Limits</h2>
+              <p className="text-sm text-slate-500">Configure detection sensitivity</p>
+            </div>
 
               <div className="space-y-4">
                 <div>
@@ -573,13 +581,16 @@ export default function AutomodPage() {
                 </div>
               </div>
             </div>
+          </div>
+          )}
 
-            {/* Whitelist Section */}
-            <div>
-              <div className="mb-4">
-                <h2 className="text-lg font-semibold text-[#0f172a]">Whitelist System</h2>
-                <p className="text-sm text-slate-500">Exempt channels, roles, or users</p>
-              </div>
+          {/* Whitelist System Card */}
+          {settings.enabled && (
+          <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+            <div className="mb-6">
+              <h2 className="text-lg font-semibold text-[#0f172a]">Whitelist System</h2>
+              <p className="text-sm text-slate-500">Exempt channels, roles, or users</p>
+            </div>
 
               <div className="space-y-4">
                 <div>
@@ -660,13 +671,16 @@ export default function AutomodPage() {
                 </div>
               </div>
             </div>
+          </div>
+          )}
 
-            {/* Action Settings Section */}
-            <div>
-              <div className="mb-4">
-                <h2 className="text-lg font-semibold text-[#0f172a]">Action Settings</h2>
-                <p className="text-sm text-slate-500">Configure how AutoMod responds to violations</p>
-              </div>
+          {/* Action Settings Card */}
+          {settings.enabled && (
+          <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+            <div className="mb-6">
+              <h2 className="text-lg font-semibold text-[#0f172a]">Action Settings</h2>
+              <p className="text-sm text-slate-500">Configure how AutoMod responds to violations</p>
+            </div>
 
               <div className="space-y-4">
                 <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
@@ -758,10 +772,8 @@ export default function AutomodPage() {
                 </div>
               </div>
             </div>
-
-              </>
-            )}
           </div>
+          )}
         </div>
       </main>
 
