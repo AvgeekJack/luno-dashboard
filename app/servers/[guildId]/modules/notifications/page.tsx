@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter, useParams, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { Switch } from '@/components/ui/switch';
 
 interface MessageConfig {
   enabled: boolean;
@@ -31,6 +32,7 @@ export default function NotificationsPage() {
   const [loading, setLoading] = useState(true);
   const [hasChanges, setHasChanges] = useState(false);
   const [channels, setChannels] = useState<Array<{ id: string; name: string }>>([]);
+  const [premium, setPremium] = useState(false);
 
   const [welcomeMessage, setWelcomeMessage] = useState<MessageConfig>({
     enabled: false,
@@ -84,6 +86,13 @@ export default function NotificationsPage() {
           welcomeMessage: data.welcomeMessage || welcomeMessage,
           leaveMessage: data.leaveMessage || leaveMessage
         });
+      }
+      
+      // Fetch premium status
+      const premiumRes = await fetch(`/api/servers/${guildId}/settings`);
+      if (premiumRes.ok) {
+        const premiumData = await premiumRes.json();
+        setPremium(premiumData.premium || false);
       }
     } catch (error) {
       console.error('Failed to fetch settings:', error);
@@ -175,39 +184,30 @@ export default function NotificationsPage() {
     setConfig: React.Dispatch<React.SetStateAction<MessageConfig>>,
     sectionTitle: string
   ) => (
-    <div className="space-y-4 mb-6">
+    <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-[#0f172a]">{sectionTitle}</h3>
-        <label className="flex items-center cursor-pointer">
-          <div className="relative">
-            <input
-              type="checkbox"
-              className="sr-only"
-              checked={config.enabled}
-              onChange={(e) => setConfig({ ...config, enabled: e.target.checked })}
-            />
-            <div className={`block w-14 h-8 rounded-full ${config.enabled ? 'bg-orange-500' : 'bg-gray-300'}`}></div>
-            <div className={`absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform ${config.enabled ? 'transform translate-x-6' : ''}`}></div>
-          </div>
-          <span className="ml-3 text-sm font-medium text-gray-700">
-            {config.enabled ? 'Enabled' : 'Disabled'}
-          </span>
-        </label>
+        <div className="pt-1">
+          <Switch
+            checked={config.enabled}
+            onCheckedChange={(checked) => setConfig({ ...config, enabled: checked })}
+          />
+        </div>
       </div>
 
       <div 
         className={`overflow-hidden transition-all duration-700 ${config.enabled ? 'max-h-[10000px] opacity-100' : 'max-h-0 opacity-0'}`}
         style={{ transitionProperty: 'max-height, opacity' }}
       >
-        <div className="space-y-4 border-t border-orange-100 pt-4">
+        <div className="space-y-4 border-t border-slate-200 pt-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-slate-700 mb-2">
                   Channel
                 </label>
                 <select
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
                   value={config.channel}
                   onChange={(e) => setConfig({ ...config, channel: e.target.value })}
                   disabled={!config.enabled}
@@ -219,69 +219,117 @@ export default function NotificationsPage() {
                 </select>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+              <div className="relative p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
+                <label className="block text-sm font-medium text-slate-700 mb-2">
                   Title
                 </label>
                 <input
                   type="text"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
                   value={config.title}
                   onChange={(e) => setConfig({ ...config, title: e.target.value })}
-                  disabled={!config.enabled}
+                  disabled={!config.enabled || !premium}
                   placeholder="Enter title"
                 />
+                {!premium && (
+                  <div className="absolute inset-0 bg-orange-50/95 backdrop-blur-[2px] rounded-lg z-10 flex items-center justify-center p-4">
+                    <div className="text-center">
+                      <img src="/premium-icon.svg" alt="Premium" className="w-8 h-8 mx-auto mb-2 opacity-90" />
+                      <p className="text-sm font-semibold text-slate-800 mb-1">Premium Only</p>
+                      <p className="text-xs text-slate-600 mb-3">Customize your message title</p>
+                      <button className="px-3 py-1.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs font-semibold rounded-md hover:from-orange-600 hover:to-orange-700 transition-all shadow-sm">
+                        Upgrade Now
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+              <div className="relative p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
+                <label className="block text-sm font-medium text-slate-700 mb-2">
                   Description
                 </label>
                 <textarea
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 resize-none"
+                  className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 resize-none"
                   rows={4}
                   value={config.description}
                   onChange={(e) => setConfig({ ...config, description: e.target.value })}
-                  disabled={!config.enabled}
+                  disabled={!config.enabled || !premium}
                   placeholder="Enter description"
                 />
+                {!premium && (
+                  <div className="absolute inset-0 bg-orange-50/95 backdrop-blur-[2px] rounded-lg z-10 flex items-center justify-center p-4">
+                    <div className="text-center">
+                      <img src="/premium-icon.svg" alt="Premium" className="w-8 h-8 mx-auto mb-2 opacity-90" />
+                      <p className="text-sm font-semibold text-slate-800 mb-1">Premium Only</p>
+                      <p className="text-xs text-slate-600 mb-3">Customize your message description</p>
+                      <button className="px-3 py-1.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs font-semibold rounded-md hover:from-orange-600 hover:to-orange-700 transition-all shadow-sm">
+                        Upgrade Now
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+              <div className="relative p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
+                <label className="block text-sm font-medium text-slate-700 mb-2">
                   Footer
                 </label>
                 <input
                   type="text"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
                   value={config.footer}
                   onChange={(e) => setConfig({ ...config, footer: e.target.value })}
-                  disabled={!config.enabled}
+                  disabled={!config.enabled || !premium}
                   placeholder="Enter footer text"
                 />
+                {!premium && (
+                  <div className="absolute inset-0 bg-orange-50/95 backdrop-blur-[2px] rounded-lg z-10 flex items-center justify-center p-4">
+                    <div className="text-center">
+                      <img src="/premium-icon.svg" alt="Premium" className="w-8 h-8 mx-auto mb-2 opacity-90" />
+                      <p className="text-sm font-semibold text-slate-800 mb-1">Premium Only</p>
+                      <p className="text-xs text-slate-600 mb-3">Add a custom footer to your message</p>
+                      <button className="px-3 py-1.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs font-semibold rounded-md hover:from-orange-600 hover:to-orange-700 transition-all shadow-sm">
+                        Upgrade Now
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+              <div className="relative p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
+                <label className="block text-sm font-medium text-slate-700 mb-2">
                   Embed Color
                 </label>
                 <div className="flex items-center gap-2">
                   <input
                     type="color"
-                    className="h-10 w-20 rounded border border-gray-300 cursor-pointer"
+                    className="h-10 w-20 rounded border border-slate-200 cursor-pointer"
                     value={config.color}
                     onChange={(e) => setConfig({ ...config, color: e.target.value })}
-                    disabled={!config.enabled}
+                    disabled={!config.enabled || !premium}
                   />
                   <input
                     type="text"
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="flex-1 px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
                     value={config.color}
                     onChange={(e) => setConfig({ ...config, color: e.target.value })}
-                    disabled={!config.enabled}
+                    disabled={!config.enabled || !premium}
                     placeholder="#f97316"
                   />
                 </div>
+                {!premium && (
+                  <div className="absolute inset-0 bg-orange-50/95 backdrop-blur-[2px] rounded-lg z-10 flex items-center justify-center p-4">
+                    <div className="text-center">
+                      <img src="/premium-icon.svg" alt="Premium" className="w-8 h-8 mx-auto mb-2 opacity-90" />
+                      <p className="text-sm font-semibold text-slate-800 mb-1">Premium Only</p>
+                      <p className="text-xs text-slate-600 mb-3">Choose a custom embed color</p>
+                      <button className="px-3 py-1.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs font-semibold rounded-md hover:from-orange-600 hover:to-orange-700 transition-all shadow-sm">
+                        Upgrade Now
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="bg-blue-50 border border-blue-200 rounded-md p-3">
@@ -440,14 +488,26 @@ export default function NotificationsPage() {
             <h1 className="text-3xl font-bold">Welcome Messages</h1>
           </div>
 
+          {/* Welcome Messages Card */}
           <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
-            <div className="space-y-1">
-              <h2 className="text-lg font-semibold text-[#0f172a]">Welcome & Leave Messages</h2>
-              <p className="text-sm text-slate-500">Configure welcome and leave messages for your server</p>
+            <div className="space-y-1 mb-6">
+              <h2 className="text-lg font-semibold text-[#0f172a]">Welcome Messages</h2>
+              <p className="text-sm text-slate-500">Configure welcome messages when users join your server</p>
             </div>
 
-            <div className="space-y-6 border-t border-slate-200 pt-6 mt-6">
+            <div className="border-t border-slate-200 pt-6">
               {renderMessageSection(welcomeMessage, setWelcomeMessage, 'Welcome Messages')}
+            </div>
+          </div>
+
+          {/* Leave Messages Card */}
+          <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+            <div className="space-y-1 mb-6">
+              <h2 className="text-lg font-semibold text-[#0f172a]">Leave Messages</h2>
+              <p className="text-sm text-slate-500">Configure leave messages when users leave your server</p>
+            </div>
+
+            <div className="border-t border-slate-200 pt-6">
               {renderMessageSection(leaveMessage, setLeaveMessage, 'Leave Messages')}
             </div>
           </div>
