@@ -45,6 +45,12 @@ export async function GET(
     // Cast to access properties
     const sub = subscription as any;
 
+    console.log('[Subscription API] Raw Stripe data:', {
+      current_period_start: sub.current_period_start,
+      current_period_end: sub.current_period_end,
+      cancel_at_period_end: sub.cancel_at_period_end,
+    });
+
     // Return subscription details
     return NextResponse.json({
       id: subscription.id,

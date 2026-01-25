@@ -17,12 +17,25 @@ interface SubscriptionData {
   interval: string;
 }
 
+interface Invoice {
+  id: string;
+  amount: number;
+  currency: string;
+  status: string;
+  created: number;
+  invoicePdf: string | null;
+  hostedInvoiceUrl: string | null;
+  periodStart: number;
+  periodEnd: number;
+}
+
 export default function ManageSubscriptionPage() {
   const { data: session, status } = useSession();
   const { guildId } = useParams();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [subscription, setSubscription] = useState<SubscriptionData | null>(null);
+  const [billingHistory, setBillingHistory] = useState<Invoice[]>([]);
   const [canceling, setCanceling] = useState(false);
   const [reactivating, setReactivating] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -52,8 +65,21 @@ export default function ManageSubscriptionPage() {
       }
     };
 
+    const fetchBillingHistory = async () => {
+      try {
+        const res = await fetch(`/api/servers/${guildId}/billing`);
+        if (res.ok) {
+          const data = await res.json();
+          setBillingHistory(data.invoices || []);
+        }
+      } catch (error) {
+        console.error('Failed to fetch billing history:', error);
+      }
+    };
+
     if (guildId) {
       fetchSubscription();
+      fetchBillingHistory();
     }
   }, [guildId]);
 
@@ -265,6 +291,56 @@ export default function ManageSubscriptionPage() {
               If you have any questions about your subscription or need assistance, feel free to contact our support team.
             </p>
           </div>
+
+          {/* Billing History */}
+          <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+            <h3 className="text-xl font-bold text-slate-900 mb-4">Billing History</h3>
+            {billingHistory.length === 0 ? (
+              <p className="text-slate-600">No billing history available yet.</p>
+            ) : (
+              <div className="space-y-3">
+                {billingHistory.map((invoice) => (
+                  <div key={invoice.id} className="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
+                    <div className="flex-1">
+                      <p className="font-semibold text-slate-900">
+                        {formatAmount(invoice.amount, invoice.currency)}
+                      </p>
+                      <p className="text-sm text-slate-600">
+                        {formatDate(invoice.created)} • {invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1)}
+                      </p>
+                    </div>
+                    {invoice.hostedInvoiceUrl && (
+                      <a
+                        href={invoice.hostedInvoiceUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition text-sm"
+                      >
+                        View Invoice
+                      </a>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Cancel Subscription Section */}
+          {!subscription.cancelAtPeriodEnd && (
+            <div className="bg-white border border-red-200 rounded-xl shadow-sm p-8">
+              <h3 className="text-xl font-bold text-red-900 mb-4">Cancel Subscription</h3>
+              <p className="text-slate-600 mb-6">
+                If you cancel your subscription, auto-renewal will be disabled and you will retain access to premium features until {formatDate(subscription.currentPeriodEnd)}. You can re-enable auto-renewal at any time before then.
+              </p>
+              <button
+                onClick={handleCancelSubscription}
+                disabled={canceling}
+                className="px-6 py-3 bg-red-500 hover:bg-red-600 disabled:bg-red-300 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition"
+              >
+                {canceling ? 'Processing...' : 'Turn Off Auto-Renewal'}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
