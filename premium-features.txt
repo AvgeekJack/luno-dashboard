@@ -1,0 +1,43 @@
+Luno is a powerful, all-in-one Discord bot and web dashboard designed to help you manage, protect, and grow your community with ease. The Luno dashboard provides an intuitive interface for configuring server settings, moderation tools, automations, welcome and notification messages, reaction roles, and more—all in real time. With advanced anti-raid, verification, and logging features, Luno keeps your server safe and organized. Whether you’re a new server owner or managing a large community, Luno offers flexible modules and premium upgrades to fit your needs, backed by fast support and regular updates.
+
+
+
+Luno Premium unlocks advanced logging, custom welcome and notification messages, enhanced anti-raid and verification controls, unlimited reaction roles, and priority support—giving your server more power, flexibility, and protection.
+
+Luno Premium Features (from Configuration & Modules Pages)
+============================================================
+
+1. **Custom Welcome Messages**
+   - Personalize titles, descriptions, colors, and footers for welcome/leave/boost notifications.
+
+2. **Advanced Logging Options**
+   - Log ignored channels, roles, and users
+   - Message content logging
+   - Custom retention periods for audit logs
+
+3. **Custom Anti-Raid Settings**
+   - Fine-tuned protection parameters
+   - Precise rate limiting and advanced anti-raid customization
+
+4. **Advanced Verification Customization**
+   - Custom rules and requirements for verification
+   - Custom verification message description
+
+5. **Reaction Roles**
+   - Unlimited reaction role panels
+   - Advanced panel options
+
+6. **Priority Support**
+   - Faster support ticket response
+
+7. **Notification Embeds**
+   - Custom embed color, title, description, and footer for notifications
+
+8. **Other Module Upgrades**
+   - Some modules (e.g., Announcements, Moderation, Utilities) may have additional premium-only options or higher limits
+
+---
+
+**Note:**
+- Premium overlays and upgrade prompts are shown for these features if the server does not have premium.
+- This list is based on all Configuration and Modules pages in the project as of January 2026.
