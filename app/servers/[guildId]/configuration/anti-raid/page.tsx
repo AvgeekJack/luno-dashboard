@@ -15,6 +15,7 @@ interface AntiRaidSettings {
   verificationLevel: number;
   autoKickNewAccounts: boolean;
   kickOnRateExceeded: boolean;
+  premium?: boolean;
   enabledBy: string | null;
   enabledAt: Date | null;
   lastUpdatedBy: string | null;
@@ -90,9 +91,10 @@ export default function AntiRaidPage() {
 
     const fetchData = async () => {
       try {
-        const [channelsRes, settingsRes] = await Promise.all([
+        const [channelsRes, settingsRes, generalRes] = await Promise.all([
           fetch(`/api/servers/${gid}/channels-and-roles`),
-          fetch(`/api/servers/${gid}/configuration/anti-raid`)
+          fetch(`/api/servers/${gid}/configuration/anti-raid`),
+          fetch(`/api/servers/${gid}/general`)
         ]);
 
         if (channelsRes.ok) {
@@ -106,6 +108,14 @@ export default function AntiRaidPage() {
             const loadedSettings = { ...settings, ...data.antiRaid };
             setSettings(loadedSettings);
             setOriginalSettings(loadedSettings);
+          }
+        }
+
+        if (generalRes.ok) {
+          const data = await generalRes.json();
+          if (data.premium !== undefined) {
+            setSettings(prev => ({ ...prev, premium: data.premium }));
+            setOriginalSettings(prev => ({ ...prev, premium: data.premium }));
           }
         }
       } catch (error) {
@@ -418,17 +428,19 @@ export default function AntiRaidPage() {
                 <p className="text-sm text-slate-500">Fine-tune protection parameters</p>
               </div>
 
-              {/* Premium Overlay */}
-              <div className="absolute inset-0 bg-white/80 backdrop-blur-sm rounded-xl flex items-center justify-center z-10">
-                <div className="text-center space-y-3">
-                  <div className="w-16 h-16 bg-orange-500 rounded-xl flex items-center justify-center mx-auto">
-                    <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 2L4 7v10l8 5 8-5V7l-8-5z" />
-                    </svg>
+              {/* Premium Overlay - Only show if premium is false */}
+              {!settings.premium && (
+                <div className="absolute inset-0 bg-orange-500/30 backdrop-blur-sm rounded-xl flex items-center justify-center z-10 pointer-events-auto cursor-not-allowed">
+                  <div className="text-center space-y-3 pointer-events-none">
+                    <div className="w-16 h-16 bg-orange-500 rounded-xl flex items-center justify-center mx-auto shadow-lg">
+                      <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                      </svg>
+                    </div>
+                    <p className="text-lg font-semibold text-slate-900">This Feature Requires A Premium Subscription</p>
                   </div>
-                  <p className="text-lg font-semibold text-slate-900">This Feature Requires A Premium Subscription</p>
                 </div>
-              </div>
+              )}
               
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="p-5 rounded-lg bg-slate-50 border border-slate-200 space-y-3">
