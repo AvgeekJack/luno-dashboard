@@ -220,6 +220,22 @@ export default function NotificationsPage() {
               </div>
 
               <div className="relative p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
+                {!premium && (
+                  <div className="absolute inset-0 bg-orange-50/95 backdrop-blur-[2px] rounded-lg z-10 flex items-start gap-3 px-3 pt-3 pb-3">
+                    <div className="flex-shrink-0 w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
+                      <img src="/premium-icon.svg" alt="Premium" className="w-6 h-6" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-bold text-sm text-slate-900 mb-0.5">Message Title</h4>
+                      <p className="text-xs text-slate-700 mb-2">Customize your message title</p>
+                      <button className="w-full px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition text-sm flex items-center justify-center gap-2">
+                        <img src="/premium-icon.svg" alt="" className="w-4 h-4" />
+                        Upgrade to Premium
+                        <span className="text-xs">→</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
                 <label className="block text-sm font-medium text-slate-700 mb-2">
                   Title
                 </label>
@@ -231,21 +247,25 @@ export default function NotificationsPage() {
                   disabled={!config.enabled || !premium}
                   placeholder="Enter title"
                 />
+              </div>
+
+              <div className="relative p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
                 {!premium && (
-                  <div className="absolute inset-0 bg-orange-50/95 backdrop-blur-[2px] rounded-lg z-10 flex items-center justify-center p-4">
-                    <div className="text-center">
-                      <img src="/premium-icon.svg" alt="Premium" className="w-8 h-8 mx-auto mb-2 opacity-90" />
-                      <p className="text-sm font-semibold text-slate-800 mb-1">Premium Only</p>
-                      <p className="text-xs text-slate-600 mb-3">Customize your message title</p>
-                      <button className="px-3 py-1.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs font-semibold rounded-md hover:from-orange-600 hover:to-orange-700 transition-all shadow-sm">
-                        Upgrade Now
+                  <div className="absolute inset-0 bg-orange-50/95 backdrop-blur-[2px] rounded-lg z-10 flex items-start gap-3 px-3 pt-3 pb-3">
+                    <div className="flex-shrink-0 w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
+                      <img src="/premium-icon.svg" alt="Premium" className="w-6 h-6" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-bold text-sm text-slate-900 mb-0.5">Message Description</h4>
+                      <p className="text-xs text-slate-700 mb-2">Customize your message description</p>
+                      <button className="w-full px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition text-sm flex items-center justify-center gap-2">
+                        <img src="/premium-icon.svg" alt="" className="w-4 h-4" />
+                        Upgrade to Premium
+                        <span className="text-xs">→</span>
                       </button>
                     </div>
                   </div>
                 )}
-              </div>
-
-              <div className="relative p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
                 <label className="block text-sm font-medium text-slate-700 mb-2">
                   Description
                 </label>
@@ -257,21 +277,25 @@ export default function NotificationsPage() {
                   disabled={!config.enabled || !premium}
                   placeholder="Enter description"
                 />
+              </div>
+
+              <div className="relative p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
                 {!premium && (
-                  <div className="absolute inset-0 bg-orange-50/95 backdrop-blur-[2px] rounded-lg z-10 flex items-center justify-center p-4">
-                    <div className="text-center">
-                      <img src="/premium-icon.svg" alt="Premium" className="w-8 h-8 mx-auto mb-2 opacity-90" />
-                      <p className="text-sm font-semibold text-slate-800 mb-1">Premium Only</p>
-                      <p className="text-xs text-slate-600 mb-3">Customize your message description</p>
-                      <button className="px-3 py-1.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs font-semibold rounded-md hover:from-orange-600 hover:to-orange-700 transition-all shadow-sm">
-                        Upgrade Now
+                  <div className="absolute inset-0 bg-orange-50/95 backdrop-blur-[2px] rounded-lg z-10 flex items-start gap-3 px-3 pt-3 pb-3">
+                    <div className="flex-shrink-0 w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
+                      <img src="/premium-icon.svg" alt="Premium" className="w-6 h-6" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-bold text-sm text-slate-900 mb-0.5">Message Footer</h4>
+                      <p className="text-xs text-slate-700 mb-2">Add a custom footer to your message</p>
+                      <button className="w-full px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition text-sm flex items-center justify-center gap-2">
+                        <img src="/premium-icon.svg" alt="" className="w-4 h-4" />
+                        Upgrade to Premium
+                        <span className="text-xs">→</span>
                       </button>
                     </div>
                   </div>
                 )}
-              </div>
-
-              <div className="relative p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
                 <label className="block text-sm font-medium text-slate-700 mb-2">
                   Footer
                 </label>
@@ -283,21 +307,25 @@ export default function NotificationsPage() {
                   disabled={!config.enabled || !premium}
                   placeholder="Enter footer text"
                 />
+              </div>
+
+              <div className="relative p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
                 {!premium && (
-                  <div className="absolute inset-0 bg-orange-50/95 backdrop-blur-[2px] rounded-lg z-10 flex items-center justify-center p-4">
-                    <div className="text-center">
-                      <img src="/premium-icon.svg" alt="Premium" className="w-8 h-8 mx-auto mb-2 opacity-90" />
-                      <p className="text-sm font-semibold text-slate-800 mb-1">Premium Only</p>
-                      <p className="text-xs text-slate-600 mb-3">Add a custom footer to your message</p>
-                      <button className="px-3 py-1.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs font-semibold rounded-md hover:from-orange-600 hover:to-orange-700 transition-all shadow-sm">
-                        Upgrade Now
+                  <div className="absolute inset-0 bg-orange-50/95 backdrop-blur-[2px] rounded-lg z-10 flex items-start gap-3 px-3 pt-3 pb-3">
+                    <div className="flex-shrink-0 w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
+                      <img src="/premium-icon.svg" alt="Premium" className="w-6 h-6" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-bold text-sm text-slate-900 mb-0.5">Embed Color</h4>
+                      <p className="text-xs text-slate-700 mb-2">Choose a custom embed color</p>
+                      <button className="w-full px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition text-sm flex items-center justify-center gap-2">
+                        <img src="/premium-icon.svg" alt="" className="w-4 h-4" />
+                        Upgrade to Premium
+                        <span className="text-xs">→</span>
                       </button>
                     </div>
                   </div>
                 )}
-              </div>
-
-              <div className="relative p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
                 <label className="block text-sm font-medium text-slate-700 mb-2">
                   Embed Color
                 </label>
@@ -318,18 +346,6 @@ export default function NotificationsPage() {
                     placeholder="#f97316"
                   />
                 </div>
-                {!premium && (
-                  <div className="absolute inset-0 bg-orange-50/95 backdrop-blur-[2px] rounded-lg z-10 flex items-center justify-center p-4">
-                    <div className="text-center">
-                      <img src="/premium-icon.svg" alt="Premium" className="w-8 h-8 mx-auto mb-2 opacity-90" />
-                      <p className="text-sm font-semibold text-slate-800 mb-1">Premium Only</p>
-                      <p className="text-xs text-slate-600 mb-3">Choose a custom embed color</p>
-                      <button className="px-3 py-1.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs font-semibold rounded-md hover:from-orange-600 hover:to-orange-700 transition-all shadow-sm">
-                        Upgrade Now
-                      </button>
-                    </div>
-                  </div>
-                )}
               </div>
 
               <div className="bg-blue-50 border border-blue-200 rounded-md p-3">
