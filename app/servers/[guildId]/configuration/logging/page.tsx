@@ -332,7 +332,7 @@ export default function LoggingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-orange-50 text-[#0f172a] flex overflow-x-hidden">
+    <div className="min-h-screen bg-[#f8f9fa] text-[#0f172a] flex overflow-x-hidden">
       {/* Mobile Menu Button */}
       <button 
         className="md:hidden fixed top-4 left-4 z-[60] bg-white p-2 rounded-lg shadow-lg border border-orange-100"
@@ -459,39 +459,36 @@ export default function LoggingPage() {
       </aside>
 
       <main className="flex-1 md:ml-64 py-12 px-4 md:px-8 pt-20 md:pt-12 flex justify-center">
-        <div className="w-full max-w-6xl space-y-4 md:space-y-6">
+        <div className="w-full max-w-5xl space-y-6">
           <div className="space-y-1">
-            <p className="text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">Configuration</p>
-            <h1 className="text-3xl font-bold">Logging</h1>
+            <p className="text-xs uppercase tracking-[0.15em] text-orange-500 font-semibold">CONFIGURATION</p>
+            <h1 className="text-4xl font-bold text-[#0f172a]">Logging</h1>
           </div>
 
-          <div className="bg-white border border-orange-100 rounded-2xl shadow-sm p-6 md:p-8 space-y-8">
+          {/* Logging Configuration Card */}
+          <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8 space-y-6">
             {/* Master Toggle */}
-            <div className="flex items-start justify-between gap-4">
-              <div className="space-y-1">
-                <h2 className="text-xl font-semibold text-[#0f172a]">Logging Configuration</h2>
-                <p className="text-slate-600">Configure event logging for your server.</p>
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-semibold text-[#0f172a]">Logging Configuration</h2>
+                <p className="text-sm text-slate-500">Configure event logging for your server.</p>
               </div>
-              <div className="flex items-center gap-2">
-                <Switch 
-                  checked={settings.enabled} 
-                  onCheckedChange={(checked) => updateSetting('enabled', checked)}
-                  className="scale-150"
-                />
-              </div>
+              <Switch 
+                checked={settings.enabled} 
+                onCheckedChange={(checked) => updateSetting('enabled', checked)}
+                className="scale-125"
+              />
             </div>
+          </div>
+          </div>
 
-            <div 
-              className={`overflow-hidden transition-all duration-700 ${settings.enabled ? 'max-h-[50000px] opacity-100' : 'max-h-0 opacity-0'}`}
-              style={{ transitionProperty: 'max-height, opacity' }}
-            >
-              <div className="space-y-8 border-t border-orange-100 pt-8">
-                {/* AutoMod Log Channel */}
-                <div className="space-y-4 bg-amber-50 p-6 rounded-lg border border-amber-200">
-                  <div className="space-y-1">
-                    <h2 className="text-xl font-semibold text-[#0f172a]">AutoMod Logging Channel</h2>
-                    <p className="text-sm text-slate-600">Configure where automod violations and actions are logged. Leave empty to disable logging for AutoMod.</p>
-                  </div>
+          {/* AutoMod Log Channel Card */}
+          {settings.enabled && (
+            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+              <div className="mb-6">
+                <h2 className="text-lg font-semibold text-[#0f172a]">AutoMod Logging Channel</h2>
+                <p className="text-sm text-slate-500">Configure where automod violations and actions are logged. Leave empty to disable logging for AutoMod.</p>
+              </div>
 
                   <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-4 rounded-lg border border-amber-200 bg-white">
                     <div className="flex-1">
@@ -1138,7 +1135,7 @@ export default function LoggingPage() {
                 </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </main>
 
