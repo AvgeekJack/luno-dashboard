@@ -60,7 +60,8 @@ export default function PremiumPage() {
       });
 
       if (!res.ok) {
-        throw new Error('Failed to create checkout session');
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'Failed to create checkout session');
       }
 
       const { url } = await res.json();
@@ -69,7 +70,8 @@ export default function PremiumPage() {
       }
     } catch (error) {
       console.error('Checkout error:', error);
-      alert('Failed to start checkout. Please try again.');
+      const errorMessage = error instanceof Error ? error.message : 'Failed to start checkout. Please try again.';
+      alert(errorMessage);
       setCheckoutLoading(false);
     }
   };
