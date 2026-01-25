@@ -333,222 +333,259 @@ export default function AutomodPage() {
           </nav>
       </aside>
 
-      <main className="flex-1 md:ml-64 py-12 px-4 md:px-8 pt-20 md:pt-12 flex justify-center">
-        <div className="w-full max-w-6xl space-y-4 md:space-y-6">
+      <main className="flex-1 md:ml-64 py-12 px-4 md:px-8 pt-20 md:pt-12">
+        <div className="w-full max-w-5xl space-y-6">
           <div className="space-y-1">
-            <p className="text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">Configuration</p>
-            <h1 className="text-3xl font-bold">Automod</h1>
+            <p className="text-xs uppercase tracking-[0.15em] text-orange-500 font-semibold">CONFIGURATION</p>
+            <h1 className="text-4xl font-bold text-[#0f172a]">Automod</h1>
           </div>
 
-          <div className="bg-white border border-orange-100 rounded-2xl shadow-sm p-6 md:p-8 space-y-8">
+          <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8 space-y-6">
             {/* Master Toggle */}
-            <div className="flex items-start justify-between gap-4">
-              <div className="space-y-1">
-                <h2 className="text-xl font-semibold text-[#0f172a]">Automod Configuration</h2>
-                <p className="text-slate-600">Configure automatic moderation filters and rules for your server.</p>
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-semibold text-[#0f172a]">Automod Configuration</h2>
+                <p className="text-sm text-slate-500">Configure automatic moderation filters and rules for your server.</p>
               </div>
-              <div className="flex items-center gap-2">
-                <Switch 
-                  checked={settings.enabled} 
-                  onCheckedChange={(checked) => updateSetting('enabled', checked)}
-                  className="scale-150"
-                />
-              </div>
+              <Switch 
+                checked={settings.enabled} 
+                onCheckedChange={(checked) => updateSetting('enabled', checked)}
+                className="scale-125"
+              />
             </div>
 
-            <div 
-              className={`overflow-hidden transition-all duration-700 ${settings.enabled ? 'max-h-[20000px] opacity-100' : 'max-h-0 opacity-0'}`}
-              style={{ transitionProperty: 'max-height, opacity' }}
-            >
-              <div className="space-y-8 border-t border-orange-100 pt-8">
+            {settings.enabled && (
+              <>
             {/* Info Box about Log Channel */}
-            <div className="p-4 rounded-lg border border-blue-200 bg-blue-50 space-y-2">
-              <div className="flex items-start gap-2">
-                <svg className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <div className="p-4 rounded-lg bg-blue-50 border border-blue-200">
+              <div className="flex items-start gap-3">
+                <svg className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                 </svg>
                 <div>
                   <p className="text-sm font-semibold text-blue-900">AutoMod Log Channel</p>
-                  <p className="text-xs text-blue-700 mt-1">
-                    AutoMod logging is now configured on the <Link href={`/servers/${gid}/configuration/logging`} className="font-semibold underline">Logging</Link> page at the top of the configuration.
+                  <p className="text-sm text-blue-700 mt-1">
+                    AutoMod logging is now configured on the <Link href={`/servers/${gid}/configuration/logging`} className="underline hover:text-blue-800">Logging page</Link> at the top of the configuration.
                   </p>
                 </div>
               </div>
             </div>
 
             {/* Filter Features Section */}
-            <div className="space-y-4">
-              <div className="space-y-1">
-                <h2 className="text-xl font-semibold text-[#0f172a]">Filter Features</h2>
-                <p className="text-sm text-slate-600">Enable or disable specific filter types</p>
+            <div>
+              <div className="mb-4">
+                <h2 className="text-lg font-semibold text-[#0f172a]">Filter Features</h2>
+                <p className="text-sm text-slate-500">Enable or disable specific filter types</p>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-3">
-                <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
                   <div>
-                    <p className="font-semibold text-slate-800 text-sm">Anti-Link</p>
-                    <p className="text-xs text-slate-500">Block all external URLs</p>
+                    <p className="font-semibold text-slate-900">Anti-Link</p>
+                    <p className="text-sm text-slate-500">Block all external URLs</p>
                   </div>
-                  <button type="button" onClick={() => updateSetting('antiLinkEnabled', !settings.antiLinkEnabled)}
-                    className={`${settings.antiLinkEnabled ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition`}>
-                    <span className={`${settings.antiLinkEnabled ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
-                  </button>
+                  <Switch 
+                    checked={settings.antiLinkEnabled} 
+                    onCheckedChange={(checked) => updateSetting('antiLinkEnabled', checked)}
+                  />
                 </div>
 
-                <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
+                <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
                   <div>
-                    <p className="font-semibold text-slate-800 text-sm">Anti-Invite</p>
-                    <p className="text-xs text-slate-500">Block Discord invite links</p>
+                    <p className="font-semibold text-slate-900">Anti-Invite</p>
+                    <p className="text-sm text-slate-500">Block Discord invite links</p>
                   </div>
-                  <button type="button" onClick={() => updateSetting('antiInviteEnabled', !settings.antiInviteEnabled)}
-                    className={`${settings.antiInviteEnabled ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition`}>
-                    <span className={`${settings.antiInviteEnabled ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
-                  </button>
+                  <Switch 
+                    checked={settings.antiInviteEnabled} 
+                    onCheckedChange={(checked) => updateSetting('antiInviteEnabled', checked)}
+                  />
                 </div>
 
-                <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
+                <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
                   <div>
-                    <p className="font-semibold text-slate-800 text-sm">Anti-Spam</p>
-                    <p className="text-xs text-slate-500">Prevent rapid message sending</p>
+                    <p className="font-semibold text-slate-900">Anti-Spam</p>
+                    <p className="text-sm text-slate-500">Prevent rapid message sending</p>
                   </div>
-                  <button type="button" onClick={() => updateSetting('antiSpamEnabled', !settings.antiSpamEnabled)}
-                    className={`${settings.antiSpamEnabled ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition`}>
-                    <span className={`${settings.antiSpamEnabled ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
-                  </button>
+                  <Switch 
+                    checked={settings.antiSpamEnabled} 
+                    onCheckedChange={(checked) => updateSetting('antiSpamEnabled', checked)}
+                  />
                 </div>
 
-                <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
+                <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
                   <div>
-                    <p className="font-semibold text-slate-800 text-sm">Anti-Mention</p>
-                    <p className="text-xs text-slate-500">Block excessive mentions</p>
+                    <p className="font-semibold text-slate-900">Anti-Mention</p>
+                    <p className="text-sm text-slate-500">Block excessive mentions</p>
                   </div>
-                  <button type="button" onClick={() => updateSetting('antiMentionEnabled', !settings.antiMentionEnabled)}
-                    className={`${settings.antiMentionEnabled ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition`}>
-                    <span className={`${settings.antiMentionEnabled ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
-                  </button>
+                  <Switch 
+                    checked={settings.antiMentionEnabled} 
+                    onCheckedChange={(checked) => updateSetting('antiMentionEnabled', checked)}
+                  />
                 </div>
 
-                <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
+                <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
                   <div>
-                    <p className="font-semibold text-slate-800 text-sm">Anti-Flood/Duplicate</p>
-                    <p className="text-xs text-slate-500">Stop repeated messages</p>
+                    <p className="font-semibold text-slate-900">Anti-Flood/Duplicate</p>
+                    <p className="text-sm text-slate-500">Stop repeated messages</p>
                   </div>
-                  <button type="button" onClick={() => updateSetting('antiFloodEnabled', !settings.antiFloodEnabled)}
-                    className={`${settings.antiFloodEnabled ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition`}>
-                    <span className={`${settings.antiFloodEnabled ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
-                  </button>
+                  <Switch 
+                    checked={settings.antiFloodEnabled} 
+                    onCheckedChange={(checked) => updateSetting('antiFloodEnabled', checked)}
+                  />
                 </div>
 
-                <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
+                <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
                   <div>
-                    <p className="font-semibold text-slate-800 text-sm">Anti-Zalgo</p>
-                    <p className="text-xs text-slate-500">Block corrupted text</p>
+                    <p className="font-semibold text-slate-900">Anti-Zalgo</p>
+                    <p className="text-sm text-slate-500">Block corrupted text</p>
                   </div>
-                  <button type="button" onClick={() => updateSetting('antiZalgoEnabled', !settings.antiZalgoEnabled)}
-                    className={`${settings.antiZalgoEnabled ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition`}>
-                    <span className={`${settings.antiZalgoEnabled ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
-                  </button>
+                  <Switch 
+                    checked={settings.antiZalgoEnabled} 
+                    onCheckedChange={(checked) => updateSetting('antiZalgoEnabled', checked)}
+                  />
                 </div>
 
-                <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
+                <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
                   <div>
-                    <p className="font-semibold text-slate-800 text-sm">Anti-Swear/Profanity</p>
-                    <p className="text-xs text-slate-500">Block bad words</p>
+                    <p className="font-semibold text-slate-900">Anti-Swear/Profanity</p>
+                    <p className="text-sm text-slate-500">Block bad words</p>
                   </div>
-                  <button type="button" onClick={() => updateSetting('antiSwearEnabled', !settings.antiSwearEnabled)}
-                    className={`${settings.antiSwearEnabled ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition`}>
-                    <span className={`${settings.antiSwearEnabled ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
-                  </button>
+                  <Switch 
+                    checked={settings.antiSwearEnabled} 
+                    onCheckedChange={(checked) => updateSetting('antiSwearEnabled', checked)}
+                  />
                 </div>
 
-                <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
+                <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
                   <div>
-                    <p className="font-semibold text-slate-800 text-sm">Caps Filter</p>
-                    <p className="text-xs text-slate-500">Block excessive capitals</p>
+                    <p className="font-semibold text-slate-900">Caps Filter</p>
+                    <p className="text-sm text-slate-500">Block excessive capitals</p>
                   </div>
-                  <button type="button" onClick={() => updateSetting('capsFilterEnabled', !settings.capsFilterEnabled)}
-                    className={`${settings.capsFilterEnabled ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition`}>
-                    <span className={`${settings.capsFilterEnabled ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
-                  </button>
+                  <Switch 
+                    checked={settings.capsFilterEnabled} 
+                    onCheckedChange={(checked) => updateSetting('capsFilterEnabled', checked)}
+                  />
                 </div>
               </div>
             </div>
 
             {/* Thresholds Section */}
-            <div className="space-y-4 border-t border-orange-100 pt-8">
-              <div className="space-y-1">
-                <h2 className="text-xl font-semibold text-[#0f172a]">Thresholds & Limits</h2>
-                <p className="text-sm text-slate-600">Configure detection sensitivity</p>
+            <div>
+              <div className="mb-4">
+                <h2 className="text-lg font-semibold text-[#0f172a]">Thresholds & Limits</h2>
+                <p className="text-sm text-slate-500">Configure detection sensitivity</p>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-4">
-                <div className="p-4 rounded-lg border border-orange-100 space-y-2">
-                  <label className="block text-sm font-semibold text-slate-800">Spam Threshold</label>
-                  <div className="grid grid-cols-2 gap-2">
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-semibold text-slate-900 mb-2">Spam Threshold</label>
+                  <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="text-xs text-slate-500">Messages</label>
-                      <input type="number" value={settings.spamMessageCount} onChange={(e) => updateSetting('spamMessageCount', parseInt(e.target.value))}
-                        className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm" min="1" max="20" />
+                      <label className="text-xs text-slate-500 block mb-1">Messages</label>
+                      <input 
+                        type="number" 
+                        value={settings.spamMessageCount} 
+                        onChange={(e) => updateSetting('spamMessageCount', parseInt(e.target.value))}
+                        className="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500" 
+                        min="1" 
+                        max="20" 
+                      />
                     </div>
                     <div>
-                      <label className="text-xs text-slate-500">Seconds</label>
-                      <input type="number" value={settings.spamTimeWindow} onChange={(e) => updateSetting('spamTimeWindow', parseInt(e.target.value))}
-                        className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm" min="1" max="60" />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="p-4 rounded-lg border border-orange-100 space-y-2">
-                  <label className="block text-sm font-semibold text-slate-800">Mention Limit</label>
-                  <input type="number" value={settings.mentionLimit} onChange={(e) => updateSetting('mentionLimit', parseInt(e.target.value))}
-                    className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm" min="1" max="50" />
-                  <p className="text-xs text-slate-500">Max mentions per message</p>
-                </div>
-
-                <div className="p-4 rounded-lg border border-orange-100 space-y-2">
-                  <label className="block text-sm font-semibold text-slate-800">Caps Percentage</label>
-                  <input type="number" value={settings.capsPercentage} onChange={(e) => updateSetting('capsPercentage', parseInt(e.target.value))}
-                    className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm" min="0" max="100" />
-                  <p className="text-xs text-slate-500">% of caps allowed</p>
-                </div>
-
-                <div className="p-4 rounded-lg border border-orange-100 space-y-2">
-                  <label className="block text-sm font-semibold text-slate-800">Flood/Duplicate Threshold</label>
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <label className="text-xs text-slate-500">Messages</label>
-                      <input type="number" value={settings.floodMessageCount} onChange={(e) => updateSetting('floodMessageCount', parseInt(e.target.value))}
-                        className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm" min="1" max="20" />
-                    </div>
-                    <div>
-                      <label className="text-xs text-slate-500">Seconds</label>
-                      <input type="number" value={settings.floodTimeWindow} onChange={(e) => updateSetting('floodTimeWindow', parseInt(e.target.value))}
-                        className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm" min="1" max="60" />
+                      <label className="text-xs text-slate-500 block mb-1">Seconds</label>
+                      <input 
+                        type="number" 
+                        value={settings.spamTimeWindow} 
+                        onChange={(e) => updateSetting('spamTimeWindow', parseInt(e.target.value))}
+                        className="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500" 
+                        min="1" 
+                        max="60" 
+                      />
                     </div>
                   </div>
                 </div>
 
-                <div className="p-4 rounded-lg border border-orange-100 space-y-2">
-                  <label className="block text-sm font-semibold text-slate-800">Zalgo Character Limit</label>
-                  <input type="number" value={settings.zalgoLimit} onChange={(e) => updateSetting('zalgoLimit', parseInt(e.target.value))}
-                    className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm" min="0" max="100" />
-                  <p className="text-xs text-slate-500">Combining characters allowed</p>
+                <div>
+                  <label className="block text-sm font-semibold text-slate-900 mb-2">Mention Limit</label>
+                  <input 
+                    type="number" 
+                    value={settings.mentionLimit} 
+                    onChange={(e) => updateSetting('mentionLimit', parseInt(e.target.value))}
+                    className="w-full max-w-md px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500" 
+                    min="1" 
+                    max="50" 
+                  />
+                  <p className="text-xs text-slate-500 mt-1">Max mentions per message</p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-slate-900 mb-2">Caps Percentage</label>
+                  <input 
+                    type="number" 
+                    value={settings.capsPercentage} 
+                    onChange={(e) => updateSetting('capsPercentage', parseInt(e.target.value))}
+                    className="w-full max-w-md px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500" 
+                    min="0" 
+                    max="100" 
+                  />
+                  <p className="text-xs text-slate-500 mt-1">% of caps allowed</p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-slate-900 mb-2">Flood/Duplicate Threshold</label>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs text-slate-500 block mb-1">Messages</label>
+                      <input 
+                        type="number" 
+                        value={settings.floodMessageCount} 
+                        onChange={(e) => updateSetting('floodMessageCount', parseInt(e.target.value))}
+                        className="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500" 
+                        min="1" 
+                        max="20" 
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs text-slate-500 block mb-1">Seconds</label>
+                      <input 
+                        type="number" 
+                        value={settings.floodTimeWindow} 
+                        onChange={(e) => updateSetting('floodTimeWindow', parseInt(e.target.value))}
+                        className="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500" 
+                        min="1" 
+                        max="60" 
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-slate-900 mb-2">Zalgo Character Limit</label>
+                  <input 
+                    type="number" 
+                    value={settings.zalgoLimit} 
+                    onChange={(e) => updateSetting('zalgoLimit', parseInt(e.target.value))}
+                    className="w-full max-w-md px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500" 
+                    min="0" 
+                    max="100" 
+                  />
+                  <p className="text-xs text-slate-500 mt-1">Combining characters allowed</p>
                 </div>
               </div>
             </div>
 
             {/* Whitelist Section */}
-            <div className="space-y-4 border-t border-orange-100 pt-8">
-              <div className="space-y-1">
-                <h2 className="text-xl font-semibold text-[#0f172a]">Whitelist System</h2>
-                <p className="text-sm text-slate-600">Exempt channels, roles, or users</p>
+            <div>
+              <div className="mb-4">
+                <h2 className="text-lg font-semibold text-[#0f172a]">Whitelist System</h2>
+                <p className="text-sm text-slate-500">Exempt channels, roles, or users</p>
               </div>
 
-              <div className="space-y-3">
-                <div className="p-4 rounded-lg border border-orange-100 space-y-2">
-                  <label className="block text-sm font-semibold text-slate-800">Whitelisted Channels</label>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-semibold text-slate-900 mb-2">Whitelisted Channels</label>
                   <select 
-                    className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white" 
+                    className="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500" 
                     onChange={(e) => {
                       if (e.target.value && !settings.whitelistedChannels.includes(e.target.value)) {
                         updateSetting('whitelistedChannels', [...settings.whitelistedChannels, e.target.value]);
@@ -562,7 +599,7 @@ export default function AutomodPage() {
                     ))}
                   </select>
                   {settings.whitelistedChannels.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mt-2">
+                    <div className="flex flex-wrap gap-2 mt-3">
                       {settings.whitelistedChannels.map(chId => {
                         const channel = channels.find(c => c.id === chId);
                         return (
@@ -575,13 +612,13 @@ export default function AutomodPage() {
                       })}
                     </div>
                   )}
-                  <p className="text-xs text-slate-500">Channels exempt from AutoMod</p>
+                  <p className="text-xs text-slate-500 mt-1">Channels exempt from AutoMod</p>
                 </div>
 
-                <div className="p-4 rounded-lg border border-orange-100 space-y-2">
-                  <label className="block text-sm font-semibold text-slate-800">Whitelisted Roles</label>
+                <div>
+                  <label className="block text-sm font-semibold text-slate-900 mb-2">Whitelisted Roles</label>
                   <select 
-                    className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white" 
+                    className="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500" 
                     onChange={(e) => {
                       if (e.target.value && !settings.whitelistedRoles.includes(e.target.value)) {
                         updateSetting('whitelistedRoles', [...settings.whitelistedRoles, e.target.value]);
@@ -595,7 +632,7 @@ export default function AutomodPage() {
                     ))}
                   </select>
                   {settings.whitelistedRoles.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mt-2">
+                    <div className="flex flex-wrap gap-2 mt-3">
                       {settings.whitelistedRoles.map(roleId => {
                         const role = roles.find(r => r.id === roleId);
                         return (
@@ -608,116 +645,122 @@ export default function AutomodPage() {
                       })}
                     </div>
                   )}
-                  <p className="text-xs text-slate-500">Roles exempt from AutoMod</p>
+                  <p className="text-xs text-slate-500 mt-1">Roles exempt from AutoMod</p>
                 </div>
 
-                <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
+                <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
                   <div>
-                    <p className="font-semibold text-slate-800 text-sm">Auto-whitelist Moderators</p>
-                    <p className="text-xs text-slate-500">Automatically exempt users with Manage Messages/Admin</p>
+                    <p className="font-semibold text-slate-900">Auto-whitelist Moderators</p>
+                    <p className="text-sm text-slate-500">Automatically exempt users with Manage Messages/Admin</p>
                   </div>
-                  <button type="button" onClick={() => updateSetting('autoWhitelistModerators', !settings.autoWhitelistModerators)}
-                    className={`${settings.autoWhitelistModerators ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition`}>
-                    <span className={`${settings.autoWhitelistModerators ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
-                  </button>
+                  <Switch 
+                    checked={settings.autoWhitelistModerators} 
+                    onCheckedChange={(checked) => updateSetting('autoWhitelistModerators', checked)}
+                  />
                 </div>
               </div>
             </div>
 
             {/* Action Settings Section */}
-            <div className="space-y-4 border-t border-orange-100 pt-8">
-              <div className="space-y-1">
-                <h2 className="text-xl font-semibold text-[#0f172a]">Action Settings</h2>
-                <p className="text-sm text-slate-600">Configure how AutoMod responds to violations</p>
+            <div>
+              <div className="mb-4">
+                <h2 className="text-lg font-semibold text-[#0f172a]">Action Settings</h2>
+                <p className="text-sm text-slate-500">Configure how AutoMod responds to violations</p>
               </div>
 
-              <div className="space-y-3">
-                <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
                   <div>
-                    <p className="font-semibold text-slate-800 text-sm">Delete Message</p>
-                    <p className="text-xs text-slate-500">Automatically delete violating messages</p>
+                    <p className="font-semibold text-slate-900">Delete Message</p>
+                    <p className="text-sm text-slate-500">Automatically delete violating messages</p>
                   </div>
-                  <button type="button" onClick={() => updateSetting('deleteMessage', !settings.deleteMessage)}
-                    className={`${settings.deleteMessage ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition`}>
-                    <span className={`${settings.deleteMessage ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
-                  </button>
+                  <Switch 
+                    checked={settings.deleteMessage} 
+                    onCheckedChange={(checked) => updateSetting('deleteMessage', checked)}
+                  />
                 </div>
 
-                <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
+                <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
                   <div>
-                    <p className="font-semibold text-slate-800 text-sm">Send Warning</p>
-                    <p className="text-xs text-slate-500">Post warning message in channel</p>
+                    <p className="font-semibold text-slate-900">Send Warning</p>
+                    <p className="text-sm text-slate-500">Post warning message in channel</p>
                   </div>
-                  <button type="button" onClick={() => updateSetting('sendWarning', !settings.sendWarning)}
-                    className={`${settings.sendWarning ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition`}>
-                    <span className={`${settings.sendWarning ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
-                  </button>
+                  <Switch 
+                    checked={settings.sendWarning} 
+                    onCheckedChange={(checked) => updateSetting('sendWarning', checked)}
+                  />
                 </div>
 
-                <div className="p-4 rounded-lg border border-orange-100 space-y-2">
-                  <label className="block text-sm font-semibold text-slate-800">Warning Duration</label>
-                  <input type="number" value={settings.warningDuration} onChange={(e) => updateSetting('warningDuration', parseInt(e.target.value))}
-                    className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm" min="1" max="60" />
-                  <p className="text-xs text-slate-500">Seconds warning stays visible</p>
+                <div>
+                  <label className="block text-sm font-semibold text-slate-900 mb-2">Warning Duration</label>
+                  <input 
+                    type="number" 
+                    value={settings.warningDuration} 
+                    onChange={(e) => updateSetting('warningDuration', parseInt(e.target.value))}
+                    className="w-full max-w-md px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500" 
+                    min="1" 
+                    max="60" 
+                  />
+                  <p className="text-xs text-slate-500 mt-1">Seconds warning stays visible</p>
                 </div>
 
-                <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
+                <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
                   <div>
-                    <p className="font-semibold text-slate-800 text-sm">DM User</p>
-                    <p className="text-xs text-slate-500">Send DM notification to user</p>
+                    <p className="font-semibold text-slate-900">DM User</p>
+                    <p className="text-sm text-slate-500">Send DM notification to user</p>
                   </div>
-                  <button type="button" onClick={() => updateSetting('dmUser', !settings.dmUser)}
-                    className={`${settings.dmUser ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition`}>
-                    <span className={`${settings.dmUser ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
-                  </button>
+                  <Switch 
+                    checked={settings.dmUser} 
+                    onCheckedChange={(checked) => updateSetting('dmUser', checked)}
+                  />
                 </div>
 
-                <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
+                <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
                   <div>
-                    <p className="font-semibold text-slate-800 text-sm">Auto-Timeout</p>
-                    <p className="text-xs text-slate-500">Automatically timeout after violations</p>
+                    <p className="font-semibold text-slate-900">Auto-Timeout</p>
+                    <p className="text-sm text-slate-500">Automatically timeout after violations</p>
                   </div>
-                  <button type="button" onClick={() => updateSetting('autoTimeoutEnabled', !settings.autoTimeoutEnabled)}
-                    className={`${settings.autoTimeoutEnabled ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition`}>
-                    <span className={`${settings.autoTimeoutEnabled ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
-                  </button>
+                  <Switch 
+                    checked={settings.autoTimeoutEnabled} 
+                    onCheckedChange={(checked) => updateSetting('autoTimeoutEnabled', checked)}
+                  />
                 </div>
 
                 {settings.autoTimeoutEnabled && (
-                  <div className="ml-4 grid md:grid-cols-3 gap-3 p-4 rounded-lg bg-orange-50/50 border border-orange-100">
+                  <div className="ml-4 grid md:grid-cols-3 gap-3 p-4 rounded-lg bg-orange-50/50 border border-orange-200">
                     <div className="space-y-2">
                       <label className="block text-xs font-semibold text-slate-700">Violations</label>
                       <input type="number" value={settings.autoTimeoutViolations} onChange={(e) => updateSetting('autoTimeoutViolations', parseInt(e.target.value))}
-                        className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm" min="1" max="20" />
+                        className="w-full px-3 py-2 bg-white border border-orange-200 rounded-lg text-sm" min="1" max="20" />
                     </div>
                     <div className="space-y-2">
                       <label className="block text-xs font-semibold text-slate-700">Within (seconds)</label>
                       <input type="number" value={settings.autoTimeoutWindow} onChange={(e) => updateSetting('autoTimeoutWindow', parseInt(e.target.value))}
-                        className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm" min="1" max="3600" />
+                        className="w-full px-3 py-2 bg-white border border-orange-200 rounded-lg text-sm" min="1" max="3600" />
                     </div>
                     <div className="space-y-2">
                       <label className="block text-xs font-semibold text-slate-700">Duration (seconds)</label>
                       <input type="number" value={settings.autoTimeoutDuration} onChange={(e) => updateSetting('autoTimeoutDuration', parseInt(e.target.value))}
-                        className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm" min="60" max="2419200" />
+                        className="w-full px-3 py-2 bg-white border border-orange-200 rounded-lg text-sm" min="60" max="2419200" />
                     </div>
                   </div>
                 )}
 
-                <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
+                <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
                   <div>
-                    <p className="font-semibold text-slate-800 text-sm">Escalating Punishments</p>
-                    <p className="text-xs text-slate-500">Warn → Timeout → Kick → Ban based on violations</p>
+                    <p className="font-semibold text-slate-900">Escalating Punishments</p>
+                    <p className="text-sm text-slate-500">Warn → Timeout → Kick → Ban based on violations</p>
                   </div>
-                  <button type="button" onClick={() => updateSetting('escalatingPunishments', !settings.escalatingPunishments)}
-                    className={`${settings.escalatingPunishments ? 'bg-orange-500' : 'bg-slate-300'} relative inline-flex h-5 w-9 items-center rounded-full transition`}>
-                    <span className={`${settings.escalatingPunishments ? 'translate-x-4' : 'translate-x-1'} inline-block h-3 w-3 transform rounded-full bg-white transition`} />
-                  </button>
+                  <Switch 
+                    checked={settings.escalatingPunishments} 
+                    onCheckedChange={(checked) => updateSetting('escalatingPunishments', checked)}
+                  />
                 </div>
               </div>
             </div>
 
-              </div>
-            </div>
+              </>
+            )}
           </div>
         </div>
       </main>
