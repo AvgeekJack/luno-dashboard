@@ -4,6 +4,8 @@ const ServerSettingsSchema = new mongoose.Schema({
   guildId: { type: String, required: true, unique: true },
   prefix: { type: String, default: '!' },
   premium: { type: Boolean, default: false },
+  stripeCustomerId: { type: String, default: null },
+  stripeSubscriptionId: { type: String, default: null },
   modules: {
     moderation: {
       enabled: { type: Boolean, default: true },
