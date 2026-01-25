@@ -307,198 +307,214 @@ export default function AntiRaidPage() {
         </nav>
       </aside>
 
-      <main className="flex-1 md:ml-64 py-12 px-4 md:px-8 pt-20 md:pt-12 flex justify-center">
-        <div className="w-full max-w-6xl space-y-4 md:space-y-6">
+      <main className="flex-1 md:ml-64 py-12 px-4 md:px-8 pt-20 md:pt-12 flex justify-center bg-[#f8f9fa]">
+        <div className="w-full max-w-5xl space-y-6">
           <div className="space-y-1">
-            <p className="text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">CONFIGURATION</p>
-            <h1 className="text-3xl font-bold">Anti-Raid Protection</h1>
+            <p className="text-xs uppercase tracking-[0.15em] text-orange-500 font-semibold">CONFIGURATION</p>
+            <h1 className="text-4xl font-bold text-[#0f172a]">Anti-Raid Protection</h1>
           </div>
 
-          <div className="bg-white border border-orange-100 rounded-2xl shadow-sm p-6 md:p-8 space-y-8">
-            {/* Master Toggle */}
-            <div className="flex items-start justify-between gap-4">
-              <div className="space-y-1">
-                <h2 className="text-xl font-semibold text-[#0f172a]">Anti-Raid System</h2>
-                <p className="text-slate-600">Protect your server from raid attacks</p>
+          {/* Master Toggle Card */}
+          <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8 space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-semibold text-[#0f172a]">Anti-Raid System</h2>
+                <p className="text-sm text-slate-500">Protect your server from raid attacks</p>
               </div>
               <Switch 
                 checked={settings.enabled} 
                 onCheckedChange={(checked) => updateSetting('enabled', checked)}
-                className="scale-150"
+                className="scale-125"
               />
             </div>
+          </div>
 
-            <div 
-              className={`overflow-hidden transition-all duration-700 ${settings.enabled ? 'max-h-[50000px] opacity-100' : 'max-h-0 opacity-0'}`}
-            >
-              <div className="space-y-8 border-t border-orange-100 pt-8">
-            {/* Info Box about Alert Channel */}
-            <div className="p-4 rounded-lg border border-blue-200 bg-blue-50 space-y-2">
-              <div className="flex items-start gap-2">
+          {/* Info Box about Alert Channel */}
+          {settings.enabled && (
+            <div className="p-5 rounded-lg border border-blue-200 bg-blue-50">
+              <div className="flex items-start gap-3">
                 <svg className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <div>
-                  <p className="text-sm font-semibold text-blue-900">Anti-Raid Alert Channel</p>
-                  <p className="text-xs text-blue-700 mt-1">
+                  <p className="font-semibold text-blue-900">Anti-Raid Alert Channel</p>
+                  <p className="text-sm text-blue-700 mt-1">
                     Anti-raid alerts are now configured on the <Link href={`/servers/${gid}/configuration/logging`} className="font-semibold underline">Logging</Link> page under the configuration section.
                   </p>
                 </div>
               </div>
             </div>
+          )}
 
-                {/* Status Display */}
-                <div className="p-4 bg-slate-50 rounded-lg border border-slate-200 space-y-3">
-                  <h3 className="text-sm font-semibold text-slate-800">Current Status</h3>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                    <div>
-                      <p className="text-slate-500 text-xs">Protection Status</p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className={`w-2 h-2 rounded-full ${getStatusColor()}`}></span>
-                        <p className="font-semibold text-slate-800">{getStatusText()}</p>
-                      </div>
-                    </div>
-                    {settings.enabledAt && (
-                      <div>
-                        <p className="text-slate-500 text-xs">Enabled Date</p>
-                        <p className="font-semibold text-slate-800 mt-1">{new Date(settings.enabledAt).toLocaleDateString()}</p>
-                      </div>
-                    )}
-                    {settings.enabledBy && (
-                      <div>
-                        <p className="text-slate-500 text-xs">Enabled By</p>
-                        <p className="font-semibold text-slate-800 mt-1">{settings.enabledBy}</p>
-                      </div>
-                    )}
-                    {settings.lastUpdatedAt && (
-                      <div>
-                        <p className="text-slate-500 text-xs">Last Updated</p>
-                        <p className="font-semibold text-slate-800 mt-1">{new Date(settings.lastUpdatedAt).toLocaleDateString()}</p>
-                      </div>
-                    )}
+          {/* Status Display Card */}
+          {settings.enabled && (
+            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+              <div className="mb-6">
+                <h2 className="text-lg font-semibold text-[#0f172a]">Current Status</h2>
+                <p className="text-sm text-slate-500">Monitor your anti-raid system status</p>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                <div className="p-4 rounded-lg bg-slate-50 border border-slate-200">
+                  <p className="text-slate-500 text-xs mb-2">Protection Status</p>
+                  <div className="flex items-center gap-2">
+                    <span className={`w-2 h-2 rounded-full ${getStatusColor()}`}></span>
+                    <p className="font-semibold text-slate-900">{getStatusText()}</p>
+                  </div>
+                </div>
+                {settings.enabledAt && (
+                  <div className="p-4 rounded-lg bg-slate-50 border border-slate-200">
+                    <p className="text-slate-500 text-xs mb-2">Enabled Date</p>
+                    <p className="font-semibold text-slate-900">{new Date(settings.enabledAt).toLocaleDateString()}</p>
+                  </div>
+                )}
+                {settings.enabledBy && (
+                  <div className="p-4 rounded-lg bg-slate-50 border border-slate-200">
+                    <p className="text-slate-500 text-xs mb-2">Enabled By</p>
+                    <p className="font-semibold text-slate-900">{settings.enabledBy}</p>
+                  </div>
+                )}
+                {settings.lastUpdatedAt && (
+                  <div className="p-4 rounded-lg bg-slate-50 border border-slate-200">
+                    <p className="text-slate-500 text-xs mb-2">Last Updated</p>
+                    <p className="font-semibold text-slate-900">{new Date(settings.lastUpdatedAt).toLocaleDateString()}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Protection Level Selection Card */}
+          {settings.enabled && (
+            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+              <div className="mb-6">
+                <h2 className="text-lg font-semibold text-[#0f172a]">Protection Level</h2>
+                <p className="text-sm text-slate-500">Choose a preset protection level or customize your own</p>
+              </div>
+              
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {(Object.keys(PROTECTION_LEVELS) as Array<keyof typeof PROTECTION_LEVELS>).map((level) => (
+                  <button
+                    key={level}
+                    onClick={() => handleProtectionLevelChange(level)}
+                    className={`p-4 rounded-lg border-2 transition text-left ${
+                      settings.protectionLevel === level
+                        ? 'border-orange-500 bg-orange-50'
+                        : 'border-slate-200 hover:border-slate-300 bg-slate-50'
+                    }`}
+                  >
+                    <p className="font-bold text-sm uppercase text-slate-900">{level}</p>
+                    <p className="text-xs text-slate-500 mt-1">{PROTECTION_LEVELS[level].description}</p>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Custom Settings Card */}
+          {settings.enabled && (
+            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+              <div className="mb-6">
+                <h2 className="text-lg font-semibold text-[#0f172a]">Custom Settings</h2>
+                <p className="text-sm text-slate-500">Fine-tune protection parameters</p>
+              </div>
+              
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="p-5 rounded-lg bg-slate-50 border border-slate-200 space-y-3">
+                  <label className="block font-semibold text-slate-900">Minimum Account Age</label>
+                  <input 
+                    type="number" 
+                    value={settings.accountAge / 60000} 
+                    onChange={(e) => {
+                      updateSetting('accountAge', parseInt(e.target.value) * 60000);
+                      updateSetting('protectionLevel', 'custom');
+                    }}
+                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    min="0"
+                  />
+                  <p className="text-sm text-slate-500">Minutes (current: {formatDuration(settings.accountAge)})</p>
+                </div>
+
+                <div className="p-5 rounded-lg bg-slate-50 border border-slate-200 space-y-3">
+                  <label className="block font-semibold text-slate-900">Join Rate Limit</label>
+                  <input 
+                    type="number" 
+                    value={settings.joinRateLimit} 
+                    onChange={(e) => {
+                      updateSetting('joinRateLimit', parseInt(e.target.value));
+                      updateSetting('protectionLevel', 'custom');
+                    }}
+                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    min="1"
+                    max="100"
+                  />
+                  <p className="text-sm text-slate-500">Maximum joins per minute</p>
+                </div>
+
+                <div className="p-5 rounded-lg bg-slate-50 border border-slate-200 space-y-3">
+                  <label className="block font-semibold text-slate-900">Join Rate Window</label>
+                  <input 
+                    type="number" 
+                    value={settings.joinRateWindow / 1000} 
+                    onChange={(e) => updateSetting('joinRateWindow', parseInt(e.target.value) * 1000)}
+                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    min="10"
+                    max="300"
+                  />
+                  <p className="text-sm text-slate-500">Seconds to track join rate</p>
+                </div>
+
+                <div className="p-5 rounded-lg bg-slate-50 border border-slate-200 space-y-3">
+                  <label className="block font-semibold text-slate-900">Verification Level</label>
+                  <select 
+                    value={settings.verificationLevel} 
+                    onChange={(e) => updateSetting('verificationLevel', parseInt(e.target.value))}
+                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  >
+                    <option value="0">None</option>
+                    <option value="1">Low - Verified email</option>
+                    <option value="2">Medium - Registered for 5+ min</option>
+                    <option value="3">High - Member for 10+ min</option>
+                    <option value="4">Highest - Verified phone</option>
+                  </select>
+                  <p className="text-sm text-slate-500">Discord server verification level</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Action Settings Card */}
+          {settings.enabled && (
+            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+              <div className="mb-6">
+                <h2 className="text-lg font-semibold text-[#0f172a]">Actions</h2>
+                <p className="text-sm text-slate-500">Configure automated responses to threats</p>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
+                  <Switch 
+                    checked={settings.autoKickNewAccounts} 
+                    onCheckedChange={(checked) => updateSetting('autoKickNewAccounts', checked)}
+                  />
+                  <div className="flex-1">
+                    <p className="font-semibold text-slate-900">Auto-kick New Accounts</p>
+                    <p className="text-sm text-slate-500">Kick accounts below minimum age</p>
                   </div>
                 </div>
 
-                {/* Protection Level Selection */}
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-[#0f172a]">Protection Level</h3>
-                  
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {(Object.keys(PROTECTION_LEVELS) as Array<keyof typeof PROTECTION_LEVELS>).map((level) => (
-                      <button
-                        key={level}
-                        onClick={() => handleProtectionLevelChange(level)}
-                        className={`p-4 rounded-lg border-2 transition text-left ${
-                          settings.protectionLevel === level
-                            ? 'border-orange-500 bg-orange-50'
-                            : 'border-orange-200 hover:border-orange-300'
-                        }`}
-                      >
-                        <p className="font-bold text-sm uppercase text-slate-800">{level}</p>
-                        <p className="text-xs text-slate-600 mt-1">{PROTECTION_LEVELS[level].description}</p>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Custom Settings */}
-                <div className="space-y-4 border-t border-orange-100 pt-8">
-                  <h3 className="text-lg font-semibold text-[#0f172a]">Custom Settings</h3>
-                  
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div className="p-4 rounded-lg border border-orange-100 space-y-2">
-                      <label className="block text-sm font-semibold text-slate-800">Minimum Account Age</label>
-                      <input 
-                        type="number" 
-                        value={settings.accountAge / 60000} 
-                        onChange={(e) => {
-                          updateSetting('accountAge', parseInt(e.target.value) * 60000);
-                          updateSetting('protectionLevel', 'custom');
-                        }}
-                        className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm"
-                        min="0"
-                      />
-                      <p className="text-xs text-slate-500">Minutes (current: {formatDuration(settings.accountAge)})</p>
-                    </div>
-
-                    <div className="p-4 rounded-lg border border-orange-100 space-y-2">
-                      <label className="block text-sm font-semibold text-slate-800">Join Rate Limit</label>
-                      <input 
-                        type="number" 
-                        value={settings.joinRateLimit} 
-                        onChange={(e) => {
-                          updateSetting('joinRateLimit', parseInt(e.target.value));
-                          updateSetting('protectionLevel', 'custom');
-                        }}
-                        className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm"
-                        min="1"
-                        max="100"
-                      />
-                      <p className="text-xs text-slate-500">Maximum joins per minute</p>
-                    </div>
-
-                    <div className="p-4 rounded-lg border border-orange-100 space-y-2">
-                      <label className="block text-sm font-semibold text-slate-800">Join Rate Window</label>
-                      <input 
-                        type="number" 
-                        value={settings.joinRateWindow / 1000} 
-                        onChange={(e) => updateSetting('joinRateWindow', parseInt(e.target.value) * 1000)}
-                        className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm"
-                        min="10"
-                        max="300"
-                      />
-                      <p className="text-xs text-slate-500">Seconds to track join rate</p>
-                    </div>
-
-                    <div className="p-4 rounded-lg border border-orange-100 space-y-2">
-                      <label className="block text-sm font-semibold text-slate-800">Verification Level</label>
-                      <select 
-                        value={settings.verificationLevel} 
-                        onChange={(e) => updateSetting('verificationLevel', parseInt(e.target.value))}
-                        className="w-full px-3 py-2 border border-orange-200 rounded-lg text-sm bg-white"
-                      >
-                        <option value="0">None</option>
-                        <option value="1">Low - Verified email</option>
-                        <option value="2">Medium - Registered for 5+ min</option>
-                        <option value="3">High - Member for 10+ min</option>
-                        <option value="4">Highest - Verified phone</option>
-                      </select>
-                      <p className="text-xs text-slate-500">Discord server verification level</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Action Settings */}
-                <div className="space-y-4 border-t border-orange-100 pt-8">
-                  <h3 className="text-lg font-semibold text-[#0f172a]">Actions</h3>
-                  
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
-                      <div>
-                        <p className="font-semibold text-slate-800 text-sm">Auto-kick New Accounts</p>
-                        <p className="text-xs text-slate-500">Kick accounts below minimum age</p>
-                      </div>
-                      <Switch 
-                        checked={settings.autoKickNewAccounts} 
-                        onCheckedChange={(checked) => updateSetting('autoKickNewAccounts', checked)}
-                      />
-                    </div>
-
-                    <div className="flex items-center justify-between p-4 rounded-lg border border-orange-100">
-                      <div>
-                        <p className="font-semibold text-slate-800 text-sm">Kick on Rate Exceeded</p>
-                        <p className="text-xs text-slate-500">Kick when join rate limit is exceeded</p>
-                      </div>
-                      <Switch 
-                        checked={settings.kickOnRateExceeded} 
-                        onCheckedChange={(checked) => updateSetting('kickOnRateExceeded', checked)}
-                      />
-                    </div>
+                <div className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
+                  <Switch 
+                    checked={settings.kickOnRateExceeded} 
+                    onCheckedChange={(checked) => updateSetting('kickOnRateExceeded', checked)}
+                  />
+                  <div className="flex-1">
+                    <p className="font-semibold text-slate-900">Kick on Rate Exceeded</p>
+                    <p className="text-sm text-slate-500">Kick when join rate limit is exceeded</p>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </main>
 
