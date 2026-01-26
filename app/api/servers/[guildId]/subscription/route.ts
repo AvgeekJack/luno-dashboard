@@ -49,13 +49,20 @@ export async function GET(
       current_period_start: sub.current_period_start,
       current_period_end: sub.current_period_end,
       cancel_at_period_end: sub.cancel_at_period_end,
+      interval: subscription.items.data[0]?.price.recurring?.interval,
       types: {
         start: typeof sub.current_period_start,
         end: typeof sub.current_period_end,
+      },
+      dates_formatted: {
+        start: new Date(sub.current_period_start * 1000).toISOString(),
+        end: new Date(sub.current_period_end * 1000).toISOString(),
       }
     });
 
-    // Return subscription details with explicit number conversion
+    // Stripe provides accurate period dates based on subscription billing cycle
+    // current_period_start: When the current billing period started (payment date)
+    // current_period_end: When the current billing period ends (start + interval)
     const responseData = {
       id: subscription.id,
       status: subscription.status,

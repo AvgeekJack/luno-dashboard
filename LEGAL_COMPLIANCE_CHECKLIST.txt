@@ -1,0 +1,418 @@
+═══════════════════════════════════════════════════════════════════════════════
+                    LEGAL COMPLIANCE CHECKLIST FOR LUNO BOT
+                          Discord Bot + Payment Platform
+═══════════════════════════════════════════════════════════════════════════════
+
+Last Updated: January 26, 2026
+Status: [ ] Not Started  [ ] In Progress  [✓] Completed
+
+
+═══════════════════════════════════════════════════════════════════════════════
+1. DATA PROTECTION & PRIVACY (GDPR/UK GDPR/CCPA)
+═══════════════════════════════════════════════════════════════════════════════
+
+[ ] 1.1. Privacy Policy
+    - Draft comprehensive privacy policy covering:
+      * What data is collected (Discord IDs, server data, payment info)
+      * How data is used (bot functionality, premium features)
+      * Data retention periods
+      * User rights (access, deletion, portability)
+      * Third-party services (Discord, MongoDB, Stripe)
+      * Cookie usage
+    - Make accessible at /privacy on website
+    - Link in bot commands and website footer
+
+[ ] 1.2. Cookie Policy
+    - Document all cookies used (NextAuth session, analytics if any)
+    - Explain purpose and duration
+    - Provide opt-out instructions
+    - Accessible at /cookies
+
+[ ] 1.3. Terms of Service
+    - Define acceptable use of bot
+    - Service limitations and warranties
+    - User responsibilities
+    - Premium subscription terms
+    - Refund policy
+    - Service termination conditions
+    - Dispute resolution
+    - Accessible at /terms
+
+[ ] 1.4. Data Subject Rights (GDPR Compliance)
+    - Implement data export functionality
+    - Implement data deletion request handling
+    - Create process for responding to access requests (within 30 days)
+    - Document data processing activities (ROPA - Record of Processing Activities)
+    - Appoint Data Protection Officer (if required based on scale)
+
+[ ] 1.5. Data Processing Agreements (DPAs)
+    - Review and sign DPA with MongoDB Atlas
+    - Review and sign DPA with Vercel/hosting provider
+    - Review Stripe's Data Processing Agreement
+    - Review Discord's Data Processing terms
+    - Keep copies of all signed DPAs
+
+[ ] 1.6. Data Security Measures
+    - Encrypt data at rest (MongoDB encryption)
+    - Encrypt data in transit (HTTPS/TLS)
+    - Secure environment variables
+    - Regular security audits
+    - Access controls and authentication
+    - Incident response plan for data breaches
+
+
+═══════════════════════════════════════════════════════════════════════════════
+2. PAYMENT PROCESSING (PCI DSS & STRIPE COMPLIANCE)
+═══════════════════════════════════════════════════════════════════════════════
+
+[ ] 2.1. Stripe Compliance
+    - Complete Stripe account verification
+    - Accept Stripe Services Agreement
+    - Review Stripe's Privacy Policy and DPA
+    - Implement SCA (Strong Customer Authentication) - Stripe handles this
+    - Never store raw card data (Stripe handles all card processing)
+    - Implement secure webhook signature verification
+
+[ ] 2.2. Payment Terms
+    - Clear pricing display (£3.99/month, £29.99/year)
+    - Refund policy clearly stated
+    - Cancellation terms (access until end of period)
+    - Auto-renewal disclosure
+    - VAT/tax handling if applicable
+    - Currency clearly displayed (GBP)
+
+[ ] 2.3. Subscription Management
+    - Easy cancellation process
+    - Subscription status visibility
+    - Billing history access
+    - Invoice delivery
+    - Failed payment handling
+    - Dunning management (retry logic)
+
+[ ] 2.4. Financial Records
+    - Keep transaction records for tax purposes (minimum 6 years UK)
+    - Export transaction data regularly
+    - Maintain accurate accounting
+    - VAT registration if revenue exceeds threshold (£90,000 in UK)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+3. HOSTING & INFRASTRUCTURE COMPLIANCE
+═══════════════════════════════════════════════════════════════════════════════
+
+[ ] 3.1. Vercel Compliance
+    - Review Vercel Terms of Service
+    - Sign Vercel DPA if handling personal data
+    - Understand data residency options
+    - Set up monitoring and alerts
+    - Configure appropriate security headers
+    - Enable HTTPS (automatic with Vercel)
+
+[ ] 3.2. MongoDB Atlas Compliance
+    - Review MongoDB Atlas Terms of Service
+    - Sign MongoDB DPA for GDPR compliance
+    - Enable encryption at rest
+    - Configure IP whitelist/network security
+    - Set up automated backups
+    - Define data retention policies
+    - Understand data residency (choose EU region for GDPR)
+
+[ ] 3.3. Domain & SSL
+    - Purchase and configure custom domain (lunobot.xyz)
+    - Ensure valid SSL certificate (automatic with Vercel)
+    - Set up DNS records correctly
+    - Configure HSTS (HTTP Strict Transport Security)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+4. DISCORD PLATFORM COMPLIANCE
+═══════════════════════════════════════════════════════════════════════════════
+
+[ ] 4.1. Discord Developer Terms
+    - Review and accept Discord Developer Terms of Service
+    - Review Discord Developer Policy
+    - Follow API rate limits and best practices
+    - Implement proper error handling
+    - Display Discord branding correctly
+
+[ ] 4.2. Bot Verification
+    - Apply for bot verification if >75 servers
+    - Provide necessary documentation
+    - Demonstrate compliance with Discord policies
+
+[ ] 4.3. Privileged Intents
+    - Justify use of any privileged intents (Message Content, Presence, Members)
+    - Apply for approval if required
+    - Document why intents are necessary
+
+
+═══════════════════════════════════════════════════════════════════════════════
+5. BUSINESS REGISTRATION & TAXES
+═══════════════════════════════════════════════════════════════════════════════
+
+[ ] 5.1. Business Registration
+    - Register as sole trader/limited company (UK Companies House)
+    - Obtain UTR (Unique Taxpayer Reference) from HMRC
+    - Register for Self Assessment if sole trader
+    - Consider limited company for liability protection
+
+[ ] 5.2. Tax Registration
+    - Register for VAT if revenue exceeds £90,000/year
+    - Charge VAT on UK sales if registered (20%)
+    - Consider VAT MOSS for EU sales
+    - File VAT returns quarterly if registered
+    - Pay Corporation Tax if limited company (19%)
+
+[ ] 5.3. Accounting
+    - Set up business bank account
+    - Use accounting software (Xero, QuickBooks, FreeAgent)
+    - Track all income and expenses
+    - Keep receipts for 6 years
+    - File annual accounts with Companies House (if limited company)
+    - File annual Self Assessment tax return
+
+
+═══════════════════════════════════════════════════════════════════════════════
+6. INTELLECTUAL PROPERTY
+═══════════════════════════════════════════════════════════════════════════════
+
+[ ] 6.1. Trademarks
+    - Check "Luno" trademark availability
+    - Consider registering trademark with UK IPO
+    - Monitor for trademark infringement
+    - Include trademark notices where appropriate
+
+[ ] 6.2. Copyright
+    - Copyright notice on website (© 2026 Luno Bot)
+    - Own or license all images/graphics used
+    - Verify icon/logo usage rights
+    - DMCA policy if hosting user content
+
+[ ] 6.3. Open Source Licenses
+    - Review licenses of all npm packages used
+    - Ensure compliance with license terms
+    - Attribute where required (MIT, Apache, etc.)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+7. CONSUMER PROTECTION (UK/EU)
+═══════════════════════════════════════════════════════════════════════════════
+
+[ ] 7.1. Consumer Rights Act 2015 (UK)
+    - Provide digital services as described
+    - Allow 14-day cooling-off period for EU/UK consumers
+    - Clear refund policy
+    - Handle complaints appropriately
+
+[ ] 7.2. Distance Selling Regulations
+    - Provide full business details (name, address, contact)
+    - Clear pricing and payment terms
+    - Right to cancel (14 days for digital services)
+    - Acknowledge digital content immediate access waiver
+
+[ ] 7.3. Accessibility
+    - Consider WCAG 2.1 AA compliance for website
+    - Provide alternative access methods
+    - Test with screen readers
+
+
+═══════════════════════════════════════════════════════════════════════════════
+8. LEGAL DOCUMENTATION
+═══════════════════════════════════════════════════════════════════════════════
+
+[ ] 8.1. Company Information
+    - Display company name and registration number on website
+    - Display registered office address
+    - Display VAT number (if applicable)
+    - Provide contact email and physical address
+
+[ ] 8.2. Required Legal Pages
+    - Privacy Policy (/privacy)
+    - Terms of Service (/terms)
+    - Cookie Policy (/cookies)
+    - GDPR Notice (part of Privacy Policy)
+    - Refund/Cancellation Policy
+    - Acceptable Use Policy
+
+[ ] 8.3. Email Compliance (if sending marketing emails)
+    - Include unsubscribe link
+    - Include company address
+    - Obtain consent before sending
+    - Honor opt-out requests immediately
+    - Keep records of consent
+
+
+═══════════════════════════════════════════════════════════════════════════════
+9. INSURANCE & LIABILITY
+═══════════════════════════════════════════════════════════════════════════════
+
+[ ] 9.1. Insurance Coverage
+    - Professional Indemnity Insurance (covers service errors)
+    - Public Liability Insurance (if applicable)
+    - Cyber Insurance (data breach coverage)
+    - Review coverage limits annually
+
+[ ] 9.2. Liability Limitations
+    - Include liability limitations in Terms of Service
+    - Disclaim warranties where legally permissible
+    - Include indemnification clauses
+    - Consider limited company structure for personal liability protection
+
+
+═══════════════════════════════════════════════════════════════════════════════
+10. OPERATIONAL COMPLIANCE
+═══════════════════════════════════════════════════════════════════════════════
+
+[ ] 10.1. Customer Support
+    - Provide support email/Discord server
+    - Respond to inquiries within reasonable time
+    - Document support processes
+    - Handle complaints professionally
+
+[ ] 10.2. Monitoring & Logging
+    - Log webhook events for debugging
+    - Monitor for fraudulent activity
+    - Set up error tracking (Sentry, etc.)
+    - Regular security audits
+
+[ ] 10.3. Service Level Agreements
+    - Define uptime targets (e.g., 99.9%)
+    - Monitor actual uptime
+    - Communicate outages transparently
+    - Maintain status page if needed
+
+[ ] 10.4. Data Backups
+    - Regular MongoDB backups (daily)
+    - Test backup restoration
+    - Off-site backup storage
+    - Define RTO/RPO (Recovery Time/Point Objectives)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+11. STRIPE-SPECIFIC REQUIREMENTS
+═══════════════════════════════════════════════════════════════════════════════
+
+[ ] 11.1. Stripe Dashboard Setup
+    - Complete business profile
+    - Add bank account for payouts
+    - Set up tax forms (W-8BEN/W-9)
+    - Configure email receipts
+    - Set company branding
+
+[ ] 11.2. Webhook Security
+    - Verify webhook signatures (already implemented)
+    - Use HTTPS for webhook endpoint
+    - Handle webhook retries
+    - Monitor webhook failures
+
+[ ] 11.3. Dispute Handling
+    - Respond to chargebacks within 7 days
+    - Provide evidence for disputes
+    - Monitor dispute rate (keep below 1%)
+    - Implement fraud prevention
+
+
+═══════════════════════════════════════════════════════════════════════════════
+12. ONGOING MAINTENANCE
+═══════════════════════════════════════════════════════════════════════════════
+
+[ ] 12.1. Regular Reviews (Quarterly)
+    - Review and update Privacy Policy
+    - Review Terms of Service
+    - Update legal pages as needed
+    - Security audit
+    - Dependency updates (npm audit fix)
+
+[ ] 12.2. Annual Tasks
+    - File tax returns
+    - File annual accounts (if limited company)
+    - Review insurance coverage
+    - Review DPAs with vendors
+    - Renew domain registration
+
+[ ] 12.3. Compliance Monitoring
+    - Stay updated on GDPR changes
+    - Monitor Discord policy updates
+    - Monitor Stripe policy changes
+    - Subscribe to regulatory news
+
+
+═══════════════════════════════════════════════════════════════════════════════
+13. RECOMMENDED IMMEDIATE ACTIONS (HIGH PRIORITY)
+═══════════════════════════════════════════════════════════════════════════════
+
+1. [ ] Draft and publish Privacy Policy (REQUIRED before launch)
+2. [ ] Draft and publish Terms of Service (REQUIRED before launch)
+3. [ ] Complete Stripe account verification
+4. [ ] Sign Vercel DPA if handling EU user data
+5. [ ] Sign MongoDB Atlas DPA for GDPR compliance
+6. [ ] Register business with HMRC/Companies House
+7. [ ] Set up business bank account
+8. [ ] Implement data deletion request handling
+9. [ ] Add company information to website footer
+10. [ ] Set up automated MongoDB backups
+
+
+═══════════════════════════════════════════════════════════════════════════════
+14. USEFUL RESOURCES
+═══════════════════════════════════════════════════════════════════════════════
+
+GDPR:
+- ICO (UK): https://ico.org.uk/
+- GDPR Portal: https://www.gdpr.eu/
+
+Business Registration:
+- UK Companies House: https://www.gov.uk/government/organisations/companies-house
+- HMRC: https://www.gov.uk/government/organisations/hm-revenue-customs
+
+Legal Templates:
+- TermsFeed: https://www.termsfeed.com/
+- GetTerms: https://getterms.io/
+- Termly: https://termly.io/
+
+Stripe Resources:
+- Stripe Documentation: https://stripe.com/docs
+- Stripe Compliance: https://stripe.com/docs/security/stripe
+
+Discord:
+- Developer Portal: https://discord.com/developers/docs
+- Developer Terms: https://discord.com/developers/docs/policies-and-agreements/developer-terms-of-service
+
+VAT:
+- VAT Registration: https://www.gov.uk/vat-registration
+- VAT MOSS: https://www.gov.uk/guidance/register-and-use-the-vat-mini-one-stop-shop
+
+
+═══════════════════════════════════════════════════════════════════════════════
+15. PROFESSIONAL ADVICE RECOMMENDED
+═══════════════════════════════════════════════════════════════════════════════
+
+Consider consulting:
+[ ] Solicitor/Lawyer for Terms of Service and Privacy Policy review
+[ ] Accountant for tax planning and compliance
+[ ] Data Protection Officer (DPO) for GDPR compliance
+[ ] Business insurance broker for appropriate coverage
+
+
+═══════════════════════════════════════════════════════════════════════════════
+NOTES & ACTION ITEMS
+═══════════════════════════════════════════════════════════════════════════════
+
+Date: _______________ | Action: _________________________________________
+
+Date: _______________ | Action: _________________________________________
+
+Date: _______________ | Action: _________________________________________
+
+Date: _______________ | Action: _________________________________________
+
+Date: _______________ | Action: _________________________________________
+
+
+═══════════════════════════════════════════════════════════════════════════════
+END OF CHECKLIST
+═══════════════════════════════════════════════════════════════════════════════
+
+⚠️  DISCLAIMER: This checklist is for informational purposes only and does not
+constitute legal advice. Consult with qualified legal and financial professionals
+for specific guidance related to your business.
