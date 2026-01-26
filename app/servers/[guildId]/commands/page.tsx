@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import MaintenanceScreen from '@/components/MaintenanceScreen';
 import { useMaintenanceCheck } from '@/lib/hooks/useMaintenanceCheck';
+import DebugInfoPopup from '@/components/DebugInfoPopup';
 
 const CATEGORIES = [
   'Moderation',
@@ -90,7 +91,7 @@ export default function CommandsPage() {
   });
   
   // Check maintenance mode
-  const { shouldShowMaintenance, handleBypass } = useMaintenanceCheck();
+  const { shouldShowMaintenance, handleBypass, bypassMaintenance } = useMaintenanceCheck();
   const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentCommand, setCurrentCommand] = useState('');
@@ -98,6 +99,7 @@ export default function CommandsPage() {
   const [configOpen, setConfigOpen] = useState(false);
   const [modulesOpen, setModulesOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showDebugInfo, setShowDebugInfo] = useState(false);
 
   useEffect(() => {
     if (status === 'loading') return;
@@ -350,7 +352,29 @@ export default function CommandsPage() {
             )}
           </details>
         </nav>
-        </aside>
+        
+        {/* Developer Debug Button - Only show when bypassed */}
+        {bypassMaintenance && (
+          <div className="mt-auto p-4 border-t-2 border-red-500">
+            <button
+              onClick={() => setShowDebugInfo(true)}
+              className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-3 px-4 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 animate-pulse"
+            >
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+              </svg>
+              🐛 Debug Info
+              <span className="text-xs bg-red-900 px-2 py-1 rounded">DEV ONLY</span>
+            </button>
+            <p className="text-center text-red-600 text-xs font-semibold mt-2">
+              ⚠️ DEVELOPER MODE ACTIVE
+            </p>
+          </div>
+        )}
+      </aside>
+
+      {/* Debug Info Popup */}
+      <DebugInfoPopup isOpen={showDebugInfo} onClose={() => setShowDebugInfo(false)} />
 
       <main className="flex-1 md:ml-64 py-12 px-4 md:px-8 flex justify-center">
         <div className="max-w-6xl space-y-4 md:space-y-6">
