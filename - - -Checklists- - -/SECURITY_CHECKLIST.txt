@@ -1,0 +1,335 @@
+SECURITY CHECKLIST FOR DISCORD BOT SAAS DASHBOARD
+=================================================
+
+Last Updated: January 26, 2026
+Project: Luno Discord Bot Dashboard
+
+This checklist ensures your application follows security best practices to protect user data,
+prevent unauthorized access, and maintain system integrity.
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+1. AUTHENTICATION & AUTHORIZATION
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ OAuth 2.0 Implementation
+  • Discord OAuth 2.0 properly configured
+  • Secure callback URL (HTTPS only in production)
+  • State parameter validated to prevent CSRF
+  • Authorization codes exchanged securely
+  • Access tokens stored securely (encrypted if persisted)
+
+□ Session Management
+  • NextAuth.js configured with secure session strategy
+  • Session tokens use cryptographically secure random generation
+  • NEXTAUTH_SECRET is strong (32+ characters, random)
+  • Session expiry time is reasonable (not indefinite)
+  • Secure session cookie flags set (httpOnly, secure, sameSite)
+
+□ Authorization Checks
+  • Every API route validates user authentication
+  • Guild/server ownership verified before allowing configuration changes
+  • Permission checks for sensitive operations (premium features, billing)
+  • Rate limiting on authentication endpoints
+  • Failed login attempts logged and monitored
+
+□ Password & Secrets Management
+  • No hardcoded secrets in codebase
+  • All sensitive credentials in environment variables
+  • .env files in .gitignore (never committed)
+  • Production secrets stored in secure vault (Vercel env vars, AWS Secrets Manager, etc.)
+  • Secrets rotated periodically (Discord tokens, Stripe keys, DB credentials)
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+2. DATA PROTECTION
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Encryption at Rest
+  • MongoDB Atlas encryption enabled
+  • Sensitive fields (if any) encrypted before storage
+  • Database backups encrypted
+  • No sensitive data stored in plain text
+
+□ Encryption in Transit
+  • All connections use TLS 1.2 or higher
+  • HTTPS enforced for all web traffic (HSTS headers)
+  • MongoDB connections use TLS/SSL
+  • Stripe API calls over HTTPS
+  • Discord API calls over HTTPS
+
+□ Data Minimization
+  • Only collect necessary user data
+  • User tokens refreshed as needed, not stored indefinitely
+  • Logs don't contain sensitive information (tokens, passwords, credit cards)
+  • Unnecessary user data purged after retention period
+
+□ Personal Data Handling
+  • User data segregated by guild/server
+  • Users can delete their data (GDPR right to erasure)
+  • Data anonymized/pseudonymized where possible
+  • Sensitive operations require re-authentication
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+3. INPUT VALIDATION & SANITIZATION
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ API Input Validation
+  • All API endpoints validate request parameters
+  • Type checking for all inputs (TypeScript + runtime validation)
+  • Length limits on strings (prevent overflow attacks)
+  • Whitelist validation for enums/known values
+  • Numeric ranges validated
+
+□ NoSQL Injection Prevention
+  • MongoDB queries use parameterized methods
+  • User input never directly interpolated into queries
+  • Mongoose schema validation enforced
+  • $where and similar operators avoided or strictly validated
+
+□ XSS Prevention
+  • React's automatic escaping utilized
+  • dangerouslySetInnerHTML avoided or sanitized (DOMPurify)
+  • User-generated content sanitized before display
+  • Content Security Policy (CSP) headers configured
+
+□ CSRF Protection
+  • NextAuth.js CSRF tokens enabled
+  • SameSite cookie attribute set
+  • State parameter in OAuth flows validated
+  • Critical operations require POST/PUT/DELETE (not GET)
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+4. API SECURITY
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Rate Limiting
+  • Rate limits on all API endpoints
+  • Stricter limits on authentication/payment endpoints
+  • IP-based and user-based rate limiting
+  • Rate limit headers returned (X-RateLimit-*)
+  • 429 status codes for exceeded limits
+
+□ API Authentication
+  • Bot API endpoints require valid authentication
+  • Bot heartbeat uses secure shared secret or JWT
+  • API keys (if used) are long, random, and rotated
+  • Webhook signatures validated (Stripe webhooks)
+
+□ Error Handling
+  • Errors don't expose sensitive information
+  • Stack traces disabled in production
+  • Generic error messages to clients
+  • Detailed errors logged server-side only
+  • Error codes used instead of detailed messages
+
+□ CORS Configuration
+  • CORS headers properly configured
+  • Allowed origins whitelist (not wildcard in production)
+  • Credentials only allowed for trusted origins
+  • Preflight requests handled correctly
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+5. DEPENDENCY MANAGEMENT
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Package Security
+  • Regular npm audit runs (automated in CI/CD)
+  • Known vulnerabilities patched immediately
+  • Dependencies kept up-to-date (automated with Dependabot/Renovate)
+  • Unused dependencies removed
+  • Package-lock.json committed for reproducible builds
+
+□ Supply Chain Security
+  • Dependencies from trusted sources only (npm, official repos)
+  • Package signatures verified where possible
+  • Minimal number of dependencies
+  • Large dependencies audited before inclusion
+  • No typosquatting packages installed
+
+□ License Compliance
+  • All dependency licenses reviewed
+  • No GPL/AGPL in proprietary code (unless intended)
+  • License files included where required
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+6. INFRASTRUCTURE & DEPLOYMENT
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Server Hardening
+  • Unnecessary services disabled
+  • Firewall configured (allow only necessary ports)
+  • SSH key-based authentication only (no password auth)
+  • Root login disabled
+  • Regular security updates applied
+
+□ Database Security
+  • MongoDB Atlas network access restricted (IP whitelist)
+  • Database authentication enabled
+  • Strong database passwords (32+ characters)
+  • Database user has minimal necessary privileges
+  • Connection strings not exposed in logs/errors
+
+□ Environment Separation
+  • Separate environments (dev, staging, production)
+  • Production uses separate credentials
+  • Production database isolated
+  • Environment-specific secrets
+
+□ Secure Deployment
+  • CI/CD pipeline secured (no secrets in logs)
+  • Deployment keys/tokens rotated regularly
+  • Production deploys require approval/review
+  • Rollback plan in place
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+7. LOGGING & MONITORING
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Security Logging
+  • Authentication attempts logged (success and failure)
+  • Authorization failures logged
+  • Sensitive operations logged (config changes, billing)
+  • Logs include timestamp, user ID, action, IP
+  • Logs stored securely and retained appropriately
+
+□ Log Protection
+  • Logs don't contain passwords, tokens, or credit card numbers
+  • Access to logs restricted
+  • Log tampering prevented (append-only, remote storage)
+  • Logs encrypted in transit and at rest
+
+□ Monitoring & Alerting
+  • Automated alerts for security events
+  • Failed login attempts monitored
+  • Unusual API usage patterns detected
+  • Payment fraud patterns monitored
+  • Intrusion detection system (IDS) considered
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+8. COMPLIANCE & GOVERNANCE
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Data Protection Regulations
+  • GDPR compliance (if serving EU users)
+  • CCPA compliance (if serving California users)
+  • Data Processing Agreement with MongoDB Atlas
+  • Privacy Policy covers all data practices
+
+□ Payment Security
+  • PCI DSS compliance (via Stripe - no card data stored)
+  • Stripe webhook signatures validated
+  • Subscription data protected
+  • Refund processes secure
+
+□ Security Policies
+  • Security incident response plan documented
+  • Vulnerability disclosure policy published
+  • Regular security reviews scheduled
+  • Penetration testing conducted (annually or on major changes)
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+9. DISCORD BOT SECURITY
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Bot Token Security
+  • Bot token never committed to git
+  • Token stored in secure environment variables
+  • Token regenerated if exposed
+  • Access to token restricted to necessary personnel
+
+□ Bot Permissions
+  • Bot requests only necessary Discord permissions
+  • Privileged intents justified and documented
+  • Permission escalation attacks prevented
+  • Server owners can review bot permissions
+
+□ Command Security
+  • Bot commands validate user permissions
+  • Rate limiting on bot commands
+  • Malicious input handled safely
+  • Bot cannot be abused to spam or raid
+
+□ Bot Communication
+  • Dashboard-to-bot communication authenticated
+  • Bot heartbeat secured
+  • Bot stats API authenticated
+  • Bot cannot be impersonated
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+10. TESTING & VALIDATION
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Security Testing
+  • Unit tests for authentication/authorization logic
+  • Integration tests for security-critical flows
+  • Automated security scans in CI/CD (Snyk, OWASP ZAP)
+  • Manual penetration testing periodically
+
+□ Code Review
+  • Security-sensitive code reviewed by multiple developers
+  • Code review checklist includes security items
+  • Third-party security audits (if budget allows)
+
+□ Vulnerability Management
+  • Security bugs prioritized and fixed quickly
+  • Vulnerability disclosure program established
+  • Bug bounty program considered
+  • CVE tracking for dependencies
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+11. USER SECURITY
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ User Account Security
+  • Account takeover prevention (re-auth for sensitive changes)
+  • Session hijacking mitigated (secure cookies, IP checks)
+  • Users can revoke Discord authorization
+  • Account deletion option available
+
+□ Security Notifications
+  • Users notified of suspicious activity
+  • Email notifications for subscription changes
+  • Security contact email available
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+12. EMERGENCY RESPONSE
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Incident Response
+  • Security incident response plan documented
+  • Team roles defined (who handles what)
+  • Communication plan (internal and external)
+  • Breach notification process (legal requirements)
+
+□ Backup & Recovery
+  • Regular database backups (automated)
+  • Backups tested for restoration
+  • Disaster recovery plan documented
+  • RTO (Recovery Time Objective) and RPO (Recovery Point Objective) defined
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+PRIORITY LEVELS:
+- CRITICAL: Must fix immediately (active vulnerabilities)
+- HIGH: Fix within 1 week (potential vulnerabilities)
+- MEDIUM: Fix within 1 month (best practices)
+- LOW: Fix when possible (nice-to-have improvements)
+
+REVIEW SCHEDULE:
+- Monthly: Review security logs and alerts
+- Quarterly: Review this checklist and update
+- Annually: Full security audit and penetration test
+- After incidents: Post-mortem and checklist update
+
+═══════════════════════════════════════════════════════════════════════════════════════════

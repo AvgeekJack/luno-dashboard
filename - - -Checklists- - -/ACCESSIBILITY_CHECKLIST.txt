@@ -1,0 +1,378 @@
+ACCESSIBILITY CHECKLIST FOR DISCORD BOT SAAS DASHBOARD
+======================================================
+
+Last Updated: January 26, 2026
+Project: Luno Discord Bot Dashboard
+
+This checklist ensures your application is accessible to all users, including those with
+disabilities. Following WCAG 2.1 Level AA standards.
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+1. SEMANTIC HTML & STRUCTURE
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Document Structure
+  • Proper HTML5 semantic elements (<header>, <nav>, <main>, <footer>, <section>, <article>)
+  • Logical heading hierarchy (h1 → h2 → h3, no skipping levels)
+  • One h1 per page describing main content
+  • Landmark regions properly identified
+  • Skip to main content link provided
+
+□ Forms & Controls
+  • All form inputs have associated <label> elements
+  • Labels use for attribute linking to input id
+  • Required fields indicated both visually and programmatically
+  • Error messages associated with inputs (aria-describedby)
+  • Fieldsets group related inputs with legend
+  • Placeholder text not used as sole label
+
+□ Lists & Tables
+  • Lists use proper <ul>, <ol>, <dl> markup
+  • Tables use <thead>, <tbody>, <th>, <caption>
+  • Table headers have scope attribute (row/col)
+  • Data tables not used for layout
+  • Complex tables have proper relationships defined
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+2. KEYBOARD NAVIGATION
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Keyboard Accessibility
+  • All interactive elements keyboard accessible (tab, enter, space)
+  • Tab order follows logical reading order
+  • No keyboard traps (can always navigate away)
+  • Custom controls implement proper keyboard patterns
+  • Keyboard shortcuts documented and don't conflict with screen readers
+
+□ Focus Management
+  • Focus indicator visible on all interactive elements
+  • Focus indicator has sufficient contrast (3:1 minimum)
+  • Focus not moved unexpectedly
+  • Modal dialogs trap focus appropriately
+  • Focus returned to trigger element when modal closes
+
+□ Focus Styling
+  • Default :focus outline not removed without replacement
+  • Custom focus styles meet contrast requirements
+  • Focus visible on all interactive elements (buttons, links, inputs)
+  • Focus-visible CSS used where appropriate (keyboard vs mouse)
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+3. COLOR & CONTRAST
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Color Contrast
+  • Normal text: 4.5:1 contrast ratio minimum
+  • Large text (18pt+ or 14pt+ bold): 3:1 contrast ratio minimum
+  • Interactive elements (buttons, links): 4.5:1 against background
+  • UI components: 3:1 contrast for boundaries/states
+  • Tested with contrast checker tools
+
+□ Color Independence
+  • Information not conveyed by color alone
+  • Links distinguishable without relying solely on color
+  • Error states include icons/text, not just red color
+  • Charts/graphs use patterns + color
+  • Status indicators (premium, active) use text/icons
+
+□ Visual Presentation
+  • Text can be resized to 200% without loss of functionality
+  • No horizontal scrolling at 200% zoom (1280px wide viewport)
+  • Line spacing at least 1.5x font size
+  • Paragraph spacing at least 2x font size
+  • Letter spacing adjustable
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+4. ARIA & SCREEN READERS
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ ARIA Attributes
+  • ARIA roles used appropriately (button, navigation, dialog, alert)
+  • aria-label or aria-labelledby on all custom controls
+  • aria-describedby for additional context
+  • aria-expanded on collapsible elements
+  • aria-current on current page/step in navigation
+  • aria-hidden on decorative elements
+  • aria-live regions for dynamic updates
+
+□ Screen Reader Support
+  • Tested with NVDA (Windows), JAWS (Windows), VoiceOver (Mac/iOS)
+  • Alternative text for all images (alt attribute)
+  • Icon-only buttons have screen reader labels
+  • Loading states announced
+  • Error messages announced
+  • Dynamic content changes announced
+
+□ ARIA Best Practices
+  • Prefer native HTML over ARIA when possible
+  • ARIA doesn't override native semantics incorrectly
+  • Required ARIA states and properties present
+  • ARIA relationships valid (labelledby, describedby IDs exist)
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+5. IMAGES & MEDIA
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Images
+  • All informative images have descriptive alt text
+  • Decorative images have empty alt attribute (alt="")
+  • Complex images (charts) have long descriptions
+  • Image buttons have alt text describing function
+  • Logo images have alt text with company name
+
+□ Icons
+  • Icon fonts/SVGs have proper labels (aria-label)
+  • Decorative icons hidden from screen readers (aria-hidden="true")
+  • Icon + text combinations properly labeled
+  • Icon-only buttons clearly labeled
+
+□ Video & Audio
+  • Captions provided for all video content
+  • Transcripts available for audio/video content
+  • Audio descriptions for visual content
+  • Media players keyboard accessible
+  • No auto-playing media (or user control provided)
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+6. FORMS & VALIDATION
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Form Accessibility
+  • Labels visible and properly associated
+  • Required fields marked with aria-required="true"
+  • Input purpose identified (autocomplete attributes)
+  • Error messages specific and helpful
+  • Errors associated with inputs (aria-describedby, aria-invalid)
+
+□ Form Validation
+  • Validation errors announced to screen readers
+  • Error summary at top of form with links to fields
+  • Inline validation doesn't remove focus unexpectedly
+  • Success messages also accessible
+  • Error prevention for irreversible actions (confirmations)
+
+□ Complex Form Controls
+  • Custom dropdowns keyboard accessible
+  • Date pickers accessible (keyboard + screen reader)
+  • Multi-select controls properly labeled
+  • Toggle switches have on/off states announced
+  • Sliders have min/max/current values announced
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+7. NAVIGATION & WAYFINDING
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Navigation Menus
+  • Main navigation properly marked with <nav> and aria-label
+  • Current page indicated (aria-current="page")
+  • Dropdown menus keyboard accessible
+  • Mobile menu accessible (hamburger icon labeled)
+  • Breadcrumbs use <nav> with aria-label="breadcrumb"
+
+□ Links
+  • Link purpose clear from text or context
+  • "Click here" avoided; descriptive link text used
+  • External links indicated (icon + screen reader text)
+  • Links visually distinct from surrounding text
+  • Visited link state distinguishable
+
+□ Page Titles
+  • Unique, descriptive <title> for each page
+  • Page title follows pattern: "[Page Name] - [Site Name]"
+  • Title updates for SPA route changes
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+8. DYNAMIC CONTENT & INTERACTIONS
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Live Regions
+  • Status messages use aria-live="polite"
+  • Urgent messages use aria-live="assertive"
+  • Loading states announced
+  • Form submission results announced
+  • Toast notifications accessible
+
+□ Modal Dialogs
+  • Modal traps focus within dialog
+  • ESC key closes modal
+  • Focus moves to modal when opened
+  • Focus returns to trigger when closed
+  • Modal has aria-modal="true" and role="dialog"
+  • Modal labeled with aria-labelledby
+
+□ Tooltips & Popovers
+  • Tooltips accessible via keyboard (focus/hover)
+  • Tooltip content accessible to screen readers
+  • ESC key dismisses tooltips
+  • Tooltips don't hide on hover
+  • Critical information not in tooltips only
+
+□ Tabs
+  • Tab panels use proper ARIA pattern
+  • Arrow keys navigate between tabs
+  • Tab content associated with tab control
+  • Selected tab indicated (aria-selected="true")
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+9. MOBILE & RESPONSIVE ACCESSIBILITY
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Touch Targets
+  • Touch targets at least 44x44 pixels (iOS) or 48x48 pixels (Android)
+  • Sufficient spacing between touch targets (8px+)
+  • Buttons large enough to tap easily
+  • No hover-only interactions (tooltip alternatives)
+
+□ Responsive Design
+  • Content accessible at all viewport sizes
+  • No loss of functionality on small screens
+  • Text readable without horizontal scrolling
+  • Mobile navigation accessible
+  • Orientation changes supported (portrait/landscape)
+
+□ Mobile Screen Readers
+  • Tested with VoiceOver (iOS) and TalkBack (Android)
+  • Swipe gestures work as expected
+  • Screen reader landmarks navigable
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+10. CONTENT & READABILITY
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Text Content
+  • Plain language used (avoid jargon)
+  • Short sentences and paragraphs
+  • Clear headings and subheadings
+  • Important information presented first
+  • Acronyms/abbreviations spelled out on first use
+
+□ Reading Level
+  • Content understandable at reasonable reading level
+  • Complex instructions broken into steps
+  • Visual aids supplement text
+  • Glossary provided for technical terms
+
+□ Language
+  • Page language declared (<html lang="en">)
+  • Language changes marked (lang attribute)
+  • Consistent terminology throughout
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+11. TIMING & MOTION
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Time Limits
+  • Users can extend time limits
+  • No critical time limits without warning
+  • Auto-logout provides ample warning
+  • Session timeout can be disabled/extended
+
+□ Motion & Animation
+  • Animations respect prefers-reduced-motion
+  • Auto-playing animations can be paused
+  • No flashing content (3 flashes per second max)
+  • Parallax effects disabled for reduced motion
+  • Confetti/decorative animations pausable
+
+□ Auto-Updates
+  • Auto-refreshing content can be paused/controlled
+  • Updates announced to screen readers
+  • User can control update frequency
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+12. DISCORD-SPECIFIC CONSIDERATIONS
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Server Configuration
+  • Channel/role selectors keyboard accessible
+  • Multi-select interfaces accessible
+  • Server settings form accessible
+  • Command configuration accessible
+
+□ Bot Commands Display
+  • Command syntax clearly explained
+  • Command parameters labeled
+  • Examples provided for complex commands
+  • Search/filter functionality accessible
+
+□ Premium Features
+  • Feature comparison tables accessible
+  • Billing cycle toggle accessible (monthly/yearly)
+  • Payment forms accessible (Stripe Checkout)
+  • Subscription management accessible
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+13. TESTING & VALIDATION
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Automated Testing
+  • axe DevTools browser extension used
+  • Lighthouse accessibility audit passed (90+ score)
+  • WAVE browser extension shows no errors
+  • Pa11y or similar in CI/CD pipeline
+
+□ Manual Testing
+  • Keyboard-only navigation tested
+  • Screen reader testing completed (NVDA/JAWS/VoiceOver)
+  • Color contrast checker used
+  • Zoom to 200% tested
+  • Mobile screen reader tested (iOS/Android)
+
+□ User Testing
+  • Testing with users with disabilities (if possible)
+  • Accessibility feedback mechanism provided
+  • User complaints addressed promptly
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+14. DOCUMENTATION & SUPPORT
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Accessibility Statement
+  • Accessibility statement page published
+  • Known issues documented
+  • Contact for accessibility feedback provided
+  • Conformance level stated (WCAG 2.1 Level AA)
+
+□ User Assistance
+  • Help documentation accessible
+  • Keyboard shortcuts documented
+  • Video tutorials have captions
+  • Support contact accessible
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+WCAG 2.1 CONFORMANCE LEVELS:
+- Level A: Minimum accessibility (basic requirements)
+- Level AA: Recommended standard (this checklist targets AA)
+- Level AAA: Highest accessibility (enhanced requirements)
+
+TARGET: WCAG 2.1 Level AA Conformance
+
+TESTING TOOLS:
+- axe DevTools (browser extension)
+- Lighthouse (Chrome DevTools)
+- WAVE (browser extension)
+- Color Contrast Analyzer
+- Screen readers: NVDA, JAWS, VoiceOver, TalkBack
+
+REVIEW SCHEDULE:
+- After major UI changes: Full accessibility audit
+- Monthly: Automated testing review
+- Quarterly: Manual testing with assistive technologies
+- Annually: External accessibility audit (professional)
+
+═══════════════════════════════════════════════════════════════════════════════════════════

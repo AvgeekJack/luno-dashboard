@@ -1,0 +1,501 @@
+MONITORING & ALERTING CHECKLIST FOR DISCORD BOT SAAS DASHBOARD
+================================================================
+
+Last Updated: January 26, 2026
+Project: Luno Discord Bot Dashboard
+
+This checklist ensures comprehensive monitoring, logging, and alerting for your application
+to detect issues quickly and maintain high availability.
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+1. APPLICATION MONITORING
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Error Tracking
+  • Error monitoring tool configured (Sentry, Rollbar, etc.)
+  • Frontend errors captured
+  • Backend errors captured
+  • Source maps uploaded for production
+  • Error grouping and deduplication enabled
+  • Context attached to errors (user ID, route, etc.)
+  • Stack traces readable and useful
+
+□ Error Alerting
+  • High-severity errors trigger immediate alerts
+  • Alert on new error types
+  • Alert on error rate spikes
+  • Deduplicate similar errors
+  • Alerts sent to team channel (Slack, Discord, email)
+  • On-call rotation for critical errors
+
+□ Performance Monitoring
+  • Real User Monitoring (RUM) enabled (Vercel Analytics, Sentry)
+  • Core Web Vitals tracked (LCP, FID/INP, CLS)
+  • Page load times monitored
+  • API response times tracked
+  • Slow transaction alerts
+  • Performance regression detection
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+2. INFRASTRUCTURE MONITORING
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Uptime Monitoring
+  • Uptime monitor for main site (UptimeRobot, Pingdom, Better Uptime)
+  • Health check endpoint (/api/health)
+  • Multiple monitoring locations (global)
+  • Check interval: 1-5 minutes
+  • Alert on 2+ consecutive failures
+  • Status page for users (optional: statuspage.io)
+
+□ Server Health
+  • CPU usage monitored
+  • Memory usage monitored
+  • Disk usage monitored
+  • Network I/O monitored
+  • Function invocation count (serverless)
+  • Cold start metrics
+
+□ Hosting Platform
+  • Vercel dashboard monitored (builds, deployments, functions)
+  • Build failures alerted
+  • Deployment failures alerted
+  • Function timeout alerts
+  • Function error rate alerts
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+3. DATABASE MONITORING
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ MongoDB Atlas Monitoring
+  • Database CPU usage monitored
+  • Database memory usage monitored
+  • Disk IOPS monitored
+  • Connection count monitored
+  • Slow query alerts (> 100ms threshold)
+  • Index usage monitored
+
+□ Database Performance
+  • Query execution time tracked
+  • N+1 query detection
+  • Connection pool exhaustion alerts
+  • Replication lag monitored (if applicable)
+  • Backup success/failure monitored
+  • Database storage capacity alerts
+
+□ Database Alerts
+  • Alert on high CPU (> 80%)
+  • Alert on high memory (> 80%)
+  • Alert on connection spikes
+  • Alert on slow queries
+  • Alert on failed backups
+  • Alert on low disk space
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+4. API & BACKEND MONITORING
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ API Performance
+  • Request count per endpoint
+  • Response time per endpoint (p50, p95, p99)
+  • Error rate per endpoint
+  • Success rate per endpoint
+  • 4xx and 5xx response tracking
+  • Slow endpoint alerts (> 1s response time)
+
+□ API Health Checks
+  • Health check endpoint (/api/health)
+  • Database connectivity check
+  • External service connectivity (Stripe, Discord API)
+  • Dependency health verified
+  • Health check monitored externally
+
+□ Rate Limiting
+  • Rate limit hits tracked
+  • IP addresses hitting limits logged
+  • Alert on excessive rate limiting (potential attack)
+
+□ Authentication
+  • Failed login attempts tracked
+  • Successful logins tracked
+  • OAuth failures monitored
+  • Session creation/expiry tracked
+  • Suspicious login patterns alerted
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+5. THIRD-PARTY SERVICE MONITORING
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Stripe Integration
+  • Stripe webhook delivery monitored
+  • Failed webhook alerts
+  • Subscription creation/cancellation tracked
+  • Payment failure rate monitored
+  • Refund rate monitored
+  • Stripe API errors tracked
+  • Checkout abandonment rate
+
+□ Discord API
+  • Discord OAuth success/failure rate
+  • Discord API error responses tracked
+  • Discord API rate limits monitored
+  • Bot API connectivity monitored
+
+□ External Service Status
+  • Monitor Stripe status page
+  • Monitor Discord status page
+  • Monitor Vercel status page
+  • Monitor MongoDB Atlas status
+  • Alerts when external services down
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+6. BOT MONITORING
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Bot Health
+  • Bot heartbeat endpoint monitored
+  • Bot online/offline status tracked
+  • Alert on bot downtime (> 5 minutes)
+  • Bot restart events logged
+  • Bot crash alerts
+
+□ Bot Performance
+  • Command usage statistics
+  • Command error rate
+  • Bot latency (Discord API ping)
+  • Guild count tracked
+  • User count tracked
+
+□ Bot Stats Integration
+  • Bot stats API response time
+  • Bot stats API error rate
+  • Dashboard-to-bot communication health
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+7. LOGGING
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Application Logs
+  • Structured logging (JSON format)
+  • Log levels properly used (debug, info, warn, error)
+  • Logs include context (user ID, request ID, timestamp)
+  • No sensitive data in logs (passwords, tokens, credit cards)
+  • Logs aggregated centrally (Vercel logs, Datadog, etc.)
+
+□ Log Categories
+  • Authentication events logged
+  • Authorization failures logged
+  • API requests logged (method, path, status, duration)
+  • Database queries logged (slow queries)
+  • Stripe events logged
+  • Bot events logged
+  • Security events logged
+
+□ Log Retention
+  • Logs retained for compliance period (30-90 days min)
+  • Archived logs accessible
+  • Log storage costs managed
+  • Old logs purged automatically
+
+□ Log Analysis
+  • Log search and filtering available
+  • Log dashboards created
+  • Anomaly detection on logs
+  • Log-based alerts configured
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+8. ALERTING STRATEGY
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Alert Channels
+  • Critical alerts: Phone/SMS (PagerDuty, Opsgenie)
+  • High priority: Team chat (Slack, Discord)
+  • Medium priority: Email
+  • Low priority: Dashboard only
+  • On-call rotation for critical alerts
+
+□ Alert Rules
+  • Uptime: Alert on 2+ consecutive check failures
+  • Error rate: Alert on > 5% error rate in 5 minutes
+  • Response time: Alert on p95 > 2s for 5 minutes
+  • Database: Alert on > 80% CPU/memory
+  • Bot: Alert on downtime > 5 minutes
+  • Payment: Alert on failed Stripe webhooks
+
+□ Alert Quality
+  • Alerts actionable (clear what to do)
+  • Runbooks linked to alerts
+  • Alert fatigue prevented (no spam)
+  • False positives minimized
+  • Alert thresholds tuned over time
+  • Alerts include context and links
+
+□ Alert Escalation
+  • Escalation policy defined
+  • Critical alerts escalate if not acknowledged
+  • Multiple escalation levels
+  • Backup contacts for on-call
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+9. BUSINESS METRICS
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ User Metrics
+  • Active users (daily, weekly, monthly)
+  • New signups per day
+  • User retention rate
+  • Churn rate
+  • User session duration
+
+□ Server/Guild Metrics
+  • Total guilds using bot
+  • New guilds per day
+  • Active guilds (used bot recently)
+  • Guild churn rate
+  • Commands per guild
+
+□ Premium Metrics
+  • Free vs premium users
+  • Conversion rate (free → premium)
+  • Monthly recurring revenue (MRR)
+  • Churn rate (premium cancellations)
+  • Lifetime value (LTV)
+  • Premium trial starts/conversions
+
+□ Feature Usage
+  • Most used bot commands
+  • Most used dashboard features
+  • Module enablement rates
+  • Configuration completion rate
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+10. SECURITY MONITORING
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Security Events
+  • Failed authentication attempts tracked
+  • Suspicious login patterns detected
+  • Rate limit hits tracked
+  • SQL/NoSQL injection attempts logged
+  • XSS attempts logged
+  • CSRF failures logged
+
+□ Security Alerts
+  • Alert on brute force attacks (many failed logins)
+  • Alert on payment fraud patterns
+  • Alert on unusual data access patterns
+  • Alert on privilege escalation attempts
+  • Alert on unauthorized API access
+
+□ Vulnerability Monitoring
+  • npm audit run regularly (automated)
+  • Dependabot alerts monitored
+  • CVE tracking for dependencies
+  • Security advisories subscribed
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+11. USER EXPERIENCE MONITORING
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Frontend Monitoring
+  • JavaScript errors tracked
+  • React errors tracked (error boundaries)
+  • Network request failures tracked
+  • Browser compatibility issues logged
+  • Mobile vs desktop experience compared
+
+□ User Behavior
+  • Page views tracked (privacy-respecting)
+  • User flows tracked (signup, premium purchase)
+  • Funnel drop-off points identified
+  • Session recordings (optional, privacy-aware)
+  • Heatmaps (optional, privacy-aware)
+
+□ User Feedback
+  • User-reported errors captured
+  • Feedback mechanism available
+  • Support tickets tracked
+  • NPS score tracked (optional)
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+12. SYNTHETIC MONITORING
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Automated Tests
+  • Critical user flows tested (signup, bot add, premium purchase)
+  • Tests run from multiple locations
+  • Tests run on schedule (every 5-15 minutes)
+  • Test failures alert immediately
+  • Tests check full functionality, not just uptime
+
+□ API Testing
+  • Critical API endpoints tested
+  • End-to-end workflows tested
+  • Authentication flow tested
+  • Payment flow tested (test mode)
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+13. DASHBOARDS & VISUALIZATION
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Operations Dashboard
+  • Real-time system health overview
+  • Error rate over time
+  • Response time over time
+  • Active users over time
+  • Database performance metrics
+  • Bot health status
+
+□ Business Dashboard
+  • MRR over time
+  • Active users/guilds over time
+  • Conversion funnel
+  • Churn rate
+  • Top features by usage
+
+□ Dashboard Best Practices
+  • Dashboards auto-refresh
+  • Dashboards accessible to team
+  • Mobile-friendly dashboards
+  • Dashboards linked in documentation
+  • Historical data available
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+14. INCIDENT MANAGEMENT
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Incident Response
+  • Incident response plan documented
+  • Roles and responsibilities defined
+  • Communication plan (internal + external)
+  • Incident severity levels defined
+  • Runbooks for common incidents
+
+□ Incident Tracking
+  • Incidents logged in system (Jira, Linear, Notion)
+  • Incident timeline documented
+  • Root cause analysis performed
+  • Post-mortems written for major incidents
+  • Action items tracked to completion
+
+□ Status Communication
+  • Status page for users (optional: statuspage.io)
+  • Incident updates communicated
+  • Maintenance windows announced
+  • SLA/uptime published
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+15. OBSERVABILITY TOOLS
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Recommended Tools
+
+ERROR TRACKING:
+  • Sentry (recommended for Next.js)
+  • Rollbar
+  • Bugsnag
+
+UPTIME MONITORING:
+  • Better Uptime (modern, good UX)
+  • UptimeRobot (free tier)
+  • Pingdom
+
+PERFORMANCE MONITORING:
+  • Vercel Analytics (built-in for Vercel)
+  • Sentry Performance Monitoring
+  • New Relic
+  • Datadog
+
+LOGGING:
+  • Vercel Logs (built-in)
+  • Datadog
+  • LogDNA/Mezmo
+  • Logtail
+
+ALERTING:
+  • PagerDuty (on-call management)
+  • Opsgenie
+  • Better Uptime (incidents + alerting)
+
+DATABASE MONITORING:
+  • MongoDB Atlas built-in monitoring
+  • Datadog MongoDB integration
+
+STATUS PAGE:
+  • statuspage.io (Atlassian)
+  • Better Uptime Status Pages
+  • Instatus
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+16. MONITORING CHECKLIST BY PHASE
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ MVP / Launch (Minimum)
+  • Sentry for error tracking
+  • Uptime monitoring (Better Uptime / UptimeRobot)
+  • Vercel Analytics for performance
+  • MongoDB Atlas monitoring
+  • Basic alerting (email/Discord)
+
+□ Growth Phase
+  • Enhanced error tracking (context, releases)
+  • Multi-location uptime monitoring
+  • Business metrics dashboard
+  • Payment monitoring (Stripe)
+  • Bot health monitoring
+  • On-call rotation
+
+□ Scale Phase
+  • Full observability stack (APM, logs, traces)
+  • Custom dashboards
+  • Automated anomaly detection
+  • Synthetic monitoring
+  • Incident management system
+  • SLA tracking
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+CRITICAL ALERTS (PAGE IMMEDIATELY):
+- Website down (uptime monitor)
+- Database down/unreachable
+- Error rate > 10% for 5+ minutes
+- Bot down for 10+ minutes
+- Payment processing failures
+- Security breach detected
+
+HIGH PRIORITY (SLACK/DISCORD):
+- Error rate > 5%
+- API response time > 2s (p95)
+- Failed Stripe webhooks
+- Database CPU/memory > 80%
+- Failed deployments
+
+MEDIUM PRIORITY (EMAIL):
+- Slow queries
+- Elevated 4xx error rates
+- Premium cancellations spike
+- Low disk space warnings
+
+REVIEW SCHEDULE:
+- Daily: Check dashboards, recent alerts
+- Weekly: Review error trends, performance trends
+- Monthly: Review alerting effectiveness, tune thresholds
+- Quarterly: Full monitoring stack audit
+
+═══════════════════════════════════════════════════════════════════════════════════════════

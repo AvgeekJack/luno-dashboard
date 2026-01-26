@@ -1,0 +1,437 @@
+PERFORMANCE OPTIMIZATION CHECKLIST FOR DISCORD BOT SAAS DASHBOARD
+==================================================================
+
+Last Updated: January 26, 2026
+Project: Luno Discord Bot Dashboard
+
+This checklist ensures your application loads quickly, responds efficiently, and scales
+effectively. Target metrics: LCP < 2.5s, FID < 100ms, CLS < 0.1, TTI < 3.5s.
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+1. FRONTEND PERFORMANCE - INITIAL LOAD
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Code Splitting & Bundle Optimization
+  • Next.js automatic code splitting enabled
+  • Dynamic imports for large components (lazy loading)
+  • Route-based code splitting implemented
+  • Heavy libraries lazy loaded (confetti, charts, etc.)
+  • Tree shaking enabled (ES modules)
+  • Bundle analyzer used to identify bloat
+  • Target: Main bundle < 170KB gzipped
+
+□ JavaScript Optimization
+  • Minimal JavaScript on initial load
+  • Critical JavaScript inlined
+  • Non-critical JavaScript deferred
+  • Third-party scripts loaded asynchronously
+  • Polyfills only loaded when needed
+  • Source maps disabled in production
+
+□ CSS Optimization
+  • Tailwind CSS purged (unused classes removed)
+  • Critical CSS inlined for above-the-fold content
+  • CSS minified in production
+  • Unused CSS removed
+  • CSS-in-JS optimized (if used)
+  • Target: CSS < 50KB gzipped
+
+□ Font Optimization
+  • Web fonts preloaded
+  • Font display: swap (or optional) for fast text render
+  • Variable fonts used (if applicable)
+  • Font subsetting for unused glyphs
+  • System fonts fallback defined
+  • Only essential font weights loaded
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+2. IMAGES & MEDIA
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Image Optimization
+  • Next.js Image component used (<Image />)
+  • Images served in modern formats (WebP, AVIF)
+  • Responsive images with srcset
+  • Images lazy loaded (below fold)
+  • Images compressed (TinyPNG, Squoosh, etc.)
+  • Image dimensions specified (width/height)
+  • No CLS from images
+
+□ Image Delivery
+  • Images served from CDN
+  • Appropriate image sizes for viewports
+  • Placeholder images/blur for loading
+  • Priority images preloaded (LCP element)
+  • SVGs optimized (SVGO)
+  • No oversized images
+
+□ Media Loading
+  • Videos lazy loaded
+  • Videos compressed/optimized
+  • Poster images for videos
+  • No auto-play for large media
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+3. RENDERING PERFORMANCE
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ React Performance
+  • React.memo for expensive components
+  • useMemo for expensive computations
+  • useCallback for function props
+  • Key prop optimized for lists
+  • Avoid inline function definitions in render
+  • Virtual scrolling for long lists (react-window)
+
+□ Next.js Optimization
+  • Server components used where possible (App Router)
+  • Static generation for static pages
+  • Incremental Static Regeneration (ISR) for semi-static
+  • API routes optimized
+  • Middleware used efficiently
+  • Edge runtime for fast response (where applicable)
+
+□ Client-Side Rendering
+  • Minimize re-renders (React DevTools Profiler)
+  • Avoid unnecessary state updates
+  • Debounce/throttle rapid events (search, scroll)
+  • Intersection Observer for lazy loading
+  • RequestIdleCallback for non-urgent work
+
+□ Layout Stability (CLS)
+  • Image dimensions specified
+  • Font fallbacks prevent layout shift
+  • No content injected above existing content
+  • Reserve space for dynamic content
+  • Animations use transform/opacity only
+  • Target: CLS < 0.1
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+4. NETWORK & API OPTIMIZATION
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ API Response Time
+  • API routes respond < 200ms (target)
+  • Database queries optimized (indexes, projection)
+  • N+1 queries eliminated
+  • Aggregation pipelines optimized
+  • Connection pooling for database
+  • API response caching where appropriate
+
+□ Data Fetching
+  • SWR or React Query for data fetching
+  • Optimistic UI updates
+  • Request deduplication
+  • Stale-while-revalidate strategy
+  • Pagination for large datasets
+  • GraphQL batching (if applicable)
+
+□ Payload Optimization
+  • API responses minimal (only needed fields)
+  • JSON minified
+  • Compression enabled (gzip/brotli)
+  • Batch API calls where possible
+  • WebSockets for real-time (if needed)
+  • Target: API payloads < 100KB
+
+□ Caching Strategy
+  • Browser caching headers set (Cache-Control)
+  • Static assets cached long-term (immutable)
+  • API responses cached appropriately
+  • CDN caching for static content
+  • Service worker caching (if PWA)
+  • Stale cache invalidation strategy
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+5. DATABASE OPTIMIZATION
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ MongoDB Optimization
+  • Indexes on frequently queried fields
+  • Compound indexes for multi-field queries
+  • Projection to return only needed fields
+  • Aggregation pipelines optimized ($match early)
+  • Connection pooling configured
+  • Query execution time monitored
+
+□ Data Modeling
+  • Schema design optimized for read patterns
+  • Denormalization where appropriate
+  • Embedding vs referencing optimized
+  • No unbounded arrays
+  • TTL indexes for temporary data
+  • Bulk operations for multiple writes
+
+□ Database Performance
+  • Database hosted in same region as app
+  • MongoDB Atlas auto-scaling enabled
+  • Read preference configured (primary/secondary)
+  • Write concern balanced (acknowledged)
+  • Database backups don't impact performance
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+6. HOSTING & INFRASTRUCTURE
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Hosting Optimization
+  • Hosted on edge network (Vercel Edge, Cloudflare)
+  • Global CDN for static assets
+  • Server regions close to users
+  • Auto-scaling configured
+  • Cold start minimized (serverless)
+
+□ Compression & Encoding
+  • Brotli compression for static assets
+  • Gzip fallback for older browsers
+  • Text assets minified (HTML, CSS, JS)
+  • HTTP/2 or HTTP/3 enabled
+
+□ DNS & Network
+  • DNS prefetch for external domains
+  • Preconnect for critical resources
+  • Keep-alive connections enabled
+  • Reduce DNS lookups (minimize domains)
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+7. THIRD-PARTY SERVICES
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ External Scripts
+  • Third-party scripts loaded asynchronously
+  • Non-critical scripts deferred
+  • Self-host critical third-party scripts
+  • Resource hints (dns-prefetch, preconnect)
+  • Third-party script impact measured
+
+□ Analytics & Monitoring
+  • Analytics loaded asynchronously
+  • Minimal analytics payload
+  • Session recording limited (privacy + performance)
+  • Error tracking (Sentry) configured efficiently
+
+□ Stripe & Payment
+  • Stripe.js loaded only on payment pages
+  • Stripe Elements optimized
+  • Payment redirects fast
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+8. CORE WEB VITALS
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Largest Contentful Paint (LCP)
+  • LCP < 2.5 seconds (target)
+  • LCP element identified (Lighthouse)
+  • Critical resources preloaded
+  • Server response time < 600ms
+  • Images optimized
+  • Target: LCP < 2.5s (Good)
+
+□ First Input Delay (FID) / Interaction to Next Paint (INP)
+  • FID < 100ms (target)
+  • INP < 200ms (new metric)
+  • Long tasks broken up
+  • Main thread unblocked
+  • Event handlers optimized
+  • Target: FID < 100ms, INP < 200ms
+
+□ Cumulative Layout Shift (CLS)
+  • CLS < 0.1 (target)
+  • Image/video dimensions set
+  • No content injected above fold
+  • Font loading optimized
+  • Target: CLS < 0.1 (Good)
+
+□ Time to First Byte (TTFB)
+  • TTFB < 800ms (target)
+  • Server response optimized
+  • CDN configured
+  • Database queries fast
+  • Target: TTFB < 600ms (Good)
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+9. MOBILE PERFORMANCE
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Mobile Optimization
+  • Mobile-first approach
+  • Touch interactions optimized
+  • Mobile bundle size minimal
+  • Images optimized for mobile
+  • Slow 3G testing performed
+
+□ Progressive Enhancement
+  • Core functionality works without JS
+  • Graceful degradation for old browsers
+  • Feature detection (not browser detection)
+  • Polyfills only when needed
+
+□ Adaptive Loading
+  • Network-aware data fetching (navigator.connection)
+  • Reduced quality images on slow networks
+  • Defer non-critical features on low-end devices
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+10. SCALABILITY
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Backend Scalability
+  • Horizontal scaling possible
+  • Stateless API design
+  • Database connection pooling
+  • Rate limiting prevents abuse
+  • Load testing performed (Artillery, k6)
+
+□ Bot Integration
+  • Bot heartbeat efficient (minimal overhead)
+  • Bot stats API optimized
+  • Dashboard doesn't overload bot
+  • Bot can handle high request volume
+
+□ Caching Strategy
+  • Redis/Memcached for session/data caching (if needed)
+  • Database query results cached
+  • API responses cached (stale-while-revalidate)
+  • CDN edge caching for static content
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+11. MONITORING & ANALYTICS
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Performance Monitoring
+  • Real User Monitoring (RUM) - Vercel Analytics, Sentry
+  • Core Web Vitals tracked
+  • API response times monitored
+  • Error rates monitored
+  • Custom performance marks (Performance API)
+
+□ Performance Budget
+  • Bundle size budget enforced (CI/CD)
+  • Lighthouse score target (90+)
+  • Core Web Vitals thresholds defined
+  • Alerts for performance regressions
+
+□ Continuous Monitoring
+  • Lighthouse CI in pipeline
+  • Performance dashboards (Vercel, Grafana)
+  • Alerts for slow pages/APIs
+  • Regular performance audits
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+12. ADVANCED OPTIMIZATIONS
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Service Worker & PWA
+  • Service worker for offline support (optional)
+  • App shell caching
+  • Background sync
+  • Push notifications (if needed)
+
+□ Edge Computing
+  • Middleware runs on edge
+  • API routes on edge (where possible)
+  • Static generation on edge
+  • Geo-routing for global users
+
+□ Prefetching & Preloading
+  • Link prefetching on hover (next/link default)
+  • Critical resources preloaded
+  • DNS prefetch for external domains
+  • Preconnect for critical origins
+
+□ Web Workers
+  • Heavy computation in web workers
+  • Background processing offloaded
+  • Main thread kept responsive
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+13. TESTING & BENCHMARKING
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Performance Testing Tools
+  • Lighthouse (Chrome DevTools) - score 90+
+  • WebPageTest - detailed waterfall analysis
+  • Vercel Analytics - real user data
+  • Chrome DevTools Performance tab
+  • React DevTools Profiler
+
+□ Load Testing
+  • API load testing (Artillery, k6, Locust)
+  • Database load testing
+  • Bot stats endpoint tested under load
+  • Stripe webhook handling tested
+
+□ Continuous Testing
+  • Lighthouse CI in GitHub Actions
+  • Performance regression testing
+  • Bundle size tracking (bundlephobia)
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+14. DISCORD DASHBOARD SPECIFIC
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Server List Optimization
+  • Pagination for large server lists
+  • Virtual scrolling for many servers
+  • Server icons lazy loaded
+  • Search/filter optimized
+
+□ Server Settings Pages
+  • Channel/role lists virtualized
+  • Settings fetched on-demand
+  • Optimistic updates for settings
+  • Debounced autosave
+
+□ Bot Stats
+  • Stats cached (avoid real-time every load)
+  • Charts lazy loaded
+  • Historical data paginated
+  • Live stats use WebSocket (not polling)
+
+□ Premium Features
+  • Stripe loaded only on premium pages
+  • Billing history paginated
+  • Confetti animation optimized
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+PERFORMANCE TARGETS:
+- Lighthouse Score: 90+ (all categories)
+- LCP: < 2.5s (Good)
+- FID: < 100ms (Good)
+- INP: < 200ms (Good)
+- CLS: < 0.1 (Good)
+- TTFB: < 600ms (Good)
+- TTI: < 3.5s
+- Bundle Size: < 170KB gzipped (main)
+- API Response: < 200ms (p95)
+
+TOOLS:
+- Lighthouse (Chrome DevTools)
+- WebPageTest
+- Vercel Analytics
+- Bundle Analyzer (webpack-bundle-analyzer)
+- React DevTools Profiler
+- Chrome DevTools Performance
+- Artillery/k6 (load testing)
+
+REVIEW SCHEDULE:
+- Weekly: Lighthouse score check
+- Monthly: Full performance audit
+- Before major releases: Load testing
+- Continuous: Lighthouse CI on every PR
+
+═══════════════════════════════════════════════════════════════════════════════════════════

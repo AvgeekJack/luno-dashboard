@@ -1,0 +1,572 @@
+DEVOPS & DEPLOYMENT CHECKLIST FOR DISCORD BOT SAAS DASHBOARD
+=============================================================
+
+Last Updated: January 26, 2026
+Project: Luno Discord Bot Dashboard
+
+This checklist ensures reliable deployments, proper CI/CD pipelines, and operational
+excellence for your production environment.
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+1. SOURCE CONTROL & GIT WORKFLOW
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Git Repository
+  • Repository on GitHub/GitLab/Bitbucket
+  • .gitignore properly configured
+  • No secrets in git history
+  • README.md up to date
+  • LICENSE file present
+  • Contributing guidelines (if open source)
+
+□ Branch Strategy
+  • Main/master branch protected
+  • Development branch for active work
+  • Feature branches for new features
+  • Hotfix branches for urgent fixes
+  • Branch naming convention defined
+  • Stale branches cleaned up regularly
+
+□ Branch Protection Rules
+  • Cannot push directly to main
+  • Pull request required for main
+  • Code review required before merge
+  • CI/CD checks must pass
+  • Up-to-date with base branch required
+  • Linear history (rebase or squash merge)
+
+□ Commit Practices
+  • Meaningful commit messages
+  • Conventional commits (optional: feat:, fix:, etc.)
+  • Atomic commits (one logical change per commit)
+  • No "WIP" commits in main
+  • Commits signed (optional but recommended)
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+2. CONTINUOUS INTEGRATION (CI)
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ CI Pipeline (GitHub Actions / GitLab CI / CircleCI)
+  • CI runs on every push/PR
+  • Build step (npm run build)
+  • Lint step (npm run lint)
+  • Type check (tsc --noEmit)
+  • Test step (if tests exist)
+  • Security audit (npm audit)
+  • CI fails on errors
+
+□ CI Optimization
+  • Dependency caching (node_modules)
+  • Parallel jobs where possible
+  • Fast feedback (< 5 minutes)
+  • Only run necessary steps per branch
+
+□ Quality Gates
+  • Build must succeed
+  • No linting errors
+  • No TypeScript errors
+  • No high/critical npm vulnerabilities
+  • Code coverage threshold (if applicable)
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+3. CONTINUOUS DEPLOYMENT (CD)
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Deployment Pipeline
+  • Automatic deployment to staging on development branch
+  • Manual approval for production deployment
+  • Automatic deployment to production on main merge (optional)
+  • Deployment status visible (Slack, Discord, GitHub)
+  • Deployment history tracked
+
+□ Vercel Deployment (or similar platform)
+  • Production environment configured
+  • Preview deployments for PRs
+  • Environment variables set
+  • Domain configured
+  • SSL/TLS enabled
+  • Custom domain configured
+
+□ Deployment Verification
+  • Health check after deployment
+  • Smoke tests run automatically
+  • Rollback plan documented
+  • Monitoring alerts active post-deployment
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+4. ENVIRONMENT MANAGEMENT
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Environment Separation
+  • Development environment
+  • Staging/preview environment
+  • Production environment
+  • Each environment isolated
+  • Separate databases per environment
+  • Separate API keys per environment
+
+□ Environment Variables
+  • All secrets in environment variables (never in code)
+  • .env.example file documenting required variables
+  • .env files in .gitignore
+  • Production secrets in secure vault (Vercel env, AWS Secrets Manager)
+  • Environment-specific configs
+
+□ Required Environment Variables
+  • NEXTAUTH_SECRET (32+ chars, random)
+  • NEXTAUTH_URL (production URL)
+  • DISCORD_CLIENT_ID
+  • DISCORD_CLIENT_SECRET
+  • MONGODB_URI (production database)
+  • STRIPE_SECRET_KEY
+  • STRIPE_PUBLISHABLE_KEY
+  • STRIPE_WEBHOOK_SECRET
+  • NEXT_PUBLIC_STRIPE_MONTHLY_PRICE_ID
+  • NEXT_PUBLIC_STRIPE_YEARLY_PRICE_ID
+  • BOT_API_SECRET (if applicable)
+
+□ Environment Variable Security
+  • Production secrets never logged
+  • Secrets rotated periodically
+  • Access to secrets restricted
+  • Secrets encrypted at rest
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+5. DATABASE MANAGEMENT
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Database Setup
+  • Production database on MongoDB Atlas (or managed service)
+  • Separate staging database
+  • Database backups enabled (automated)
+  • Point-in-time recovery enabled
+  • Network access restricted (IP whitelist)
+
+□ Database Migrations
+  • Schema changes tracked (migration scripts or version control)
+  • Migrations tested in staging first
+  • Rollback plan for migrations
+  • Zero-downtime migrations preferred
+
+□ Database Backups
+  • Daily automated backups
+  • Backup retention policy (30+ days)
+  • Backups tested (restore regularly)
+  • Backups stored in separate region
+  • Disaster recovery plan documented
+
+□ Database Security
+  • Strong database passwords
+  • Database user has minimal necessary privileges
+  • TLS/SSL enabled for connections
+  • No public access to database
+  • Connection pooling configured
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+6. SECRETS MANAGEMENT
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Secret Storage
+  • No secrets in git repository
+  • No secrets in CI/CD logs
+  • Secrets in secure vault (Vercel, AWS Secrets Manager, HashiCorp Vault)
+  • Access to secrets logged and audited
+
+□ Secret Rotation
+  • Regular secret rotation schedule (quarterly minimum)
+  • Rotation process documented
+  • Old secrets invalidated after rotation
+  • Zero-downtime rotation process
+
+□ API Keys
+  • Stripe API keys (test and live)
+  • Discord bot token
+  • Discord OAuth credentials
+  • MongoDB connection strings
+  • NextAuth secret
+  • Bot API secret (dashboard-to-bot)
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+7. MONITORING & LOGGING
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Application Monitoring
+  • Error tracking (Sentry) configured
+  • Performance monitoring enabled
+  • Logs aggregated (Vercel, Datadog, etc.)
+  • Uptime monitoring active
+  • Alerts configured
+
+□ Deployment Monitoring
+  • Deployment success/failure tracked
+  • Deployment notifications sent
+  • Post-deployment health checks
+  • Error rate monitored after deploy
+  • Rollback triggers defined
+
+□ Log Management
+  • Structured logging (JSON)
+  • Log levels properly used
+  • No sensitive data in logs
+  • Logs retained per compliance
+  • Logs searchable and filterable
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+8. ROLLBACK & DISASTER RECOVERY
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Rollback Strategy
+  • One-click rollback available (Vercel)
+  • Rollback tested regularly
+  • Rollback decision criteria defined
+  • Database rollback plan (if schema changed)
+  • Communication plan for rollbacks
+
+□ Disaster Recovery
+  • Recovery Time Objective (RTO) defined
+  • Recovery Point Objective (RPO) defined
+  • DR plan documented
+  • DR plan tested annually
+  • Backup restoration tested
+
+□ Incident Response
+  • On-call rotation for production issues
+  • Incident response runbooks
+  • Communication plan (internal + users)
+  • Post-mortem process
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+9. INFRASTRUCTURE AS CODE
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Configuration Management
+  • Infrastructure defined in code (Terraform, Pulumi, etc.) - optional for Vercel
+  • Configuration versioned in git
+  • Environment parity (dev/staging/prod)
+  • Reproducible deployments
+
+□ Vercel Configuration
+  • vercel.json configured (if needed)
+  • Build settings optimized
+  • Function regions configured
+  • Redirects and rewrites defined
+  • Headers configured (security, caching)
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+10. SECURITY
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Dependency Management
+  • npm audit run in CI/CD
+  • Dependabot/Renovate enabled
+  • Vulnerabilities patched promptly
+  • Dependencies kept up to date
+  • Lock file committed (package-lock.json)
+
+□ Build Security
+  • Build reproducible (lock files)
+  • Build artifacts scanned
+  • No secrets in build artifacts
+  • Build environment secure
+
+□ Deployment Security
+  • HTTPS enforced
+  • HSTS headers enabled
+  • Security headers configured (CSP, X-Frame-Options, etc.)
+  • Rate limiting enabled
+  • DDoS protection (Vercel, Cloudflare)
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+11. PERFORMANCE & OPTIMIZATION
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Build Optimization
+  • Production build minified
+  • Dead code eliminated
+  • Bundle size monitored
+  • Code splitting enabled
+  • Source maps uploaded to error tracker
+
+□ Deployment Optimization
+  • CDN for static assets (Vercel Edge)
+  • Edge functions for fast responses
+  • Compression enabled (gzip, brotli)
+  • Caching headers configured
+  • Image optimization enabled (Next.js Image)
+
+□ Performance Monitoring
+  • Lighthouse score tracked (90+)
+  • Core Web Vitals monitored
+  • Performance budget enforced
+  • Slow pages/APIs alerted
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+12. TESTING
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Automated Testing
+  • Unit tests for critical logic
+  • Integration tests for APIs
+  • E2E tests for critical flows (Playwright, Cypress)
+  • Tests run in CI/CD
+  • Test coverage tracked
+
+□ Manual Testing
+  • QA checklist for major releases
+  • Staging environment tested before production
+  • Mobile testing (responsive design)
+  • Browser compatibility tested
+  • Accessibility tested
+
+□ Production Testing
+  • Smoke tests after deployment
+  • Synthetic monitoring (uptime checks)
+  • Canary deployments (optional, advanced)
+  • A/B testing infrastructure (optional)
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+13. DOCUMENTATION
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Technical Documentation
+  • README.md with setup instructions
+  • Architecture documentation
+  • API documentation
+  • Environment variables documented
+  • Deployment process documented
+  • Runbooks for common operations
+
+□ Operational Documentation
+  • Incident response plan
+  • On-call rotation schedule
+  • Escalation procedures
+  • Contact list (team, vendors)
+  • Change management process
+
+□ Code Documentation
+  • Inline comments for complex logic
+  • JSDoc for functions/types
+  • README in key directories
+  • CHANGELOG.md for releases
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+14. RELEASE MANAGEMENT
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Release Process
+  • Semantic versioning (MAJOR.MINOR.PATCH)
+  • Release notes for each version
+  • Changelog maintained
+  • Git tags for releases
+  • Release branch strategy (if needed)
+
+□ Deployment Cadence
+  • Regular release schedule (weekly, bi-weekly)
+  • Hotfix process for urgent fixes
+  • Maintenance windows communicated
+  • User-facing changes announced
+
+□ Feature Flags
+  • Feature flags for gradual rollouts (optional)
+  • Ability to disable features without deploy
+  • Feature flag cleanup (remove old flags)
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+15. THIRD-PARTY INTEGRATIONS
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Stripe Integration
+  • Stripe webhook endpoint secured
+  • Webhook signature validation
+  • Test mode for staging/dev
+  • Live mode for production
+  • Failed webhooks retried/alerted
+
+□ Discord Integration
+  • Discord OAuth configured
+  • Discord bot token secure
+  • Bot permissions documented
+  • Bot invite link ready
+
+□ Service Dependencies
+  • SLA for critical dependencies understood
+  • Fallback plan for service outages
+  • Service status pages monitored
+  • Vendor support contacts documented
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+16. COST OPTIMIZATION
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Infrastructure Costs
+  • Vercel plan appropriate for traffic
+  • MongoDB Atlas tier appropriate
+  • Monitoring tool costs reviewed
+  • CDN costs monitored
+  • Function invocation limits understood
+
+□ Cost Monitoring
+  • Billing alerts configured
+  • Cost attribution by service
+  • Regular cost reviews (monthly)
+  • Unused resources identified and removed
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+17. COMPLIANCE & GOVERNANCE
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Access Control
+  • Team member access reviewed regularly
+  • Principle of least privilege
+  • Offboarding process (revoke access)
+  • Admin access limited
+  • Audit logs for access changes
+
+□ Compliance
+  • GDPR compliance (if applicable)
+  • Data retention policies enforced
+  • User data deletion on request
+  • Privacy policy up to date
+  • Terms of service up to date
+
+□ Audit Logs
+  • Critical actions logged
+  • Admin actions logged
+  • Deployment history tracked
+  • Access logs retained
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+18. DISCORD BOT DEPLOYMENT
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Bot Hosting
+  • Bot hosted separately from dashboard
+  • Bot auto-restarts on crash
+  • Bot process monitored (PM2, systemd, etc.)
+  • Bot logs centralized
+  • Bot deployment automated
+
+□ Bot-Dashboard Integration
+  • Dashboard-to-bot API secured
+  • Bot heartbeat monitored
+  • Bot stats endpoint secured
+  • Communication failure alerts
+
+□ Bot Updates
+  • Bot updates tested in dev environment
+  • Bot update process documented
+  • Zero-downtime updates (if possible)
+  • Bot version tracked
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+19. PRE-LAUNCH CHECKLIST
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ 1 Week Before Launch
+  • All features tested in staging
+  • Performance benchmarked
+  • Security audit completed
+  • Monitoring and alerts configured
+  • Backups tested
+  • Documentation complete
+
+□ 1 Day Before Launch
+  • Final deployment to staging
+  • Load testing completed
+  • Team briefed on launch plan
+  • Support plan ready
+  • Rollback plan reviewed
+
+□ Launch Day
+  • Deploy during low-traffic period
+  • Monitor errors closely (first 24 hours)
+  • Team on standby
+  • User communication ready
+  • Status page updated
+
+□ Post-Launch
+  • Monitor performance metrics
+  • Review error logs daily (first week)
+  • Gather user feedback
+  • Fix critical issues immediately
+  • Post-launch retrospective
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+20. ONGOING MAINTENANCE
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+□ Daily
+  • Check error rates
+  • Review critical alerts
+  • Monitor uptime
+
+□ Weekly
+  • Review performance metrics
+  • Update dependencies (patch versions)
+  • Review open issues/PRs
+  • Team sync on priorities
+
+□ Monthly
+  • Security audit (npm audit, Dependabot)
+  • Cost review
+  • Performance review
+  • Update documentation
+
+□ Quarterly
+  • Major dependency updates
+  • Architecture review
+  • Disaster recovery test
+  • Security penetration test (optional)
+
+═══════════════════════════════════════════════════════════════════════════════════════════
+
+DEPLOYMENT WORKFLOW SUMMARY:
+1. Create feature branch
+2. Develop and commit
+3. Push branch → CI runs → Preview deploy
+4. Open pull request
+5. Code review
+6. CI passes → Merge to main
+7. Auto-deploy to production (or manual approval)
+8. Monitor deployment
+9. Verify in production
+
+EMERGENCY HOTFIX WORKFLOW:
+1. Create hotfix branch from main
+2. Apply fix
+3. Test in staging
+4. Fast-track PR approval
+5. Deploy to production
+6. Monitor closely
+7. Cherry-pick to development branch
+
+TOOLS CHECKLIST:
+□ GitHub/GitLab (source control)
+□ Vercel (hosting)
+□ MongoDB Atlas (database)
+□ Sentry (error tracking)
+□ Better Uptime (uptime monitoring)
+□ Dependabot (security updates)
+□ ESLint + Prettier (code quality)
+
+═══════════════════════════════════════════════════════════════════════════════════════════
