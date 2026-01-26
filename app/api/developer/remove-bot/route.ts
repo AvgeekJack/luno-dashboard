@@ -45,6 +45,8 @@ export async function POST(request: NextRequest) {
 
     // Make the bot leave the guild using Discord API
     console.log(`[Remove Bot] Attempting to remove bot from guild: ${guildId}`);
+    console.log(`[Remove Bot] Bot token starts with: ${BOT_TOKEN.substring(0, 20)}...`);
+    console.log(`[Remove Bot] Using endpoint: https://discord.com/api/v10/users/@me/guilds/${guildId}`);
     
     const discordResponse = await fetch(
       `https://discord.com/api/v10/users/@me/guilds/${guildId}`,
@@ -52,31 +54,39 @@ export async function POST(request: NextRequest) {
         method: 'DELETE',
         headers: {
           'Authorization': `Bot ${BOT_TOKEN}`,
-          'Content-Type': 'application/json',
         },
       }
     );
 
     if (!discordResponse.ok) {
-      const errorText = await discordResponse.text();
-      console.error('[Remove Bot] Discord API error:', discordResponse.status, errorText);
+      let errorDetails;
+      try {
+        errorDetails = await discordResponse.json();
+      } catch {
+        errorDetails = await discordResponse.text();
+      }
+      console.error('[Remove Bot] Discord API error:', discordResponse.status, JSON.stringify(errorDetails, null, 2));
       
       if (discordResponse.status === 404) {
         return NextResponse.json(
-          { error: 'Bot is not in that server or Guild ID not found' },
+          { error: 'Bot is not in that server or Guild ID not found', details: errorDetails },
           { status: 404 }
         );
       }
       
-      if (discordResponse.status === 401) {
+      if (discordResponse.status === 401 || discordResponse.status === 403) {
         return NextResponse.json(
-          { error: 'Bot authentication failed - check bot token' },
+          { error: 'Bot authentication failed - check bot token', details: errorDetails },
           { status: 500 }
         );
       }
       
       return NextResponse.json(
-        { error: `Failed to remove bot: ${discordResponse.status}` },
+        { 
+          error: `Failed to remove bot: ${discordResponse.status}`,
+          details: errorDetails,
+          guildId: guildId
+        },
         { status: discordResponse.status }
       );
     }

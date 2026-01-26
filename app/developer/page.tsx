@@ -433,6 +433,8 @@ export default function DeveloperPage() {
                         
                         const data = await response.json();
                         
+                        console.log('Remove bot response:', response.status, data);
+                        
                         if (response.ok) {
                           setRemoveStatus('success');
                           setRemoveMessage(data.message || 'Bot removed successfully');
@@ -443,7 +445,10 @@ export default function DeveloperPage() {
                           }, 5000);
                         } else {
                           setRemoveStatus('error');
-                          setRemoveMessage(data.error || 'Failed to remove bot');
+                          const errorMsg = data.error || 'Failed to remove bot';
+                          const details = data.details ? `\n\nDetails: ${JSON.stringify(data.details, null, 2)}` : '';
+                          setRemoveMessage(`${errorMsg}${details}`);
+                          console.error('Discord API Error Details:', data.details);
                         }
                       } catch (error) {
                         console.error('Remove bot error:', error);
@@ -459,7 +464,7 @@ export default function DeveloperPage() {
                 </div>
                 
                 {removeMessage && (
-                  <div className={`p-4 rounded-lg ${
+                  <div className={`p-4 rounded-lg whitespace-pre-wrap ${ 
                     removeStatus === 'success' 
                       ? 'bg-green-900/30 border border-green-700 text-green-400' 
                       : 'bg-red-900/30 border border-red-700 text-red-400'
