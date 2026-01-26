@@ -21,6 +21,7 @@ export default function PremiumPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [billingType, setBillingType] = useState<'monthly' | 'yearly'>('monthly');
+  const [premiumPurchaseEnabled, setPremiumPurchaseEnabled] = useState(true);
 
   useEffect(() => {
     if (status === 'loading') return;
@@ -33,9 +34,13 @@ export default function PremiumPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(`/api/servers/${guildId}/settings`);
-        if (res.ok) {
-          const data = await res.json();
+        const [serverRes, siteSettingsRes] = await Promise.all([
+          fetch(`/api/servers/${guildId}/settings`),
+          fetch('/api/site-settings')
+        ]);
+        
+        if (serverRes.ok) {
+          const data = await serverRes.json();
           setPremium(data.premium || false);
           setServerName(data.serverName || 'Server');
           
@@ -43,6 +48,11 @@ export default function PremiumPage() {
           if (data.premium) {
             triggerConfetti();
           }
+        }
+
+        if (siteSettingsRes.ok) {
+          const siteData = await siteSettingsRes.json();
+          setPremiumPurchaseEnabled(siteData.premiumPurchaseEnabled ?? true);
         }
       } catch (error) {
         console.error('Failed to fetch settings:', error);
@@ -523,7 +533,16 @@ export default function PremiumPage() {
               </div>
 
               {/* Pricing Card */}
-              <div className="bg-gradient-to-br from-orange-50 to-orange-100 border border-orange-200 rounded-xl shadow-sm p-8">
+              <div className="bg-gradient-to-br from-orange-50 to-orange-100 border border-orange-200 rounded-xl shadow-sm p-8 relative">
+                {!premiumPurchaseEnabled && (
+                  <div className="absolute inset-0 backdrop-blur-sm bg-orange-500/20 rounded-xl flex flex-col items-center justify-center z-10">
+                    <div className="bg-white/90 rounded-xl p-8 shadow-xl text-center">
+                      <div className="text-6xl mb-4">🚀</div>
+                      <h3 className="text-3xl font-bold text-orange-600 mb-2">Coming Soon</h3>
+                      <p className="text-slate-600">Premium subscriptions will be available soon!</p>
+                    </div>
+                  </div>
+                )}
                 <div className="text-center mb-6">
                   <h3 className="text-2xl font-bold text-slate-900 mb-4">Choose Your Plan</h3>
                   
@@ -590,7 +609,7 @@ export default function PremiumPage() {
 
                 <button 
                   onClick={handleCheckout}
-                  disabled={checkoutLoading}
+                  disabled={checkoutLoading || !premiumPurchaseEnabled}
                   className="w-full py-4 bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 disabled:cursor-not-allowed text-white text-lg font-bold rounded-lg transition flex items-center justify-center gap-3 shadow-lg"
                 >
                   <img src="/premium-icon.svg" alt="" className="w-6 h-6" />
