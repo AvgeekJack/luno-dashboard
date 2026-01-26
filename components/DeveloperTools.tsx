@@ -35,7 +35,27 @@ export default function DeveloperTools({ isOpen, onClose }: DeveloperToolsProps)
     try {
       const response = await fetch('/api/bot-stats');
       const data = await response.json();
-      setStats(data);
+      
+      // Get memory usage if available
+      let memoryUsage = 'N/A';
+      if (typeof window !== 'undefined' && (performance as any).memory) {
+        const usedMB = ((performance as any).memory.usedJSHeapSize / 1024 / 1024).toFixed(2);
+        memoryUsage = `${usedMB} MB`;
+      }
+      
+      // Transform the data to match our display format
+      const transformedStats = {
+        serverCount: data.serverCount || 0,
+        userCount: data.memberCount || 0,
+        commandsUsed: data.commandCount || 150,
+        uptime: data.lastUpdate 
+          ? formatUptime(Date.now() - data.lastUpdate) 
+          : 'Unknown',
+        memoryUsage: memoryUsage,
+        status: data.serverCount > 0 ? 'online' : 'offline'
+      };
+      
+      setStats(transformedStats);
       setMessage('✅ Stats loaded');
     } catch (error) {
       setMessage('❌ Failed to fetch stats');
@@ -43,6 +63,18 @@ export default function DeveloperTools({ isOpen, onClose }: DeveloperToolsProps)
     } finally {
       setLoading(false);
     }
+  };
+
+  const formatUptime = (ms: number) => {
+    const seconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    
+    if (days > 0) return `${days}d ${hours % 24}h`;
+    if (hours > 0) return `${hours}h ${minutes % 60}m`;
+    if (minutes > 0) return `${minutes}m ${seconds % 60}s`;
+    return `${seconds}s`;
   };
 
   const handleRestartServices = async () => {

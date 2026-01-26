@@ -31,6 +31,10 @@ export default function DeveloperPage() {
   const [newSettingValue, setNewSettingValue] = useState('');
   const [newSettingDescription, setNewSettingDescription] = useState('');
   const [showNewSettingForm, setShowNewSettingForm] = useState(false);
+  
+  const [guildIdToRemove, setGuildIdToRemove] = useState('');
+  const [removeStatus, setRemoveStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [removeMessage, setRemoveMessage] = useState('');
 
   // Check if user is developer
   const isDeveloper = session?.user?.id === DEVELOPER_USER_ID;
@@ -387,6 +391,87 @@ export default function DeveloperPage() {
                   No settings configured yet. Click "Add Setting" to create one.
                 </div>
               )}
+            </div>
+
+            {/* Bot Server Management */}
+            <div className="bg-purple-900/20 border border-purple-800 rounded-lg p-6">
+              <h2 className="text-xl font-bold text-purple-400 mb-4">🤖 Bot Server Management</h2>
+              <p className="text-gray-400 mb-4">
+                Remove the bot from a specific server by entering the Guild ID.
+              </p>
+              <div className="space-y-4">
+                <div className="flex gap-4">
+                  <input
+                    type="text"
+                    value={guildIdToRemove}
+                    onChange={(e) => setGuildIdToRemove(e.target.value)}
+                    placeholder="Enter Guild ID (e.g., 123456789012345678)"
+                    className="flex-1 px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-purple-500"
+                    disabled={removeStatus === 'loading'}
+                  />
+                  <button
+                    onClick={async () => {
+                      if (!guildIdToRemove.trim()) {
+                        setRemoveMessage('Please enter a Guild ID');
+                        setRemoveStatus('error');
+                        return;
+                      }
+                      
+                      if (!confirm(`Are you sure you want to remove the bot from server ${guildIdToRemove}?`)) {
+                        return;
+                      }
+                      
+                      setRemoveStatus('loading');
+                      setRemoveMessage('');
+                      
+                      try {
+                        const response = await fetch('/api/developer/remove-bot', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ guildId: guildIdToRemove }),
+                        });
+                        
+                        const data = await response.json();
+                        
+                        if (response.ok) {
+                          setRemoveStatus('success');
+                          setRemoveMessage(data.message || 'Bot removed successfully');
+                          setGuildIdToRemove('');
+                          setTimeout(() => {
+                            setRemoveStatus('idle');
+                            setRemoveMessage('');
+                          }, 5000);
+                        } else {
+                          setRemoveStatus('error');
+                          setRemoveMessage(data.error || 'Failed to remove bot');
+                        }
+                      } catch (error) {
+                        console.error('Remove bot error:', error);
+                        setRemoveStatus('error');
+                        setRemoveMessage('Failed to remove bot from server');
+                      }
+                    }}
+                    disabled={removeStatus === 'loading' || !guildIdToRemove.trim()}
+                    className="px-6 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg font-semibold transition-colors"
+                  >
+                    {removeStatus === 'loading' ? 'Removing...' : 'Remove Bot'}
+                  </button>
+                </div>
+                
+                {removeMessage && (
+                  <div className={`p-4 rounded-lg ${
+                    removeStatus === 'success' 
+                      ? 'bg-green-900/30 border border-green-700 text-green-400' 
+                      : 'bg-red-900/30 border border-red-700 text-red-400'
+                  }`}>
+                    {removeMessage}
+                  </div>
+                )}
+                
+                <p className="text-gray-500 text-sm">
+                  ℹ️ Note: The bot will leave the server immediately. This action cannot be undone.
+                </p>
+              </div>
             </div>
 
             {/* Danger Zone */}
