@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import MaintenanceScreen from '@/components/MaintenanceScreen';
 
 interface Settings {
   guildId: string;
@@ -54,6 +55,29 @@ export default function ServerSettings() {
   const [channels, setChannels] = useState<Channel[]>([]);
   const [saving, setSaving] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [maintenanceMode, setMaintenanceMode] = useState<boolean | null>(null);
+  const [bypassMaintenance, setBypassMaintenance] = useState(false);
+
+  // Check maintenance mode and bypass status
+  useEffect(() => {
+    const checkMaintenance = async () => {
+      try {
+        const res = await fetch('/api/maintenance-status');
+        if (res.ok) {
+          const data = await res.json();
+          setMaintenanceMode(data.maintenanceMode);
+        }
+      } catch (error) {
+        console.error('Failed to check maintenance status:', error);
+      }
+    };
+
+    // Check if developer has bypassed maintenance
+    const bypass = sessionStorage.getItem('maintenanceBypass') === 'true';
+    setBypassMaintenance(bypass);
+    
+    checkMaintenance();
+  }, []);
 
   // Poll bot status every 5 seconds for more responsive updates
   useEffect(() => {
@@ -142,6 +166,11 @@ export default function ServerSettings() {
 
   if (!settings) {
     return <div className="flex min-h-screen items-center justify-center text-[#0f172a]">Server not found</div>;
+  }
+
+  // Show maintenance screen if maintenance mode is enabled and developer hasn't bypassed
+  if (maintenanceMode && !bypassMaintenance) {
+    return <MaintenanceScreen userId={session?.user?.id} />;
   }
 
   return (

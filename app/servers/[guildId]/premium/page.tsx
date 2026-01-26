@@ -5,6 +5,7 @@ import { useRouter, useParams, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
+import ServerPageWrapper from '@/components/ServerPageWrapper';
 
 export default function PremiumPage() {
   const { data: session, status } = useSession();
@@ -122,6 +123,7 @@ export default function PremiumPage() {
   }
 
   return (
+    <ServerPageWrapper>
     <div className="min-h-screen bg-[#f8f9fa] text-[#0f172a] flex flex-col md:flex-row">
       {/* Mobile Menu Button */}
       <button 
@@ -640,5 +642,6 @@ export default function PremiumPage() {
         </div>
       </main>
     </div>
+    </ServerPageWrapper>
   );
 }

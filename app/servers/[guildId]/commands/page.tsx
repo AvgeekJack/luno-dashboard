@@ -4,6 +4,8 @@ import { useSession } from 'next-auth/react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import MaintenanceScreen from '@/components/MaintenanceScreen';
+import { useMaintenanceCheck } from '@/lib/hooks/useMaintenanceCheck';
 
 const CATEGORIES = [
   'Moderation',
@@ -86,6 +88,9 @@ export default function CommandsPage() {
     allowedRoles: [] as string[],
     ignoredRoles: [] as string[],
   });
+  
+  // Check maintenance mode
+  const { shouldShowMaintenance } = useMaintenanceCheck();
   const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentCommand, setCurrentCommand] = useState('');
@@ -209,6 +214,11 @@ export default function CommandsPage() {
 
   if (status === 'loading') {
     return <div className="flex min-h-screen items-center justify-center text-[#0f172a]">Loading...</div>;
+  }
+
+  // Show maintenance screen if needed
+  if (shouldShowMaintenance) {
+    return <MaintenanceScreen userId={session?.user?.id} />;
   }
 
   return (
