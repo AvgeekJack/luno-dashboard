@@ -136,7 +136,6 @@ export default function ManageSubscriptionPage() {
   const formatDate = (timestamp: number | string) => {
     // Convert to number if it's a string
     let numTimestamp = typeof timestamp === 'string' ? parseInt(timestamp, 10) : timestamp;
-    console.log('formatDate input:', timestamp, 'type:', typeof timestamp, 'converted:', numTimestamp);
     
     // Check if valid number
     if (isNaN(numTimestamp) || numTimestamp === 0) {
@@ -144,29 +143,22 @@ export default function ManageSubscriptionPage() {
       return 'Invalid Date';
     }
     
-    // Try direct conversion first (assume it's already milliseconds)
-    let date = new Date(numTimestamp);
-    console.log('Direct date conversion:', date, 'isValid:', !isNaN(date.getTime()));
-    
-    // If the year is before 2000, it's probably in seconds, multiply by 1000
-    if (date.getFullYear() < 2000) {
-      console.log('Year < 2000, multiplying by 1000');
-      numTimestamp = numTimestamp * 1000;
-      date = new Date(numTimestamp);
-      console.log('After multiplication:', date);
-    }
+    // Stripe always returns Unix timestamps in SECONDS
+    // Multiply by 1000 to convert to milliseconds for JavaScript Date
+    const milliseconds = numTimestamp * 1000;
+    const date = new Date(milliseconds);
     
     if (isNaN(date.getTime())) {
       console.error('Invalid date created from timestamp:', numTimestamp);
       return 'Invalid Date';
     }
     
-    const formatted = date.toLocaleDateString('en-US', {
+    const formatted = date.toLocaleDateString('en-GB', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
     });
-    console.log('formatted:', formatted);
+    
     return formatted;
   };
 

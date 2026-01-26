@@ -19,7 +19,7 @@ export default function PremiumPage() {
   const [modulesOpen, setModulesOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
-  const [billingType, setBillingType] = useState<'monthly' | 'yearly'>('yearly');
+  const [billingType, setBillingType] = useState<'monthly' | 'yearly'>('monthly');
 
   useEffect(() => {
     if (status === 'loading') return;
@@ -555,12 +555,12 @@ export default function PremiumPage() {
                   <div className="flex items-baseline justify-center gap-2">
                     {billingType === 'monthly' ? (
                       <>
-                        <span className="text-5xl font-bold text-orange-600">$4.99</span>
+                        <span className="text-5xl font-bold text-orange-600">£3.99</span>
                         <span className="text-slate-600">/month</span>
                       </>
                     ) : (
                       <>
-                        <span className="text-5xl font-bold text-orange-600">$49.99</span>
+                        <span className="text-5xl font-bold text-orange-600">£29.99</span>
                         <span className="text-slate-600">/year</span>
                       </>
                     )}
@@ -568,7 +568,7 @@ export default function PremiumPage() {
                   
                   {billingType === 'yearly' && (
                     <p className="text-sm text-green-700 font-semibold mt-2">
-                      Save $9.89 compared to monthly billing!
+                      Save £17.89 compared to monthly billing!
                     </p>
                   )}
                 </div>
@@ -580,7 +580,7 @@ export default function PremiumPage() {
                   {billingType === 'yearly' && (
                     <div className="bg-green-50 border border-green-200 rounded-lg p-3">
                       <p className="text-sm text-green-800 font-semibold text-center">
-                        ✨ Best Value - Get 2 months free with yearly billing!
+                        ✨ Best Value - Save over £17 with yearly billing!
                       </p>
                     </div>
                   )}
