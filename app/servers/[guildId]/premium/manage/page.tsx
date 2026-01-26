@@ -187,10 +187,10 @@ export default function ManageSubscriptionPage() {
         <div className="max-w-4xl mx-auto">
           <div className="mb-6">
             <Link
-              href={`/servers/${guildId}/premium`}
+              href={`/servers/${guildId}`}
               className="text-orange-600 font-semibold hover:text-orange-700 transition-colors"
             >
-              ← Back to Premium
+              ← Back to Dashboard
             </Link>
           </div>
 
@@ -292,7 +292,7 @@ export default function ManageSubscriptionPage() {
               <div>
                 <p className="text-sm text-slate-600 mb-1">Plan</p>
                 <p className="text-lg font-semibold">
-                  {formatAmount(subscription.amount, subscription.currency)} / {subscription.interval}
+                  {formatAmount(subscription.amount, subscription.currency)} / {subscription.interval === 'month' ? 'Monthly' : subscription.interval === 'year' ? 'Yearly' : subscription.interval}
                 </p>
               </div>
 

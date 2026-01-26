@@ -19,6 +19,7 @@ export default function PremiumPage() {
   const [modulesOpen, setModulesOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [billingType, setBillingType] = useState<'monthly' | 'yearly'>('yearly');
 
   useEffect(() => {
     if (status === 'loading') return;
@@ -95,7 +96,7 @@ export default function PremiumPage() {
       const res = await fetch('/api/stripe/create-checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ serverId: guildId }),
+        body: JSON.stringify({ serverId: guildId, billingType }),
       });
 
       if (!res.ok) {
@@ -522,17 +523,67 @@ export default function PremiumPage() {
               {/* Pricing Card */}
               <div className="bg-gradient-to-br from-orange-50 to-orange-100 border border-orange-200 rounded-xl shadow-sm p-8">
                 <div className="text-center mb-6">
-                  <h3 className="text-2xl font-bold text-slate-900 mb-2">Premium Plan</h3>
-                  <div className="flex items-baseline justify-center gap-2">
-                    <span className="text-5xl font-bold text-orange-600">$4.99</span>
-                    <span className="text-slate-600">/month</span>
+                  <h3 className="text-2xl font-bold text-slate-900 mb-4">Choose Your Plan</h3>
+                  
+                  {/* Billing Type Toggle */}
+                  <div className="inline-flex items-center gap-2 p-1 bg-white rounded-lg shadow-sm mb-6">
+                    <button
+                      onClick={() => setBillingType('monthly')}
+                      className={`px-6 py-3 rounded-md font-semibold transition ${
+                        billingType === 'monthly'
+                          ? 'bg-orange-500 text-white shadow-sm'
+                          : 'text-slate-600 hover:text-slate-900'
+                      }`}
+                    >
+                      Monthly
+                    </button>
+                    <button
+                      onClick={() => setBillingType('yearly')}
+                      className={`px-6 py-3 rounded-md font-semibold transition relative ${
+                        billingType === 'yearly'
+                          ? 'bg-orange-500 text-white shadow-sm'
+                          : 'text-slate-600 hover:text-slate-900'
+                      }`}
+                    >
+                      Yearly
+                      <span className="absolute -top-2 -right-2 bg-green-500 text-white text-xs px-2 py-0.5 rounded-full font-bold">
+                        SAVE 17%
+                      </span>
+                    </button>
                   </div>
+
+                  <div className="flex items-baseline justify-center gap-2">
+                    {billingType === 'monthly' ? (
+                      <>
+                        <span className="text-5xl font-bold text-orange-600">$4.99</span>
+                        <span className="text-slate-600">/month</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="text-5xl font-bold text-orange-600">$49.99</span>
+                        <span className="text-slate-600">/year</span>
+                      </>
+                    )}
+                  </div>
+                  
+                  {billingType === 'yearly' && (
+                    <p className="text-sm text-green-700 font-semibold mt-2">
+                      Save $9.89 compared to monthly billing!
+                    </p>
+                  )}
                 </div>
 
                 <div className="space-y-3 mb-6">
                   <p className="text-center text-slate-700">
                     Unlock all premium features for your server and support Luno's development!
                   </p>
+                  {billingType === 'yearly' && (
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                      <p className="text-sm text-green-800 font-semibold text-center">
+                        ✨ Best Value - Get 2 months free with yearly billing!
+                      </p>
+                    </div>
+                  )}
                 </div>
 
                 <button 
@@ -541,7 +592,7 @@ export default function PremiumPage() {
                   className="w-full py-4 bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 disabled:cursor-not-allowed text-white text-lg font-bold rounded-lg transition flex items-center justify-center gap-3 shadow-lg"
                 >
                   <img src="/premium-icon.svg" alt="" className="w-6 h-6" />
-                  {checkoutLoading ? 'Loading...' : 'Subscribe Now'}
+                  {checkoutLoading ? 'Loading...' : `Subscribe ${billingType === 'monthly' ? 'Monthly' : 'Yearly'}`}
                   {!checkoutLoading && <span>→</span>}
                 </button>
 
