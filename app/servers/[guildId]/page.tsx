@@ -58,7 +58,7 @@ export default function ServerSettings() {
   const [maintenanceMode, setMaintenanceMode] = useState<boolean | null>(null);
   const [bypassMaintenance, setBypassMaintenance] = useState(false);
 
-  // Check maintenance mode and bypass status
+  // Check maintenance mode
   useEffect(() => {
     const checkMaintenance = async () => {
       try {
@@ -71,13 +71,13 @@ export default function ServerSettings() {
         console.error('Failed to check maintenance status:', error);
       }
     };
-
-    // Check if developer has bypassed maintenance
-    const bypass = sessionStorage.getItem('maintenanceBypass') === 'true';
-    setBypassMaintenance(bypass);
     
     checkMaintenance();
   }, []);
+
+  const handleBypass = () => {
+    setBypassMaintenance(true);
+  };
 
   // Poll bot status every 5 seconds for more responsive updates
   useEffect(() => {
@@ -170,7 +170,7 @@ export default function ServerSettings() {
 
   // Show maintenance screen if maintenance mode is enabled and developer hasn't bypassed
   if (maintenanceMode && !bypassMaintenance) {
-    return <MaintenanceScreen userId={session?.user?.id} />;
+    return <MaintenanceScreen userId={session?.user?.id} onBypass={handleBypass} />;
   }
 
   return (

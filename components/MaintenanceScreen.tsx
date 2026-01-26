@@ -17,9 +17,10 @@ interface DebugStats {
 
 interface MaintenanceScreenProps {
   userId?: string;
+  onBypass?: () => void;
 }
 
-export default function MaintenanceScreen({ userId }: MaintenanceScreenProps) {
+export default function MaintenanceScreen({ userId, onBypass }: MaintenanceScreenProps) {
   const router = useRouter();
   const [pin, setPin] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
@@ -88,11 +89,14 @@ export default function MaintenanceScreen({ userId }: MaintenanceScreenProps) {
         return;
       }
 
-      // Store bypass token in sessionStorage
-      sessionStorage.setItem('maintenanceBypass', 'true');
+      // Successfully verified - set local bypass state
+      setShowBypass(false);
+      setPin('');
       
-      // Reload the page to bypass maintenance
-      window.location.reload();
+      // Call the parent component's bypass handler
+      if (onBypass) {
+        onBypass();
+      }
     } catch (error) {
       console.error('PIN verification error:', error);
       setError('Verification failed');

@@ -90,7 +90,7 @@ export default function CommandsPage() {
   });
   
   // Check maintenance mode
-  const { shouldShowMaintenance } = useMaintenanceCheck();
+  const { shouldShowMaintenance, handleBypass } = useMaintenanceCheck();
   const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentCommand, setCurrentCommand] = useState('');
@@ -218,7 +218,7 @@ export default function CommandsPage() {
 
   // Show maintenance screen if needed
   if (shouldShowMaintenance) {
-    return <MaintenanceScreen userId={session?.user?.id} />;
+    return <MaintenanceScreen userId={session?.user?.id} onBypass={handleBypass} />;
   }
 
   return (

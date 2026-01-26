@@ -20,15 +20,15 @@ export function useMaintenanceCheck() {
         setLoading(false);
       }
     };
-
-    // Check if developer has bypassed maintenance
-    const bypass = sessionStorage.getItem('maintenanceBypass') === 'true';
-    setBypassMaintenance(bypass);
     
     checkMaintenance();
   }, []);
 
   const shouldShowMaintenance = maintenanceMode && !bypassMaintenance;
 
-  return { maintenanceMode, bypassMaintenance, shouldShowMaintenance, loading };
+  const handleBypass = () => {
+    setBypassMaintenance(true);
+  };
+
+  return { maintenanceMode, bypassMaintenance, shouldShowMaintenance, loading, handleBypass };
 }
