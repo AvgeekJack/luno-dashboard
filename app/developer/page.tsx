@@ -35,6 +35,15 @@ export default function DeveloperPage() {
   const [guildIdToRemove, setGuildIdToRemove] = useState('');
   const [removeStatus, setRemoveStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [removeMessage, setRemoveMessage] = useState('');
+  
+  const [premiumGuildId, setPremiumGuildId] = useState('');
+  const [premiumStatus, setPremiumStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [premiumMessage, setPremiumMessage] = useState('');
+  
+  const [banUserId, setBanUserId] = useState('');
+  const [banReason, setBanReason] = useState('');
+  const [banStatus, setBanStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [banMessage, setBanMessage] = useState('');
 
   // Check if user is developer
   const isDeveloper = session?.user?.id === DEVELOPER_USER_ID;
@@ -475,6 +484,268 @@ export default function DeveloperPage() {
                 
                 <p className="text-gray-500 text-sm">
                   ℹ️ Note: The bot will leave the server immediately. This action cannot be undone.
+                </p>
+              </div>
+            </div>
+
+            {/* Premium Management */}
+            <div className="bg-yellow-900/20 border border-yellow-800 rounded-lg p-6">
+              <h2 className="text-xl font-bold text-yellow-400 mb-4">⭐ Premium Management</h2>
+              <p className="text-gray-400 mb-4">
+                Grant or revoke premium access for a server by entering the Guild ID.
+              </p>
+              <div className="space-y-4">
+                <div className="flex gap-4">
+                  <input
+                    type="text"
+                    value={premiumGuildId}
+                    onChange={(e) => setPremiumGuildId(e.target.value)}
+                    placeholder="Enter Guild ID"
+                    className="flex-1 px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-yellow-500"
+                    disabled={premiumStatus === 'loading'}
+                  />
+                  <button
+                    onClick={async () => {
+                      if (!premiumGuildId.trim()) {
+                        setPremiumMessage('Please enter a Guild ID');
+                        setPremiumStatus('error');
+                        return;
+                      }
+                      
+                      setPremiumStatus('loading');
+                      setPremiumMessage('');
+                      
+                      try {
+                        const response = await fetch('/api/developer/premium', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ guildId: premiumGuildId, premium: true }),
+                        });
+                        
+                        const data = await response.json();
+                        console.log('Premium grant response:', response.status, data);
+                        
+                        if (response.ok) {
+                          setPremiumStatus('success');
+                          setPremiumMessage(data.message || 'Premium granted successfully');
+                          setTimeout(() => {
+                            setPremiumStatus('idle');
+                            setPremiumMessage('');
+                          }, 5000);
+                        } else {
+                          setPremiumStatus('error');
+                          setPremiumMessage(data.error || 'Failed to grant premium');
+                        }
+                      } catch (error) {
+                        console.error('Premium grant error:', error);
+                        setPremiumStatus('error');
+                        setPremiumMessage('Failed to grant premium');
+                      }
+                    }}
+                    disabled={premiumStatus === 'loading' || !premiumGuildId.trim()}
+                    className="px-6 py-2 bg-yellow-600 hover:bg-yellow-700 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg font-semibold transition-colors"
+                  >
+                    {premiumStatus === 'loading' ? 'Granting...' : 'Grant Premium'}
+                  </button>
+                  <button
+                    onClick={async () => {
+                      if (!premiumGuildId.trim()) {
+                        setPremiumMessage('Please enter a Guild ID');
+                        setPremiumStatus('error');
+                        return;
+                      }
+                      
+                      if (!confirm(`Remove premium from server ${premiumGuildId}?`)) {
+                        return;
+                      }
+                      
+                      setPremiumStatus('loading');
+                      setPremiumMessage('');
+                      
+                      try {
+                        const response = await fetch('/api/developer/premium', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ guildId: premiumGuildId, premium: false }),
+                        });
+                        
+                        const data = await response.json();
+                        
+                        if (response.ok) {
+                          setPremiumStatus('success');
+                          setPremiumMessage(data.message || 'Premium removed successfully');
+                          setTimeout(() => {
+                            setPremiumStatus('idle');
+                            setPremiumMessage('');
+                          }, 5000);
+                        } else {
+                          setPremiumStatus('error');
+                          setPremiumMessage(data.error || 'Failed to remove premium');
+                        }
+                      } catch (error) {
+                        console.error('Premium remove error:', error);
+                        setPremiumStatus('error');
+                        setPremiumMessage('Failed to remove premium');
+                      }
+                    }}
+                    disabled={premiumStatus === 'loading' || !premiumGuildId.trim()}
+                    className="px-6 py-2 bg-gray-600 hover:bg-gray-700 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg font-semibold transition-colors"
+                  >
+                    {premiumStatus === 'loading' ? 'Removing...' : 'Remove Premium'}
+                  </button>
+                </div>
+                
+                {premiumMessage && (
+                  <div className={`p-4 rounded-lg whitespace-pre-wrap ${ 
+                    premiumStatus === 'success' 
+                      ? 'bg-green-900/30 border border-green-700 text-green-400' 
+                      : 'bg-red-900/30 border border-red-700 text-red-400'
+                  }`}>
+                    {premiumMessage}
+                  </div>
+                )}
+                
+                <p className="text-gray-500 text-sm">
+                  ℹ️ Note: Premium status is stored in MongoDB and takes effect immediately.
+                </p>
+              </div>
+            </div>
+
+            {/* User Ban Management */}
+            <div className="bg-red-900/20 border border-red-800 rounded-lg p-6">
+              <h2 className="text-xl font-bold text-red-400 mb-4">🚫 User Ban Management</h2>
+              <p className="text-gray-400 mb-4">
+                Ban or unban users from accessing the website. Banned users can only access the home page.
+              </p>
+              <div className="space-y-4">
+                <div className="space-y-3">
+                  <input
+                    type="text"
+                    value={banUserId}
+                    onChange={(e) => setBanUserId(e.target.value)}
+                    placeholder="Enter User ID"
+                    className="w-full px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-red-500"
+                    disabled={banStatus === 'loading'}
+                  />
+                  <textarea
+                    value={banReason}
+                    onChange={(e) => setBanReason(e.target.value)}
+                    placeholder="Ban reason (optional but recommended)"
+                    className="w-full px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-red-500 h-24 resize-none"
+                    disabled={banStatus === 'loading'}
+                  />
+                  <div className="flex gap-4">
+                    <button
+                      onClick={async () => {
+                        if (!banUserId.trim()) {
+                          setBanMessage('Please enter a User ID');
+                          setBanStatus('error');
+                          return;
+                        }
+                        
+                        if (!confirm(`Ban user ${banUserId}? They will be blocked from all pages except the home page.`)) {
+                          return;
+                        }
+                        
+                        setBanStatus('loading');
+                        setBanMessage('');
+                        
+                        try {
+                          const response = await fetch('/api/developer/ban-user', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ 
+                              userId: banUserId, 
+                              banned: true,
+                              reason: banReason.trim() || 'No reason provided'
+                            }),
+                          });
+                          
+                          const data = await response.json();
+                          
+                          if (response.ok) {
+                            setBanStatus('success');
+                            setBanMessage(data.message || 'User banned successfully');
+                            setBanUserId('');
+                            setBanReason('');
+                            setTimeout(() => {
+                              setBanStatus('idle');
+                              setBanMessage('');
+                            }, 5000);
+                          } else {
+                            setBanStatus('error');
+                            setBanMessage(data.error || 'Failed to ban user');
+                          }
+                        } catch (error) {
+                          console.error('Ban user error:', error);
+                          setBanStatus('error');
+                          setBanMessage('Failed to ban user');
+                        }
+                      }}
+                      disabled={banStatus === 'loading' || !banUserId.trim()}
+                      className="flex-1 px-6 py-2 bg-red-600 hover:bg-red-700 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg font-semibold transition-colors"
+                    >
+                      {banStatus === 'loading' ? 'Banning...' : 'Ban User'}
+                    </button>
+                    <button
+                      onClick={async () => {
+                        if (!banUserId.trim()) {
+                          setBanMessage('Please enter a User ID');
+                          setBanStatus('error');
+                          return;
+                        }
+                        
+                        setBanStatus('loading');
+                        setBanMessage('');
+                        
+                        try {
+                          const response = await fetch('/api/developer/ban-user', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ userId: banUserId, banned: false }),
+                          });
+                          
+                          const data = await response.json();
+                          
+                          if (response.ok) {
+                            setBanStatus('success');
+                            setBanMessage(data.message || 'User unbanned successfully');
+                            setBanUserId('');
+                            setBanReason('');
+                            setTimeout(() => {
+                              setBanStatus('idle');
+                              setBanMessage('');
+                            }, 5000);
+                          } else {
+                            setBanStatus('error');
+                            setBanMessage(data.error || 'Failed to unban user');
+                          }
+                        } catch (error) {
+                          console.error('Unban user error:', error);
+                          setBanStatus('error');
+                          setBanMessage('Failed to unban user');
+                        }
+                      }}
+                      disabled={banStatus === 'loading' || !banUserId.trim()}
+                      className="flex-1 px-6 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg font-semibold transition-colors"
+                    >
+                      {banStatus === 'loading' ? 'Unbanning...' : 'Unban User'}
+                    </button>
+                  </div>
+                </div>
+                
+                {banMessage && (
+                  <div className={`p-4 rounded-lg whitespace-pre-wrap ${ 
+                    banStatus === 'success' 
+                      ? 'bg-green-900/30 border border-green-700 text-green-400' 
+                      : 'bg-red-900/30 border border-red-700 text-red-400'
+                  }`}>
+                    {banMessage}
+                  </div>
+                )}
+                
+                <p className="text-gray-500 text-sm">
+                  ⚠️ Warning: Banned users will be automatically signed out and redirected to the home page.
                 </p>
               </div>
             </div>
