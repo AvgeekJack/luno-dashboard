@@ -45,12 +45,21 @@ export default function DeveloperPage() {
   const [banStatus, setBanStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [banMessage, setBanMessage] = useState('');
   
-  const [resetGuildId, setResetGuildId] = useState('');
-  const [resetCollection, setResetCollection] = useState<'ServerSettings' | 'SiteSettings' | 'BannedUsers'>('ServerSettings');
-  const [resetStatus, setResetStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-  const [resetMessage, setResetMessage] = useState('');
-  const [defaultPremium, setDefaultPremium] = useState(false);
-  const [defaultPrefix, setDefaultPrefix] = useState('!');
+  const [defaultsStatus, setDefaultsStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [defaultsMessage, setDefaultsMessage] = useState('');
+  const [serverDefaults, setServerDefaults] = useState({
+    prefix: '!',
+    premium: false,
+    modules: {
+      moderation: true,
+      roleManagement: false,
+      memberManagement: false,
+      announcements: false,
+      fun: false,
+      utilities: false,
+      notifications: false,
+    }
+  });
 
   // Check if user is developer
   const isDeveloper = session?.user?.id === DEVELOPER_USER_ID;
@@ -90,11 +99,24 @@ export default function DeveloperPage() {
       setIsVerified(true);
       setPin('');
       fetchSettings();
+      fetchServerDefaults();
     } catch (error) {
       console.error('PIN verification error:', error);
       setVerifyError('Verification failed');
     } finally {
       setIsVerifying(false);
+    }
+  };
+
+  const fetchServerDefaults = async () => {
+    try {
+      const response = await fetch('/api/developer/reset-defaults');
+      if (response.ok) {
+        const data = await response.json();
+        setServerDefaults(data.defaults);
+      }
+    } catch (error) {
+      console.error('Failed to fetch server defaults:', error);
     }
   };
 
@@ -757,302 +779,246 @@ export default function DeveloperPage() {
               </div>
             </div>
 
-            {/* MongoDB Defaults Management */}
+            {/* New Server Defaults Configuration */}
             <div className="bg-cyan-900/20 border border-cyan-800 rounded-lg p-6">
-              <h2 className="text-xl font-bold text-cyan-400 mb-4">🗄️ MongoDB Defaults Management</h2>
-              <p className="text-gray-400 mb-4">
-                Reset MongoDB collections or set default values for new servers.
+              <h2 className="text-xl font-bold text-cyan-400 mb-4">🆕 New Server Defaults</h2>
+              <p className="text-gray-400 mb-6">
+                Configure default settings that will be applied when a server first adds the bot and sets up their dashboard.
               </p>
               
               <div className="space-y-6">
-                {/* Collection Selector */}
+                {/* Prefix Setting */}
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Select Collection
+                    Default Command Prefix
                   </label>
-                  <select
-                    value={resetCollection}
-                    onChange={(e) => setResetCollection(e.target.value as any)}
+                  <input
+                    type="text"
+                    value={serverDefaults.prefix}
+                    onChange={(e) => setServerDefaults({ ...serverDefaults, prefix: e.target.value })}
+                    placeholder="!"
                     className="w-full px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-cyan-500"
-                  >
-                    <option value="ServerSettings">Server Settings</option>
-                    <option value="SiteSettings">Site Settings</option>
-                    <option value="BannedUsers">Banned Users</option>
-                  </select>
+                  />
+                  <p className="text-sm text-gray-500 mt-1">
+                    The default prefix for bot commands (e.g., "!", "/", ".")
+                  </p>
                 </div>
 
-                {/* Server Settings Actions */}
-                {resetCollection === 'ServerSettings' && (
-                  <div className="space-y-4 border-t border-gray-700 pt-4">
-                    <h3 className="font-semibold text-cyan-300">Server Settings Actions</h3>
-                    
-                    {/* Reset Specific Server */}
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">
-                        Reset Specific Server
-                      </label>
-                      <div className="flex gap-2">
+                {/* Premium Setting */}
+                <div className="flex items-center justify-between p-4 bg-gray-800/50 rounded-lg">
+                  <div>
+                    <h3 className="font-medium text-gray-200">Default Premium Status</h3>
+                    <p className="text-sm text-gray-500">Enable premium features by default for new servers</p>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={serverDefaults.premium}
+                      onChange={(e) => setServerDefaults({ ...serverDefaults, premium: e.target.checked })}
+                      className="sr-only peer"
+                    />
+                    <div className="w-11 h-6 bg-gray-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-cyan-800 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
+                  </label>
+                </div>
+
+                {/* Modules Configuration */}
+                <div>
+                  <h3 className="text-lg font-semibold text-cyan-300 mb-4">Default Module States</h3>
+                  <div className="space-y-3">
+                    {/* Moderation Module */}
+                    <div className="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">
+                      <div>
+                        <span className="font-medium text-gray-200">Moderation</span>
+                        <p className="text-xs text-gray-500">Ban, kick, timeout, warn, etc.</p>
+                      </div>
+                      <label className="relative inline-flex items-center cursor-pointer">
                         <input
-                          type="text"
-                          value={resetGuildId}
-                          onChange={(e) => setResetGuildId(e.target.value)}
-                          placeholder="Enter Guild ID"
-                          className="flex-1 px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-cyan-500"
+                          type="checkbox"
+                          checked={serverDefaults.modules.moderation}
+                          onChange={(e) => setServerDefaults({
+                            ...serverDefaults,
+                            modules: { ...serverDefaults.modules, moderation: e.target.checked }
+                          })}
+                          className="sr-only peer"
                         />
-                        <button
-                          onClick={async () => {
-                            if (!resetGuildId.trim()) {
-                              setResetMessage('Please enter a Guild ID');
-                              setResetStatus('error');
-                              return;
-                            }
-                            
-                            if (!confirm(`Reset all settings for server ${resetGuildId}?`)) return;
-                            
-                            setResetStatus('loading');
-                            try {
-                              const response = await fetch('/api/developer/reset-defaults', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({
-                                  collection: 'ServerSettings',
-                                  action: 'resetOne',
-                                  guildId: resetGuildId,
-                                }),
-                              });
-                              
-                              const data = await response.json();
-                              if (response.ok) {
-                                setResetStatus('success');
-                                setResetMessage(data.message);
-                                setResetGuildId('');
-                              } else {
-                                setResetStatus('error');
-                                setResetMessage(data.error);
-                              }
-                            } catch (error) {
-                              setResetStatus('error');
-                              setResetMessage('Failed to reset server');
-                            }
-                          }}
-                          disabled={resetStatus === 'loading'}
-                          className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 disabled:bg-gray-600 rounded-lg font-semibold"
-                        >
-                          Reset Server
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Set Custom Defaults */}
-                    <div className="bg-gray-800/50 rounded-lg p-4">
-                      <label className="block text-sm font-medium text-gray-300 mb-3">
-                        Set Custom Defaults for Server
+                        <div className="w-11 h-6 bg-gray-600 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
                       </label>
-                      <div className="space-y-3">
-                        <div className="flex gap-4">
-                          <input
-                            type="text"
-                            value={resetGuildId}
-                            onChange={(e) => setResetGuildId(e.target.value)}
-                            placeholder="Guild ID"
-                            className="flex-1 px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-lg"
-                          />
-                          <input
-                            type="text"
-                            value={defaultPrefix}
-                            onChange={(e) => setDefaultPrefix(e.target.value)}
-                            placeholder="Prefix"
-                            className="w-24 px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-lg"
-                          />
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <label className="flex items-center gap-2 cursor-pointer">
-                            <input
-                              type="checkbox"
-                              checked={defaultPremium}
-                              onChange={(e) => setDefaultPremium(e.target.checked)}
-                              className="w-5 h-5 rounded bg-gray-700 border-gray-600"
-                            />
-                            <span className="text-gray-300">Premium Enabled</span>
-                          </label>
-                        </div>
-                        <button
-                          onClick={async () => {
-                            if (!resetGuildId.trim()) {
-                              setResetMessage('Please enter a Guild ID');
-                              setResetStatus('error');
-                              return;
-                            }
-                            
-                            if (!confirm(`Apply custom defaults to server ${resetGuildId}?`)) return;
-                            
-                            setResetStatus('loading');
-                            try {
-                              const response = await fetch('/api/developer/reset-defaults', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({
-                                  collection: 'ServerSettings',
-                                  action: 'setDefaults',
-                                  guildId: resetGuildId,
-                                  defaults: {
-                                    prefix: defaultPrefix,
-                                    premium: defaultPremium,
-                                  },
-                                }),
-                              });
-                              
-                              const data = await response.json();
-                              if (response.ok) {
-                                setResetStatus('success');
-                                setResetMessage(data.message);
-                                setResetGuildId('');
-                              } else {
-                                setResetStatus('error');
-                                setResetMessage(data.error);
-                              }
-                            } catch (error) {
-                              setResetStatus('error');
-                              setResetMessage('Failed to apply defaults');
-                            }
-                          }}
-                          disabled={resetStatus === 'loading'}
-                          className="w-full px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-600 rounded-lg font-semibold"
-                        >
-                          Apply Defaults
-                        </button>
-                      </div>
                     </div>
 
-                    {/* Reset All Servers */}
-                    <button
-                      onClick={async () => {
-                        if (!confirm('⚠️ WARNING: This will DELETE ALL server settings from the database! Are you absolutely sure?')) return;
-                        if (!confirm('This action CANNOT be undone! Type YES to confirm.')) return;
-                        
-                        setResetStatus('loading');
-                        try {
-                          const response = await fetch('/api/developer/reset-defaults', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                              collection: 'ServerSettings',
-                              action: 'resetAll',
-                            }),
-                          });
-                          
-                          const data = await response.json();
-                          if (response.ok) {
-                            setResetStatus('success');
-                            setResetMessage(data.message);
-                          } else {
-                            setResetStatus('error');
-                            setResetMessage(data.error);
-                          }
-                        } catch (error) {
-                          setResetStatus('error');
-                          setResetMessage('Failed to reset all servers');
-                        }
-                      }}
-                      disabled={resetStatus === 'loading'}
-                      className="w-full px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-gray-600 rounded-lg font-semibold"
-                    >
-                      ⚠️ Reset ALL Server Settings
-                    </button>
-                  </div>
-                )}
+                    {/* Role Management Module */}
+                    <div className="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">
+                      <div>
+                        <span className="font-medium text-gray-200">Role Management</span>
+                        <p className="text-xs text-gray-500">Create, delete, manage roles</p>
+                      </div>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={serverDefaults.modules.roleManagement}
+                          onChange={(e) => setServerDefaults({
+                            ...serverDefaults,
+                            modules: { ...serverDefaults.modules, roleManagement: e.target.checked }
+                          })}
+                          className="sr-only peer"
+                        />
+                        <div className="w-11 h-6 bg-gray-600 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                      </label>
+                    </div>
 
-                {/* Site Settings Actions */}
-                {resetCollection === 'SiteSettings' && (
-                  <div className="space-y-4 border-t border-gray-700 pt-4">
-                    <h3 className="font-semibold text-cyan-300">Site Settings Actions</h3>
-                    <button
-                      onClick={async () => {
-                        if (!confirm('Reset all site settings to default values?')) return;
-                        
-                        setResetStatus('loading');
-                        try {
-                          const response = await fetch('/api/developer/reset-defaults', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                              collection: 'SiteSettings',
-                              action: 'resetAll',
-                            }),
-                          });
-                          
-                          const data = await response.json();
-                          if (response.ok) {
-                            setResetStatus('success');
-                            setResetMessage(data.message);
-                            fetchSettings(); // Refresh settings display
-                          } else {
-                            setResetStatus('error');
-                            setResetMessage(data.error);
-                          }
-                        } catch (error) {
-                          setResetStatus('error');
-                          setResetMessage('Failed to reset site settings');
-                        }
-                      }}
-                      disabled={resetStatus === 'loading'}
-                      className="w-full px-4 py-2 bg-orange-600 hover:bg-orange-700 disabled:bg-gray-600 rounded-lg font-semibold"
-                    >
-                      Reset All Site Settings
-                    </button>
-                  </div>
-                )}
+                    {/* Member Management Module */}
+                    <div className="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">
+                      <div>
+                        <span className="font-medium text-gray-200">Member Management</span>
+                        <p className="text-xs text-gray-500">User info, avatars, roles</p>
+                      </div>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={serverDefaults.modules.memberManagement}
+                          onChange={(e) => setServerDefaults({
+                            ...serverDefaults,
+                            modules: { ...serverDefaults.modules, memberManagement: e.target.checked }
+                          })}
+                          className="sr-only peer"
+                        />
+                        <div className="w-11 h-6 bg-gray-600 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                      </label>
+                    </div>
 
-                {/* Banned Users Actions */}
-                {resetCollection === 'BannedUsers' && (
-                  <div className="space-y-4 border-t border-gray-700 pt-4">
-                    <h3 className="font-semibold text-cyan-300">Banned Users Actions</h3>
-                    <button
-                      onClick={async () => {
-                        if (!confirm('Unban ALL users? This will clear the entire banned users collection.')) return;
-                        
-                        setResetStatus('loading');
-                        try {
-                          const response = await fetch('/api/developer/reset-defaults', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                              collection: 'BannedUsers',
-                              action: 'resetAll',
-                            }),
-                          });
-                          
-                          const data = await response.json();
-                          if (response.ok) {
-                            setResetStatus('success');
-                            setResetMessage(data.message);
-                          } else {
-                            setResetStatus('error');
-                            setResetMessage(data.error);
-                          }
-                        } catch (error) {
-                          setResetStatus('error');
-                          setResetMessage('Failed to unban all users');
-                        }
-                      }}
-                      disabled={resetStatus === 'loading'}
-                      className="w-full px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-600 rounded-lg font-semibold"
-                    >
-                      Unban All Users
-                    </button>
+                    {/* Announcements Module */}
+                    <div className="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">
+                      <div>
+                        <span className="font-medium text-gray-200">Announcements</span>
+                        <p className="text-xs text-gray-500">Announcements, giveaways, polls</p>
+                      </div>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={serverDefaults.modules.announcements}
+                          onChange={(e) => setServerDefaults({
+                            ...serverDefaults,
+                            modules: { ...serverDefaults.modules, announcements: e.target.checked }
+                          })}
+                          className="sr-only peer"
+                        />
+                        <div className="w-11 h-6 bg-gray-600 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                      </label>
+                    </div>
+
+                    {/* Fun Module */}
+                    <div className="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">
+                      <div>
+                        <span className="font-medium text-gray-200">Fun</span>
+                        <p className="text-xs text-gray-500">Memes, jokes, games</p>
+                      </div>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={serverDefaults.modules.fun}
+                          onChange={(e) => setServerDefaults({
+                            ...serverDefaults,
+                            modules: { ...serverDefaults.modules, fun: e.target.checked }
+                          })}
+                          className="sr-only peer"
+                        />
+                        <div className="w-11 h-6 bg-gray-600 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                      </label>
+                    </div>
+
+                    {/* Utilities Module */}
+                    <div className="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">
+                      <div>
+                        <span className="font-medium text-gray-200">Utilities</span>
+                        <p className="text-xs text-gray-500">Server info, ping, help</p>
+                      </div>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={serverDefaults.modules.utilities}
+                          onChange={(e) => setServerDefaults({
+                            ...serverDefaults,
+                            modules: { ...serverDefaults.modules, utilities: e.target.checked }
+                          })}
+                          className="sr-only peer"
+                        />
+                        <div className="w-11 h-6 bg-gray-600 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                      </label>
+                    </div>
+
+                    {/* Notifications Module */}
+                    <div className="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">
+                      <div>
+                        <span className="font-medium text-gray-200">Notifications</span>
+                        <p className="text-xs text-gray-500">Welcome/leave messages</p>
+                      </div>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={serverDefaults.modules.notifications}
+                          onChange={(e) => setServerDefaults({
+                            ...serverDefaults,
+                            modules: { ...serverDefaults.modules, notifications: e.target.checked }
+                          })}
+                          className="sr-only peer"
+                        />
+                        <div className="w-11 h-6 bg-gray-600 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                      </label>
+                    </div>
                   </div>
-                )}
+                </div>
+
+                {/* Save Button */}
+                <button
+                  onClick={async () => {
+                    setDefaultsStatus('loading');
+                    setDefaultsMessage('');
+                    
+                    try {
+                      const response = await fetch('/api/developer/reset-defaults', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ defaults: serverDefaults }),
+                      });
+                      
+                      const data = await response.json();
+                      
+                      if (response.ok) {
+                        setDefaultsStatus('success');
+                        setDefaultsMessage('Default server configuration saved successfully!');
+                        setTimeout(() => {
+                          setDefaultsStatus('idle');
+                          setDefaultsMessage('');
+                        }, 5000);
+                      } else {
+                        setDefaultsStatus('error');
+                        setDefaultsMessage(data.error || 'Failed to save defaults');
+                      }
+                    } catch (error) {
+                      console.error('Save defaults error:', error);
+                      setDefaultsStatus('error');
+                      setDefaultsMessage('Failed to save default configuration');
+                    }
+                  }}
+                  disabled={defaultsStatus === 'loading'}
+                  className="w-full px-6 py-3 bg-cyan-600 hover:bg-cyan-700 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg font-semibold text-lg transition-colors"
+                >
+                  {defaultsStatus === 'loading' ? 'Saving...' : '💾 Save Default Configuration'}
+                </button>
 
                 {/* Status Message */}
-                {resetMessage && (
+                {defaultsMessage && (
                   <div className={`p-4 rounded-lg ${ 
-                    resetStatus === 'success' 
+                    defaultsStatus === 'success' 
                       ? 'bg-green-900/30 border border-green-700 text-green-400' 
                       : 'bg-red-900/30 border border-red-700 text-red-400'
                   }`}>
-                    {resetMessage}
+                    {defaultsMessage}
                   </div>
                 )}
+
+                <p className="text-gray-500 text-sm">
+                  ℹ️ Note: These settings will only apply to NEW servers that add the bot. Existing servers will not be affected.
+                </p>
               </div>
             </div>
 

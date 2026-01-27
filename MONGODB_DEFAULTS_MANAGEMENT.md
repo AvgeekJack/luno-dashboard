@@ -1,138 +1,169 @@
-# MongoDB Defaults Management
+# New Server Defaults Configuration
 
-This feature allows developers to reset MongoDB collections and set default values for servers, including premium status.
+This feature allows developers to configure the default settings that are automatically applied when a server first adds the bot and sets up their dashboard.
 
 ## Overview
 
-The MongoDB Defaults Management section on the developer page provides tools to:
-- Reset individual server settings
-- Set custom default values for specific servers (including premium)
-- Reset entire collections to defaults
-- Manage banned users in bulk
+The New Server Defaults section on the developer page provides controls to:
+- Set the default command prefix for new servers
+- Enable/disable premium by default for new servers
+- Configure which modules are enabled by default
+- Preview current default configuration
+- Save changes that apply to all future new servers
+
+## How It Works
+
+When a server first adds the bot and someone visits the dashboard:
+1. The system checks if server settings exist in MongoDB
+2. If not found, it fetches the custom defaults from SiteSettings
+3. A new ServerSettings document is created with these defaults
+4. The server owner sees their dashboard pre-configured
 
 ## Features
 
-### 1. Server Settings Management
+### Default Command Prefix
+- Set what prefix new servers will use (e.g., `!`, `/`, `.`)
+- Default: `!`
+- Applied when server settings are first created
 
-**Reset Specific Server:**
-- Enter a Guild ID to reset all settings for that server
-- Server will be removed from database and use schema defaults on next access
+### Default Premium Status
+- Toggle whether new servers start with premium enabled
+- Default: `false`
+- Useful for giving premium to partner servers or during promotions
 
-**Set Custom Defaults:**
-- Enter a Guild ID
-- Configure custom prefix (default: `!`)
-- Enable/disable premium status
-- Apply custom defaults to create or update server settings
+### Default Module States
+Configure which modules are enabled by default for new servers:
 
-**Reset All Servers:**
-- ⚠️ **DANGEROUS**: Deletes ALL server settings from database
-- Requires multiple confirmations
-- Shows count of deleted servers
+- **Moderation** (Ban, kick, timeout, warn, etc.)
+  - Default: `true` (enabled)
+  
+- **Role Management** (Create, delete, manage roles)
+  - Default: `false` (disabled)
+  
+- **Member Management** (User info, avatars, roles)
+  - Default: `false` (disabled)
+  
+- **Announcements** (Announcements, giveaways, polls)
+  - Default: `false` (disabled)
+  
+- **Fun** (Memes, jokes, games)
+  - Default: `false` (disabled)
+  
+- **Utilities** (Server info, ping, help)
+  - Default: `false` (disabled)
+  
+- **Notifications** (Welcome/leave messages)
+  - Default: `false` (disabled)
 
-### 2. Site Settings Management
+## Usage
 
-**Reset All Site Settings:**
-- Resets all site-wide settings to defaults:
-  - `premiumPurchaseEnabled`: true
-  - `maintenanceMode`: false
-  - `newUserSignupsEnabled`: true
-  - `botCommandsEnabled`: true
-  - `maxServersPerUser`: 100
+1. Navigate to Developer Page
+2. Enter PIN to access developer tools
+3. Scroll to "New Server Defaults" section
+4. Configure default prefix and premium status
+5. Toggle which modules should be enabled by default
+6. Click "💾 Save Default Configuration"
+7. Changes apply to all NEW servers from that moment forward
 
-### 3. Banned Users Management
+## Important Notes
 
-**Unban All Users:**
-- Clears entire banned users collection
-- Shows count of unbanned users
-- Useful for bulk pardons or testing
+- ⚠️ **Only affects NEW servers** - Existing servers are not modified
+- Changes are saved to SiteSettings collection with keys like `defaultServerPrefix`, `defaultModuleFun`, etc.
+- If fetching defaults fails, system falls back to schema defaults
+- Configuration is loaded automatically when PIN is verified
 
-## API Endpoint
+## API Endpoints
 
-### POST /api/developer/reset-defaults
+### GET /api/developer/reset-defaults
+Fetches current default configuration
 
-**Authentication:** Developer PIN required
-
-**Request Body:**
+**Response:**
 ```json
 {
-  "collection": "ServerSettings" | "SiteSettings" | "BannedUsers",
-  "action": "resetAll" | "resetOne" | "setDefaults",
-  "guildId": "string (optional)",
   "defaults": {
-    "prefix": "string",
-    "premium": boolean
+    "prefix": "!",
+    "premium": false,
+    "modules": {
+      "moderation": true,
+      "roleManagement": false,
+      "memberManagement": false,
+      "announcements": false,
+      "fun": false,
+      "utilities": false,
+      "notifications": false
+    }
   }
 }
 ```
 
-**Actions:**
+### POST /api/developer/reset-defaults
+Updates default configuration
 
-1. **ServerSettings + resetAll**
-   - Deletes all server settings
-   - Returns deletedCount
-
-2. **ServerSettings + resetOne**
-   - Requires `guildId`
-   - Deletes specific server settings
-
-3. **ServerSettings + setDefaults**
-   - Requires `guildId` and `defaults`
-   - Updates or creates server with custom values
-   - Useful for granting premium to test servers
-
-4. **SiteSettings + resetAll**
-   - Resets all site settings to defaults
-
-5. **BannedUsers + resetAll**
-   - Unbans all users
-   - Returns unbannedCount
-
-## Use Cases
-
-### Grant Premium to Test Server
-1. Select "Server Settings"
-2. Enter Guild ID
-3. Check "Premium Enabled"
-4. Set custom prefix if needed
-5. Click "Apply Defaults"
-
-### Reset Development Database
-1. Select each collection type
-2. Use "Reset All" buttons
-3. Confirm each action
-4. Database returns to clean state
-
-### Bulk Unban After Testing
-1. Select "Banned Users"
-2. Click "Unban All Users"
-3. All bans cleared instantly
-
-## Safety Features
-
-- Multiple confirmation dialogs for destructive actions
-- Clear warning messages with ⚠️ symbols
-- Status feedback (success/error messages)
-- Color-coded UI (red for danger, green for safe)
-- Developer authentication required for all actions
-
-## UI Design
-
-The section uses a cyan color scheme:
-- `bg-cyan-900/20` background
-- `border-cyan-800` border
-- `text-cyan-400` headings
-- Collection-specific actions shown conditionally
-- Dropdown selector for collection type
+**Request:**
+```json
+{
+  "defaults": {
+    "prefix": "!",
+    "premium": false,
+    "modules": {
+      "moderation": true,
+      "roleManagement": false,
+      "memberManagement": false,
+      "announcements": false,
+      "fun": false,
+      "utilities": false,
+      "notifications": false
+    }
+  }
+}
+```
 
 ## Code Structure
 
-- `/app/api/developer/reset-defaults/route.ts` - API endpoint
-- `/app/developer/page.tsx` - Developer UI with MongoDB section
-- All three collections supported: ServerSettings, SiteSettings, BannedUsers
+- `/app/api/developer/reset-defaults/route.ts` - API for managing defaults
+- `/app/developer/page.tsx` - Developer UI with New Server Defaults section
+- `/lib/serverDefaults.ts` - Utility function to fetch defaults
+- `/app/api/servers/[guildId]/settings/route.ts` - Updated to use custom defaults when creating new servers
 
-## Notes
+## Technical Implementation
 
-- Actions are immediate and cannot be undone
-- Deleted server settings will be recreated with schema defaults on next access
-- Premium status can be toggled without affecting Stripe subscriptions
-- All actions are logged to console for debugging
+When a new server is detected in `GET /api/servers/[guildId]/settings`:
+```typescript
+if (!settings) {
+  const defaults = await getServerDefaults();
+  settings = new ServerSettings({ 
+    guildId,
+    prefix: defaults.prefix,
+    premium: defaults.premium,
+    modules: defaults.modules,
+  });
+  await settings.save();
+}
+```
+
+The `getServerDefaults()` function fetches all default settings from SiteSettings and returns a structured object with fallbacks to schema defaults if any setting is missing.
+
+## Use Cases
+
+### Partner Server Setup
+1. Enable premium by default
+2. Enable all modules
+3. Partners get full access immediately
+
+### Testing Environment
+1. Enable premium for testing
+2. Enable specific modules being tested
+3. Streamlined testing workflow
+
+### Production Launch
+1. Set conservative defaults
+2. Only enable Moderation module
+3. Users opt-in to other features
+
+## Safety Features
+
+- Non-destructive: Existing servers unchanged
+- Automatic fallbacks if defaults can't be fetched
+- Status feedback (success/error messages)
+- Developer authentication required
+- Changes logged to console

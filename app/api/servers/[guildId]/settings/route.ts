@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import dbConnect from '@/lib/mongoose';
 import ServerSettings from '@/lib/models/ServerSettings';
+import { getServerDefaults } from '@/lib/serverDefaults';
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ guildId: string }> }) {
   const session = await getServerSession(authOptions);
@@ -18,8 +19,25 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ guil
   let settings = await ServerSettings.findOne({ guildId });
 
   if (!settings) {
-    settings = new ServerSettings({ guildId });
+    // Fetch custom defaults from site settings
+    const defaults = await getServerDefaults();
+    
+    // Create new server with custom defaults
+    settings = new ServerSettings({ 
+      guildId,
+      prefix: defaults.prefix,
+      premium: defaults.premium,
+      modules: defaults.modules,
+    });
     await settings.save();
+    
+    console.log(`[ServerSettings] New server ${guildId} created with custom defaults:`, {
+      prefix: defaults.prefix,
+      premium: defaults.premium,
+      modules: Object.keys(defaults.modules).map(key => ({
+        [key]: defaults.modules[key as keyof typeof defaults.modules].enabled
+      }))
+    });
   }
 
   return NextResponse.json(settings);

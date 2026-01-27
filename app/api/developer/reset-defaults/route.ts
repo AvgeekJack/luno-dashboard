@@ -2,9 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import connectDB from '@/lib/mongoose';
-import ServerSettings from '@/lib/models/ServerSettings';
 import SiteSettings from '@/lib/models/SiteSettings';
-import BannedUser from '@/lib/models/BannedUser';
 
 const DEVELOPER_USER_ID = '922940896322940929';
 
@@ -16,7 +14,56 @@ async function verifyDeveloperAccess() {
   return true;
 }
 
-// POST - Reset a collection to default values or set specific defaults
+// GET - Fetch current default server configuration
+export async function GET(req: NextRequest) {
+  try {
+    const isAuthorized = await verifyDeveloperAccess();
+    
+    if (!isAuthorized) {
+      return NextResponse.json(
+        { error: 'Forbidden - Developer access only' },
+        { status: 403 }
+      );
+    }
+
+    await connectDB();
+
+    // Fetch all default settings
+    const defaultPrefix = await SiteSettings.findOne({ settingKey: 'defaultServerPrefix' });
+    const defaultPremium = await SiteSettings.findOne({ settingKey: 'defaultServerPremium' });
+    const defaultModeration = await SiteSettings.findOne({ settingKey: 'defaultModuleModeration' });
+    const defaultRoleManagement = await SiteSettings.findOne({ settingKey: 'defaultModuleRoleManagement' });
+    const defaultMemberManagement = await SiteSettings.findOne({ settingKey: 'defaultModuleMemberManagement' });
+    const defaultAnnouncements = await SiteSettings.findOne({ settingKey: 'defaultModuleAnnouncements' });
+    const defaultFun = await SiteSettings.findOne({ settingKey: 'defaultModuleFun' });
+    const defaultUtilities = await SiteSettings.findOne({ settingKey: 'defaultModuleUtilities' });
+    const defaultNotifications = await SiteSettings.findOne({ settingKey: 'defaultModuleNotifications' });
+
+    return NextResponse.json({
+      defaults: {
+        prefix: defaultPrefix?.settingValue ?? '!',
+        premium: defaultPremium?.settingValue ?? false,
+        modules: {
+          moderation: defaultModeration?.settingValue ?? true,
+          roleManagement: defaultRoleManagement?.settingValue ?? false,
+          memberManagement: defaultMemberManagement?.settingValue ?? false,
+          announcements: defaultAnnouncements?.settingValue ?? false,
+          fun: defaultFun?.settingValue ?? false,
+          utilities: defaultUtilities?.settingValue ?? false,
+          notifications: defaultNotifications?.settingValue ?? false,
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Get defaults error:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
+
+// POST - Update default server configuration
 export async function POST(req: NextRequest) {
   try {
     const isAuthorized = await verifyDeveloperAccess();
@@ -28,86 +75,55 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { collection, action, guildId, defaults } = await req.json();
+    const { defaults } = await req.json();
 
     await connectDB();
 
-    if (collection === 'ServerSettings') {
-      if (action === 'resetAll') {
-        // Delete all server settings
-        const result = await ServerSettings.deleteMany({});
-        return NextResponse.json({
-          message: `All server settings deleted (${result.deletedCount} servers)`,
-          deletedCount: result.deletedCount,
-        });
-      } else if (action === 'resetOne' && guildId) {
-        // Delete specific server settings
-        const result = await ServerSettings.deleteOne({ guildId });
-        if (result.deletedCount > 0) {
-          return NextResponse.json({
-            message: `Server settings reset for ${guildId}`,
-          });
-        } else {
-          return NextResponse.json(
-            { error: 'Server not found' },
-            { status: 404 }
+    // Update each default setting
+    if (defaults.prefix !== undefined) {
+      await SiteSettings.findOneAndUpdate(
+        { settingKey: 'defaultServerPrefix' },
+        { settingKey: 'defaultServerPrefix', settingValue: defaults.prefix, description: 'Default command prefix for new servers' },
+        { upsert: true }
+      );
+    }
+
+    if (defaults.premium !== undefined) {
+      await SiteSettings.findOneAndUpdate(
+        { settingKey: 'defaultServerPremium' },
+        { settingKey: 'defaultServerPremium', settingValue: defaults.premium, description: 'Default premium status for new servers' },
+        { upsert: true }
+      );
+    }
+
+    if (defaults.modules) {
+      const moduleUpdates = [
+        { key: 'defaultModuleModeration', value: defaults.modules.moderation, desc: 'Default state for Moderation module' },
+        { key: 'defaultModuleRoleManagement', value: defaults.modules.roleManagement, desc: 'Default state for Role Management module' },
+        { key: 'defaultModuleMemberManagement', value: defaults.modules.memberManagement, desc: 'Default state for Member Management module' },
+        { key: 'defaultModuleAnnouncements', value: defaults.modules.announcements, desc: 'Default state for Announcements module' },
+        { key: 'defaultModuleFun', value: defaults.modules.fun, desc: 'Default state for Fun module' },
+        { key: 'defaultModuleUtilities', value: defaults.modules.utilities, desc: 'Default state for Utilities module' },
+        { key: 'defaultModuleNotifications', value: defaults.modules.notifications, desc: 'Default state for Notifications module' },
+      ];
+
+      for (const update of moduleUpdates) {
+        if (update.value !== undefined) {
+          await SiteSettings.findOneAndUpdate(
+            { settingKey: update.key },
+            { settingKey: update.key, settingValue: update.value, description: update.desc },
+            { upsert: true }
           );
         }
-      } else if (action === 'setDefaults' && guildId && defaults) {
-        // Update or create server with custom defaults
-        const updatedServer = await ServerSettings.findOneAndUpdate(
-          { guildId },
-          { $set: defaults },
-          { new: true, upsert: true }
-        );
-        return NextResponse.json({
-          message: `Defaults applied to server ${guildId}`,
-          settings: updatedServer,
-        });
-      }
-    } else if (collection === 'SiteSettings') {
-      if (action === 'resetAll') {
-        // Reset all site settings to defaults
-        const defaultSettings = [
-          { settingKey: 'premiumPurchaseEnabled', settingValue: true },
-          { settingKey: 'maintenanceMode', settingValue: false },
-          { settingKey: 'newUserSignupsEnabled', settingValue: true },
-          { settingKey: 'botCommandsEnabled', settingValue: true },
-          { settingKey: 'maxServersPerUser', settingValue: 100 },
-        ];
-
-        await SiteSettings.deleteMany({});
-        await SiteSettings.insertMany(defaultSettings);
-
-        return NextResponse.json({
-          message: 'All site settings reset to defaults',
-          settings: defaultSettings,
-        });
-      } else if (action === 'resetOne' && defaults?.settingKey) {
-        // Reset specific setting
-        const result = await SiteSettings.deleteOne({ settingKey: defaults.settingKey });
-        return NextResponse.json({
-          message: `Setting ${defaults.settingKey} reset`,
-          deleted: result.deletedCount > 0,
-        });
-      }
-    } else if (collection === 'BannedUsers') {
-      if (action === 'resetAll') {
-        // Unban all users
-        const result = await BannedUser.deleteMany({});
-        return NextResponse.json({
-          message: `All users unbanned (${result.deletedCount} users)`,
-          unbannedCount: result.deletedCount,
-        });
       }
     }
 
-    return NextResponse.json(
-      { error: 'Invalid action or missing parameters' },
-      { status: 400 }
-    );
+    return NextResponse.json({
+      message: 'Default server configuration updated successfully',
+      defaults,
+    });
   } catch (error) {
-    console.error('Reset defaults error:', error);
+    console.error('Update defaults error:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
