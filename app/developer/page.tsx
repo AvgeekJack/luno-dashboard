@@ -45,6 +45,11 @@ export default function DeveloperPage() {
   const [banStatus, setBanStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [banMessage, setBanMessage] = useState('');
   
+  const [userViewId, setUserViewId] = useState('');
+  const [userViewStatus, setUserViewStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [userViewMessage, setUserViewMessage] = useState('');
+  const [userViewData, setUserViewData] = useState<any>(null);
+  
   const [defaultsStatus, setDefaultsStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [defaultsMessage, setDefaultsMessage] = useState('');
   const [serverDefaults, setServerDefaults] = useState({
@@ -775,6 +780,155 @@ export default function DeveloperPage() {
                 
                 <p className="text-gray-500 text-sm">
                   ⚠️ Warning: Banned users will be automatically signed out and redirected to the home page.
+                </p>
+              </div>
+            </div>
+
+            {/* User Account View */}
+            <div className="bg-indigo-900/20 border border-indigo-800 rounded-lg p-6">
+              <h2 className="text-xl font-bold text-indigo-400 mb-4">👤 User Account View</h2>
+              <p className="text-gray-400 mb-4">
+                View any user's account information and their accessible servers.
+              </p>
+              <div className="space-y-4">
+                <div className="flex gap-4">
+                  <input
+                    type="text"
+                    value={userViewId}
+                    onChange={(e) => setUserViewId(e.target.value)}
+                    placeholder="Enter User ID (e.g., 123456789012345678)"
+                    className="flex-1 px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-indigo-500"
+                    disabled={userViewStatus === 'loading'}
+                  />
+                  <button
+                    onClick={async () => {
+                      if (!userViewId.trim()) {
+                        setUserViewMessage('Please enter a User ID');
+                        setUserViewStatus('error');
+                        return;
+                      }
+                      
+                      setUserViewStatus('loading');
+                      setUserViewMessage('');
+                      setUserViewData(null);
+                      
+                      try {
+                        const response = await fetch(`/api/developer/user-view?userId=${userViewId}`);
+                        const data = await response.json();
+                        
+                        if (response.ok) {
+                          setUserViewStatus('success');
+                          setUserViewData(data);
+                          setUserViewMessage('');
+                        } else {
+                          setUserViewStatus('error');
+                          setUserViewMessage(data.error || 'Failed to fetch user data');
+                          setUserViewData(null);
+                        }
+                      } catch (error) {
+                        console.error('User view error:', error);
+                        setUserViewStatus('error');
+                        setUserViewMessage('Failed to fetch user data');
+                        setUserViewData(null);
+                      }
+                    }}
+                    disabled={userViewStatus === 'loading' || !userViewId.trim()}
+                    className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg font-semibold transition-colors"
+                  >
+                    {userViewStatus === 'loading' ? 'Loading...' : 'View Account'}
+                  </button>
+                </div>
+                
+                {userViewMessage && (
+                  <div className="p-4 rounded-lg bg-red-900/30 border border-red-700 text-red-400">
+                    {userViewMessage}
+                  </div>
+                )}
+                
+                {userViewData && (
+                  <div className="space-y-4">
+                    {/* User Info Card */}
+                    <div className="bg-gray-800/50 rounded-lg p-6 border border-indigo-700">
+                      <h3 className="text-lg font-semibold text-indigo-300 mb-4">User Information</h3>
+                      <div className="flex items-center gap-4">
+                        {userViewData.user.avatar ? (
+                          <img
+                            src={`https://cdn.discordapp.com/avatars/${userViewData.user.id}/${userViewData.user.avatar}.png?size=128`}
+                            alt="Avatar"
+                            className="w-16 h-16 rounded-full"
+                          />
+                        ) : (
+                          <div className="w-16 h-16 rounded-full bg-indigo-600 flex items-center justify-center text-2xl font-bold">
+                            {userViewData.user.username.charAt(0).toUpperCase()}
+                          </div>
+                        )}
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <h4 className="text-xl font-bold text-white">
+                              {userViewData.user.globalName || userViewData.user.username}
+                            </h4>
+                            {userViewData.user.bot && (
+                              <span className="px-2 py-0.5 bg-blue-600 text-xs font-semibold rounded">BOT</span>
+                            )}
+                          </div>
+                          <p className="text-gray-400">@{userViewData.user.username}</p>
+                          <p className="text-gray-500 text-sm">ID: {userViewData.user.id}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Servers List */}
+                    <div className="bg-gray-800/50 rounded-lg p-6 border border-indigo-700">
+                      <h3 className="text-lg font-semibold text-indigo-300 mb-4">
+                        Accessible Servers ({userViewData.guildsCount})
+                      </h3>
+                      {userViewData.guilds.length === 0 ? (
+                        <p className="text-gray-500 text-center py-4">
+                          This user has no servers with MANAGE_GUILD permission where Luno is present.
+                        </p>
+                      ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          {userViewData.guilds.map((guild: any) => (
+                            <a
+                              key={guild.id}
+                              href={`/servers/${guild.id}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-3 p-3 bg-gray-700/50 rounded-lg hover:bg-gray-700 transition-colors border border-gray-600 hover:border-indigo-500"
+                            >
+                              {guild.icon ? (
+                                <img
+                                  src={`https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png?size=64`}
+                                  alt=""
+                                  className="w-12 h-12 rounded-full"
+                                />
+                              ) : (
+                                <div className="w-12 h-12 rounded-full bg-indigo-600 flex items-center justify-center font-bold">
+                                  {guild.name.charAt(0)}
+                                </div>
+                              )}
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2">
+                                  <p className="font-semibold text-white truncate">{guild.name}</p>
+                                  {guild.owner && (
+                                    <span className="px-1.5 py-0.5 bg-yellow-600 text-xs font-semibold rounded">OWNER</span>
+                                  )}
+                                </div>
+                                <p className="text-xs text-gray-400 truncate">ID: {guild.id}</p>
+                              </div>
+                              <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                              </svg>
+                            </a>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+                
+                <p className="text-gray-500 text-sm">
+                  ℹ️ Note: Only shows servers where the bot is present and the user has MANAGE_GUILD permission.
                 </p>
               </div>
             </div>
