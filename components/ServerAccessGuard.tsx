@@ -16,14 +16,31 @@ export default function ServerAccessGuard({ guildId, children }: ServerAccessGua
   const router = useRouter();
   const [hasAccess, setHasAccess] = useState<boolean | null>(null);
   const [developerPinInput, setDeveloperPinInput] = useState('');
-  const [showDeveloperBypass, setShowDeveloperBypass] = useState(false);
+  const [showDeveloperPin, setShowDeveloperPin] = useState(false);
   const [verifyingPin, setVerifyingPin] = useState(false);
+  const [pinVerified, setPinVerified] = useState(false);
+
+  // Check if developer PIN is already verified in this session
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const verified = sessionStorage.getItem('developerPinVerified');
+      if (verified === 'true') {
+        setPinVerified(true);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     if (status === 'loading') return;
     
     if (!session) {
       router.push('/');
+      return;
+    }
+
+    // If user is developer and PIN not verified, show PIN screen first
+    if (session.user?.id === DEVELOPER_USER_ID && !pinVerified) {
+      setShowDeveloperPin(true);
       return;
     }
 
@@ -35,10 +52,6 @@ export default function ServerAccessGuard({ guildId, children }: ServerAccessGua
         if (res.status === 403) {
           // User doesn't have access
           setHasAccess(false);
-          // Show developer bypass option if user is the bot owner
-          if (session.user?.id === DEVELOPER_USER_ID) {
-            setShowDeveloperBypass(true);
-          }
         } else if (res.ok) {
           setHasAccess(true);
         } else if (res.status === 401) {
@@ -53,9 +66,9 @@ export default function ServerAccessGuard({ guildId, children }: ServerAccessGua
     };
 
     checkAccess();
-  }, [session, status, guildId, router]);
+  }, [session, status, guildId, router, pinVerified]);
 
-  const handleDeveloperBypass = async () => {
+  const handleDeveloperPinVerification = async () => {
     if (!developerPinInput.trim()) return;
 
     setVerifyingPin(true);
@@ -67,9 +80,12 @@ export default function ServerAccessGuard({ guildId, children }: ServerAccessGua
       });
 
       if (res.ok) {
-        // PIN verified, grant access
-        setHasAccess(true);
-        setShowDeveloperBypass(false);
+        // PIN verified, store in session storage
+        sessionStorage.setItem('developerPinVerified', 'true');
+        setPinVerified(true);
+        setShowDeveloperPin(false);
+        // Trigger access check
+        setHasAccess(null);
       } else {
         alert('Invalid developer PIN');
       }
@@ -81,6 +97,60 @@ export default function ServerAccessGuard({ guildId, children }: ServerAccessGua
       setDeveloperPinInput('');
     }
   };
+
+  // Show developer PIN screen if developer hasn't verified yet
+  if (showDeveloperPin && session?.user?.id === DEVELOPER_USER_ID && !pinVerified) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-yellow-900 to-gray-900 flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-gray-800/50 backdrop-blur-sm rounded-lg p-8 text-center border border-yellow-500/30">
+          <div className="mb-6">
+            <svg className="w-20 h-20 mx-auto text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          
+          <h1 className="text-2xl font-bold text-white mb-2">Developer Verification Required</h1>
+          <p className="text-yellow-400 font-semibold mb-4">
+            🔒 Bot Owner Account Detected
+          </p>
+          <p className="text-gray-300 mb-6">
+            For security purposes, please enter your developer PIN to access server dashboards. This verification will remain active for your current session.
+          </p>
+
+          <div className="mb-6">
+            <div className="flex gap-2">
+              <input
+                type="password"
+                value={developerPinInput}
+                onChange={(e) => setDeveloperPinInput(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleDeveloperPinVerification()}
+                placeholder="Enter Developer PIN"
+                className="flex-1 px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 text-center text-lg font-mono"
+                disabled={verifyingPin}
+                autoFocus
+              />
+            </div>
+            <button
+              onClick={handleDeveloperPinVerification}
+              disabled={verifyingPin || !developerPinInput.trim()}
+              className="w-full mt-3 px-6 py-3 bg-yellow-500 hover:bg-yellow-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-black font-bold rounded-lg transition-colors text-lg"
+            >
+              {verifyingPin ? 'Verifying...' : '🔓 Verify & Continue'}
+            </button>
+          </div>
+
+          <div className="pt-4 border-t border-gray-700">
+            <button
+              onClick={() => router.push('/servers')}
+              className="text-gray-400 hover:text-white transition-colors text-sm"
+            >
+              ← Back to Server List
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (status === 'loading' || hasAccess === null) {
     return (
@@ -107,31 +177,6 @@ export default function ServerAccessGuard({ guildId, children }: ServerAccessGua
           <p className="text-gray-300 mb-6">
             You don't have permission to access this server's dashboard. You need the <span className="font-semibold text-purple-400">MANAGE_GUILD</span> permission to view and modify server settings.
           </p>
-
-          {showDeveloperBypass && (
-            <div className="mb-6 p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
-              <h3 className="text-yellow-400 font-semibold mb-3">Developer Bypass</h3>
-              <p className="text-gray-300 text-sm mb-3">Enter your developer PIN to access this server:</p>
-              <div className="flex gap-2">
-                <input
-                  type="password"
-                  value={developerPinInput}
-                  onChange={(e) => setDeveloperPinInput(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleDeveloperBypass()}
-                  placeholder="Enter PIN"
-                  className="flex-1 px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                  disabled={verifyingPin}
-                />
-                <button
-                  onClick={handleDeveloperBypass}
-                  disabled={verifyingPin || !developerPinInput.trim()}
-                  className="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-medium rounded transition-colors"
-                >
-                  {verifyingPin ? 'Verifying...' : 'Verify'}
-                </button>
-              </div>
-            </div>
-          )}
 
           <button
             onClick={() => router.push('/servers')}
