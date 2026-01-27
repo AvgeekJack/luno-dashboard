@@ -44,6 +44,13 @@ export default function DeveloperPage() {
   const [banReason, setBanReason] = useState('');
   const [banStatus, setBanStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [banMessage, setBanMessage] = useState('');
+  
+  const [resetGuildId, setResetGuildId] = useState('');
+  const [resetCollection, setResetCollection] = useState<'ServerSettings' | 'SiteSettings' | 'BannedUsers'>('ServerSettings');
+  const [resetStatus, setResetStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [resetMessage, setResetMessage] = useState('');
+  const [defaultPremium, setDefaultPremium] = useState(false);
+  const [defaultPrefix, setDefaultPrefix] = useState('!');
 
   // Check if user is developer
   const isDeveloper = session?.user?.id === DEVELOPER_USER_ID;
@@ -747,6 +754,305 @@ export default function DeveloperPage() {
                 <p className="text-gray-500 text-sm">
                   ⚠️ Warning: Banned users will be automatically signed out and redirected to the home page.
                 </p>
+              </div>
+            </div>
+
+            {/* MongoDB Defaults Management */}
+            <div className="bg-cyan-900/20 border border-cyan-800 rounded-lg p-6">
+              <h2 className="text-xl font-bold text-cyan-400 mb-4">🗄️ MongoDB Defaults Management</h2>
+              <p className="text-gray-400 mb-4">
+                Reset MongoDB collections or set default values for new servers.
+              </p>
+              
+              <div className="space-y-6">
+                {/* Collection Selector */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Select Collection
+                  </label>
+                  <select
+                    value={resetCollection}
+                    onChange={(e) => setResetCollection(e.target.value as any)}
+                    className="w-full px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-cyan-500"
+                  >
+                    <option value="ServerSettings">Server Settings</option>
+                    <option value="SiteSettings">Site Settings</option>
+                    <option value="BannedUsers">Banned Users</option>
+                  </select>
+                </div>
+
+                {/* Server Settings Actions */}
+                {resetCollection === 'ServerSettings' && (
+                  <div className="space-y-4 border-t border-gray-700 pt-4">
+                    <h3 className="font-semibold text-cyan-300">Server Settings Actions</h3>
+                    
+                    {/* Reset Specific Server */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                        Reset Specific Server
+                      </label>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={resetGuildId}
+                          onChange={(e) => setResetGuildId(e.target.value)}
+                          placeholder="Enter Guild ID"
+                          className="flex-1 px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-cyan-500"
+                        />
+                        <button
+                          onClick={async () => {
+                            if (!resetGuildId.trim()) {
+                              setResetMessage('Please enter a Guild ID');
+                              setResetStatus('error');
+                              return;
+                            }
+                            
+                            if (!confirm(`Reset all settings for server ${resetGuildId}?`)) return;
+                            
+                            setResetStatus('loading');
+                            try {
+                              const response = await fetch('/api/developer/reset-defaults', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                  collection: 'ServerSettings',
+                                  action: 'resetOne',
+                                  guildId: resetGuildId,
+                                }),
+                              });
+                              
+                              const data = await response.json();
+                              if (response.ok) {
+                                setResetStatus('success');
+                                setResetMessage(data.message);
+                                setResetGuildId('');
+                              } else {
+                                setResetStatus('error');
+                                setResetMessage(data.error);
+                              }
+                            } catch (error) {
+                              setResetStatus('error');
+                              setResetMessage('Failed to reset server');
+                            }
+                          }}
+                          disabled={resetStatus === 'loading'}
+                          className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 disabled:bg-gray-600 rounded-lg font-semibold"
+                        >
+                          Reset Server
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Set Custom Defaults */}
+                    <div className="bg-gray-800/50 rounded-lg p-4">
+                      <label className="block text-sm font-medium text-gray-300 mb-3">
+                        Set Custom Defaults for Server
+                      </label>
+                      <div className="space-y-3">
+                        <div className="flex gap-4">
+                          <input
+                            type="text"
+                            value={resetGuildId}
+                            onChange={(e) => setResetGuildId(e.target.value)}
+                            placeholder="Guild ID"
+                            className="flex-1 px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-lg"
+                          />
+                          <input
+                            type="text"
+                            value={defaultPrefix}
+                            onChange={(e) => setDefaultPrefix(e.target.value)}
+                            placeholder="Prefix"
+                            className="w-24 px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-lg"
+                          />
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <label className="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={defaultPremium}
+                              onChange={(e) => setDefaultPremium(e.target.checked)}
+                              className="w-5 h-5 rounded bg-gray-700 border-gray-600"
+                            />
+                            <span className="text-gray-300">Premium Enabled</span>
+                          </label>
+                        </div>
+                        <button
+                          onClick={async () => {
+                            if (!resetGuildId.trim()) {
+                              setResetMessage('Please enter a Guild ID');
+                              setResetStatus('error');
+                              return;
+                            }
+                            
+                            if (!confirm(`Apply custom defaults to server ${resetGuildId}?`)) return;
+                            
+                            setResetStatus('loading');
+                            try {
+                              const response = await fetch('/api/developer/reset-defaults', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                  collection: 'ServerSettings',
+                                  action: 'setDefaults',
+                                  guildId: resetGuildId,
+                                  defaults: {
+                                    prefix: defaultPrefix,
+                                    premium: defaultPremium,
+                                  },
+                                }),
+                              });
+                              
+                              const data = await response.json();
+                              if (response.ok) {
+                                setResetStatus('success');
+                                setResetMessage(data.message);
+                                setResetGuildId('');
+                              } else {
+                                setResetStatus('error');
+                                setResetMessage(data.error);
+                              }
+                            } catch (error) {
+                              setResetStatus('error');
+                              setResetMessage('Failed to apply defaults');
+                            }
+                          }}
+                          disabled={resetStatus === 'loading'}
+                          className="w-full px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-600 rounded-lg font-semibold"
+                        >
+                          Apply Defaults
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Reset All Servers */}
+                    <button
+                      onClick={async () => {
+                        if (!confirm('⚠️ WARNING: This will DELETE ALL server settings from the database! Are you absolutely sure?')) return;
+                        if (!confirm('This action CANNOT be undone! Type YES to confirm.')) return;
+                        
+                        setResetStatus('loading');
+                        try {
+                          const response = await fetch('/api/developer/reset-defaults', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                              collection: 'ServerSettings',
+                              action: 'resetAll',
+                            }),
+                          });
+                          
+                          const data = await response.json();
+                          if (response.ok) {
+                            setResetStatus('success');
+                            setResetMessage(data.message);
+                          } else {
+                            setResetStatus('error');
+                            setResetMessage(data.error);
+                          }
+                        } catch (error) {
+                          setResetStatus('error');
+                          setResetMessage('Failed to reset all servers');
+                        }
+                      }}
+                      disabled={resetStatus === 'loading'}
+                      className="w-full px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-gray-600 rounded-lg font-semibold"
+                    >
+                      ⚠️ Reset ALL Server Settings
+                    </button>
+                  </div>
+                )}
+
+                {/* Site Settings Actions */}
+                {resetCollection === 'SiteSettings' && (
+                  <div className="space-y-4 border-t border-gray-700 pt-4">
+                    <h3 className="font-semibold text-cyan-300">Site Settings Actions</h3>
+                    <button
+                      onClick={async () => {
+                        if (!confirm('Reset all site settings to default values?')) return;
+                        
+                        setResetStatus('loading');
+                        try {
+                          const response = await fetch('/api/developer/reset-defaults', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                              collection: 'SiteSettings',
+                              action: 'resetAll',
+                            }),
+                          });
+                          
+                          const data = await response.json();
+                          if (response.ok) {
+                            setResetStatus('success');
+                            setResetMessage(data.message);
+                            fetchSettings(); // Refresh settings display
+                          } else {
+                            setResetStatus('error');
+                            setResetMessage(data.error);
+                          }
+                        } catch (error) {
+                          setResetStatus('error');
+                          setResetMessage('Failed to reset site settings');
+                        }
+                      }}
+                      disabled={resetStatus === 'loading'}
+                      className="w-full px-4 py-2 bg-orange-600 hover:bg-orange-700 disabled:bg-gray-600 rounded-lg font-semibold"
+                    >
+                      Reset All Site Settings
+                    </button>
+                  </div>
+                )}
+
+                {/* Banned Users Actions */}
+                {resetCollection === 'BannedUsers' && (
+                  <div className="space-y-4 border-t border-gray-700 pt-4">
+                    <h3 className="font-semibold text-cyan-300">Banned Users Actions</h3>
+                    <button
+                      onClick={async () => {
+                        if (!confirm('Unban ALL users? This will clear the entire banned users collection.')) return;
+                        
+                        setResetStatus('loading');
+                        try {
+                          const response = await fetch('/api/developer/reset-defaults', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                              collection: 'BannedUsers',
+                              action: 'resetAll',
+                            }),
+                          });
+                          
+                          const data = await response.json();
+                          if (response.ok) {
+                            setResetStatus('success');
+                            setResetMessage(data.message);
+                          } else {
+                            setResetStatus('error');
+                            setResetMessage(data.error);
+                          }
+                        } catch (error) {
+                          setResetStatus('error');
+                          setResetMessage('Failed to unban all users');
+                        }
+                      }}
+                      disabled={resetStatus === 'loading'}
+                      className="w-full px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-600 rounded-lg font-semibold"
+                    >
+                      Unban All Users
+                    </button>
+                  </div>
+                )}
+
+                {/* Status Message */}
+                {resetMessage && (
+                  <div className={`p-4 rounded-lg ${ 
+                    resetStatus === 'success' 
+                      ? 'bg-green-900/30 border border-green-700 text-green-400' 
+                      : 'bg-red-900/30 border border-red-700 text-red-400'
+                  }`}>
+                    {resetMessage}
+                  </div>
+                )}
               </div>
             </div>
 
