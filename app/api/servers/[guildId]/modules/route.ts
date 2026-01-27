@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import connectDB from '@/lib/mongoose';
 import ServerSettings from '@/lib/models/ServerSettings';
+import { checkServerAccess } from '@/lib/serverAccess';
 
 const MODULE_LIST = [
   'moderation', 'roleManagement',
@@ -18,8 +19,14 @@ export async function GET(
   const session = await getServerSession(authOptions);
   const { guildId } = await params;
 
-  if (!session) {
+  if (!session?.user?.id) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  // Check if user has access to this server
+  const hasAccess = await checkServerAccess(session.user.id, guildId);
+  if (!hasAccess) {
+    return NextResponse.json({ error: 'Forbidden - You do not have access to this server' }, { status: 403 });
   }
 
   try {
@@ -52,8 +59,14 @@ export async function PUT(
   const session = await getServerSession(authOptions);
   const { guildId } = await params;
 
-  if (!session) {
+  if (!session?.user?.id) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  // Check if user has access to this server
+  const hasAccess = await checkServerAccess(session.user.id, guildId);
+  if (!hasAccess) {
+    return NextResponse.json({ error: 'Forbidden - You do not have access to this server' }, { status: 403 });
   }
 
   try {

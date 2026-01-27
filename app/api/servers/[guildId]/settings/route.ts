@@ -4,15 +4,22 @@ import { authOptions } from '@/lib/auth';
 import dbConnect from '@/lib/mongoose';
 import ServerSettings from '@/lib/models/ServerSettings';
 import { getServerDefaults } from '@/lib/serverDefaults';
+import { checkServerAccess } from '@/lib/serverAccess';
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ guildId: string }> }) {
   const session = await getServerSession(authOptions);
 
-  if (!session) {
+  if (!session?.user?.id) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   const { guildId } = await params;
+
+  // Check if user has access to this server
+  const hasAccess = await checkServerAccess(session.user.id, guildId);
+  if (!hasAccess) {
+    return NextResponse.json({ error: 'Forbidden - You do not have access to this server' }, { status: 403 });
+  }
 
   await dbConnect();
 
@@ -46,11 +53,18 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ guil
 export async function POST(req: NextRequest, { params }: { params: Promise<{ guildId: string }> }) {
   const session = await getServerSession(authOptions);
 
-  if (!session) {
+  if (!session?.user?.id) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   const { guildId } = await params;
+
+  // Check if user has access to this server
+  const hasAccess = await checkServerAccess(session.user.id, guildId);
+  if (!hasAccess) {
+    return NextResponse.json({ error: 'Forbidden - You do not have access to this server' }, { status: 403 });
+  }
+
   const body = await req.json();
 
   // Strip out forbidden fields that should not be saved
@@ -70,11 +84,18 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ gui
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ guildId: string }> }) {
   const session = await getServerSession(authOptions);
 
-  if (!session) {
+  if (!session?.user?.id) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   const { guildId } = await params;
+
+  // Check if user has access to this server
+  const hasAccess = await checkServerAccess(session.user.id, guildId);
+  if (!hasAccess) {
+    return NextResponse.json({ error: 'Forbidden - You do not have access to this server' }, { status: 403 });
+  }
+
   const body = await req.json();
 
   await dbConnect();

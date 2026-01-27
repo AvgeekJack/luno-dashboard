@@ -2,19 +2,26 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import process from 'node:process';
+import { checkServerAccess } from '@/lib/serverAccess';
 
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ guildId: string }> }) {
   const session = await getServerSession(authOptions);
-  if (!session || !session.accessToken) {
+  if (!session?.user?.id || !session.accessToken) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const { guildId } = await params;
+
+  // Check if user has access to this server
+  const hasAccess = await checkServerAccess(session.user.id, guildId);
+  if (!hasAccess) {
+    return NextResponse.json({ error: 'Forbidden - You do not have access to this server' }, { status: 403 });
   }
 
   const botToken = process.env.DISCORD_BOT_TOKEN;
   if (!botToken) {
     return NextResponse.json({ error: 'Bot token not configured' }, { status: 500 });
   }
-
-  const { guildId } = await params;
 
   try {
     const guildRes = await fetch(`https://discord.com/api/guilds/${guildId}?with_counts=true`, {

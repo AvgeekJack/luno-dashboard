@@ -1,10 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import { checkServerAccess } from '@/lib/serverAccess';
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ guildId: string }> }
 ) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   const { guildId } = await params;
+
+  // Check if user has access to this server
+  const hasAccess = await checkServerAccess(session.user.id, guildId);
+  if (!hasAccess) {
+    return NextResponse.json({ error: 'Forbidden - You do not have access to this server' }, { status: 403 });
+  }
 
   if (!process.env.DISCORD_BOT_TOKEN) {
     return NextResponse.json(

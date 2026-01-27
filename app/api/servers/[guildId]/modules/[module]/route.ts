@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import connectDB from '@/lib/mongoose';
 import ServerSettings from '@/lib/models/ServerSettings';
+import { checkServerAccess } from '@/lib/serverAccess';
 
 // Map new command names to existing MongoDB field names
 const COMMAND_ALIASES: Record<string, string> = {
@@ -20,11 +21,18 @@ export async function GET(
 ) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session?.user) {
+    if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { guildId, module } = await params;
+
+    // Check if user has access to this server
+    const hasAccess = await checkServerAccess(session.user.id, guildId);
+    if (!hasAccess) {
+      return NextResponse.json({ error: 'Forbidden - You do not have access to this server' }, { status: 403 });
+    }
+
     await connectDB();
 
     const settings = await ServerSettings.findOne({ guildId });
@@ -78,11 +86,18 @@ export async function PUT(
 ) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session?.user) {
+    if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { guildId, module } = await params;
+
+    // Check if user has access to this server
+    const hasAccess = await checkServerAccess(session.user.id, guildId);
+    if (!hasAccess) {
+      return NextResponse.json({ error: 'Forbidden - You do not have access to this server' }, { status: 403 });
+    }
+
     const body = await req.json();
     await connectDB();
 
