@@ -61,22 +61,32 @@ export default function ServerSettings() {
   const [showDebugInfo, setShowDebugInfo] = useState(false);
   const [showDeveloperTools, setShowDeveloperTools] = useState(false);
   const [bypassMaintenance, setBypassMaintenance] = useState(false);
+  const [premiumPurchaseEnabled, setPremiumPurchaseEnabled] = useState(true);
 
-  // Check maintenance mode
+  // Check maintenance mode and premium purchase status
   useEffect(() => {
-    const checkMaintenance = async () => {
+    const checkSettings = async () => {
       try {
-        const res = await fetch('/api/maintenance-status');
-        if (res.ok) {
-          const data = await res.json();
+        const [maintenanceRes, siteSettingsRes] = await Promise.all([
+          fetch('/api/maintenance-status'),
+          fetch('/api/site-settings')
+        ]);
+        
+        if (maintenanceRes.ok) {
+          const data = await maintenanceRes.json();
           setMaintenanceMode(data.maintenanceMode);
         }
+        
+        if (siteSettingsRes.ok) {
+          const siteData = await siteSettingsRes.json();
+          setPremiumPurchaseEnabled(siteData.premiumPurchaseEnabled ?? true);
+        }
       } catch (error) {
-        console.error('Failed to check maintenance status:', error);
+        console.error('Failed to check settings:', error);
       }
     };
     
-    checkMaintenance();
+    checkSettings();
   }, []);
 
   const handleBypass = () => {
@@ -456,7 +466,16 @@ export default function ServerSettings() {
             </div>
 
             {/* Premium Status Card */}
-            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow relative">
+              {!premiumPurchaseEnabled && !settings?.premium && (
+                <div className="absolute inset-0 backdrop-blur-sm bg-orange-500/20 rounded-2xl flex items-center justify-center z-10">
+                  <div className="bg-white/90 rounded-xl p-6 shadow-xl text-center">
+                    <div className="text-4xl mb-3">🚀</div>
+                    <h3 className="text-2xl font-bold text-orange-600 mb-1">Coming Soon</h3>
+                    <p className="text-sm text-slate-600">Premium subscriptions will be available soon!</p>
+                  </div>
+                </div>
+              )}
               <div className="flex items-start justify-between mb-4">
                 <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center">
                   <img src="/premium-icon.svg" alt="Premium" className="w-7 h-7 text-white" />
@@ -473,7 +492,7 @@ export default function ServerSettings() {
                   </Link>
                 ) : (
                   <Link href={`/servers/${guildId}/premium`}>
-                    <button className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition text-sm flex items-center gap-2">
+                    <button disabled={!premiumPurchaseEnabled} className="px-4 py-2 bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition text-sm flex items-center gap-2">
                       <img src="/premium-icon.svg" alt="" className="w-4 h-4" />
                       Enroll Now
                     </button>

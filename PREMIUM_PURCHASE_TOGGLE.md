@@ -6,9 +6,11 @@ This feature allows developers to disable premium subscriptions site-wide while 
 
 When `premiumPurchaseEnabled` is set to `false` in the site settings:
 - Users can still view the premium page and see premium features
-- A frosted orange overlay appears over the pricing card
-- A "Coming Soon" message is displayed
-- The subscribe button is disabled
+- A frosted orange overlay appears over the pricing card on the premium page
+- A frosted orange overlay appears over the Premium Status card on the server dashboard
+- A "Coming Soon" message is displayed on both overlays
+- The subscribe button on the premium page is disabled
+- The "Enroll Now" button on the server dashboard is disabled
 - Premium users can still manage their existing subscriptions
 
 ## Implementation
@@ -29,14 +31,19 @@ Settings are stored in the `SiteSettings` MongoDB collection with the key `premi
 
 ### Frontend
 
-The premium page (`app/servers/[guildId]/premium/page.tsx`) fetches both:
-1. Server-specific settings (premium status, server name)
-2. Site-wide settings (premium purchase enabled)
+**Premium Page** (`app/servers/[guildId]/premium/page.tsx`):
+- Fetches both server-specific settings and site-wide settings
+- When `premiumPurchaseEnabled` is `false`:
+  - Frosted orange overlay with `backdrop-blur-sm bg-orange-500/20`
+  - White card with rocket emoji (🚀), "Coming Soon" heading, and description
+  - Subscribe button disabled via `disabled={checkoutLoading || !premiumPurchaseEnabled}`
 
-When `premiumPurchaseEnabled` is `false`:
-- Frosted orange overlay with `backdrop-blur-sm bg-orange-500/20`
-- White card with rocket emoji (🚀), "Coming Soon" heading, and description
-- Subscribe button disabled via `disabled={checkoutLoading || !premiumPurchaseEnabled}`
+**Server Dashboard** (`app/servers/[guildId]/page.tsx`):
+- Fetches both maintenance mode and premium purchase enabled status
+- When `premiumPurchaseEnabled` is `false` and server is not enrolled:
+  - Same frosted orange overlay appears on Premium Status card
+  - "Enroll Now" button disabled via `disabled={!premiumPurchaseEnabled}`
+  - Premium users still see "Manage" button and can access their subscription
 
 ## Usage
 
@@ -56,7 +63,8 @@ When `premiumPurchaseEnabled` is `false`:
 
 - `/app/api/site-settings/route.ts` - Public endpoint for site settings
 - `/lib/siteSettings.ts` - Utility functions for fetching settings
-- `/app/servers/[guildId]/premium/page.tsx` - Premium page with toggle logic
+- `/app/servers/[guildId]/premium/page.tsx` - Premium page with overlay on pricing card
+- `/app/servers/[guildId]/page.tsx` - Server dashboard with overlay on Premium Status card
 - `/lib/models/SiteSettings.ts` - MongoDB schema for site settings
 
 ## Visual Design
