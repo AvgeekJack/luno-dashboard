@@ -36,11 +36,6 @@ export default function ServersPage() {
         },
       })
         .then(res => {
-          if (res.status === 401) {
-            console.error('Unauthorized - re-authenticating');
-            signIn('discord');
-            return [];
-          }
           if (!res.ok) {
             console.error('Failed to fetch servers:', res.status);
             return [];
