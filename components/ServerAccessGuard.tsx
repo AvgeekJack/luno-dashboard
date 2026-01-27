@@ -41,6 +41,7 @@ export default function ServerAccessGuard({ guildId, children }: ServerAccessGua
     // If user is developer and PIN not verified, show PIN screen first
     if (session.user?.id === DEVELOPER_USER_ID && !pinVerified) {
       setShowDeveloperPin(true);
+      setHasAccess(null); // Keep null to show page loading
       return;
     }
 
@@ -152,15 +153,10 @@ export default function ServerAccessGuard({ guildId, children }: ServerAccessGua
     );
   }
 
+  // Don't show separate loading screen - let the page handle its own loading state
+  // Just silently check permissions in the background
   if (status === 'loading' || hasAccess === null) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500 mb-4"></div>
-          <p className="text-white text-lg">Checking access permissions...</p>
-        </div>
-      </div>
-    );
+    return <>{children}</>;
   }
 
   if (hasAccess === false) {
