@@ -1,0 +1,58 @@
+Security Breach Report Form
+============================
+
+Date of Report: ______________________
+Reported By: _________________________
+Role/Position: _______________________
+Contact Information: __________________
+
+Incident Details
+----------------
+Date/Time of Breach: __________________
+Location/System Affected: ______________
+Type of Breach (e.g., data leak, unauthorized access, malware): ___________________________
+
+Description of Incident:
+------------------------------------------------------------
+
+
+
+How was the breach detected?
+------------------------------------------------------------
+
+
+
+Immediate Actions Taken:
+------------------------------------------------------------
+
+
+
+Systems/Services Impacted:
+------------------------------------------------------------
+
+
+
+Individuals/Teams Notified:
+------------------------------------------------------------
+
+
+
+Additional Comments/Notes:
+------------------------------------------------------------
+
+
+
+---
+
+For Internal Use Only
+---------------------
+Investigation Lead: ___________________
+Follow-up Actions Required: ___________________________________________
+Resolution Date: ______________________
+Final Outcome/Notes:
+------------------------------------------------------------
+
+
+
+Signature: ____________________________
+Date: ________________________________
