@@ -140,7 +140,12 @@ export default function ServerSettings() {
       .then(res => res.json())
       .then((data) => {
         const match = Array.isArray(data) ? data.find((g: any) => String(g.id) === String(guildId)) : null;
-        setServerName(match?.name ?? null);
+        const name = match?.name ?? null;
+        setServerName(name);
+        // Update document title with server name
+        if (name) {
+          document.title = `Dashboard - ${name}`;
+        }
       })
       .catch((err) => {
         console.error(err);
