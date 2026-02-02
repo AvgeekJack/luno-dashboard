@@ -352,26 +352,26 @@ ServerSettingsSchema.pre('save', async function(next) {
       }
       
       // Apply default module states
-      if (defaults.modules) {
-        if (this.modules.moderation.enabled === undefined) {
+      if (defaults.modules && this.modules) {
+        if (this.modules.moderation && this.modules.moderation.enabled === undefined) {
           this.modules.moderation.enabled = defaults.modules.moderation.enabled;
         }
-        if (this.modules.roleManagement.enabled === undefined) {
+        if (this.modules.roleManagement && this.modules.roleManagement.enabled === undefined) {
           this.modules.roleManagement.enabled = defaults.modules.roleManagement.enabled;
         }
-        if (this.modules.memberManagement.enabled === undefined) {
+        if (this.modules.memberManagement && this.modules.memberManagement.enabled === undefined) {
           this.modules.memberManagement.enabled = defaults.modules.memberManagement.enabled;
         }
-        if (this.modules.announcements.enabled === undefined) {
+        if (this.modules.announcements && this.modules.announcements.enabled === undefined) {
           this.modules.announcements.enabled = defaults.modules.announcements.enabled;
         }
-        if (this.modules.fun.enabled === undefined) {
+        if (this.modules.fun && this.modules.fun.enabled === undefined) {
           this.modules.fun.enabled = defaults.modules.fun.enabled;
         }
-        if (this.modules.utilities.enabled === undefined) {
+        if (this.modules.utilities && this.modules.utilities.enabled === undefined) {
           this.modules.utilities.enabled = defaults.modules.utilities.enabled;
         }
-        if (this.modules.notifications.enabled === undefined) {
+        if (this.modules.notifications && this.modules.notifications.enabled === undefined) {
           this.modules.notifications.enabled = defaults.modules.notifications.enabled;
         }
       }
