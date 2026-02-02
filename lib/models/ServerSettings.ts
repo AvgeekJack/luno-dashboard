@@ -335,7 +335,7 @@ const ServerSettingsSchema = new mongoose.Schema({
 });
 
 // Pre-save hook to apply default settings from SiteSettings for new servers
-ServerSettingsSchema.pre('save', async function(next) {
+ServerSettingsSchema.pre('save', async function() {
   // Only apply defaults when creating a new document
   if (this.isNew) {
     try {
@@ -380,7 +380,6 @@ ServerSettingsSchema.pre('save', async function(next) {
       // Continue with schema defaults if fetching fails
     }
   }
-  next();
 });
 
 export default mongoose.models.ServerSettings || mongoose.model('ServerSettings', ServerSettingsSchema);
