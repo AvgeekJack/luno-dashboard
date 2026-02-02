@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { getServerDefaults } from '@/lib/serverDefaults';
 
 const ServerSettingsSchema = new mongoose.Schema({
   guildId: { type: String, required: true, unique: true },
@@ -331,6 +332,55 @@ const ServerSettingsSchema = new mongoose.Schema({
   },
 }, {
   timestamps: true,
+});
+
+// Pre-save hook to apply default settings from SiteSettings for new servers
+ServerSettingsSchema.pre('save', async function(next) {
+  // Only apply defaults when creating a new document
+  if (this.isNew) {
+    try {
+      const defaults = await getServerDefaults();
+      
+      // Apply default prefix
+      if (!this.prefix || this.prefix === '!') {
+        this.prefix = defaults.prefix;
+      }
+      
+      // Apply default premium status
+      if (this.premium === undefined) {
+        this.premium = defaults.premium;
+      }
+      
+      // Apply default module states
+      if (defaults.modules) {
+        if (this.modules.moderation.enabled === undefined) {
+          this.modules.moderation.enabled = defaults.modules.moderation.enabled;
+        }
+        if (this.modules.roleManagement.enabled === undefined) {
+          this.modules.roleManagement.enabled = defaults.modules.roleManagement.enabled;
+        }
+        if (this.modules.memberManagement.enabled === undefined) {
+          this.modules.memberManagement.enabled = defaults.modules.memberManagement.enabled;
+        }
+        if (this.modules.announcements.enabled === undefined) {
+          this.modules.announcements.enabled = defaults.modules.announcements.enabled;
+        }
+        if (this.modules.fun.enabled === undefined) {
+          this.modules.fun.enabled = defaults.modules.fun.enabled;
+        }
+        if (this.modules.utilities.enabled === undefined) {
+          this.modules.utilities.enabled = defaults.modules.utilities.enabled;
+        }
+        if (this.modules.notifications.enabled === undefined) {
+          this.modules.notifications.enabled = defaults.modules.notifications.enabled;
+        }
+      }
+    } catch (error) {
+      console.error('Error applying server defaults:', error);
+      // Continue with schema defaults if fetching fails
+    }
+  }
+  next();
 });
 
 export default mongoose.models.ServerSettings || mongoose.model('ServerSettings', ServerSettingsSchema);

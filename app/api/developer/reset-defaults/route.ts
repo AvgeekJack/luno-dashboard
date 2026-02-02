@@ -44,13 +44,13 @@ export async function GET(req: NextRequest) {
         prefix: defaultPrefix?.settingValue ?? '!',
         premium: defaultPremium?.settingValue ?? false,
         modules: {
-          moderation: defaultModeration?.settingValue ?? true,
-          roleManagement: defaultRoleManagement?.settingValue ?? false,
-          memberManagement: defaultMemberManagement?.settingValue ?? false,
-          announcements: defaultAnnouncements?.settingValue ?? false,
-          fun: defaultFun?.settingValue ?? false,
-          utilities: defaultUtilities?.settingValue ?? false,
-          notifications: defaultNotifications?.settingValue ?? false,
+          moderation: { enabled: defaultModeration?.settingValue ?? true },
+          roleManagement: { enabled: defaultRoleManagement?.settingValue ?? false },
+          memberManagement: { enabled: defaultMemberManagement?.settingValue ?? false },
+          announcements: { enabled: defaultAnnouncements?.settingValue ?? false },
+          fun: { enabled: defaultFun?.settingValue ?? false },
+          utilities: { enabled: defaultUtilities?.settingValue ?? false },
+          notifications: { enabled: defaultNotifications?.settingValue ?? false },
         }
       }
     });
@@ -98,13 +98,13 @@ export async function POST(req: NextRequest) {
 
     if (defaults.modules) {
       const moduleUpdates = [
-        { key: 'defaultModuleModeration', value: defaults.modules.moderation, desc: 'Default state for Moderation module' },
-        { key: 'defaultModuleRoleManagement', value: defaults.modules.roleManagement, desc: 'Default state for Role Management module' },
-        { key: 'defaultModuleMemberManagement', value: defaults.modules.memberManagement, desc: 'Default state for Member Management module' },
-        { key: 'defaultModuleAnnouncements', value: defaults.modules.announcements, desc: 'Default state for Announcements module' },
-        { key: 'defaultModuleFun', value: defaults.modules.fun, desc: 'Default state for Fun module' },
-        { key: 'defaultModuleUtilities', value: defaults.modules.utilities, desc: 'Default state for Utilities module' },
-        { key: 'defaultModuleNotifications', value: defaults.modules.notifications, desc: 'Default state for Notifications module' },
+        { key: 'defaultModuleModeration', value: defaults.modules.moderation?.enabled, desc: 'Default state for Moderation module' },
+        { key: 'defaultModuleRoleManagement', value: defaults.modules.roleManagement?.enabled, desc: 'Default state for Role Management module' },
+        { key: 'defaultModuleMemberManagement', value: defaults.modules.memberManagement?.enabled, desc: 'Default state for Member Management module' },
+        { key: 'defaultModuleAnnouncements', value: defaults.modules.announcements?.enabled, desc: 'Default state for Announcements module' },
+        { key: 'defaultModuleFun', value: defaults.modules.fun?.enabled, desc: 'Default state for Fun module' },
+        { key: 'defaultModuleUtilities', value: defaults.modules.utilities?.enabled, desc: 'Default state for Utilities module' },
+        { key: 'defaultModuleNotifications', value: defaults.modules.notifications?.enabled, desc: 'Default state for Notifications module' },
       ];
 
       for (const update of moduleUpdates) {

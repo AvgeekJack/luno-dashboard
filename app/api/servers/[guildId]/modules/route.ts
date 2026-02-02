@@ -4,6 +4,7 @@ import { authOptions } from '@/lib/auth';
 import connectDB from '@/lib/mongoose';
 import ServerSettings from '@/lib/models/ServerSettings';
 import { checkServerAccess } from '@/lib/serverAccess';
+import { getServerDefaults } from '@/lib/serverDefaults';
 
 const MODULE_LIST = [
   'moderation', 'roleManagement',
@@ -34,7 +35,21 @@ export async function GET(
 
     let settings = await ServerSettings.findOne({ guildId });
     if (!settings) {
-      settings = await ServerSettings.create({ guildId });
+      const defaults = await getServerDefaults();
+      settings = await ServerSettings.create({ 
+        guildId,
+        prefix: defaults.prefix,
+        premium: defaults.premium,
+        modules: {
+          moderation: { enabled: defaults.modules.moderation.enabled },
+          roleManagement: { enabled: defaults.modules.roleManagement.enabled },
+          memberManagement: { enabled: defaults.modules.memberManagement.enabled },
+          announcements: { enabled: defaults.modules.announcements.enabled },
+          fun: { enabled: defaults.modules.fun.enabled },
+          utilities: { enabled: defaults.modules.utilities.enabled },
+          notifications: { enabled: defaults.modules.notifications.enabled },
+        }
+      });
     }
 
     const modules: Record<string, boolean> = {};
