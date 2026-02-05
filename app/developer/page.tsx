@@ -349,7 +349,7 @@ export default function DeveloperPage() {
       const response = await fetch('/api/developer/ban-user', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: banUserId, reason: banReason }),
+        body: JSON.stringify({ userId: banUserId, banned: true, reason: banReason }),
       });
 
       const data = await response.json();
