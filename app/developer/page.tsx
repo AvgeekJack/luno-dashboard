@@ -35,6 +35,10 @@ export default function DeveloperPage() {
   const [guildIdToRemove, setGuildIdToRemove] = useState('');
   const [removeStatus, setRemoveStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [removeMessage, setRemoveMessage] = useState('');
+  const [serverProfile, setServerProfile] = useState<any>(null);
+  const [serverProfileLoading, setServerProfileLoading] = useState(false);
+  const [serverActionStatus, setServerActionStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [serverActionMessage, setServerActionMessage] = useState('');
   
   const [premiumGuildId, setPremiumGuildId] = useState('');
   const [premiumStatus, setPremiumStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -262,6 +266,98 @@ export default function DeveloperPage() {
     setTimeout(() => {
       setRemoveStatus('idle');
       setRemoveMessage('');
+    }, 3000);
+  };
+
+  const handleViewServer = async () => {
+    if (!guildIdToRemove.trim()) {
+      setServerActionMessage('Please enter a Guild ID');
+      setServerActionStatus('error');
+      return;
+    }
+
+    setServerProfileLoading(true);
+    setServerProfile(null);
+    setServerActionStatus('idle');
+    setServerActionMessage('');
+
+    try {
+      const response = await fetch(`/api/developer/server-profile?guildId=${guildIdToRemove}`);
+      const data = await response.json();
+      
+      if (response.ok) {
+        setServerProfile(data);
+      } else {
+        setServerActionStatus('error');
+        setServerActionMessage(data.error || 'Failed to fetch server profile');
+      }
+    } catch (error) {
+      setServerActionStatus('error');
+      setServerActionMessage('Network error occurred');
+    } finally {
+      setServerProfileLoading(false);
+    }
+  };
+
+  const handleServerAction = async (action: string) => {
+    if (!serverProfile?.guildId) return;
+
+    setServerActionStatus('loading');
+    setServerActionMessage('');
+
+    try {
+      let endpoint = '';
+      let method = 'POST';
+      let body: any = { guildId: serverProfile.guildId };
+
+      switch (action) {
+        case 'grant-premium':
+          endpoint = '/api/developer/premium';
+          break;
+        case 'remove-premium':
+          endpoint = '/api/developer/premium';
+          method = 'DELETE';
+          break;
+        case 'remove-bot':
+          endpoint = '/api/developer/remove-bot';
+          break;
+        case 'erase-data':
+          endpoint = '/api/developer/erase-server-data';
+          method = 'DELETE';
+          break;
+        case 'reset-settings':
+          endpoint = '/api/developer/reset-defaults';
+          body = { ...body, guildId: serverProfile.guildId };
+          break;
+        default:
+          return;
+      }
+
+      const response = await fetch(endpoint, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+
+      const data = await response.json();
+      
+      if (response.ok) {
+        setServerActionStatus('success');
+        setServerActionMessage(data.message || 'Action completed successfully!');
+        // Refresh server profile
+        await handleViewServer();
+      } else {
+        setServerActionStatus('error');
+        setServerActionMessage(data.error || 'Action failed');
+      }
+    } catch (error) {
+      setServerActionStatus('error');
+      setServerActionMessage('Network error occurred');
+    }
+
+    setTimeout(() => {
+      setServerActionStatus('idle');
+      setServerActionMessage('');
     }, 3000);
   };
 
@@ -720,7 +816,7 @@ export default function DeveloperPage() {
                   <Server className="w-5 h-5 text-orange-600" />
                   Bot Server Management
                 </h2>
-                <p className="text-gray-600 text-sm">Remove the bot from a specific server by entering the Guild ID.</p>
+                <p className="text-gray-600 text-sm">View and manage bot servers with comprehensive admin actions.</p>
               </div>
 
               <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
@@ -728,40 +824,147 @@ export default function DeveloperPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Enter Guild ID (e.g., 1234567890123456678)
                   </label>
-                  <input
-                    type="text"
-                    value={guildIdToRemove}
-                    onChange={(e) => setGuildIdToRemove(e.target.value)}
-                    placeholder="1234567890123456678"
-                    className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-gray-900"
-                  />
-                </div>
-
-                <button
-                  onClick={handleRemoveBot}
-                  disabled={removeStatus === 'loading'}
-                  className="w-full sm:w-auto px-6 py-2.5 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {removeStatus === 'loading' ? 'Removing...' : 'Remove Bot'}
-                </button>
-
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
-                  <div className="flex items-start gap-3">
-                    <AlertTriangle className="w-5 h-5 text-blue-600 mt-0.5" />
-                    <div>
-                      <p className="font-semibold text-gray-900 mb-1">Note:</p>
-                      <p className="text-sm text-gray-700">The bot will leave the server immediately. This action cannot be undone.</p>
-                    </div>
+                  <div className="flex gap-3">
+                    <input
+                      type="text"
+                      value={guildIdToRemove}
+                      onChange={(e) => setGuildIdToRemove(e.target.value)}
+                      placeholder="1234567890123456678"
+                      className="flex-1 px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-gray-900"
+                    />
+                    <button
+                      onClick={handleViewServer}
+                      disabled={serverProfileLoading}
+                      className="px-6 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {serverProfileLoading ? 'Loading...' : 'View Server'}
+                    </button>
                   </div>
                 </div>
 
-                {removeMessage && (
-                  <div className={`mt-4 p-4 rounded-lg border ${
-                    removeStatus === 'success'
+                {serverActionMessage && (
+                  <div className={`mb-4 p-4 rounded-lg border ${
+                    serverActionStatus === 'success'
                       ? 'bg-orange-50 border-orange-200 text-orange-900'
                       : 'bg-red-50 border-red-200 text-red-900'
                   }`}>
-                    {removeMessage}
+                    {serverActionMessage}
+                  </div>
+                )}
+
+                {serverProfile && (
+                  <div className="space-y-6">
+                    {/* Server Header */}
+                    <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                      {serverProfile.icon && (
+                        <img
+                          src={serverProfile.icon}
+                          alt={serverProfile.name}
+                          className="w-16 h-16 rounded-full"
+                        />
+                      )}
+                      <div className="flex-1">
+                        <h3 className="text-xl font-bold text-gray-900">{serverProfile.name}</h3>
+                        <p className="text-sm text-gray-500 font-mono">{serverProfile.guildId}</p>
+                        <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
+                          <span>👥 {serverProfile.memberCount || 'N/A'} members</span>
+                          {serverProfile.isPremium && (
+                            <span className="px-2 py-0.5 bg-orange-100 text-orange-700 text-xs font-medium rounded">Premium</span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Server Info Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="p-4 bg-gray-50 rounded-lg">
+                        <p className="text-sm font-medium text-gray-500 mb-1">Owner</p>
+                        <p className="text-gray-900 font-mono text-sm">{serverProfile.ownerId || 'Unknown'}</p>
+                      </div>
+                      <div className="p-4 bg-gray-50 rounded-lg">
+                        <p className="text-sm font-medium text-gray-500 mb-1">Command Prefix</p>
+                        <p className="text-gray-900 font-semibold">{serverProfile.prefix || '!'}</p>
+                      </div>
+                      <div className="p-4 bg-gray-50 rounded-lg">
+                        <p className="text-sm font-medium text-gray-500 mb-1">Premium Status</p>
+                        <p className="text-gray-900 font-semibold">{serverProfile.isPremium ? 'Active' : 'Inactive'}</p>
+                      </div>
+                      <div className="p-4 bg-gray-50 rounded-lg">
+                        <p className="text-sm font-medium text-gray-500 mb-1">Settings Configured</p>
+                        <p className="text-gray-900 font-semibold">{serverProfile.hasSettings ? 'Yes' : 'No'}</p>
+                      </div>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-3">Server Actions</h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {!serverProfile.isPremium ? (
+                          <button
+                            onClick={() => handleServerAction('grant-premium')}
+                            disabled={serverActionStatus === 'loading'}
+                            className="flex items-center justify-center gap-2 px-4 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50"
+                          >
+                            <Star className="w-4 h-4" />
+                            Grant Premium
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => handleServerAction('remove-premium')}
+                            disabled={serverActionStatus === 'loading'}
+                            className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white hover:bg-gray-50 border border-gray-300 text-gray-700 font-medium rounded-lg transition-colors disabled:opacity-50"
+                          >
+                            <X className="w-4 h-4" />
+                            Remove Premium
+                          </button>
+                        )}
+                        
+                        <button
+                          onClick={() => handleServerAction('reset-settings')}
+                          disabled={serverActionStatus === 'loading'}
+                          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white hover:bg-gray-50 border border-gray-300 text-gray-700 font-medium rounded-lg transition-colors disabled:opacity-50"
+                        >
+                          <Settings className="w-4 h-4" />
+                          Reset to Defaults
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            if (confirm('Remove bot from this server? This cannot be undone.')) {
+                              handleServerAction('remove-bot');
+                            }
+                          }}
+                          disabled={serverActionStatus === 'loading'}
+                          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50"
+                        >
+                          <Server className="w-4 h-4" />
+                          Remove Bot
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            if (confirm('Erase ALL MongoDB data for this server? This is IRREVERSIBLE!')) {
+                              handleServerAction('erase-data');
+                            }
+                          }}
+                          disabled={serverActionStatus === 'loading'}
+                          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-red-700 hover:bg-red-800 text-white font-medium rounded-lg transition-colors disabled:opacity-50"
+                        >
+                          <AlertTriangle className="w-4 h-4" />
+                          Erase All Data
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                      <div className="flex items-start gap-3">
+                        <Shield className="w-5 h-5 text-orange-600 mt-0.5" />
+                        <div>
+                          <p className="font-semibold text-gray-900 mb-1">Warning:</p>
+                          <p className="text-sm text-gray-700">All actions are immediate and most cannot be undone. Use with caution.</p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
