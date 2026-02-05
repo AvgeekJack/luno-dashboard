@@ -932,8 +932,20 @@ export default function DeveloperPage() {
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
                             <div className="flex items-center gap-3 mb-2">
-                              <p className="font-mono font-semibold text-gray-900">{user.userId}</p>
-                              <span className="px-2 py-0.5 bg-red-100 text-red-700 text-xs font-medium rounded">Banned</span>
+                              {user.avatar && (
+                                <img
+                                  src={user.avatar}
+                                  alt={user.username || 'User'}
+                                  className="w-10 h-10 rounded-full"
+                                />
+                              )}
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2">
+                                  <p className="font-semibold text-gray-900">{user.username || 'Unknown User'}</p>
+                                  <span className="px-2 py-0.5 bg-red-100 text-red-700 text-xs font-medium rounded">Banned</span>
+                                </div>
+                                <p className="text-xs text-gray-500 font-mono">{user.userId}</p>
+                              </div>
                             </div>
                             
                             {editingBanId === user.userId ? (
@@ -941,7 +953,7 @@ export default function DeveloperPage() {
                                 <textarea
                                   value={editReason}
                                   onChange={(e) => setEditReason(e.target.value)}
-                                  className="w-full px-3 py-2 text-sm bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all resize-none"
+                                  className="w-full px-3 py-2 text-sm bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all resize-none text-gray-900"
                                   rows={2}
                                 />
                                 <div className="flex gap-2 mt-2">
