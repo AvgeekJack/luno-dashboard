@@ -47,6 +47,10 @@ export default function DeveloperPage() {
       notifications: { enabled: false },
     }
   });
+  
+  const [maintenanceMode, setMaintenanceMode] = useState(false);
+  const [maintenanceStatus, setMaintenanceStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [maintenanceMessage, setMaintenanceMessage] = useState('');
 
   // Check if user is developer
   const isDeveloper = session?.user?.id === DEVELOPER_USER_ID;
@@ -86,6 +90,7 @@ export default function DeveloperPage() {
       setIsVerified(true);
       setPin('');
       fetchServerDefaults();
+      fetchMaintenanceStatus();
     } catch (error) {
       console.error('PIN verification error:', error);
       setVerifyError('Verification failed');
@@ -106,10 +111,22 @@ export default function DeveloperPage() {
     }
   };
 
+  const fetchMaintenanceStatus = async () => {
+    try {
+      const response = await fetch('/api/site-settings');
+      if (response.ok) {
+        const data = await response.json();
+        setMaintenanceMode(data.maintenanceMode ?? false);
+      }
+    } catch (error) {
+      console.error('Failed to fetch maintenance status:', error);
+    }
+  };
+
   if (status === 'loading') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-orange-900 to-gray-900">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-orange-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-600"></div>
       </div>
     );
   }
@@ -121,12 +138,12 @@ export default function DeveloperPage() {
   // PIN verification screen
   if (!isVerified) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-orange-900 to-gray-900">
-        <div className="bg-gray-800/50 backdrop-blur-sm p-8 rounded-lg shadow-xl max-w-md w-full border border-orange-500/30">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-orange-50">
+        <div className="bg-white p-8 rounded-lg shadow-xl max-w-md w-full border-2 border-orange-500">
           <div className="text-center mb-6">
             <div className="text-orange-500 text-4xl mb-4">🔐</div>
-            <h1 className="text-2xl font-bold text-white mb-2">Developer Access</h1>
-            <p className="text-gray-400">Enter PIN to continue</p>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">Developer Access</h1>
+            <p className="text-gray-600">Enter PIN to continue</p>
           </div>
           
           <div className="space-y-4">
@@ -137,14 +154,14 @@ export default function DeveloperPage() {
                 onChange={(e) => setPin(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleVerifyPin()}
                 placeholder="Enter PIN"
-                className="w-full px-4 py-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-orange-500 text-center text-2xl tracking-widest"
+                className="w-full px-4 py-3 bg-white text-gray-900 border-2 border-orange-300 rounded-lg focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500 text-center text-2xl tracking-widest"
                 maxLength={10}
                 autoFocus
               />
             </div>
 
             {verifyError && (
-              <div className="text-orange-500 text-sm text-center">
+              <div className="text-orange-600 text-sm text-center font-medium">
                 {verifyError}
               </div>
             )}
@@ -152,7 +169,7 @@ export default function DeveloperPage() {
             <button
               onClick={handleVerifyPin}
               disabled={isVerifying}
-              className="w-full px-4 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 disabled:bg-gray-600 disabled:cursor-not-allowed font-semibold"
+              className="w-full px-4 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 disabled:bg-gray-300 disabled:cursor-not-allowed font-semibold shadow-md"
             >
               {isVerifying ? 'Verifying...' : 'Verify PIN'}
             </button>
@@ -173,32 +190,99 @@ export default function DeveloperPage() {
 
   // Main developer panel
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-orange-900/20 to-gray-900 text-white p-8">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-50 p-8">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-3xl font-bold mb-2">🔧 Developer Control Panel</h1>
-              <p className="text-gray-400">Master controls for the entire site</p>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">🔧 Developer Control Panel</h1>
+              <p className="text-gray-600">Master controls for the entire site</p>
             </div>
             <button
               onClick={() => router.push('/')}
-              className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg"
+              className="px-4 py-2 bg-white border-2 border-orange-500 hover:bg-orange-50 text-orange-600 rounded-lg transition-colors shadow-md"
             >
               ← Back to Dashboard
             </button>
           </div>
-          <div className="flex items-center gap-2 text-sm text-gray-400">
+          <div className="flex items-center gap-2 text-sm text-gray-600">
             <span className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></span>
-            <span>Authenticated as Developer</span>
+            <span className="font-medium">Authenticated as Developer</span>
             <span className="ml-4">User ID: {session?.user?.id}</span>
           </div>
         </div>
 
         <div className="space-y-6">
+            {/* Maintenance Mode Toggle */}
+            <div className="bg-white border-2 border-orange-500 rounded-lg p-6 shadow-lg">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h2 className="text-xl font-bold text-orange-600 mb-2">🛠️ Maintenance Mode</h2>
+                  <p className="text-gray-600">
+                    Enable to prevent all users (except you) from accessing the site. Users will see a maintenance screen.
+                  </p>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={maintenanceMode}
+                    onChange={async (e) => {
+                      const newValue = e.target.checked;
+                      setMaintenanceStatus('loading');
+                      setMaintenanceMessage('');
+                      
+                      try {
+                        const response = await fetch('/api/site-settings', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ maintenanceMode: newValue }),
+                        });
+                        
+                        if (response.ok) {
+                          setMaintenanceMode(newValue);
+                          setMaintenanceStatus('success');
+                          setMaintenanceMessage(`Maintenance mode ${newValue ? 'enabled' : 'disabled'} successfully`);
+                          setTimeout(() => {
+                            setMaintenanceStatus('idle');
+                            setMaintenanceMessage('');
+                          }, 3000);
+                        } else {
+                          setMaintenanceStatus('error');
+                          setMaintenanceMessage('Failed to update maintenance mode');
+                        }
+                      } catch (error) {
+                        console.error('Maintenance mode error:', error);
+                        setMaintenanceStatus('error');
+                        setMaintenanceMessage('Failed to update maintenance mode');
+                      }
+                    }}
+                    disabled={maintenanceStatus === 'loading'}
+                    className="sr-only peer"
+                  />
+                  <div className="w-14 h-7 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-orange-600 shadow-inner"></div>
+                </label>
+              </div>
+              
+              {maintenanceMessage && (
+                <div className={`mt-4 p-3 rounded-lg ${ 
+                  maintenanceStatus === 'success' 
+                    ? 'bg-orange-50 border-2 border-orange-500 text-orange-700' 
+                    : 'bg-orange-50 border-2 border-orange-500 text-orange-700'
+                }`}>
+                  {maintenanceMessage}
+                </div>
+              )}
+              
+              <div className="mt-4 p-4 bg-orange-50 border border-orange-200 rounded-lg">
+                <p className="text-sm text-gray-700">
+                  <span className="font-semibold text-orange-600">⚠️ Note:</span> When enabled, only you (developer) can bypass the maintenance screen using your PIN.
+                </p>
+              </div>
+            </div>
+
             {/* Bot Server Management */}
-            <div className="bg-orange-900/20 border border-orange-800 rounded-lg p-6">
+            <div className="bg-white border-2 border-orange-500 rounded-lg p-6 shadow-lg">
               <h2 className="text-xl font-bold text-orange-400 mb-4">🤖 Bot Server Management</h2>
               <p className="text-gray-400 mb-4">
                 Remove the bot from a specific server by entering the Guild ID.
@@ -210,7 +294,7 @@ export default function DeveloperPage() {
                     value={guildIdToRemove}
                     onChange={(e) => setGuildIdToRemove(e.target.value)}
                     placeholder="Enter Guild ID (e.g., 123456789012345678)"
-                    className="flex-1 px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-orange-500"
+                    className="flex-1 px-4 py-2 bg-white text-gray-900 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500"
                     disabled={removeStatus === 'loading'}
                   />
                   <button
@@ -284,9 +368,9 @@ export default function DeveloperPage() {
             </div>
 
             {/* Premium Management */}
-            <div className="bg-orange-900/20 border border-orange-800 rounded-lg p-6">
-              <h2 className="text-xl font-bold text-orange-400 mb-4">⭐ Premium Management</h2>
-              <p className="text-gray-400 mb-4">
+            <div className="bg-white border-2 border-orange-500 rounded-lg p-6 shadow-lg">
+              <h2 className="text-xl font-bold text-orange-600 mb-4">⭐ Premium Management</h2>
+              <p className="text-gray-600 mb-4">
                 Grant or revoke premium access for a server by entering the Guild ID.
               </p>
               <div className="space-y-4">
@@ -296,7 +380,7 @@ export default function DeveloperPage() {
                     value={premiumGuildId}
                     onChange={(e) => setPremiumGuildId(e.target.value)}
                     placeholder="Enter Guild ID"
-                    className="flex-1 px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-orange-500"
+                    className="flex-1 px-4 py-2 bg-white text-gray-900 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500"
                     disabled={premiumStatus === 'loading'}
                   />
                   <button
@@ -384,7 +468,7 @@ export default function DeveloperPage() {
                       }
                     }}
                     disabled={premiumStatus === 'loading' || !premiumGuildId.trim()}
-                    className="px-6 py-2 bg-gray-600 hover:bg-gray-700 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg font-semibold transition-colors"
+                    className="px-6 py-2 bg-gray-500 hover:bg-gray-600 text-white disabled:bg-gray-300 disabled:cursor-not-allowed rounded-lg font-semibold transition-colors shadow-md"
                   >
                     {premiumStatus === 'loading' ? 'Removing...' : 'Remove Premium'}
                   </button>
@@ -407,9 +491,9 @@ export default function DeveloperPage() {
             </div>
 
             {/* User Ban Management */}
-            <div className="bg-orange-900/20 border border-orange-800 rounded-lg p-6">
-              <h2 className="text-xl font-bold text-orange-400 mb-4">🚫 User Ban Management</h2>
-              <p className="text-gray-400 mb-4">
+            <div className="bg-white border-2 border-orange-500 rounded-lg p-6 shadow-lg">
+              <h2 className="text-xl font-bold text-orange-600 mb-4">🚫 User Ban Management</h2>
+              <p className="text-gray-600 mb-4">
                 Ban or unban users from accessing the website. Banned users can only access the home page.
               </p>
               <div className="space-y-4">
@@ -419,14 +503,14 @@ export default function DeveloperPage() {
                     value={banUserId}
                     onChange={(e) => setBanUserId(e.target.value)}
                     placeholder="Enter User ID"
-                    className="w-full px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-orange-500"
+                    className="w-full px-4 py-2 bg-white text-gray-900 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500"
                     disabled={banStatus === 'loading'}
                   />
                   <textarea
                     value={banReason}
                     onChange={(e) => setBanReason(e.target.value)}
                     placeholder="Ban reason (optional but recommended)"
-                    className="w-full px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-orange-500 h-24 resize-none"
+                    className="w-full px-4 py-2 bg-white text-gray-900 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500 h-24 resize-none"
                     disabled={banStatus === 'loading'}
                   />
                   <div className="flex gap-4">
@@ -546,9 +630,9 @@ export default function DeveloperPage() {
             </div>
 
             {/* User Account View */}
-            <div className="bg-orange-900/20 border border-orange-800 rounded-lg p-6">
-              <h2 className="text-xl font-bold text-orange-400 mb-4">👤 User Account View</h2>
-              <p className="text-gray-400 mb-4">
+            <div className="bg-white border-2 border-orange-500 rounded-lg p-6 shadow-lg">
+              <h2 className="text-xl font-bold text-orange-600 mb-4">👤 User Account View</h2>
+              <p className="text-gray-600 mb-4">
                 View any user's account information and their accessible servers.
               </p>
               <div className="space-y-4">
@@ -558,7 +642,7 @@ export default function DeveloperPage() {
                     value={userViewId}
                     onChange={(e) => setUserViewId(e.target.value)}
                     placeholder="Enter User ID (e.g., 123456789012345678)"
-                    className="flex-1 px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-orange-500"
+                    className="flex-1 px-4 py-2 bg-white text-gray-900 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500"
                     disabled={userViewStatus === 'loading'}
                   />
                   <button
@@ -609,8 +693,8 @@ export default function DeveloperPage() {
                 {userViewData && (
                   <div className="space-y-4">
                     {/* User Info Card */}
-                    <div className="bg-gray-800/50 rounded-lg p-6 border border-orange-700">
-                      <h3 className="text-lg font-semibold text-orange-300 mb-4">User Information</h3>
+                    <div className="bg-orange-50 rounded-lg p-6 border-2 border-orange-200 shadow-md">
+                      <h3 className="text-lg font-semibold text-orange-700 mb-4">User Information</h3>
                       <div className="flex items-center gap-4">
                         {userViewData.user.avatar ? (
                           <img
@@ -625,26 +709,26 @@ export default function DeveloperPage() {
                         )}
                         <div>
                           <div className="flex items-center gap-2">
-                            <h4 className="text-xl font-bold text-white">
+                            <h4 className="text-xl font-bold text-gray-900">
                               {userViewData.user.globalName || userViewData.user.username}
                             </h4>
                             {userViewData.user.bot && (
-                              <span className="px-2 py-0.5 bg-orange-600 text-xs font-semibold rounded">BOT</span>
+                              <span className="px-2 py-0.5 bg-orange-600 text-white text-xs font-semibold rounded">BOT</span>
                             )}
                           </div>
-                          <p className="text-gray-400">@{userViewData.user.username}</p>
-                          <p className="text-gray-500 text-sm">ID: {userViewData.user.id}</p>
+                          <p className="text-gray-700">@{userViewData.user.username}</p>
+                          <p className="text-gray-600 text-sm">ID: {userViewData.user.id}</p>
                         </div>
                       </div>
                     </div>
 
                     {/* Servers List */}
-                    <div className="bg-gray-800/50 rounded-lg p-6 border border-orange-700">
-                      <h3 className="text-lg font-semibold text-orange-300 mb-4">
+                    <div className="bg-orange-50 rounded-lg p-6 border-2 border-orange-200 shadow-md">
+                      <h3 className="text-lg font-semibold text-orange-700 mb-4">
                         Accessible Servers ({userViewData.guildsCount})
                       </h3>
                       {userViewData.guilds.length === 0 ? (
-                        <p className="text-gray-500 text-center py-4">
+                        <p className="text-gray-600 text-center py-4">
                           This user has no servers with MANAGE_GUILD permission where Luno is present.
                         </p>
                       ) : (
@@ -655,7 +739,7 @@ export default function DeveloperPage() {
                               href={`/servers/${guild.id}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex items-center gap-3 p-3 bg-gray-700/50 rounded-lg hover:bg-gray-700 transition-colors border border-gray-600 hover:border-orange-500"
+                              className="flex items-center gap-3 p-3 bg-white rounded-lg hover:bg-orange-100 transition-colors border-2 border-orange-200 hover:border-orange-500 shadow-sm"
                             >
                               {guild.icon ? (
                                 <img
@@ -670,14 +754,14 @@ export default function DeveloperPage() {
                               )}
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-2">
-                                  <p className="font-semibold text-white truncate">{guild.name}</p>
+                                  <p className="font-semibold text-gray-900 truncate">{guild.name}</p>
                                   {guild.owner && (
-                                    <span className="px-1.5 py-0.5 bg-orange-600 text-xs font-semibold rounded">OWNER</span>
+                                    <span className="px-1.5 py-0.5 bg-orange-600 text-white text-xs font-semibold rounded">OWNER</span>
                                   )}
                                 </div>
-                                <p className="text-xs text-gray-400 truncate">ID: {guild.id}</p>
+                                <p className="text-xs text-gray-600 truncate">ID: {guild.id}</p>
                               </div>
-                              <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                               </svg>
                             </a>
@@ -695,16 +779,16 @@ export default function DeveloperPage() {
             </div>
 
             {/* New Server Defaults Configuration */}
-            <div className="bg-orange-900/20 border border-orange-800 rounded-lg p-6">
-              <h2 className="text-xl font-bold text-orange-400 mb-4">🆕 New Server Defaults</h2>
-              <p className="text-gray-400 mb-6">
+            <div className="bg-white border-2 border-orange-500 rounded-lg p-6 shadow-lg">
+              <h2 className="text-xl font-bold text-orange-600 mb-4">🆕 New Server Defaults</h2>
+              <p className="text-gray-600 mb-6">
                 Configure default settings that will be applied when a server first adds the bot and sets up their dashboard.
               </p>
               
               <div className="space-y-6">
                 {/* Prefix Setting */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Default Command Prefix
                   </label>
                   <input
@@ -712,18 +796,18 @@ export default function DeveloperPage() {
                     value={serverDefaults.prefix}
                     onChange={(e) => setServerDefaults({ ...serverDefaults, prefix: e.target.value })}
                     placeholder="!"
-                    className="w-full px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-orange-500"
+                    className="w-full px-4 py-2 bg-white text-gray-900 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500"
                   />
-                  <p className="text-sm text-gray-500 mt-1">
+                  <p className="text-sm text-gray-600 mt-1">
                     The default prefix for bot commands (e.g., "!", "/", ".")
                   </p>
                 </div>
 
                 {/* Premium Setting */}
-                <div className="flex items-center justify-between p-4 bg-gray-800/50 rounded-lg">
+                <div className="flex items-center justify-between p-4 bg-orange-50 border-2 border-orange-200 rounded-lg">
                   <div>
-                    <h3 className="font-medium text-gray-200">Default Premium Status</h3>
-                    <p className="text-sm text-gray-500">Enable premium features by default for new servers</p>
+                    <h3 className="font-medium text-gray-900">Default Premium Status</h3>
+                    <p className="text-sm text-gray-600">Enable premium features by default for new servers</p>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input
@@ -738,13 +822,13 @@ export default function DeveloperPage() {
 
                 {/* Modules Configuration */}
                 <div>
-                  <h3 className="text-lg font-semibold text-orange-300 mb-4">Default Module States</h3>
+                  <h3 className="text-lg font-semibold text-orange-700 mb-4">Default Module States</h3>
                   <div className="space-y-3">
                     {/* Moderation Module */}
-                    <div className="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">
+                    <div className="flex items-center justify-between p-3 bg-orange-50 border border-orange-200 rounded-lg">
                       <div>
-                        <span className="font-medium text-gray-200">Moderation</span>
-                        <p className="text-xs text-gray-500">Ban, kick, timeout, warn, etc.</p>
+                        <span className="font-medium text-gray-900">Moderation</span>
+                        <p className="text-xs text-gray-600">Ban, kick, timeout, warn, etc.</p>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input
@@ -761,10 +845,10 @@ export default function DeveloperPage() {
                     </div>
 
                     {/* Role Management Module */}
-                    <div className="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">
+                    <div className="flex items-center justify-between p-3 bg-orange-50 border border-orange-200 rounded-lg">
                       <div>
-                        <span className="font-medium text-gray-200">Role Management</span>
-                        <p className="text-xs text-gray-500">Create, delete, manage roles</p>
+                        <span className="font-medium text-gray-900">Role Management</span>
+                        <p className="text-xs text-gray-600">Create, delete, manage roles</p>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input
@@ -781,10 +865,10 @@ export default function DeveloperPage() {
                     </div>
 
                     {/* Member Management Module */}
-                    <div className="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">
+                    <div className="flex items-center justify-between p-3 bg-orange-50 border border-orange-200 rounded-lg">
                       <div>
-                        <span className="font-medium text-gray-200">Member Management</span>
-                        <p className="text-xs text-gray-500">User info, avatars, roles</p>
+                        <span className="font-medium text-gray-900">Member Management</span>
+                        <p className="text-xs text-gray-600">User info, avatars, roles</p>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input
@@ -801,10 +885,10 @@ export default function DeveloperPage() {
                     </div>
 
                     {/* Announcements Module */}
-                    <div className="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">
+                    <div className="flex items-center justify-between p-3 bg-orange-50 border border-orange-200 rounded-lg">
                       <div>
-                        <span className="font-medium text-gray-200">Announcements</span>
-                        <p className="text-xs text-gray-500">Announcements, giveaways, polls</p>
+                        <span className="font-medium text-gray-900">Announcements</span>
+                        <p className="text-xs text-gray-600">Announcements, giveaways, polls</p>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input
@@ -821,10 +905,10 @@ export default function DeveloperPage() {
                     </div>
 
                     {/* Fun Module */}
-                    <div className="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">
+                    <div className="flex items-center justify-between p-3 bg-orange-50 border border-orange-200 rounded-lg">
                       <div>
-                        <span className="font-medium text-gray-200">Fun</span>
-                        <p className="text-xs text-gray-500">Memes, jokes, games</p>
+                        <span className="font-medium text-gray-900">Fun</span>
+                        <p className="text-xs text-gray-600">Memes, jokes, games</p>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input
@@ -841,10 +925,10 @@ export default function DeveloperPage() {
                     </div>
 
                     {/* Utilities Module */}
-                    <div className="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">
+                    <div className="flex items-center justify-between p-3 bg-orange-50 border border-orange-200 rounded-lg">
                       <div>
-                        <span className="font-medium text-gray-200">Utilities</span>
-                        <p className="text-xs text-gray-500">Server info, ping, help</p>
+                        <span className="font-medium text-gray-900">Utilities</span>
+                        <p className="text-xs text-gray-600">Server info, ping, help</p>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input
@@ -861,10 +945,10 @@ export default function DeveloperPage() {
                     </div>
 
                     {/* Notifications Module */}
-                    <div className="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">
+                    <div className="flex items-center justify-between p-3 bg-orange-50 border border-orange-200 rounded-lg">
                       <div>
-                        <span className="font-medium text-gray-200">Notifications</span>
-                        <p className="text-xs text-gray-500">Welcome/leave messages</p>
+                        <span className="font-medium text-gray-900">Notifications</span>
+                        <p className="text-xs text-gray-600">Welcome/leave messages</p>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input
@@ -938,9 +1022,9 @@ export default function DeveloperPage() {
             </div>
 
             {/* Info Panel */}
-            <div className="bg-blue-900/20 border border-blue-800 rounded-lg p-6">
-              <h2 className="text-xl font-bold text-blue-400 mb-2">ℹ️ Information</h2>
-              <ul className="text-gray-400 space-y-1 text-sm">
+            <div className="bg-white border-2 border-orange-500 rounded-lg p-6 shadow-lg">
+              <h2 className="text-xl font-bold text-orange-600 mb-2">ℹ️ Information</h2>
+              <ul className="text-gray-700 space-y-1 text-sm">
                 <li>• All changes are logged and saved to the database</li>
                 <li>• Server defaults apply only to NEW servers that add the bot</li>
                 <li>• Existing servers will keep their current settings</li>

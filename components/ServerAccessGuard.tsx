@@ -104,19 +104,19 @@ export default function ServerAccessGuard({ guildId, children }: ServerAccessGua
   // Show developer PIN screen if developer hasn't verified yet
   if (showDeveloperPin && session?.user?.id === DEVELOPER_USER_ID && !pinVerified) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-yellow-900 to-gray-900 flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-gray-800/50 backdrop-blur-sm rounded-lg p-8 text-center border border-yellow-500/30">
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-50 flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-white rounded-lg p-8 text-center border-2 border-orange-500 shadow-xl">
           <div className="mb-6">
-            <svg className="w-20 h-20 mx-auto text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-20 h-20 mx-auto text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
             </svg>
           </div>
           
-          <h1 className="text-2xl font-bold text-white mb-2">Developer Verification Required</h1>
-          <p className="text-yellow-400 font-semibold mb-4">
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Developer Verification Required</h1>
+          <p className="text-orange-600 font-semibold mb-4">
             🔒 Bot Owner Account Detected
           </p>
-          <p className="text-gray-300 mb-6">
+          <p className="text-gray-700 mb-6">
             You are attempting to access a server you don't own. For security purposes, please enter your developer PIN. This verification will remain active for your current session.
           </p>
 
@@ -128,7 +128,7 @@ export default function ServerAccessGuard({ guildId, children }: ServerAccessGua
                 onChange={(e) => setDeveloperPinInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleDeveloperPinVerification()}
                 placeholder="Enter Developer PIN"
-                className="flex-1 px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 text-center text-lg font-mono"
+                className="flex-1 px-4 py-3 bg-white border-2 border-orange-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-center text-lg font-mono"
                 disabled={verifyingPin}
                 autoFocus
               />
@@ -136,16 +136,16 @@ export default function ServerAccessGuard({ guildId, children }: ServerAccessGua
             <button
               onClick={handleDeveloperPinVerification}
               disabled={verifyingPin || !developerPinInput.trim()}
-              className="w-full mt-3 px-6 py-3 bg-yellow-500 hover:bg-yellow-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-black font-bold rounded-lg transition-colors text-lg"
+              className="w-full mt-3 px-6 py-3 bg-orange-600 hover:bg-orange-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-bold rounded-lg transition-colors text-lg shadow-md"
             >
               {verifyingPin ? 'Verifying...' : '🔓 Verify & Continue'}
             </button>
           </div>
 
-          <div className="pt-4 border-t border-gray-700">
+          <div className="pt-4 border-t border-gray-200">
             <button
               onClick={() => router.push('/servers')}
-              className="text-gray-400 hover:text-white transition-colors text-sm"
+              className="text-gray-600 hover:text-gray-900 transition-colors text-sm"
             >
               ← Back to Server List
             </button>
@@ -163,22 +163,22 @@ export default function ServerAccessGuard({ guildId, children }: ServerAccessGua
 
   if (hasAccess === false) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-orange-900 to-gray-900 flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-gray-800/50 backdrop-blur-sm rounded-lg p-8 text-center border border-orange-500/30">
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-50 flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-white rounded-lg p-8 text-center border-2 border-orange-500 shadow-xl">
           <div className="mb-6">
             <svg className="w-20 h-20 mx-auto text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
           </div>
           
-          <h1 className="text-2xl font-bold text-white mb-4">Access Denied</h1>
-          <p className="text-gray-300 mb-6">
-            You don't have permission to access this server's dashboard. You need the <span className="font-semibold text-orange-400">MANAGE_GUILD</span> permission to view and modify server settings.
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Access Denied</h1>
+          <p className="text-gray-600 mb-6">
+            You don't have permission to access this server's dashboard. You need the <span className="font-semibold text-orange-600">MANAGE_GUILD</span> permission to view and modify server settings.
           </p>
 
           <button
             onClick={() => router.push('/servers')}
-            className="w-full px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white font-medium rounded-lg transition-colors"
+            className="w-full px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white font-medium rounded-lg transition-colors shadow-md"
           >
             Return to Server List
           </button>
