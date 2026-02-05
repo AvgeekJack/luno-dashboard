@@ -26,11 +26,15 @@ export default function MaintenanceScreen({ userId, onBypass }: MaintenanceScree
   const [isVerifying, setIsVerifying] = useState(false);
   const [error, setError] = useState('');
   const [debugStats, setDebugStats] = useState<DebugStats | null>(null);
+  const [maintenanceETA, setMaintenanceETA] = useState('');
   
   const isDeveloper = userId === DEVELOPER_USER_ID;
   const [showBypass, setShowBypass] = useState(false);
 
   useEffect(() => {
+    // Fetch maintenance ETA
+    fetchMaintenanceETA();
+    
     if (isDeveloper) {
       // Initialize debug stats
       updateDebugStats();
@@ -41,6 +45,18 @@ export default function MaintenanceScreen({ userId, onBypass }: MaintenanceScree
       return () => clearInterval(interval);
     }
   }, [isDeveloper]);
+
+  const fetchMaintenanceETA = async () => {
+    try {
+      const response = await fetch('/api/site-settings');
+      if (response.ok) {
+        const data = await response.json();
+        setMaintenanceETA(data.maintenanceETA || '');
+      }
+    } catch (error) {
+      console.error('Error fetching maintenance ETA:', error);
+    }
+  };
 
   const updateDebugStats = () => {
     const stats: DebugStats = {
@@ -132,9 +148,18 @@ export default function MaintenanceScreen({ userId, onBypass }: MaintenanceScree
           </div>
 
           <div className="space-y-4 text-center">
-            <p className="text-gray-600 text-sm">
-              Expected completion time: Soon
-            </p>
+            {maintenanceETA ? (
+              <p className="text-gray-600 text-sm">
+                Expected completion: {new Date(maintenanceETA).toLocaleString('en-US', {
+                  dateStyle: 'medium',
+                  timeStyle: 'short'
+                })}
+              </p>
+            ) : (
+              <p className="text-gray-600 text-sm">
+                Expected completion time: Soon
+              </p>
+            )}
             <button
               onClick={() => router.push('/')}
               className="px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-colors shadow-md"
