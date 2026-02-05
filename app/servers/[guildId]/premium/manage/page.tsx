@@ -39,6 +39,7 @@ export default function ManageSubscriptionPage() {
   const [canceling, setCanceling] = useState(false);
   const [reactivating, setReactivating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [premiumManagementEnabled, setPremiumManagementEnabled] = useState(true);
 
   useEffect(() => {
     if (status === 'loading') return;
@@ -46,6 +47,21 @@ export default function ManageSubscriptionPage() {
       router.push('/');
       return;
     }
+
+    // Fetch site settings for premium management toggle
+    const fetchSettings = async () => {
+      try {
+        const res = await fetch('/api/site-settings');
+        if (res.ok) {
+          const data = await res.json();
+          setPremiumManagementEnabled(data.premiumManagementEnabled ?? true);
+        }
+      } catch (error) {
+        console.error('Failed to fetch site settings:', error);
+      }
+    };
+
+    fetchSettings();
   }, [session, status, router]);
 
   useEffect(() => {
@@ -246,7 +262,18 @@ export default function ManageSubscriptionPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f8f9fa] text-[#0f172a] py-12 px-4 md:px-8">
+    <div className="min-h-screen bg-[#f8f9fa] text-[#0f172a] py-12 px-4 md:px-8 relative">
+      {/* Coming Soon Overlay */}
+      {!premiumManagementEnabled && (
+        <div className="fixed inset-0 backdrop-blur-sm bg-orange-500/20 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl p-8 shadow-2xl text-center max-w-md">
+            <div className="text-6xl mb-4">🚀</div>
+            <h2 className="text-3xl font-bold text-orange-600 mb-3">Coming Soon</h2>
+            <p className="text-slate-600 text-lg">Premium subscriptions will be available soon!</p>
+          </div>
+        </div>
+      )}
+
       <div className="max-w-4xl mx-auto">
         <div className="mb-6">
           <Link
