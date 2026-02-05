@@ -20,12 +20,13 @@ import {
   Gem,
   MoreVertical,
   Edit,
-  X
+  X,
+  Database
 } from 'lucide-react';
 
 const DEVELOPER_USER_ID = '922940896322940929';
 
-type TabType = 'overview' | 'maintenance' | 'servers' | 'premium' | 'bans' | 'users' | 'defaults';
+type TabType = 'overview' | 'maintenance' | 'servers' | 'premium' | 'bans' | 'users' | 'defaults' | 'settings';
 
 export default function DeveloperPage() {
   const { data: session, status } = useSession();
@@ -70,6 +71,10 @@ export default function DeveloperPage() {
   const [maintenanceMode, setMaintenanceMode] = useState(false);
   const [maintenanceStatus, setMaintenanceStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [maintenanceMessage, setMaintenanceMessage] = useState('');
+  const [premiumPurchaseEnabled, setPremiumPurchaseEnabled] = useState(false);
+  const [premiumManagementEnabled, setPremiumManagementEnabled] = useState(false);
+  const [settingsStatus, setSettingsStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [settingsMessage, setSettingsMessage] = useState('');
   const [maintenanceETA, setMaintenanceETA] = useState('');
   
   const [bannedUsers, setBannedUsers] = useState<any[]>([]);
@@ -85,7 +90,8 @@ export default function DeveloperPage() {
     { id: 'premium', label: 'Premium', icon: Star },
     { id: 'bans', label: 'Bans', icon: Ban },
     { id: 'users', label: 'Users', icon: Users },
-    { id: 'defaults', label: 'Defaults', icon: Settings },
+    { id: 'defaults', label: 'Defaults', icon: Database },
+    { id: 'settings', label: 'Settings', icon: Zap },
   ] as const;
 
   const isDeveloper = session?.user?.id === DEVELOPER_USER_ID;
@@ -103,6 +109,9 @@ export default function DeveloperPage() {
     fetchMaintenanceStatus();
     if (activeTab === 'bans') {
       fetchBannedUsers();
+    }
+    if (activeTab === 'settings') {
+      fetchSettings();
     }
   }, [activeTab]);
 
@@ -132,6 +141,85 @@ export default function DeveloperPage() {
     } finally {
       setBannedUsersLoading(false);
     }
+  };
+
+  const fetchSettings = async () => {
+    try {
+      const response = await fetch('/api/site-settings');
+      if (response.ok) {
+        const data = await response.json();
+        setPremiumPurchaseEnabled(data.premiumPurchaseEnabled || false);
+        setPremiumManagementEnabled(data.premiumManagementEnabled || false);
+      }
+    } catch (error) {
+      console.error('Error fetching settings:', error);
+    }
+  };
+
+  const handlePremiumPurchaseToggle = async () => {
+    const newValue = !premiumPurchaseEnabled;
+    setSettingsStatus('loading');
+    
+    try {
+      const response = await fetch('/api/site-settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ premiumPurchaseEnabled: newValue }),
+      });
+
+      const data = await response.json();
+      
+      if (response.ok) {
+        setPremiumPurchaseEnabled(newValue);
+        setSettingsStatus('success');
+        setSettingsMessage('Premium purchase setting updated successfully!');
+      } else {
+        setSettingsStatus('error');
+        setSettingsMessage(data.error || 'Failed to update setting');
+      }
+    } catch (error) {
+      setSettingsStatus('error');
+      setSettingsMessage('Network error occurred');
+      console.error('Premium purchase toggle error:', error);
+    }
+
+    setTimeout(() => {
+      setSettingsStatus('idle');
+      setSettingsMessage('');
+    }, 3000);
+  };
+
+  const handlePremiumManagementToggle = async () => {
+    const newValue = !premiumManagementEnabled;
+    setSettingsStatus('loading');
+    
+    try {
+      const response = await fetch('/api/site-settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ premiumManagementEnabled: newValue }),
+      });
+
+      const data = await response.json();
+      
+      if (response.ok) {
+        setPremiumManagementEnabled(newValue);
+        setSettingsStatus('success');
+        setSettingsMessage('Premium management setting updated successfully!');
+      } else {
+        setSettingsStatus('error');
+        setSettingsMessage(data.error || 'Failed to update setting');
+      }
+    } catch (error) {
+      setSettingsStatus('error');
+      setSettingsMessage('Network error occurred');
+      console.error('Premium management toggle error:', error);
+    }
+
+    setTimeout(() => {
+      setSettingsStatus('idle');
+      setSettingsMessage('');
+    }, 3000);
   };
 
   const handleMaintenanceToggle = async () => {
@@ -1495,6 +1583,119 @@ export default function DeveloperPage() {
                       : 'bg-red-50 border-red-200 text-red-900'
                   }`}>
                     {defaultsMessage}
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          )}
+
+          {activeTab === 'settings' && (
+            <motion.div
+              key="settings"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="mb-6">
+                <h2 className="text-xl font-bold text-gray-900 mb-1 flex items-center gap-2">
+                  <Zap className="w-5 h-5 text-orange-600" />
+                  Site Settings
+                </h2>
+                <p className="text-gray-600 text-sm">Configure site-wide features and availability.</p>
+              </div>
+
+              <div className="space-y-4">
+                {/* Premium Purchase Toggle */}
+                <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <Star className="w-5 h-5 text-orange-600" />
+                        <h3 className="font-semibold text-gray-900">Premium Purchasing</h3>
+                      </div>
+                      <p className="text-sm text-gray-600">
+                        Enable or disable the ability for users to purchase premium subscriptions. 
+                        When disabled, users cannot access the premium purchase page.
+                      </p>
+                    </div>
+                    <button
+                      onClick={handlePremiumPurchaseToggle}
+                      disabled={settingsStatus === 'loading'}
+                      className={`ml-6 relative inline-flex h-10 w-20 items-center rounded-full transition-all shadow-sm disabled:opacity-50 ${
+                        premiumPurchaseEnabled ? 'bg-orange-600' : 'bg-gray-300'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-8 w-8 transform rounded-full bg-white shadow-md transition-transform ${
+                          premiumPurchaseEnabled ? 'translate-x-11' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
+                  </div>
+                  <div className="mt-4 p-3 bg-orange-50 rounded-lg border border-orange-100">
+                    <p className="text-sm text-orange-900 font-medium">
+                      Status: {premiumPurchaseEnabled ? (
+                        <span className="text-green-700">✓ Premium purchases are enabled</span>
+                      ) : (
+                        <span className="text-gray-700">✕ Premium purchases are disabled</span>
+                      )}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Premium Management Page Toggle */}
+                <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <Gem className="w-5 h-5 text-orange-600" />
+                        <h3 className="font-semibold text-gray-900">Premium Management Page</h3>
+                      </div>
+                      <p className="text-sm text-gray-600">
+                        Enable or disable the premium management dashboard. 
+                        When disabled, users will see a "Coming Soon" banner instead of the management interface.
+                      </p>
+                    </div>
+                    <button
+                      onClick={handlePremiumManagementToggle}
+                      disabled={settingsStatus === 'loading'}
+                      className={`ml-6 relative inline-flex h-10 w-20 items-center rounded-full transition-all shadow-sm disabled:opacity-50 ${
+                        premiumManagementEnabled ? 'bg-orange-600' : 'bg-gray-300'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-8 w-8 transform rounded-full bg-white shadow-md transition-transform ${
+                          premiumManagementEnabled ? 'translate-x-11' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
+                  </div>
+                  <div className="mt-4 p-3 bg-orange-50 rounded-lg border border-orange-100">
+                    <p className="text-sm text-orange-900 font-medium">
+                      Status: {premiumManagementEnabled ? (
+                        <span className="text-green-700">✓ Management page is accessible</span>
+                      ) : (
+                        <span className="text-gray-700">✕ Showing "Coming Soon" banner</span>
+                      )}
+                    </p>
+                  </div>
+                </div>
+
+                {settingsMessage && (
+                  <div className={`p-4 rounded-lg border ${
+                    settingsStatus === 'success'
+                      ? 'bg-green-50 border-green-200 text-green-900'
+                      : 'bg-red-50 border-red-200 text-red-900'
+                  }`}>
+                    <div className="flex items-center gap-2">
+                      {settingsStatus === 'success' ? (
+                        <CheckCircle2 className="w-5 h-5" />
+                      ) : (
+                        <AlertTriangle className="w-5 h-5" />
+                      )}
+                      <span className="font-medium">{settingsMessage}</span>
+                    </div>
                   </div>
                 )}
               </div>

@@ -11,11 +11,13 @@ export async function GET() {
     const premiumPurchaseEnabled = await isPremiumPurchaseEnabled();
     const maintenanceMode = await isMaintenanceMode();
     const maintenanceETA = await getSiteSetting('maintenanceETA', '');
+    const premiumManagementEnabled = await getSiteSetting('premiumManagementEnabled', false);
 
     return NextResponse.json({
       premiumPurchaseEnabled,
       maintenanceMode,
       maintenanceETA,
+      premiumManagementEnabled,
     });
   } catch (error) {
     console.error('Site settings GET error:', error);
@@ -77,6 +79,17 @@ export async function POST(req: NextRequest) {
         success: true,
         premiumPurchaseEnabled: body.premiumPurchaseEnabled,
         message: `Premium purchase ${body.premiumPurchaseEnabled ? 'enabled' : 'disabled'} successfully`,
+      });
+    }
+
+    // Handle premium management toggle update
+    if ('premiumManagementEnabled' in body) {
+      await setSiteSetting('premiumManagementEnabled', body.premiumManagementEnabled, session.user.id);
+      console.log(`[Site Settings] Premium management ${body.premiumManagementEnabled ? 'enabled' : 'disabled'} by ${session.user.id}`);
+      return NextResponse.json({
+        success: true,
+        premiumManagementEnabled: body.premiumManagementEnabled,
+        message: `Premium management ${body.premiumManagementEnabled ? 'enabled' : 'disabled'} successfully`,
       });
     }
 
