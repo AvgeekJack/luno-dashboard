@@ -21,7 +21,11 @@ import {
   MoreVertical,
   Edit,
   X,
-  Database
+  Database,
+  Link2,
+  Megaphone,
+  BarChart3,
+  Beaker
 } from 'lucide-react';
 
 const DEVELOPER_USER_ID = '922940896322940929';
@@ -73,6 +77,10 @@ export default function DeveloperPage() {
   const [maintenanceMessage, setMaintenanceMessage] = useState('');
   const [premiumPurchaseEnabled, setPremiumPurchaseEnabled] = useState(false);
   const [premiumManagementEnabled, setPremiumManagementEnabled] = useState(false);
+  const [botInviteEnabled, setBotInviteEnabled] = useState(true);
+  const [systemAnnouncementsEnabled, setSystemAnnouncementsEnabled] = useState(false);
+  const [analyticsEnabled, setAnalyticsEnabled] = useState(true);
+  const [betaFeaturesEnabled, setBetaFeaturesEnabled] = useState(false);
   const [settingsStatus, setSettingsStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [settingsMessage, setSettingsMessage] = useState('');
   const [maintenanceETA, setMaintenanceETA] = useState('');
@@ -150,6 +158,10 @@ export default function DeveloperPage() {
         const data = await response.json();
         setPremiumPurchaseEnabled(data.premiumPurchaseEnabled || false);
         setPremiumManagementEnabled(data.premiumManagementEnabled || false);
+        setBotInviteEnabled(data.botInviteEnabled ?? true);
+        setSystemAnnouncementsEnabled(data.systemAnnouncementsEnabled || false);
+        setAnalyticsEnabled(data.analyticsEnabled ?? true);
+        setBetaFeaturesEnabled(data.betaFeaturesEnabled || false);
       }
     } catch (error) {
       console.error('Error fetching settings:', error);
@@ -214,6 +226,138 @@ export default function DeveloperPage() {
       setSettingsStatus('error');
       setSettingsMessage('Network error occurred');
       console.error('Premium management toggle error:', error);
+    }
+
+    setTimeout(() => {
+      setSettingsStatus('idle');
+      setSettingsMessage('');
+    }, 3000);
+  };
+
+  const handleBotInviteToggle = async () => {
+    const newValue = !botInviteEnabled;
+    setSettingsStatus('loading');
+    
+    try {
+      const response = await fetch('/api/site-settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ botInviteEnabled: newValue }),
+      });
+
+      const data = await response.json();
+      
+      if (response.ok) {
+        setBotInviteEnabled(newValue);
+        setSettingsStatus('success');
+        setSettingsMessage('Bot invite setting updated successfully!');
+      } else {
+        setSettingsStatus('error');
+        setSettingsMessage(data.error || 'Failed to update setting');
+      }
+    } catch (error) {
+      setSettingsStatus('error');
+      setSettingsMessage('Network error occurred');
+      console.error('Bot invite toggle error:', error);
+    }
+
+    setTimeout(() => {
+      setSettingsStatus('idle');
+      setSettingsMessage('');
+    }, 3000);
+  };
+
+  const handleSystemAnnouncementsToggle = async () => {
+    const newValue = !systemAnnouncementsEnabled;
+    setSettingsStatus('loading');
+    
+    try {
+      const response = await fetch('/api/site-settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ systemAnnouncementsEnabled: newValue }),
+      });
+
+      const data = await response.json();
+      
+      if (response.ok) {
+        setSystemAnnouncementsEnabled(newValue);
+        setSettingsStatus('success');
+        setSettingsMessage('System announcements setting updated successfully!');
+      } else {
+        setSettingsStatus('error');
+        setSettingsMessage(data.error || 'Failed to update setting');
+      }
+    } catch (error) {
+      setSettingsStatus('error');
+      setSettingsMessage('Network error occurred');
+      console.error('System announcements toggle error:', error);
+    }
+
+    setTimeout(() => {
+      setSettingsStatus('idle');
+      setSettingsMessage('');
+    }, 3000);
+  };
+
+  const handleAnalyticsToggle = async () => {
+    const newValue = !analyticsEnabled;
+    setSettingsStatus('loading');
+    
+    try {
+      const response = await fetch('/api/site-settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ analyticsEnabled: newValue }),
+      });
+
+      const data = await response.json();
+      
+      if (response.ok) {
+        setAnalyticsEnabled(newValue);
+        setSettingsStatus('success');
+        setSettingsMessage('Analytics setting updated successfully!');
+      } else {
+        setSettingsStatus('error');
+        setSettingsMessage(data.error || 'Failed to update setting');
+      }
+    } catch (error) {
+      setSettingsStatus('error');
+      setSettingsMessage('Network error occurred');
+      console.error('Analytics toggle error:', error);
+    }
+
+    setTimeout(() => {
+      setSettingsStatus('idle');
+      setSettingsMessage('');
+    }, 3000);
+  };
+
+  const handleBetaFeaturesToggle = async () => {
+    const newValue = !betaFeaturesEnabled;
+    setSettingsStatus('loading');
+    
+    try {
+      const response = await fetch('/api/site-settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ betaFeaturesEnabled: newValue }),
+      });
+
+      const data = await response.json();
+      
+      if (response.ok) {
+        setBetaFeaturesEnabled(newValue);
+        setSettingsStatus('success');
+        setSettingsMessage('Beta features setting updated successfully!');
+      } else {
+        setSettingsStatus('error');
+        setSettingsMessage(data.error || 'Failed to update setting');
+      }
+    } catch (error) {
+      setSettingsStatus('error');
+      setSettingsMessage('Network error occurred');
+      console.error('Beta features toggle error:', error);
     }
 
     setTimeout(() => {
@@ -1677,6 +1821,158 @@ export default function DeveloperPage() {
                         <span className="text-green-700">✓ Management page is accessible</span>
                       ) : (
                         <span className="text-gray-700">✕ Showing "Coming Soon" banner</span>
+                      )}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Bot Invite Toggle */}
+                <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <Link2 className="w-5 h-5 text-orange-600" />
+                        <h3 className="font-semibold text-gray-900">Bot Invite Link</h3>
+                      </div>
+                      <p className="text-sm text-gray-600">
+                        Control whether new servers can invite and add the bot. 
+                        When disabled, the bot invite link will show an error message.
+                      </p>
+                    </div>
+                    <button
+                      onClick={handleBotInviteToggle}
+                      disabled={settingsStatus === 'loading'}
+                      className={`ml-6 relative inline-flex h-10 w-20 items-center rounded-full transition-all shadow-sm disabled:opacity-50 ${
+                        botInviteEnabled ? 'bg-orange-600' : 'bg-gray-300'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-8 w-8 transform rounded-full bg-white shadow-md transition-transform ${
+                          botInviteEnabled ? 'translate-x-11' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
+                  </div>
+                  <div className="mt-4 p-3 bg-orange-50 rounded-lg border border-orange-100">
+                    <p className="text-sm text-orange-900 font-medium">
+                      Status: {botInviteEnabled ? (
+                        <span className="text-green-700">✓ New servers can add the bot</span>
+                      ) : (
+                        <span className="text-gray-700">✕ Bot invites are disabled</span>
+                      )}
+                    </p>
+                  </div>
+                </div>
+
+                {/* System Announcements Toggle */}
+                <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <Megaphone className="w-5 h-5 text-orange-600" />
+                        <h3 className="font-semibold text-gray-900">System Announcements</h3>
+                      </div>
+                      <p className="text-sm text-gray-600">
+                        Display site-wide announcements and banners to all users. 
+                        Useful for informing users about updates, features, or planned maintenance.
+                      </p>
+                    </div>
+                    <button
+                      onClick={handleSystemAnnouncementsToggle}
+                      disabled={settingsStatus === 'loading'}
+                      className={`ml-6 relative inline-flex h-10 w-20 items-center rounded-full transition-all shadow-sm disabled:opacity-50 ${
+                        systemAnnouncementsEnabled ? 'bg-orange-600' : 'bg-gray-300'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-8 w-8 transform rounded-full bg-white shadow-md transition-transform ${
+                          systemAnnouncementsEnabled ? 'translate-x-11' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
+                  </div>
+                  <div className="mt-4 p-3 bg-orange-50 rounded-lg border border-orange-100">
+                    <p className="text-sm text-orange-900 font-medium">
+                      Status: {systemAnnouncementsEnabled ? (
+                        <span className="text-green-700">✓ Announcements are visible</span>
+                      ) : (
+                        <span className="text-gray-700">✕ Announcements are hidden</span>
+                      )}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Analytics Collection Toggle */}
+                <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <BarChart3 className="w-5 h-5 text-orange-600" />
+                        <h3 className="font-semibold text-gray-900">Analytics Collection</h3>
+                      </div>
+                      <p className="text-sm text-gray-600">
+                        Enable or disable collection of usage analytics and statistics. 
+                        Analytics help improve the platform but can be disabled for privacy.
+                      </p>
+                    </div>
+                    <button
+                      onClick={handleAnalyticsToggle}
+                      disabled={settingsStatus === 'loading'}
+                      className={`ml-6 relative inline-flex h-10 w-20 items-center rounded-full transition-all shadow-sm disabled:opacity-50 ${
+                        analyticsEnabled ? 'bg-orange-600' : 'bg-gray-300'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-8 w-8 transform rounded-full bg-white shadow-md transition-transform ${
+                          analyticsEnabled ? 'translate-x-11' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
+                  </div>
+                  <div className="mt-4 p-3 bg-orange-50 rounded-lg border border-orange-100">
+                    <p className="text-sm text-orange-900 font-medium">
+                      Status: {analyticsEnabled ? (
+                        <span className="text-green-700">✓ Analytics are being collected</span>
+                      ) : (
+                        <span className="text-gray-700">✕ Analytics collection is disabled</span>
+                      )}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Beta Features Toggle */}
+                <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <Beaker className="w-5 h-5 text-orange-600" />
+                        <h3 className="font-semibold text-gray-900">Beta Features</h3>
+                      </div>
+                      <p className="text-sm text-gray-600">
+                        Enable experimental and beta features for all users. 
+                        These features may be unstable or subject to change.
+                      </p>
+                    </div>
+                    <button
+                      onClick={handleBetaFeaturesToggle}
+                      disabled={settingsStatus === 'loading'}
+                      className={`ml-6 relative inline-flex h-10 w-20 items-center rounded-full transition-all shadow-sm disabled:opacity-50 ${
+                        betaFeaturesEnabled ? 'bg-orange-600' : 'bg-gray-300'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-8 w-8 transform rounded-full bg-white shadow-md transition-transform ${
+                          betaFeaturesEnabled ? 'translate-x-11' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
+                  </div>
+                  <div className="mt-4 p-3 bg-orange-50 rounded-lg border border-orange-100">
+                    <p className="text-sm text-orange-900 font-medium">
+                      Status: {betaFeaturesEnabled ? (
+                        <span className="text-green-700">✓ Beta features are enabled</span>
+                      ) : (
+                        <span className="text-gray-700">✕ Beta features are disabled</span>
                       )}
                     </p>
                   </div>
