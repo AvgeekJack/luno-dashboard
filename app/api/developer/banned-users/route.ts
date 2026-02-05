@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { connectDB } from '@/lib/mongodb';
+import dbConnect from '@/lib/mongoose';
 import BannedUser from '@/lib/models/BannedUser';
 
 const DEVELOPER_USER_ID = '922940896322940929';
@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
 
-    await connectDB();
+    await dbConnect();
 
     const bannedUsers = await BannedUser.find({ banned: true })
       .sort({ bannedAt: -1 })
