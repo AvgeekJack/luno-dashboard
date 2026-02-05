@@ -4,7 +4,7 @@ import { authOptions } from '@/lib/auth';
 import dbConnect from '@/lib/mongoose';
 import ServerSettings from '@/lib/models/ServerSettings';
 import { getServerDefaults } from '@/lib/serverDefaults';
-import { checkServerAccess } from '@/lib/serverAccess';
+import { checkServerAccess, checkGuildOwnership } from '@/lib/serverAccess';
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ guildId: string }> }) {
   const session = await getServerSession(authOptions);
@@ -20,6 +20,9 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ guil
   if (!hasAccess) {
     return NextResponse.json({ error: 'Forbidden - You do not have access to this server' }, { status: 403 });
   }
+
+  // Check if user is the owner of this guild
+  const isOwner = await checkGuildOwnership(session.user.id, guildId);
 
   await dbConnect();
 
@@ -47,7 +50,11 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ guil
     });
   }
 
-  return NextResponse.json(settings);
+  // Include ownership information in the response
+  const response = settings.toObject();
+  response.isOwner = isOwner;
+
+  return NextResponse.json(response);
 }
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ guildId: string }> }) {

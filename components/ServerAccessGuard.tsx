@@ -38,13 +38,6 @@ export default function ServerAccessGuard({ guildId, children }: ServerAccessGua
       return;
     }
 
-    // If user is developer and PIN not verified, show PIN screen first
-    if (session.user?.id === DEVELOPER_USER_ID && !pinVerified) {
-      setShowDeveloperPin(true);
-      setHasAccess(null); // Keep null to show page loading
-      return;
-    }
-
     const checkAccess = async () => {
       try {
         // Make a lightweight request to check access
@@ -54,6 +47,15 @@ export default function ServerAccessGuard({ guildId, children }: ServerAccessGua
           // User doesn't have access
           setHasAccess(false);
         } else if (res.ok) {
+          const data = await res.json();
+          
+          // If user is developer and not owner of this guild, require PIN
+          if (session.user?.id === DEVELOPER_USER_ID && !data.isOwner && !pinVerified) {
+            setShowDeveloperPin(true);
+            setHasAccess(null);
+            return;
+          }
+          
           setHasAccess(true);
         } else if (res.status === 401) {
           router.push('/');
@@ -115,7 +117,7 @@ export default function ServerAccessGuard({ guildId, children }: ServerAccessGua
             🔒 Bot Owner Account Detected
           </p>
           <p className="text-gray-300 mb-6">
-            For security purposes, please enter your developer PIN to access server dashboards. This verification will remain active for your current session.
+            You are attempting to access a server you don't own. For security purposes, please enter your developer PIN. This verification will remain active for your current session.
           </p>
 
           <div className="mb-6">

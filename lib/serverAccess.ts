@@ -9,6 +9,39 @@ interface UserGuild {
 }
 
 /**
+ * Check if a user is the owner of a specific guild
+ */
+export async function checkGuildOwnership(userId: string, guildId: string): Promise<boolean> {
+  try {
+    const DISCORD_API_URL = 'https://discord.com/api/v10';
+    const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
+
+    if (!BOT_TOKEN) {
+      console.error('[ServerAccess] Bot token not configured');
+      return false;
+    }
+
+    // Fetch guild info to check if user is owner
+    const guildResponse = await fetch(`${DISCORD_API_URL}/guilds/${guildId}`, {
+      headers: {
+        'Authorization': `Bot ${BOT_TOKEN}`,
+      },
+    });
+
+    if (!guildResponse.ok) {
+      console.error('[ServerAccess] Failed to fetch guild info');
+      return false;
+    }
+
+    const guild = await guildResponse.json();
+    return guild.owner_id === userId;
+  } catch (error) {
+    console.error('[ServerAccess] Error checking guild ownership:', error);
+    return false;
+  }
+}
+
+/**
  * Check if a user has MANAGE_GUILD permission in a specific server
  * Developer can bypass this check
  */
