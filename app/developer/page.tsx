@@ -61,24 +61,88 @@ export default function DeveloperPage() {
   
   const [defaultsStatus, setDefaultsStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [defaultsMessage, setDefaultsMessage] = useState('');
+  const [expandedDefaults, setExpandedDefaults] = useState<string[]>([]);
   const [serverDefaults, setServerDefaults] = useState({
     prefix: '!',
     premium: true,
     configuration: {
-      automod: { enabled: true },
-      logging: { enabled: true },
-      antiRaid: { enabled: false },
-      reactionRoles: { enabled: false },
-      verification: { enabled: false },
+      automod: { 
+        enabled: true,
+        filterSpam: true,
+        filterLinks: false,
+        filterMentions: true,
+        filterCaps: false,
+        maxWarnings: 3
+      },
+      logging: { 
+        enabled: true,
+        logModeration: true,
+        logMessages: true,
+        logJoinsLeaves: true,
+        logVoice: false
+      },
+      antiRaid: { 
+        enabled: false,
+        verificationLevel: 'medium',
+        joinRateLimit: 10,
+        accountAgeMinimum: 7
+      },
+      reactionRoles: { 
+        enabled: false,
+        maxRolesPerUser: 5,
+        removeOnReactionRemove: true
+      },
+      verification: { 
+        enabled: false,
+        requireCaptcha: false,
+        requireRules: true,
+        verificationTimeout: 600
+      },
     },
     modules: {
-      moderation: { enabled: true },
-      roleManagement: { enabled: true },
-      memberManagement: { enabled: false },
-      announcements: { enabled: false },
-      welcomeMessages: { enabled: false },
-      fun: { enabled: true },
-      utilities: { enabled: true },
+      moderation: { 
+        enabled: true,
+        allowBan: true,
+        allowKick: true,
+        allowWarn: true,
+        allowMute: true,
+        allowTimeout: true
+      },
+      roleManagement: { 
+        enabled: true,
+        allowRoleCreate: true,
+        allowRoleDelete: true,
+        allowRoleAssign: true
+      },
+      memberManagement: { 
+        enabled: false,
+        showAvatars: true,
+        showNicknames: true,
+        showJoinDate: true
+      },
+      announcements: { 
+        enabled: false,
+        allowPings: false,
+        allowEmbeds: true
+      },
+      welcomeMessages: { 
+        enabled: false,
+        sendDM: false,
+        sendInChannel: true,
+        includeRules: false
+      },
+      fun: { 
+        enabled: true,
+        allowGames: true,
+        allowMemes: true,
+        allowGifs: true
+      },
+      utilities: { 
+        enabled: true,
+        allowReminders: true,
+        allowPolls: true,
+        allowCalculator: true
+      },
     }
   });
   
@@ -1666,129 +1730,492 @@ export default function DeveloperPage() {
                     <span className="text-orange-600">🔧</span> Configuration
                   </h3>
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <div>
-                        <p className="font-medium text-gray-900">Automod</p>
-                        <p className="text-xs text-gray-500">Automated content moderation</p>
-                      </div>
-                      <button
-                        onClick={() => setServerDefaults({
-                          ...serverDefaults,
-                          configuration: {
-                            ...serverDefaults.configuration,
-                            automod: { enabled: !serverDefaults.configuration.automod.enabled }
-                          }
-                        })}
-                        className={`relative inline-flex h-8 w-16 items-center rounded-full transition-all ${
-                          serverDefaults.configuration.automod.enabled ? 'bg-green-600' : 'bg-gray-300'
-                        }`}
-                      >
-                        <span
-                          className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform ${
-                            serverDefaults.configuration.automod.enabled ? 'translate-x-9' : 'translate-x-1'
+                    {/* Automod */}
+                    <div className="bg-gray-50 rounded-lg border border-gray-200">
+                      <div className="flex items-center justify-between p-3">
+                        <div className="flex items-center gap-3 flex-1">
+                          {serverDefaults.configuration.automod.enabled && (
+                            <button
+                              onClick={() => setExpandedDefaults(prev => 
+                                prev.includes('automod') ? prev.filter(i => i !== 'automod') : [...prev, 'automod']
+                              )}
+                              className="text-gray-500 hover:text-gray-700"
+                            >
+                              {expandedDefaults.includes('automod') ? '▼' : '▶'}
+                            </button>
+                          )}
+                          <div>
+                            <p className="font-medium text-gray-900">Automod</p>
+                            <p className="text-xs text-gray-500">Automated content moderation</p>
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => setServerDefaults({
+                            ...serverDefaults,
+                            configuration: {
+                              ...serverDefaults.configuration,
+                              automod: { ...serverDefaults.configuration.automod, enabled: !serverDefaults.configuration.automod.enabled }
+                            }
+                          })}
+                          className={`relative inline-flex h-8 w-16 items-center rounded-full transition-all ${
+                            serverDefaults.configuration.automod.enabled ? 'bg-green-600' : 'bg-gray-300'
                           }`}
-                        />
-                      </button>
+                        >
+                          <span
+                            className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform ${
+                              serverDefaults.configuration.automod.enabled ? 'translate-x-9' : 'translate-x-1'
+                            }`}
+                          />
+                        </button>
+                      </div>
+                      {serverDefaults.configuration.automod.enabled && expandedDefaults.includes('automod') && (
+                        <div className="px-6 pb-4 space-y-2 border-t border-gray-200 pt-3">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Filter Spam</span>
+                            <input
+                              type="checkbox"
+                              checked={serverDefaults.configuration.automod.filterSpam}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                configuration: {
+                                  ...serverDefaults.configuration,
+                                  automod: { ...serverDefaults.configuration.automod, filterSpam: e.target.checked }
+                                }
+                              })}
+                              className="w-4 h-4 text-orange-600 rounded"
+                            />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Filter Links</span>
+                            <input
+                              type="checkbox"
+                              checked={serverDefaults.configuration.automod.filterLinks}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                configuration: {
+                                  ...serverDefaults.configuration,
+                                  automod: { ...serverDefaults.configuration.automod, filterLinks: e.target.checked }
+                                }
+                              })}
+                              className="w-4 h-4 text-orange-600 rounded"
+                            />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Filter Excessive Mentions</span>
+                            <input
+                              type="checkbox"
+                              checked={serverDefaults.configuration.automod.filterMentions}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                configuration: {
+                                  ...serverDefaults.configuration,
+                                  automod: { ...serverDefaults.configuration.automod, filterMentions: e.target.checked }
+                                }
+                              })}
+                              className="w-4 h-4 text-orange-600 rounded"
+                            />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Filter Caps</span>
+                            <input
+                              type="checkbox"
+                              checked={serverDefaults.configuration.automod.filterCaps}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                configuration: {
+                                  ...serverDefaults.configuration,
+                                  automod: { ...serverDefaults.configuration.automod, filterCaps: e.target.checked }
+                                }
+                              })}
+                              className="w-4 h-4 text-orange-600 rounded"
+                            />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Max Warnings Before Action</span>
+                            <input
+                              type="number"
+                              min="1"
+                              max="10"
+                              value={serverDefaults.configuration.automod.maxWarnings}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                configuration: {
+                                  ...serverDefaults.configuration,
+                                  automod: { ...serverDefaults.configuration.automod, maxWarnings: parseInt(e.target.value) }
+                                }
+                              })}
+                              className="w-16 px-2 py-1 text-sm border border-gray-300 rounded text-gray-900"
+                            />
+                          </div>
+                        </div>
+                      )}
                     </div>
 
-                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <div>
-                        <p className="font-medium text-gray-900">Logging</p>
-                        <p className="text-xs text-gray-500">Server activity logs</p>
-                      </div>
-                      <button
-                        onClick={() => setServerDefaults({
-                          ...serverDefaults,
-                          configuration: {
-                            ...serverDefaults.configuration,
-                            logging: { enabled: !serverDefaults.configuration.logging.enabled }
-                          }
-                        })}
-                        className={`relative inline-flex h-8 w-16 items-center rounded-full transition-all ${
-                          serverDefaults.configuration.logging.enabled ? 'bg-green-600' : 'bg-gray-300'
-                        }`}
-                      >
-                        <span
-                          className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform ${
-                            serverDefaults.configuration.logging.enabled ? 'translate-x-9' : 'translate-x-1'
+                    {/* Logging */}
+                    <div className="bg-gray-50 rounded-lg border border-gray-200">
+                      <div className="flex items-center justify-between p-3">
+                        <div className="flex items-center gap-3 flex-1">
+                          {serverDefaults.configuration.logging.enabled && (
+                            <button
+                              onClick={() => setExpandedDefaults(prev => 
+                                prev.includes('logging') ? prev.filter(i => i !== 'logging') : [...prev, 'logging']
+                              )}
+                              className="text-gray-500 hover:text-gray-700"
+                            >
+                              {expandedDefaults.includes('logging') ? '▼' : '▶'}
+                            </button>
+                          )}
+                          <div>
+                            <p className="font-medium text-gray-900">Logging</p>
+                            <p className="text-xs text-gray-500">Server activity logs</p>
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => setServerDefaults({
+                            ...serverDefaults,
+                            configuration: {
+                              ...serverDefaults.configuration,
+                              logging: { ...serverDefaults.configuration.logging, enabled: !serverDefaults.configuration.logging.enabled }
+                            }
+                          })}
+                          className={`relative inline-flex h-8 w-16 items-center rounded-full transition-all ${
+                            serverDefaults.configuration.logging.enabled ? 'bg-green-600' : 'bg-gray-300'
                           }`}
-                        />
-                      </button>
+                        >
+                          <span
+                            className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform ${
+                              serverDefaults.configuration.logging.enabled ? 'translate-x-9' : 'translate-x-1'
+                            }`}
+                          />
+                        </button>
+                      </div>
+                      {serverDefaults.configuration.logging.enabled && expandedDefaults.includes('logging') && (
+                        <div className="px-6 pb-4 space-y-2 border-t border-gray-200 pt-3">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Log Moderation Actions</span>
+                            <input
+                              type="checkbox"
+                              checked={serverDefaults.configuration.logging.logModeration}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                configuration: {
+                                  ...serverDefaults.configuration,
+                                  logging: { ...serverDefaults.configuration.logging, logModeration: e.target.checked }
+                                }
+                              })}
+                              className="w-4 h-4 text-orange-600 rounded"
+                            />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Log Message Edits/Deletes</span>
+                            <input
+                              type="checkbox"
+                              checked={serverDefaults.configuration.logging.logMessages}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                configuration: {
+                                  ...serverDefaults.configuration,
+                                  logging: { ...serverDefaults.configuration.logging, logMessages: e.target.checked }
+                                }
+                              })}
+                              className="w-4 h-4 text-orange-600 rounded"
+                            />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Log Joins/Leaves</span>
+                            <input
+                              type="checkbox"
+                              checked={serverDefaults.configuration.logging.logJoinsLeaves}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                configuration: {
+                                  ...serverDefaults.configuration,
+                                  logging: { ...serverDefaults.configuration.logging, logJoinsLeaves: e.target.checked }
+                                }
+                              })}
+                              className="w-4 h-4 text-orange-600 rounded"
+                            />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Log Voice Activity</span>
+                            <input
+                              type="checkbox"
+                              checked={serverDefaults.configuration.logging.logVoice}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                configuration: {
+                                  ...serverDefaults.configuration,
+                                  logging: { ...serverDefaults.configuration.logging, logVoice: e.target.checked }
+                                }
+                              })}
+                              className="w-4 h-4 text-orange-600 rounded"
+                            />
+                          </div>
+                        </div>
+                      )}
                     </div>
 
-                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <div>
-                        <p className="font-medium text-gray-900">Anti-Raid</p>
-                        <p className="text-xs text-gray-500">Raid protection measures</p>
-                      </div>
-                      <button
-                        onClick={() => setServerDefaults({
-                          ...serverDefaults,
-                          configuration: {
-                            ...serverDefaults.configuration,
-                            antiRaid: { enabled: !serverDefaults.configuration.antiRaid.enabled }
-                          }
-                        })}
-                        className={`relative inline-flex h-8 w-16 items-center rounded-full transition-all ${
-                          serverDefaults.configuration.antiRaid.enabled ? 'bg-green-600' : 'bg-gray-300'
-                        }`}
-                      >
-                        <span
-                          className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform ${
-                            serverDefaults.configuration.antiRaid.enabled ? 'translate-x-9' : 'translate-x-1'
+                    {/* Anti-Raid - simpler structure */}
+                    <div className="bg-gray-50 rounded-lg border border-gray-200">
+                      <div className="flex items-center justify-between p-3">
+                        <div className="flex items-center gap-3 flex-1">
+                          {serverDefaults.configuration.antiRaid.enabled && (
+                            <button
+                              onClick={() => setExpandedDefaults(prev => 
+                                prev.includes('antiRaid') ? prev.filter(i => i !== 'antiRaid') : [...prev, 'antiRaid']
+                              )}
+                              className="text-gray-500 hover:text-gray-700"
+                            >
+                              {expandedDefaults.includes('antiRaid') ? '▼' : '▶'}
+                            </button>
+                          )}
+                          <div>
+                            <p className="font-medium text-gray-900">Anti-Raid</p>
+                            <p className="text-xs text-gray-500">Raid protection measures</p>
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => setServerDefaults({
+                            ...serverDefaults,
+                            configuration: {
+                              ...serverDefaults.configuration,
+                              antiRaid: { ...serverDefaults.configuration.antiRaid, enabled: !serverDefaults.configuration.antiRaid.enabled }
+                            }
+                          })}
+                          className={`relative inline-flex h-8 w-16 items-center rounded-full transition-all ${
+                            serverDefaults.configuration.antiRaid.enabled ? 'bg-green-600' : 'bg-gray-300'
                           }`}
-                        />
-                      </button>
+                        >
+                          <span
+                            className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform ${
+                              serverDefaults.configuration.antiRaid.enabled ? 'translate-x-9' : 'translate-x-1'
+                            }`}
+                          />
+                        </button>
+                      </div>
+                      {serverDefaults.configuration.antiRaid.enabled && expandedDefaults.includes('antiRaid') && (
+                        <div className="px-6 pb-4 space-y-2 border-t border-gray-200 pt-3">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Verification Level</span>
+                            <select
+                              value={serverDefaults.configuration.antiRaid.verificationLevel}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                configuration: {
+                                  ...serverDefaults.configuration,
+                                  antiRaid: { ...serverDefaults.configuration.antiRaid, verificationLevel: e.target.value }
+                                }
+                              })}
+                              className="px-2 py-1 text-sm border border-gray-300 rounded text-gray-900"
+                            >
+                              <option value="low">Low</option>
+                              <option value="medium">Medium</option>
+                              <option value="high">High</option>
+                            </select>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Join Rate Limit (per minute)</span>
+                            <input
+                              type="number"
+                              min="1"
+                              max="50"
+                              value={serverDefaults.configuration.antiRaid.joinRateLimit}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                configuration: {
+                                  ...serverDefaults.configuration,
+                                  antiRaid: { ...serverDefaults.configuration.antiRaid, joinRateLimit: parseInt(e.target.value) }
+                                }
+                              })}
+                              className="w-16 px-2 py-1 text-sm border border-gray-300 rounded text-gray-900"
+                            />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Min Account Age (days)</span>
+                            <input
+                              type="number"
+                              min="0"
+                              max="30"
+                              value={serverDefaults.configuration.antiRaid.accountAgeMinimum}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                configuration: {
+                                  ...serverDefaults.configuration,
+                                  antiRaid: { ...serverDefaults.configuration.antiRaid, accountAgeMinimum: parseInt(e.target.value) }
+                                }
+                              })}
+                              className="w-16 px-2 py-1 text-sm border border-gray-300 rounded text-gray-900"
+                            />
+                          </div>
+                        </div>
+                      )}
                     </div>
 
-                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <div>
-                        <p className="font-medium text-gray-900">Reaction Roles</p>
-                        <p className="text-xs text-gray-500">Role assignment via reactions</p>
-                      </div>
-                      <button
-                        onClick={() => setServerDefaults({
-                          ...serverDefaults,
-                          configuration: {
-                            ...serverDefaults.configuration,
-                            reactionRoles: { enabled: !serverDefaults.configuration.reactionRoles.enabled }
-                          }
-                        })}
-                        className={`relative inline-flex h-8 w-16 items-center rounded-full transition-all ${
-                          serverDefaults.configuration.reactionRoles.enabled ? 'bg-green-600' : 'bg-gray-300'
-                        }`}
-                      >
-                        <span
-                          className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform ${
-                            serverDefaults.configuration.reactionRoles.enabled ? 'translate-x-9' : 'translate-x-1'
+                    {/* Reaction Roles */}
+                    <div className="bg-gray-50 rounded-lg border border-gray-200">
+                      <div className="flex items-center justify-between p-3">
+                        <div className="flex items-center gap-3 flex-1">
+                          {serverDefaults.configuration.reactionRoles.enabled && (
+                            <button
+                              onClick={() => setExpandedDefaults(prev => 
+                                prev.includes('reactionRoles') ? prev.filter(i => i !== 'reactionRoles') : [...prev, 'reactionRoles']
+                              )}
+                              className="text-gray-500 hover:text-gray-700"
+                            >
+                              {expandedDefaults.includes('reactionRoles') ? '▼' : '▶'}
+                            </button>
+                          )}
+                          <div>
+                            <p className="font-medium text-gray-900">Reaction Roles</p>
+                            <p className="text-xs text-gray-500">Role assignment via reactions</p>
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => setServerDefaults({
+                            ...serverDefaults,
+                            configuration: {
+                              ...serverDefaults.configuration,
+                              reactionRoles: { ...serverDefaults.configuration.reactionRoles, enabled: !serverDefaults.configuration.reactionRoles.enabled }
+                            }
+                          })}
+                          className={`relative inline-flex h-8 w-16 items-center rounded-full transition-all ${
+                            serverDefaults.configuration.reactionRoles.enabled ? 'bg-green-600' : 'bg-gray-300'
                           }`}
-                        />
-                      </button>
+                        >
+                          <span
+                            className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform ${
+                              serverDefaults.configuration.reactionRoles.enabled ? 'translate-x-9' : 'translate-x-1'
+                            }`}
+                          />
+                        </button>
+                      </div>
+                      {serverDefaults.configuration.reactionRoles.enabled && expandedDefaults.includes('reactionRoles') && (
+                        <div className="px-6 pb-4 space-y-2 border-t border-gray-200 pt-3">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Max Roles Per User</span>
+                            <input
+                              type="number"
+                              min="1"
+                              max="20"
+                              value={serverDefaults.configuration.reactionRoles.maxRolesPerUser}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                configuration: {
+                                  ...serverDefaults.configuration,
+                                  reactionRoles: { ...serverDefaults.configuration.reactionRoles, maxRolesPerUser: parseInt(e.target.value) }
+                                }
+                              })}
+                              className="w-16 px-2 py-1 text-sm border border-gray-300 rounded text-gray-900"
+                            />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Remove Role When Reaction Removed</span>
+                            <input
+                              type="checkbox"
+                              checked={serverDefaults.configuration.reactionRoles.removeOnReactionRemove}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                configuration: {
+                                  ...serverDefaults.configuration,
+                                  reactionRoles: { ...serverDefaults.configuration.reactionRoles, removeOnReactionRemove: e.target.checked }
+                                }
+                              })}
+                              className="w-4 h-4 text-orange-600 rounded"
+                            />
+                          </div>
+                        </div>
+                      )}
                     </div>
 
-                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <div>
-                        <p className="font-medium text-gray-900">Verification</p>
-                        <p className="text-xs text-gray-500">Member verification system</p>
-                      </div>
-                      <button
-                        onClick={() => setServerDefaults({
-                          ...serverDefaults,
-                          configuration: {
-                            ...serverDefaults.configuration,
-                            verification: { enabled: !serverDefaults.configuration.verification.enabled }
-                          }
-                        })}
-                        className={`relative inline-flex h-8 w-16 items-center rounded-full transition-all ${
-                          serverDefaults.configuration.verification.enabled ? 'bg-green-600' : 'bg-gray-300'
-                        }`}
-                      >
-                        <span
-                          className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform ${
-                            serverDefaults.configuration.verification.enabled ? 'translate-x-9' : 'translate-x-1'
+                    {/* Verification */}
+                    <div className="bg-gray-50 rounded-lg border border-gray-200">
+                      <div className="flex items-center justify-between p-3">
+                        <div className="flex items-center gap-3 flex-1">
+                          {serverDefaults.configuration.verification.enabled && (
+                            <button
+                              onClick={() => setExpandedDefaults(prev => 
+                                prev.includes('verification') ? prev.filter(i => i !== 'verification') : [...prev, 'verification']
+                              )}
+                              className="text-gray-500 hover:text-gray-700"
+                            >
+                              {expandedDefaults.includes('verification') ? '▼' : '▶'}
+                            </button>
+                          )}
+                          <div>
+                            <p className="font-medium text-gray-900">Verification</p>
+                            <p className="text-xs text-gray-500">Member verification system</p>
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => setServerDefaults({
+                            ...serverDefaults,
+                            configuration: {
+                              ...serverDefaults.configuration,
+                              verification: { ...serverDefaults.configuration.verification, enabled: !serverDefaults.configuration.verification.enabled }
+                            }
+                          })}
+                          className={`relative inline-flex h-8 w-16 items-center rounded-full transition-all ${
+                            serverDefaults.configuration.verification.enabled ? 'bg-green-600' : 'bg-gray-300'
                           }`}
-                        />
-                      </button>
+                        >
+                          <span
+                            className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform ${
+                              serverDefaults.configuration.verification.enabled ? 'translate-x-9' : 'translate-x-1'
+                            }`}
+                          />
+                        </button>
+                      </div>
+                      {serverDefaults.configuration.verification.enabled && expandedDefaults.includes('verification') && (
+                        <div className="px-6 pb-4 space-y-2 border-t border-gray-200 pt-3">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Require Captcha</span>
+                            <input
+                              type="checkbox"
+                              checked={serverDefaults.configuration.verification.requireCaptcha}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                configuration: {
+                                  ...serverDefaults.configuration,
+                                  verification: { ...serverDefaults.configuration.verification, requireCaptcha: e.target.checked }
+                                }
+                              })}
+                              className="w-4 h-4 text-orange-600 rounded"
+                            />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Require Rules Acceptance</span>
+                            <input
+                              type="checkbox"
+                              checked={serverDefaults.configuration.verification.requireRules}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                configuration: {
+                                  ...serverDefaults.configuration,
+                                  verification: { ...serverDefaults.configuration.verification, requireRules: e.target.checked }
+                                }
+                              })}
+                              className="w-4 h-4 text-orange-600 rounded"
+                            />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Verification Timeout (minutes)</span>
+                            <input
+                              type="number"
+                              min="5"
+                              max="60"
+                              value={serverDefaults.configuration.verification.verificationTimeout}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                configuration: {
+                                  ...serverDefaults.configuration,
+                                  verification: { ...serverDefaults.configuration.verification, verificationTimeout: parseInt(e.target.value) }
+                                }
+                              })}
+                              className="w-16 px-2 py-1 text-sm border border-gray-300 rounded text-gray-900"
+                            />
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -1799,179 +2226,642 @@ export default function DeveloperPage() {
                     <span className="text-orange-600">📦</span> Modules
                   </h3>
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <div>
-                        <p className="font-medium text-gray-900">Moderation</p>
-                        <p className="text-xs text-gray-500">Ban, kick, timeout, warn, etc.</p>
-                      </div>
-                      <button
-                        onClick={() => setServerDefaults({
-                          ...serverDefaults,
-                          modules: {
-                            ...serverDefaults.modules,
-                            moderation: { enabled: !serverDefaults.modules.moderation.enabled }
-                          }
-                        })}
-                        className={`relative inline-flex h-8 w-16 items-center rounded-full transition-all ${
-                          serverDefaults.modules.moderation.enabled ? 'bg-green-600' : 'bg-gray-300'
-                        }`}
-                      >
-                        <span
-                          className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform ${
-                            serverDefaults.modules.moderation.enabled ? 'translate-x-9' : 'translate-x-1'
+                    {/* Moderation */}
+                    <div className="bg-gray-50 rounded-lg border border-gray-200">
+                      <div className="flex items-center justify-between p-3">
+                        <div className="flex items-center gap-3 flex-1">
+                          {serverDefaults.modules.moderation.enabled && (
+                            <button
+                              onClick={() => setExpandedDefaults(prev => 
+                                prev.includes('moderation') ? prev.filter(i => i !== 'moderation') : [...prev, 'moderation']
+                              )}
+                              className="text-gray-500 hover:text-gray-700"
+                            >
+                              {expandedDefaults.includes('moderation') ? '▼' : '▶'}
+                            </button>
+                          )}
+                          <div>
+                            <p className="font-medium text-gray-900">Moderation</p>
+                            <p className="text-xs text-gray-500">Ban, kick, timeout, warn, etc.</p>
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => setServerDefaults({
+                            ...serverDefaults,
+                            modules: {
+                              ...serverDefaults.modules,
+                              moderation: { ...serverDefaults.modules.moderation, enabled: !serverDefaults.modules.moderation.enabled }
+                            }
+                          })}
+                          className={`relative inline-flex h-8 w-16 items-center rounded-full transition-all ${
+                            serverDefaults.modules.moderation.enabled ? 'bg-green-600' : 'bg-gray-300'
                           }`}
-                        />
-                      </button>
+                        >
+                          <span
+                            className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform ${
+                              serverDefaults.modules.moderation.enabled ? 'translate-x-9' : 'translate-x-1'
+                            }`}
+                          />
+                        </button>
+                      </div>
+                      {serverDefaults.modules.moderation.enabled && expandedDefaults.includes('moderation') && (
+                        <div className="px-6 pb-4 space-y-2 border-t border-gray-200 pt-3">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Allow Ban</span>
+                            <input
+                              type="checkbox"
+                              checked={serverDefaults.modules.moderation.allowBan}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                modules: {
+                                  ...serverDefaults.modules,
+                                  moderation: { ...serverDefaults.modules.moderation, allowBan: e.target.checked }
+                                }
+                              })}
+                              className="w-4 h-4 text-orange-600 rounded"
+                            />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Allow Kick</span>
+                            <input
+                              type="checkbox"
+                              checked={serverDefaults.modules.moderation.allowKick}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                modules: {
+                                  ...serverDefaults.modules,
+                                  moderation: { ...serverDefaults.modules.moderation, allowKick: e.target.checked }
+                                }
+                              })}
+                              className="w-4 h-4 text-orange-600 rounded"
+                            />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Allow Warn</span>
+                            <input
+                              type="checkbox"
+                              checked={serverDefaults.modules.moderation.allowWarn}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                modules: {
+                                  ...serverDefaults.modules,
+                                  moderation: { ...serverDefaults.modules.moderation, allowWarn: e.target.checked }
+                                }
+                              })}
+                              className="w-4 h-4 text-orange-600 rounded"
+                            />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Allow Mute</span>
+                            <input
+                              type="checkbox"
+                              checked={serverDefaults.modules.moderation.allowMute}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                modules: {
+                                  ...serverDefaults.modules,
+                                  moderation: { ...serverDefaults.modules.moderation, allowMute: e.target.checked }
+                                }
+                              })}
+                              className="w-4 h-4 text-orange-600 rounded"
+                            />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Allow Timeout</span>
+                            <input
+                              type="checkbox"
+                              checked={serverDefaults.modules.moderation.allowTimeout}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                modules: {
+                                  ...serverDefaults.modules,
+                                  moderation: { ...serverDefaults.modules.moderation, allowTimeout: e.target.checked }
+                                }
+                              })}
+                              className="w-4 h-4 text-orange-600 rounded"
+                            />
+                          </div>
+                        </div>
+                      )}
                     </div>
 
-                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <div>
-                        <p className="font-medium text-gray-900">Role Management</p>
-                        <p className="text-xs text-gray-500">Create, delete, manage roles</p>
-                      </div>
-                      <button
-                        onClick={() => setServerDefaults({
-                          ...serverDefaults,
-                          modules: {
-                            ...serverDefaults.modules,
-                            roleManagement: { enabled: !serverDefaults.modules.roleManagement.enabled }
-                          }
-                        })}
-                        className={`relative inline-flex h-8 w-16 items-center rounded-full transition-all ${
-                          serverDefaults.modules.roleManagement.enabled ? 'bg-green-600' : 'bg-gray-300'
-                        }`}
-                      >
-                        <span
-                          className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform ${
-                            serverDefaults.modules.roleManagement.enabled ? 'translate-x-9' : 'translate-x-1'
+                    {/* Role Management */}
+                    <div className="bg-gray-50 rounded-lg border border-gray-200">
+                      <div className="flex items-center justify-between p-3">
+                        <div className="flex items-center gap-3 flex-1">
+                          {serverDefaults.modules.roleManagement.enabled && (
+                            <button
+                              onClick={() => setExpandedDefaults(prev => 
+                                prev.includes('roleManagement') ? prev.filter(i => i !== 'roleManagement') : [...prev, 'roleManagement']
+                              )}
+                              className="text-gray-500 hover:text-gray-700"
+                            >
+                              {expandedDefaults.includes('roleManagement') ? '▼' : '▶'}
+                            </button>
+                          )}
+                          <div>
+                            <p className="font-medium text-gray-900">Role Management</p>
+                            <p className="text-xs text-gray-500">Create, delete, manage roles</p>
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => setServerDefaults({
+                            ...serverDefaults,
+                            modules: {
+                              ...serverDefaults.modules,
+                              roleManagement: { ...serverDefaults.modules.roleManagement, enabled: !serverDefaults.modules.roleManagement.enabled }
+                            }
+                          })}
+                          className={`relative inline-flex h-8 w-16 items-center rounded-full transition-all ${
+                            serverDefaults.modules.roleManagement.enabled ? 'bg-green-600' : 'bg-gray-300'
                           }`}
-                        />
-                      </button>
+                        >
+                          <span
+                            className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform ${
+                              serverDefaults.modules.roleManagement.enabled ? 'translate-x-9' : 'translate-x-1'
+                            }`}
+                          />
+                        </button>
+                      </div>
+                      {serverDefaults.modules.roleManagement.enabled && expandedDefaults.includes('roleManagement') && (
+                        <div className="px-6 pb-4 space-y-2 border-t border-gray-200 pt-3">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Allow Role Create</span>
+                            <input
+                              type="checkbox"
+                              checked={serverDefaults.modules.roleManagement.allowRoleCreate}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                modules: {
+                                  ...serverDefaults.modules,
+                                  roleManagement: { ...serverDefaults.modules.roleManagement, allowRoleCreate: e.target.checked }
+                                }
+                              })}
+                              className="w-4 h-4 text-orange-600 rounded"
+                            />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Allow Role Delete</span>
+                            <input
+                              type="checkbox"
+                              checked={serverDefaults.modules.roleManagement.allowRoleDelete}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                modules: {
+                                  ...serverDefaults.modules,
+                                  roleManagement: { ...serverDefaults.modules.roleManagement, allowRoleDelete: e.target.checked }
+                                }
+                              })}
+                              className="w-4 h-4 text-orange-600 rounded"
+                            />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Allow Role Assign</span>
+                            <input
+                              type="checkbox"
+                              checked={serverDefaults.modules.roleManagement.allowRoleAssign}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                modules: {
+                                  ...serverDefaults.modules,
+                                  roleManagement: { ...serverDefaults.modules.roleManagement, allowRoleAssign: e.target.checked }
+                                }
+                              })}
+                              className="w-4 h-4 text-orange-600 rounded"
+                            />
+                          </div>
+                        </div>
+                      )}
                     </div>
 
-                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <div>
-                        <p className="font-medium text-gray-900">Member Management</p>
-                        <p className="text-xs text-gray-500">User info, avatars, roles</p>
-                      </div>
-                      <button
-                        onClick={() => setServerDefaults({
-                          ...serverDefaults,
-                          modules: {
-                            ...serverDefaults.modules,
-                            memberManagement: { enabled: !serverDefaults.modules.memberManagement.enabled }
-                          }
-                        })}
-                        className={`relative inline-flex h-8 w-16 items-center rounded-full transition-all ${
-                          serverDefaults.modules.memberManagement.enabled ? 'bg-green-600' : 'bg-gray-300'
-                        }`}
-                      >
-                        <span
-                          className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform ${
-                            serverDefaults.modules.memberManagement.enabled ? 'translate-x-9' : 'translate-x-1'
+                    {/* Member Management */}
+                    <div className="bg-gray-50 rounded-lg border border-gray-200">
+                      <div className="flex items-center justify-between p-3">
+                        <div className="flex items-center gap-3 flex-1">
+                          {serverDefaults.modules.memberManagement.enabled && (
+                            <button
+                              onClick={() => setExpandedDefaults(prev => 
+                                prev.includes('memberManagement') ? prev.filter(i => i !== 'memberManagement') : [...prev, 'memberManagement']
+                              )}
+                              className="text-gray-500 hover:text-gray-700"
+                            >
+                              {expandedDefaults.includes('memberManagement') ? '▼' : '▶'}
+                            </button>
+                          )}
+                          <div>
+                            <p className="font-medium text-gray-900">Member Management</p>
+                            <p className="text-xs text-gray-500">User info, avatars, roles</p>
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => setServerDefaults({
+                            ...serverDefaults,
+                            modules: {
+                              ...serverDefaults.modules,
+                              memberManagement: { ...serverDefaults.modules.memberManagement, enabled: !serverDefaults.modules.memberManagement.enabled }
+                            }
+                          })}
+                          className={`relative inline-flex h-8 w-16 items-center rounded-full transition-all ${
+                            serverDefaults.modules.memberManagement.enabled ? 'bg-green-600' : 'bg-gray-300'
                           }`}
-                        />
-                      </button>
+                        >
+                          <span
+                            className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform ${
+                              serverDefaults.modules.memberManagement.enabled ? 'translate-x-9' : 'translate-x-1'
+                            }`}
+                          />
+                        </button>
+                      </div>
+                      {serverDefaults.modules.memberManagement.enabled && expandedDefaults.includes('memberManagement') && (
+                        <div className="px-6 pb-4 space-y-2 border-t border-gray-200 pt-3">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Show Avatars</span>
+                            <input
+                              type="checkbox"
+                              checked={serverDefaults.modules.memberManagement.showAvatars}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                modules: {
+                                  ...serverDefaults.modules,
+                                  memberManagement: { ...serverDefaults.modules.memberManagement, showAvatars: e.target.checked }
+                                }
+                              })}
+                              className="w-4 h-4 text-orange-600 rounded"
+                            />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Show Nicknames</span>
+                            <input
+                              type="checkbox"
+                              checked={serverDefaults.modules.memberManagement.showNicknames}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                modules: {
+                                  ...serverDefaults.modules,
+                                  memberManagement: { ...serverDefaults.modules.memberManagement, showNicknames: e.target.checked }
+                                }
+                              })}
+                              className="w-4 h-4 text-orange-600 rounded"
+                            />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Show Join Date</span>
+                            <input
+                              type="checkbox"
+                              checked={serverDefaults.modules.memberManagement.showJoinDate}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                modules: {
+                                  ...serverDefaults.modules,
+                                  memberManagement: { ...serverDefaults.modules.memberManagement, showJoinDate: e.target.checked }
+                                }
+                              })}
+                              className="w-4 h-4 text-orange-600 rounded"
+                            />
+                          </div>
+                        </div>
+                      )}
                     </div>
 
-                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <div>
-                        <p className="font-medium text-gray-900">Announcements</p>
-                        <p className="text-xs text-gray-500">Server announcements and updates</p>
-                      </div>
-                      <button
-                        onClick={() => setServerDefaults({
-                          ...serverDefaults,
-                          modules: {
-                            ...serverDefaults.modules,
-                            announcements: { enabled: !serverDefaults.modules.announcements.enabled }
-                          }
-                        })}
-                        className={`relative inline-flex h-8 w-16 items-center rounded-full transition-all ${
-                          serverDefaults.modules.announcements.enabled ? 'bg-green-600' : 'bg-gray-300'
-                        }`}
-                      >
-                        <span
-                          className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform ${
-                            serverDefaults.modules.announcements.enabled ? 'translate-x-9' : 'translate-x-1'
+                    {/* Announcements */}
+                    <div className="bg-gray-50 rounded-lg border border-gray-200">
+                      <div className="flex items-center justify-between p-3">
+                        <div className="flex items-center gap-3 flex-1">
+                          {serverDefaults.modules.announcements.enabled && (
+                            <button
+                              onClick={() => setExpandedDefaults(prev => 
+                                prev.includes('announcements') ? prev.filter(i => i !== 'announcements') : [...prev, 'announcements']
+                              )}
+                              className="text-gray-500 hover:text-gray-700"
+                            >
+                              {expandedDefaults.includes('announcements') ? '▼' : '▶'}
+                            </button>
+                          )}
+                          <div>
+                            <p className="font-medium text-gray-900">Announcements</p>
+                            <p className="text-xs text-gray-500">Server announcements and updates</p>
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => setServerDefaults({
+                            ...serverDefaults,
+                            modules: {
+                              ...serverDefaults.modules,
+                              announcements: { ...serverDefaults.modules.announcements, enabled: !serverDefaults.modules.announcements.enabled }
+                            }
+                          })}
+                          className={`relative inline-flex h-8 w-16 items-center rounded-full transition-all ${
+                            serverDefaults.modules.announcements.enabled ? 'bg-green-600' : 'bg-gray-300'
                           }`}
-                        />
-                      </button>
+                        >
+                          <span
+                            className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform ${
+                              serverDefaults.modules.announcements.enabled ? 'translate-x-9' : 'translate-x-1'
+                            }`}
+                          />
+                        </button>
+                      </div>
+                      {serverDefaults.modules.announcements.enabled && expandedDefaults.includes('announcements') && (
+                        <div className="px-6 pb-4 space-y-2 border-t border-gray-200 pt-3">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Allow Pings in Announcements</span>
+                            <input
+                              type="checkbox"
+                              checked={serverDefaults.modules.announcements.allowPings}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                modules: {
+                                  ...serverDefaults.modules,
+                                  announcements: { ...serverDefaults.modules.announcements, allowPings: e.target.checked }
+                                }
+                              })}
+                              className="w-4 h-4 text-orange-600 rounded"
+                            />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Allow Embeds</span>
+                            <input
+                              type="checkbox"
+                              checked={serverDefaults.modules.announcements.allowEmbeds}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                modules: {
+                                  ...serverDefaults.modules,
+                                  announcements: { ...serverDefaults.modules.announcements, allowEmbeds: e.target.checked }
+                                }
+                              })}
+                              className="w-4 h-4 text-orange-600 rounded"
+                            />
+                          </div>
+                        </div>
+                      )}
                     </div>
 
-                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <div>
-                        <p className="font-medium text-gray-900">Welcome Messages</p>
-                        <p className="text-xs text-gray-500">Greet new members</p>
-                      </div>
-                      <button
-                        onClick={() => setServerDefaults({
-                          ...serverDefaults,
-                          modules: {
-                            ...serverDefaults.modules,
-                            welcomeMessages: { enabled: !serverDefaults.modules.welcomeMessages.enabled }
-                          }
-                        })}
-                        className={`relative inline-flex h-8 w-16 items-center rounded-full transition-all ${
-                          serverDefaults.modules.welcomeMessages.enabled ? 'bg-green-600' : 'bg-gray-300'
-                        }`}
-                      >
-                        <span
-                          className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform ${
-                            serverDefaults.modules.welcomeMessages.enabled ? 'translate-x-9' : 'translate-x-1'
+                    {/* Welcome Messages */}
+                    <div className="bg-gray-50 rounded-lg border border-gray-200">
+                      <div className="flex items-center justify-between p-3">
+                        <div className="flex items-center gap-3 flex-1">
+                          {serverDefaults.modules.welcomeMessages.enabled && (
+                            <button
+                              onClick={() => setExpandedDefaults(prev => 
+                                prev.includes('welcomeMessages') ? prev.filter(i => i !== 'welcomeMessages') : [...prev, 'welcomeMessages']
+                              )}
+                              className="text-gray-500 hover:text-gray-700"
+                            >
+                              {expandedDefaults.includes('welcomeMessages') ? '▼' : '▶'}
+                            </button>
+                          )}
+                          <div>
+                            <p className="font-medium text-gray-900">Welcome Messages</p>
+                            <p className="text-xs text-gray-500">Greet new members</p>
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => setServerDefaults({
+                            ...serverDefaults,
+                            modules: {
+                              ...serverDefaults.modules,
+                              welcomeMessages: { ...serverDefaults.modules.welcomeMessages, enabled: !serverDefaults.modules.welcomeMessages.enabled }
+                            }
+                          })}
+                          className={`relative inline-flex h-8 w-16 items-center rounded-full transition-all ${
+                            serverDefaults.modules.welcomeMessages.enabled ? 'bg-green-600' : 'bg-gray-300'
                           }`}
-                        />
-                      </button>
+                        >
+                          <span
+                            className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform ${
+                              serverDefaults.modules.welcomeMessages.enabled ? 'translate-x-9' : 'translate-x-1'
+                            }`}
+                          />
+                        </button>
+                      </div>
+                      {serverDefaults.modules.welcomeMessages.enabled && expandedDefaults.includes('welcomeMessages') && (
+                        <div className="px-6 pb-4 space-y-2 border-t border-gray-200 pt-3">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Send DM to New Member</span>
+                            <input
+                              type="checkbox"
+                              checked={serverDefaults.modules.welcomeMessages.sendDM}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                modules: {
+                                  ...serverDefaults.modules,
+                                  welcomeMessages: { ...serverDefaults.modules.welcomeMessages, sendDM: e.target.checked }
+                                }
+                              })}
+                              className="w-4 h-4 text-orange-600 rounded"
+                            />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Send In Welcome Channel</span>
+                            <input
+                              type="checkbox"
+                              checked={serverDefaults.modules.welcomeMessages.sendInChannel}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                modules: {
+                                  ...serverDefaults.modules,
+                                  welcomeMessages: { ...serverDefaults.modules.welcomeMessages, sendInChannel: e.target.checked }
+                                }
+                              })}
+                              className="w-4 h-4 text-orange-600 rounded"
+                            />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Include Server Rules</span>
+                            <input
+                              type="checkbox"
+                              checked={serverDefaults.modules.welcomeMessages.includeRules}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                modules: {
+                                  ...serverDefaults.modules,
+                                  welcomeMessages: { ...serverDefaults.modules.welcomeMessages, includeRules: e.target.checked }
+                                }
+                              })}
+                              className="w-4 h-4 text-orange-600 rounded"
+                            />
+                          </div>
+                        </div>
+                      )}
                     </div>
 
-                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <div>
-                        <p className="font-medium text-gray-900">Fun</p>
-                        <p className="text-xs text-gray-500">Games and entertainment commands</p>
-                      </div>
-                      <button
-                        onClick={() => setServerDefaults({
-                          ...serverDefaults,
-                          modules: {
-                            ...serverDefaults.modules,
-                            fun: { enabled: !serverDefaults.modules.fun.enabled }
-                          }
-                        })}
-                        className={`relative inline-flex h-8 w-16 items-center rounded-full transition-all ${
-                          serverDefaults.modules.fun.enabled ? 'bg-green-600' : 'bg-gray-300'
-                        }`}
-                      >
-                        <span
-                          className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform ${
-                            serverDefaults.modules.fun.enabled ? 'translate-x-9' : 'translate-x-1'
+                    {/* Fun */}
+                    <div className="bg-gray-50 rounded-lg border border-gray-200">
+                      <div className="flex items-center justify-between p-3">
+                        <div className="flex items-center gap-3 flex-1">
+                          {serverDefaults.modules.fun.enabled && (
+                            <button
+                              onClick={() => setExpandedDefaults(prev => 
+                                prev.includes('fun') ? prev.filter(i => i !== 'fun') : [...prev, 'fun']
+                              )}
+                              className="text-gray-500 hover:text-gray-700"
+                            >
+                              {expandedDefaults.includes('fun') ? '▼' : '▶'}
+                            </button>
+                          )}
+                          <div>
+                            <p className="font-medium text-gray-900">Fun</p>
+                            <p className="text-xs text-gray-500">Games and entertainment commands</p>
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => setServerDefaults({
+                            ...serverDefaults,
+                            modules: {
+                              ...serverDefaults.modules,
+                              fun: { ...serverDefaults.modules.fun, enabled: !serverDefaults.modules.fun.enabled }
+                            }
+                          })}
+                          className={`relative inline-flex h-8 w-16 items-center rounded-full transition-all ${
+                            serverDefaults.modules.fun.enabled ? 'bg-green-600' : 'bg-gray-300'
                           }`}
-                        />
-                      </button>
+                        >
+                          <span
+                            className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform ${
+                              serverDefaults.modules.fun.enabled ? 'translate-x-9' : 'translate-x-1'
+                            }`}
+                          />
+                        </button>
+                      </div>
+                      {serverDefaults.modules.fun.enabled && expandedDefaults.includes('fun') && (
+                        <div className="px-6 pb-4 space-y-2 border-t border-gray-200 pt-3">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Allow Games</span>
+                            <input
+                              type="checkbox"
+                              checked={serverDefaults.modules.fun.allowGames}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                modules: {
+                                  ...serverDefaults.modules,
+                                  fun: { ...serverDefaults.modules.fun, allowGames: e.target.checked }
+                                }
+                              })}
+                              className="w-4 h-4 text-orange-600 rounded"
+                            />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Allow Memes</span>
+                            <input
+                              type="checkbox"
+                              checked={serverDefaults.modules.fun.allowMemes}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                modules: {
+                                  ...serverDefaults.modules,
+                                  fun: { ...serverDefaults.modules.fun, allowMemes: e.target.checked }
+                                }
+                              })}
+                              className="w-4 h-4 text-orange-600 rounded"
+                            />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Allow GIFs</span>
+                            <input
+                              type="checkbox"
+                              checked={serverDefaults.modules.fun.allowGifs}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                modules: {
+                                  ...serverDefaults.modules,
+                                  fun: { ...serverDefaults.modules.fun, allowGifs: e.target.checked }
+                                }
+                              })}
+                              className="w-4 h-4 text-orange-600 rounded"
+                            />
+                          </div>
+                        </div>
+                      )}
                     </div>
 
-                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <div>
-                        <p className="font-medium text-gray-900">Utilities</p>
-                        <p className="text-xs text-gray-500">Utility and helper commands</p>
-                      </div>
-                      <button
-                        onClick={() => setServerDefaults({
-                          ...serverDefaults,
-                          modules: {
-                            ...serverDefaults.modules,
-                            utilities: { enabled: !serverDefaults.modules.utilities.enabled }
-                          }
-                        })}
-                        className={`relative inline-flex h-8 w-16 items-center rounded-full transition-all ${
-                          serverDefaults.modules.utilities.enabled ? 'bg-green-600' : 'bg-gray-300'
-                        }`}
-                      >
-                        <span
-                          className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform ${
-                            serverDefaults.modules.utilities.enabled ? 'translate-x-9' : 'translate-x-1'
+                    {/* Utilities */}
+                    <div className="bg-gray-50 rounded-lg border border-gray-200">
+                      <div className="flex items-center justify-between p-3">
+                        <div className="flex items-center gap-3 flex-1">
+                          {serverDefaults.modules.utilities.enabled && (
+                            <button
+                              onClick={() => setExpandedDefaults(prev => 
+                                prev.includes('utilities') ? prev.filter(i => i !== 'utilities') : [...prev, 'utilities']
+                              )}
+                              className="text-gray-500 hover:text-gray-700"
+                            >
+                              {expandedDefaults.includes('utilities') ? '▼' : '▶'}
+                            </button>
+                          )}
+                          <div>
+                            <p className="font-medium text-gray-900">Utilities</p>
+                            <p className="text-xs text-gray-500">Utility and helper commands</p>
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => setServerDefaults({
+                            ...serverDefaults,
+                            modules: {
+                              ...serverDefaults.modules,
+                              utilities: { ...serverDefaults.modules.utilities, enabled: !serverDefaults.modules.utilities.enabled }
+                            }
+                          })}
+                          className={`relative inline-flex h-8 w-16 items-center rounded-full transition-all ${
+                            serverDefaults.modules.utilities.enabled ? 'bg-green-600' : 'bg-gray-300'
                           }`}
-                        />
-                      </button>
+                        >
+                          <span
+                            className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform ${
+                              serverDefaults.modules.utilities.enabled ? 'translate-x-9' : 'translate-x-1'
+                            }`}
+                          />
+                        </button>
+                      </div>
+                      {serverDefaults.modules.utilities.enabled && expandedDefaults.includes('utilities') && (
+                        <div className="px-6 pb-4 space-y-2 border-t border-gray-200 pt-3">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Allow Reminders</span>
+                            <input
+                              type="checkbox"
+                              checked={serverDefaults.modules.utilities.allowReminders}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                modules: {
+                                  ...serverDefaults.modules,
+                                  utilities: { ...serverDefaults.modules.utilities, allowReminders: e.target.checked }
+                                }
+                              })}
+                              className="w-4 h-4 text-orange-600 rounded"
+                            />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Allow Polls</span>
+                            <input
+                              type="checkbox"
+                              checked={serverDefaults.modules.utilities.allowPolls}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                modules: {
+                                  ...serverDefaults.modules,
+                                  utilities: { ...serverDefaults.modules.utilities, allowPolls: e.target.checked }
+                                }
+                              })}
+                              className="w-4 h-4 text-orange-600 rounded"
+                            />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">Allow Calculator</span>
+                            <input
+                              type="checkbox"
+                              checked={serverDefaults.modules.utilities.allowCalculator}
+                              onChange={(e) => setServerDefaults({
+                                ...serverDefaults,
+                                modules: {
+                                  ...serverDefaults.modules,
+                                  utilities: { ...serverDefaults.modules.utilities, allowCalculator: e.target.checked }
+                                }
+                              })}
+                              className="w-4 h-4 text-orange-600 rounded"
+                            />
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
