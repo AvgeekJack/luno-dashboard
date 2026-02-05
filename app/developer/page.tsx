@@ -873,6 +873,12 @@ export default function DeveloperPage() {
                           )}
                         </div>
                       </div>
+                      <button
+                        onClick={() => router.push(`/servers/${serverProfile.guildId}`)}
+                        className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white font-medium rounded-lg transition-colors shadow-sm whitespace-nowrap"
+                      >
+                        View Server Dashboard
+                      </button>
                     </div>
 
                     {/* Server Info Grid */}
