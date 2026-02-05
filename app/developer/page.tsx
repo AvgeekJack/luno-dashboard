@@ -64,11 +64,21 @@ export default function DeveloperPage() {
   const [serverDefaults, setServerDefaults] = useState({
     prefix: '!',
     premium: true,
+    configuration: {
+      automod: { enabled: true },
+      logging: { enabled: true },
+      antiRaid: { enabled: false },
+      reactionRoles: { enabled: false },
+      verification: { enabled: false },
+    },
     modules: {
       moderation: { enabled: true },
       roleManagement: { enabled: true },
       memberManagement: { enabled: false },
       announcements: { enabled: false },
+      welcomeMessages: { enabled: false },
+      fun: { enabled: true },
+      utilities: { enabled: true },
     }
   });
   
@@ -1650,9 +1660,144 @@ export default function DeveloperPage() {
                   </div>
                 </div>
 
-                {/* Default Module States */}
+                {/* Configuration Section */}
                 <div className="mb-6">
-                  <h3 className="text-sm font-semibold text-gray-900 mb-3 uppercase tracking-wide">Default Module States</h3>
+                  <h3 className="text-sm font-semibold text-gray-900 mb-3 uppercase tracking-wide flex items-center gap-2">
+                    <span className="text-orange-600">🔧</span> Configuration
+                  </h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div>
+                        <p className="font-medium text-gray-900">Automod</p>
+                        <p className="text-xs text-gray-500">Automated content moderation</p>
+                      </div>
+                      <button
+                        onClick={() => setServerDefaults({
+                          ...serverDefaults,
+                          configuration: {
+                            ...serverDefaults.configuration,
+                            automod: { enabled: !serverDefaults.configuration.automod.enabled }
+                          }
+                        })}
+                        className={`relative inline-flex h-8 w-16 items-center rounded-full transition-all ${
+                          serverDefaults.configuration.automod.enabled ? 'bg-green-600' : 'bg-gray-300'
+                        }`}
+                      >
+                        <span
+                          className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform ${
+                            serverDefaults.configuration.automod.enabled ? 'translate-x-9' : 'translate-x-1'
+                          }`}
+                        />
+                      </button>
+                    </div>
+
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div>
+                        <p className="font-medium text-gray-900">Logging</p>
+                        <p className="text-xs text-gray-500">Server activity logs</p>
+                      </div>
+                      <button
+                        onClick={() => setServerDefaults({
+                          ...serverDefaults,
+                          configuration: {
+                            ...serverDefaults.configuration,
+                            logging: { enabled: !serverDefaults.configuration.logging.enabled }
+                          }
+                        })}
+                        className={`relative inline-flex h-8 w-16 items-center rounded-full transition-all ${
+                          serverDefaults.configuration.logging.enabled ? 'bg-green-600' : 'bg-gray-300'
+                        }`}
+                      >
+                        <span
+                          className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform ${
+                            serverDefaults.configuration.logging.enabled ? 'translate-x-9' : 'translate-x-1'
+                          }`}
+                        />
+                      </button>
+                    </div>
+
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div>
+                        <p className="font-medium text-gray-900">Anti-Raid</p>
+                        <p className="text-xs text-gray-500">Raid protection measures</p>
+                      </div>
+                      <button
+                        onClick={() => setServerDefaults({
+                          ...serverDefaults,
+                          configuration: {
+                            ...serverDefaults.configuration,
+                            antiRaid: { enabled: !serverDefaults.configuration.antiRaid.enabled }
+                          }
+                        })}
+                        className={`relative inline-flex h-8 w-16 items-center rounded-full transition-all ${
+                          serverDefaults.configuration.antiRaid.enabled ? 'bg-green-600' : 'bg-gray-300'
+                        }`}
+                      >
+                        <span
+                          className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform ${
+                            serverDefaults.configuration.antiRaid.enabled ? 'translate-x-9' : 'translate-x-1'
+                          }`}
+                        />
+                      </button>
+                    </div>
+
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div>
+                        <p className="font-medium text-gray-900">Reaction Roles</p>
+                        <p className="text-xs text-gray-500">Role assignment via reactions</p>
+                      </div>
+                      <button
+                        onClick={() => setServerDefaults({
+                          ...serverDefaults,
+                          configuration: {
+                            ...serverDefaults.configuration,
+                            reactionRoles: { enabled: !serverDefaults.configuration.reactionRoles.enabled }
+                          }
+                        })}
+                        className={`relative inline-flex h-8 w-16 items-center rounded-full transition-all ${
+                          serverDefaults.configuration.reactionRoles.enabled ? 'bg-green-600' : 'bg-gray-300'
+                        }`}
+                      >
+                        <span
+                          className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform ${
+                            serverDefaults.configuration.reactionRoles.enabled ? 'translate-x-9' : 'translate-x-1'
+                          }`}
+                        />
+                      </button>
+                    </div>
+
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div>
+                        <p className="font-medium text-gray-900">Verification</p>
+                        <p className="text-xs text-gray-500">Member verification system</p>
+                      </div>
+                      <button
+                        onClick={() => setServerDefaults({
+                          ...serverDefaults,
+                          configuration: {
+                            ...serverDefaults.configuration,
+                            verification: { enabled: !serverDefaults.configuration.verification.enabled }
+                          }
+                        })}
+                        className={`relative inline-flex h-8 w-16 items-center rounded-full transition-all ${
+                          serverDefaults.configuration.verification.enabled ? 'bg-green-600' : 'bg-gray-300'
+                        }`}
+                      >
+                        <span
+                          className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform ${
+                            serverDefaults.configuration.verification.enabled ? 'translate-x-9' : 'translate-x-1'
+                          }`}
+                        />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Modules Section */}
+                <div className="mb-6">
+                  <h3 className="text-sm font-semibold text-gray-900 mb-3 uppercase tracking-wide flex items-center gap-2">
+                    <span className="text-orange-600">📦</span> Modules
+                  </h3>
                   <div className="space-y-3">
                     <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                       <div>
@@ -1732,7 +1877,7 @@ export default function DeveloperPage() {
                     <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                       <div>
                         <p className="font-medium text-gray-900">Announcements</p>
-                        <p className="text-xs text-gray-500">Announcements, giveaways, polls</p>
+                        <p className="text-xs text-gray-500">Server announcements and updates</p>
                       </div>
                       <button
                         onClick={() => setServerDefaults({
@@ -1749,6 +1894,81 @@ export default function DeveloperPage() {
                         <span
                           className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform ${
                             serverDefaults.modules.announcements.enabled ? 'translate-x-9' : 'translate-x-1'
+                          }`}
+                        />
+                      </button>
+                    </div>
+
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div>
+                        <p className="font-medium text-gray-900">Welcome Messages</p>
+                        <p className="text-xs text-gray-500">Greet new members</p>
+                      </div>
+                      <button
+                        onClick={() => setServerDefaults({
+                          ...serverDefaults,
+                          modules: {
+                            ...serverDefaults.modules,
+                            welcomeMessages: { enabled: !serverDefaults.modules.welcomeMessages.enabled }
+                          }
+                        })}
+                        className={`relative inline-flex h-8 w-16 items-center rounded-full transition-all ${
+                          serverDefaults.modules.welcomeMessages.enabled ? 'bg-green-600' : 'bg-gray-300'
+                        }`}
+                      >
+                        <span
+                          className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform ${
+                            serverDefaults.modules.welcomeMessages.enabled ? 'translate-x-9' : 'translate-x-1'
+                          }`}
+                        />
+                      </button>
+                    </div>
+
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div>
+                        <p className="font-medium text-gray-900">Fun</p>
+                        <p className="text-xs text-gray-500">Games and entertainment commands</p>
+                      </div>
+                      <button
+                        onClick={() => setServerDefaults({
+                          ...serverDefaults,
+                          modules: {
+                            ...serverDefaults.modules,
+                            fun: { enabled: !serverDefaults.modules.fun.enabled }
+                          }
+                        })}
+                        className={`relative inline-flex h-8 w-16 items-center rounded-full transition-all ${
+                          serverDefaults.modules.fun.enabled ? 'bg-green-600' : 'bg-gray-300'
+                        }`}
+                      >
+                        <span
+                          className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform ${
+                            serverDefaults.modules.fun.enabled ? 'translate-x-9' : 'translate-x-1'
+                          }`}
+                        />
+                      </button>
+                    </div>
+
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div>
+                        <p className="font-medium text-gray-900">Utilities</p>
+                        <p className="text-xs text-gray-500">Utility and helper commands</p>
+                      </div>
+                      <button
+                        onClick={() => setServerDefaults({
+                          ...serverDefaults,
+                          modules: {
+                            ...serverDefaults.modules,
+                            utilities: { enabled: !serverDefaults.modules.utilities.enabled }
+                          }
+                        })}
+                        className={`relative inline-flex h-8 w-16 items-center rounded-full transition-all ${
+                          serverDefaults.modules.utilities.enabled ? 'bg-green-600' : 'bg-gray-300'
+                        }`}
+                      >
+                        <span
+                          className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform ${
+                            serverDefaults.modules.utilities.enabled ? 'translate-x-9' : 'translate-x-1'
                           }`}
                         />
                       </button>
