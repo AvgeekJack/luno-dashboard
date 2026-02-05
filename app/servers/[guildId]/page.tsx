@@ -62,6 +62,7 @@ export default function ServerSettings() {
   const [showDeveloperTools, setShowDeveloperTools] = useState(false);
   const [bypassMaintenance, setBypassMaintenance] = useState(false);
   const [premiumPurchaseEnabled, setPremiumPurchaseEnabled] = useState(true);
+  const [premiumManagementEnabled, setPremiumManagementEnabled] = useState(true);
 
   // Check maintenance mode and premium purchase status
   useEffect(() => {
@@ -80,6 +81,7 @@ export default function ServerSettings() {
         if (siteSettingsRes.ok) {
           const siteData = await siteSettingsRes.json();
           setPremiumPurchaseEnabled(siteData.premiumPurchaseEnabled ?? true);
+          setPremiumManagementEnabled(siteData.premiumManagementEnabled ?? true);
         }
       } catch (error) {
         console.error('Failed to check settings:', error);
@@ -474,7 +476,7 @@ export default function ServerSettings() {
 
             {/* Premium Status Card */}
             <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow relative">
-              {!premiumPurchaseEnabled && !settings?.premium && (
+              {((!premiumPurchaseEnabled && !settings?.premium) || (!premiumManagementEnabled && settings?.premium)) && (
                 <div className="absolute inset-0 backdrop-blur-sm bg-orange-500/20 rounded-2xl flex items-center justify-center z-10">
                   <div className="bg-white/90 rounded-xl p-6 shadow-xl text-center">
                     <div className="text-4xl mb-3">🚀</div>
