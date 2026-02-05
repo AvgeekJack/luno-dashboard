@@ -81,6 +81,13 @@ export default function DeveloperPage() {
   const [systemAnnouncementsEnabled, setSystemAnnouncementsEnabled] = useState(false);
   const [analyticsEnabled, setAnalyticsEnabled] = useState(true);
   const [betaFeaturesEnabled, setBetaFeaturesEnabled] = useState(false);
+  const [announcementConfig, setAnnouncementConfig] = useState({
+    title: '',
+    description: '',
+    backgroundColor: '#f97316',
+    buttonText: '',
+    buttonUrl: ''
+  });
   const [settingsStatus, setSettingsStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [settingsMessage, setSettingsMessage] = useState('');
   const [maintenanceETA, setMaintenanceETA] = useState('');
@@ -162,6 +169,9 @@ export default function DeveloperPage() {
         setSystemAnnouncementsEnabled(data.systemAnnouncementsEnabled || false);
         setAnalyticsEnabled(data.analyticsEnabled ?? true);
         setBetaFeaturesEnabled(data.betaFeaturesEnabled || false);
+        if (data.announcementConfig) {
+          setAnnouncementConfig(data.announcementConfig);
+        }
       }
     } catch (error) {
       console.error('Error fetching settings:', error);
@@ -292,6 +302,37 @@ export default function DeveloperPage() {
       setSettingsStatus('error');
       setSettingsMessage('Network error occurred');
       console.error('System announcements toggle error:', error);
+    }
+
+    setTimeout(() => {
+      setSettingsStatus('idle');
+      setSettingsMessage('');
+    }, 3000);
+  };
+
+  const handleSaveAnnouncementConfig = async () => {
+    setSettingsStatus('loading');
+    
+    try {
+      const response = await fetch('/api/site-settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ announcementConfig }),
+      });
+
+      const data = await response.json();
+      
+      if (response.ok) {
+        setSettingsStatus('success');
+        setSettingsMessage('Announcement configuration saved successfully!');
+      } else {
+        setSettingsStatus('error');
+        setSettingsMessage(data.error || 'Failed to save configuration');
+      }
+    } catch (error) {
+      setSettingsStatus('error');
+      setSettingsMessage('Network error occurred');
+      console.error('Announcement config save error:', error);
     }
 
     setTimeout(() => {
@@ -1900,6 +1941,126 @@ export default function DeveloperPage() {
                       )}
                     </p>
                   </div>
+
+                  {/* Announcement Configuration (Only shown when enabled) */}
+                  {systemAnnouncementsEnabled && (
+                    <div className="mt-6 pt-6 border-t border-gray-200 space-y-4">
+                      <h4 className="font-semibold text-gray-900 mb-3">Configure Announcement</h4>
+                      
+                      {/* Title */}
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Title
+                        </label>
+                        <input
+                          type="text"
+                          value={announcementConfig.title}
+                          onChange={(e) => setAnnouncementConfig({ ...announcementConfig, title: e.target.value })}
+                          placeholder="Important Update"
+                          className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-gray-900"
+                        />
+                      </div>
+
+                      {/* Description */}
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Description
+                        </label>
+                        <textarea
+                          value={announcementConfig.description}
+                          onChange={(e) => setAnnouncementConfig({ ...announcementConfig, description: e.target.value })}
+                          placeholder="We've added new features to improve your experience..."
+                          rows={3}
+                          className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-gray-900"
+                        />
+                      </div>
+
+                      {/* Background Color */}
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Background Color
+                        </label>
+                        <div className="flex gap-3 items-center">
+                          <input
+                            type="color"
+                            value={announcementConfig.backgroundColor}
+                            onChange={(e) => setAnnouncementConfig({ ...announcementConfig, backgroundColor: e.target.value })}
+                            className="h-10 w-20 rounded-lg border border-gray-300 cursor-pointer"
+                          />
+                          <input
+                            type="text"
+                            value={announcementConfig.backgroundColor}
+                            onChange={(e) => setAnnouncementConfig({ ...announcementConfig, backgroundColor: e.target.value })}
+                            placeholder="#f97316"
+                            className="flex-1 px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-gray-900"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Button Text */}
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Button Text (Optional)
+                          </label>
+                          <input
+                            type="text"
+                            value={announcementConfig.buttonText}
+                            onChange={(e) => setAnnouncementConfig({ ...announcementConfig, buttonText: e.target.value })}
+                            placeholder="Learn More"
+                            className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-gray-900"
+                          />
+                        </div>
+
+                        {/* Button URL */}
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Button URL (Optional)
+                          </label>
+                          <input
+                            type="url"
+                            value={announcementConfig.buttonUrl}
+                            onChange={(e) => setAnnouncementConfig({ ...announcementConfig, buttonUrl: e.target.value })}
+                            placeholder="https://example.com"
+                            className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-gray-900"
+                          />
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={handleSaveAnnouncementConfig}
+                        disabled={settingsStatus === 'loading'}
+                        className="w-full px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white font-semibold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {settingsStatus === 'loading' ? 'Saving...' : 'Save Announcement Configuration'}
+                      </button>
+
+                      {/* Preview */}
+                      {announcementConfig.title && (
+                        <div className="mt-6">
+                          <p className="text-sm font-medium text-gray-700 mb-2">Preview:</p>
+                          <div 
+                            className="rounded-lg p-4 text-white shadow-md"
+                            style={{ backgroundColor: announcementConfig.backgroundColor }}
+                          >
+                            <div className="flex items-start justify-between gap-4">
+                              <div className="flex-1">
+                                <h5 className="font-bold text-lg mb-1">{announcementConfig.title}</h5>
+                                {announcementConfig.description && (
+                                  <p className="text-sm opacity-95">{announcementConfig.description}</p>
+                                )}
+                              </div>
+                              {announcementConfig.buttonText && (
+                                <button className="px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-lg font-semibold text-sm transition-all whitespace-nowrap">
+                                  {announcementConfig.buttonText}
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 {/* Analytics Collection Toggle */}

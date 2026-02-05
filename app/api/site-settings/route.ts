@@ -16,6 +16,13 @@ export async function GET() {
     const systemAnnouncementsEnabled = await getSiteSetting('systemAnnouncementsEnabled', false);
     const analyticsEnabled = await getSiteSetting('analyticsEnabled', true);
     const betaFeaturesEnabled = await getSiteSetting('betaFeaturesEnabled', false);
+    const announcementConfig = await getSiteSetting('announcementConfig', {
+      title: '',
+      description: '',
+      backgroundColor: '#f97316',
+      buttonText: '',
+      buttonUrl: ''
+    });
 
     return NextResponse.json({
       premiumPurchaseEnabled,
@@ -26,6 +33,7 @@ export async function GET() {
       systemAnnouncementsEnabled,
       analyticsEnabled,
       betaFeaturesEnabled,
+      announcementConfig,
     });
   } catch (error) {
     console.error('Site settings GET error:', error);
@@ -142,6 +150,17 @@ export async function POST(req: NextRequest) {
         success: true,
         betaFeaturesEnabled: body.betaFeaturesEnabled,
         message: `Beta features ${body.betaFeaturesEnabled ? 'enabled' : 'disabled'} successfully`,
+      });
+    }
+
+    // Handle announcement configuration update
+    if ('announcementConfig' in body) {
+      await setSiteSetting('announcementConfig', body.announcementConfig, session.user.id);
+      console.log(`[Site Settings] Announcement configuration updated by ${session.user.id}`);
+      return NextResponse.json({
+        success: true,
+        announcementConfig: body.announcementConfig,
+        message: 'Announcement configuration updated successfully',
       });
     }
 
