@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import ServerHeader from '@/components/ServerHeader';
+import SystemAnnouncement from '@/components/SystemAnnouncement';
 
 interface Guild {
   id: string;
@@ -85,6 +86,7 @@ export default function ServersPage() {
   return (
     <div className="min-h-screen bg-gray-50 text-[#0f172a]">
       <ServerHeader />
+      <SystemAnnouncement />
       
       <main className="pt-24 sm:pt-28 pb-12 sm:pb-16 px-4 sm:px-6 md:px-8">
         <div className="max-w-7xl mx-auto">

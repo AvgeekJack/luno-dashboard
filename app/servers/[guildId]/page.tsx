@@ -7,6 +7,7 @@ import Link from 'next/link';
 import MaintenanceScreen from '@/components/MaintenanceScreen';
 import DebugInfoPopup from '@/components/DebugInfoPopup';
 import DeveloperTools from '@/components/DeveloperTools';
+import SystemAnnouncement from '@/components/SystemAnnouncement';
 
 interface Settings {
   guildId: string;
@@ -433,7 +434,9 @@ export default function ServerSettings() {
       <DebugInfoPopup isOpen={showDebugInfo} onClose={() => setShowDebugInfo(false)} />
       <DeveloperTools isOpen={showDeveloperTools} onClose={() => setShowDeveloperTools(false)} />
 
-      <main className="flex-1 md:ml-64 py-12 px-4 md:px-8 pt-20 md:pt-12">
+      <div className="flex-1 md:ml-64">
+        <SystemAnnouncement />
+        <main className="py-12 px-4 md:px-8 pt-20 md:pt-12">
         <div className="w-full max-w-7xl mx-auto space-y-8">
           {/* Dashboard Header */}
           <div className="mb-8">
@@ -779,6 +782,7 @@ export default function ServerSettings() {
           </div>
         </div>
       </main>
+      </div>
     </div>
   );
 }

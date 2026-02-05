@@ -3,6 +3,8 @@
 import { useSession, signIn } from 'next-auth/react';
 import Link from 'next/link';
 import UserDropdown from '@/components/UserDropdown';
+import SystemAnnouncement from '@/components/SystemAnnouncement';
+import CookieConsent from '@/components/CookieConsent';
 
 export default function HomePage() {
   const { data: session } = useSession();
@@ -47,6 +49,14 @@ export default function HomePage() {
           </div>
         </div>
       </nav>
+
+      {/* System Announcement - appears after header */}
+      <div className="w-full mt-[60px] sm:mt-[72px]">
+        <SystemAnnouncement />
+      </div>
+
+      {/* Cookie Consent */}
+      <CookieConsent />
 
       <main className="w-full flex flex-col items-center flex-1">
         {/* Hero Section */}

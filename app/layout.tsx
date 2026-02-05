@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Providers } from '../components/providers';
 import BanCheckWrapper from '../components/BanCheckWrapper';
-import SystemAnnouncement from '../components/SystemAnnouncement';
 import "./globals.css";
 
 const geistSans = Geist({
@@ -32,7 +31,6 @@ export default function RootLayout({
       >
         <Providers>
           <BanCheckWrapper>
-            <SystemAnnouncement />
             {children}
           </BanCheckWrapper>
         </Providers>
