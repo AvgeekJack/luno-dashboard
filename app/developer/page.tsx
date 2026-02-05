@@ -681,7 +681,7 @@ export default function DeveloperPage() {
                       type="datetime-local"
                       value={maintenanceETA}
                       onChange={(e) => setMaintenanceETA(e.target.value)}
-                      className="flex-1 px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+                      className="flex-1 px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-gray-900"
                     />
                     <button
                       onClick={handleUpdateETA}
@@ -733,7 +733,7 @@ export default function DeveloperPage() {
                     value={guildIdToRemove}
                     onChange={(e) => setGuildIdToRemove(e.target.value)}
                     placeholder="1234567890123456678"
-                    className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+                    className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-gray-900"
                   />
                 </div>
 
@@ -794,7 +794,7 @@ export default function DeveloperPage() {
                     value={premiumGuildId}
                     onChange={(e) => setPremiumGuildId(e.target.value)}
                     placeholder="Enter Guild ID"
-                    className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+                    className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-gray-900"
                   />
                 </div>
 
@@ -864,7 +864,7 @@ export default function DeveloperPage() {
                     value={banUserId}
                     onChange={(e) => setBanUserId(e.target.value)}
                     placeholder="Enter User ID"
-                    className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all mb-4"
+                    className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all mb-4 text-gray-900"
                   />
 
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -875,7 +875,7 @@ export default function DeveloperPage() {
                     onChange={(e) => setBanReason(e.target.value)}
                     placeholder="Enter ban reason..."
                     rows={4}
-                    className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all resize-none"
+                    className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all resize-none text-gray-900"
                   />
                 </div>
 
@@ -1041,7 +1041,7 @@ export default function DeveloperPage() {
                       value={userViewId}
                       onChange={(e) => setUserViewId(e.target.value)}
                       placeholder="1234567890123456678"
-                      className="flex-1 px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+                      className="flex-1 px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-gray-900"
                     />
                     <button
                       onClick={handleViewUser}
@@ -1123,7 +1123,7 @@ export default function DeveloperPage() {
                     value={serverDefaults.prefix}
                     onChange={(e) => setServerDefaults({ ...serverDefaults, prefix: e.target.value })}
                     placeholder="!"
-                    className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+                    className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-gray-900"
                   />
                   <p className="text-xs text-gray-500 mt-1">The default prefix for bot commands (e.g., "!", "/", ".")</p>
                 </div>
