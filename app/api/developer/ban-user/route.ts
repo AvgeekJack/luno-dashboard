@@ -111,6 +111,123 @@ export async function POST(request: NextRequest) {
   }
 }
 
+// DELETE endpoint to unban a user
+export async function DELETE(request: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions);
+    
+    if (!session || session.user?.id !== DEVELOPER_USER_ID) {
+      return NextResponse.json(
+        { error: 'Unauthorized - Developer access only' },
+        { status: 403 }
+      );
+    }
+
+    const body = await request.json();
+    const { userId } = body;
+
+    if (!userId || typeof userId !== 'string') {
+      return NextResponse.json(
+        { error: 'User ID is required' },
+        { status: 400 }
+      );
+    }
+
+    await dbConnect();
+
+    const bannedUser = await BannedUser.findOne({ userId });
+    
+    if (bannedUser) {
+      bannedUser.banned = false;
+      bannedUser.updatedAt = new Date();
+      await bannedUser.save();
+    }
+    
+    console.log(`[User Ban] Unbanned user: ${userId}`);
+    
+    return NextResponse.json({
+      success: true,
+      message: `User ${userId} has been unbanned`,
+      userId,
+    });
+
+  } catch (error: any) {
+    console.error('[User Unban] Error:', error);
+    return NextResponse.json(
+      { 
+        error: 'Failed to unban user',
+        message: error.message 
+      },
+      { status: 500 }
+    );
+  }
+}
+
+// PATCH endpoint to update ban reason
+export async function PATCH(request: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions);
+    
+    if (!session || session.user?.id !== DEVELOPER_USER_ID) {
+      return NextResponse.json(
+        { error: 'Unauthorized - Developer access only' },
+        { status: 403 }
+      );
+    }
+
+    const body = await request.json();
+    const { userId, reason } = body;
+
+    if (!userId || typeof userId !== 'string') {
+      return NextResponse.json(
+        { error: 'User ID is required' },
+        { status: 400 }
+      );
+    }
+
+    if (!reason || typeof reason !== 'string') {
+      return NextResponse.json(
+        { error: 'Reason is required' },
+        { status: 400 }
+      );
+    }
+
+    await dbConnect();
+
+    const bannedUser = await BannedUser.findOne({ userId });
+    
+    if (!bannedUser) {
+      return NextResponse.json(
+        { error: 'User not found in banned list' },
+        { status: 404 }
+      );
+    }
+
+    bannedUser.reason = reason;
+    bannedUser.updatedAt = new Date();
+    await bannedUser.save();
+    
+    console.log(`[User Ban] Updated ban reason for user: ${userId}`);
+    
+    return NextResponse.json({
+      success: true,
+      message: 'Ban reason updated successfully',
+      userId,
+      reason,
+    });
+
+  } catch (error: any) {
+    console.error('[User Ban Update] Error:', error);
+    return NextResponse.json(
+      { 
+        error: 'Failed to update ban reason',
+        message: error.message 
+      },
+      { status: 500 }
+    );
+  }
+}
+
 // GET endpoint to check if a user is banned
 export async function GET(request: NextRequest) {
   try {

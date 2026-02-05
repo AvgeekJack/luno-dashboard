@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { isPremiumPurchaseEnabled, isMaintenanceMode, setSiteSetting } from '@/lib/siteSettings';
+import { isPremiumPurchaseEnabled, isMaintenanceMode, setSiteSetting, getSiteSetting } from '@/lib/siteSettings';
 
 const DEVELOPER_USER_ID = '922940896322940929';
 
@@ -10,10 +10,12 @@ export async function GET() {
   try {
     const premiumPurchaseEnabled = await isPremiumPurchaseEnabled();
     const maintenanceMode = await isMaintenanceMode();
+    const maintenanceETA = await getSiteSetting('maintenanceETA', '');
 
     return NextResponse.json({
       premiumPurchaseEnabled,
       maintenanceMode,
+      maintenanceETA,
     });
   } catch (error) {
     console.error('Site settings GET error:', error);
@@ -42,11 +44,28 @@ export async function POST(req: NextRequest) {
     // Handle maintenance mode update
     if ('maintenanceMode' in body) {
       await setSiteSetting('maintenanceMode', body.maintenanceMode, session.user.id);
+      
+      // Also update ETA if provided
+      if ('maintenanceETA' in body) {
+        await setSiteSetting('maintenanceETA', body.maintenanceETA, session.user.id);
+      }
+      
       console.log(`[Site Settings] Maintenance mode ${body.maintenanceMode ? 'enabled' : 'disabled'} by ${session.user.id}`);
       return NextResponse.json({
         success: true,
         maintenanceMode: body.maintenanceMode,
         message: `Maintenance mode ${body.maintenanceMode ? 'enabled' : 'disabled'} successfully`,
+      });
+    }
+
+    // Handle maintenance ETA update
+    if ('maintenanceETA' in body) {
+      await setSiteSetting('maintenanceETA', body.maintenanceETA, session.user.id);
+      console.log(`[Site Settings] Maintenance ETA updated by ${session.user.id}`);
+      return NextResponse.json({
+        success: true,
+        maintenanceETA: body.maintenanceETA,
+        message: 'Maintenance ETA updated successfully',
       });
     }
 

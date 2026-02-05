@@ -17,7 +17,10 @@ import {
   AlertTriangle,
   Shield,
   Zap,
-  Gem
+  Gem,
+  MoreVertical,
+  Edit,
+  X
 } from 'lucide-react';
 
 const DEVELOPER_USER_ID = '922940896322940929';
@@ -63,6 +66,13 @@ export default function DeveloperPage() {
   const [maintenanceMode, setMaintenanceMode] = useState(false);
   const [maintenanceStatus, setMaintenanceStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [maintenanceMessage, setMaintenanceMessage] = useState('');
+  const [maintenanceETA, setMaintenanceETA] = useState('');
+  
+  const [bannedUsers, setBannedUsers] = useState<any[]>([]);
+  const [bannedUsersLoading, setBannedUsersLoading] = useState(false);
+  const [editingBanId, setEditingBanId] = useState<string | null>(null);
+  const [editReason, setEditReason] = useState('');
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
   const tabs = [
     { id: 'overview', label: 'Overview', icon: Settings },
@@ -87,7 +97,10 @@ export default function DeveloperPage() {
 
   useEffect(() => {
     fetchMaintenanceStatus();
-  }, []);
+    if (activeTab === 'bans') {
+      fetchBannedUsers();
+    }
+  }, [activeTab]);
 
   const fetchMaintenanceStatus = async () => {
     try {
@@ -95,9 +108,25 @@ export default function DeveloperPage() {
       if (response.ok) {
         const data = await response.json();
         setMaintenanceMode(data.maintenanceMode || false);
+        setMaintenanceETA(data.maintenanceETA || '');
       }
     } catch (error) {
       console.error('Error fetching maintenance status:', error);
+    }
+  };
+
+  const fetchBannedUsers = async () => {
+    setBannedUsersLoading(true);
+    try {
+      const response = await fetch('/api/developer/banned-users');
+      if (response.ok) {
+        const data = await response.json();
+        setBannedUsers(data.bannedUsers || []);
+      }
+    } catch (error) {
+      console.error('Error fetching banned users:', error);
+    } finally {
+      setBannedUsersLoading(false);
     }
   };
 
@@ -109,7 +138,7 @@ export default function DeveloperPage() {
       const response = await fetch('/api/site-settings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ maintenanceMode: newValue }),
+        body: JSON.stringify({ maintenanceMode: newValue, maintenanceETA }),
       });
 
       const data = await response.json();
@@ -134,6 +163,70 @@ export default function DeveloperPage() {
       setMaintenanceStatus('idle');
       setMaintenanceMessage('');
     }, 3000);
+  };
+
+  const handleUpdateETA = async () => {
+    setMaintenanceStatus('loading');
+    try {
+      const response = await fetch('/api/site-settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ maintenanceETA }),
+      });
+
+      const data = await response.json();
+      
+      if (response.ok) {
+        setMaintenanceStatus('success');
+        setMaintenanceMessage('ETA updated successfully!');
+      } else {
+        setMaintenanceStatus('error');
+        setMaintenanceMessage(data.error || 'Failed to update ETA');
+      }
+    } catch (error) {
+      setMaintenanceStatus('error');
+      setMaintenanceMessage('Network error occurred');
+    }
+
+    setTimeout(() => {
+      setMaintenanceStatus('idle');
+      setMaintenanceMessage('');
+    }, 3000);
+  };
+
+  const handleUpdateBanReason = async (userId: string, newReason: string) => {
+    try {
+      const response = await fetch('/api/developer/ban-user', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, reason: newReason }),
+      });
+
+      if (response.ok) {
+        await fetchBannedUsers();
+        setEditingBanId(null);
+        setEditReason('');
+      }
+    } catch (error) {
+      console.error('Error updating ban reason:', error);
+    }
+  };
+
+  const handleUnbanFromList = async (userId: string) => {
+    try {
+      const response = await fetch('/api/developer/ban-user', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId }),
+      });
+
+      if (response.ok) {
+        await fetchBannedUsers();
+        setOpenMenuId(null);
+      }
+    } catch (error) {
+      console.error('Error unbanning user:', error);
+    }
   };
 
   const handleRemoveBot = async () => {
@@ -266,6 +359,7 @@ export default function DeveloperPage() {
         setBanMessage('User banned successfully!');
         setBanUserId('');
         setBanReason('');
+        await fetchBannedUsers();
       } else {
         setBanStatus('error');
         setBanMessage(data.error || 'Failed to ban user');
@@ -303,6 +397,7 @@ export default function DeveloperPage() {
         setBanMessage('User unbanned successfully!');
         setBanUserId('');
         setBanReason('');
+        await fetchBannedUsers();
       } else {
         setBanStatus('error');
         setBanMessage(data.error || 'Failed to unban user');
@@ -387,7 +482,7 @@ export default function DeveloperPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50/30 via-white to-orange-50/30">
+    <div className="min-h-screen bg-white">
       <div className="max-w-7xl mx-auto p-6">
         {/* Header */}
         <div className="mb-6">
@@ -555,7 +650,7 @@ export default function DeveloperPage() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg mb-6">
                   <div>
                     <p className="font-semibold text-gray-900 mb-1">Maintenance Mode</p>
                     <p className="text-sm text-gray-600">
@@ -575,6 +670,28 @@ export default function DeveloperPage() {
                       }`}
                     />
                   </button>
+                </div>
+
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Expected Completion Date/Time
+                  </label>
+                  <div className="flex gap-3">
+                    <input
+                      type="datetime-local"
+                      value={maintenanceETA}
+                      onChange={(e) => setMaintenanceETA(e.target.value)}
+                      className="flex-1 px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+                    />
+                    <button
+                      onClick={handleUpdateETA}
+                      disabled={maintenanceStatus === 'loading'}
+                      className="px-6 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Update ETA
+                    </button>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">This will be displayed on the maintenance screen</p>
                 </div>
 
                 {maintenanceMessage && (
@@ -737,7 +854,7 @@ export default function DeveloperPage() {
                 <p className="text-gray-600 text-sm">Ban or unban users from accessing the website. Banned users can only access the home page.</p>
               </div>
 
-              <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+              <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm mb-6">
                 <div className="mb-6">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Enter User ID
@@ -796,6 +913,101 @@ export default function DeveloperPage() {
                       : 'bg-red-50 border-red-200 text-red-900'
                   }`}>
                     {banMessage}
+                  </div>
+                )}
+              </div>
+
+              {/* Banned Users List */}
+              <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+                <h3 className="text-lg font-bold text-gray-900 mb-4">Banned Users List</h3>
+                
+                {bannedUsersLoading ? (
+                  <div className="text-center py-8 text-gray-500">Loading banned users...</div>
+                ) : bannedUsers.length === 0 ? (
+                  <div className="text-center py-8 text-gray-500">No banned users found</div>
+                ) : (
+                  <div className="space-y-3">
+                    {bannedUsers.map((user) => (
+                      <div key={user.userId} className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-3 mb-2">
+                              <p className="font-mono font-semibold text-gray-900">{user.userId}</p>
+                              <span className="px-2 py-0.5 bg-red-100 text-red-700 text-xs font-medium rounded">Banned</span>
+                            </div>
+                            
+                            {editingBanId === user.userId ? (
+                              <div className="mt-2">
+                                <textarea
+                                  value={editReason}
+                                  onChange={(e) => setEditReason(e.target.value)}
+                                  className="w-full px-3 py-2 text-sm bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all resize-none"
+                                  rows={2}
+                                />
+                                <div className="flex gap-2 mt-2">
+                                  <button
+                                    onClick={() => handleUpdateBanReason(user.userId, editReason)}
+                                    className="px-3 py-1.5 bg-orange-600 hover:bg-orange-700 text-white text-sm font-medium rounded transition-colors"
+                                  >
+                                    Save
+                                  </button>
+                                  <button
+                                    onClick={() => {
+                                      setEditingBanId(null);
+                                      setEditReason('');
+                                    }}
+                                    className="px-3 py-1.5 bg-gray-200 hover:bg-gray-300 text-gray-700 text-sm font-medium rounded transition-colors"
+                                  >
+                                    Cancel
+                                  </button>
+                                </div>
+                              </div>
+                            ) : (
+                              <>
+                                <p className="text-sm text-gray-600 mb-1">
+                                  <span className="font-medium">Reason:</span> {user.reason || 'No reason provided'}
+                                </p>
+                                <p className="text-xs text-gray-500">
+                                  Banned on: {new Date(user.bannedAt).toLocaleDateString()} by {user.bannedBy}
+                                </p>
+                              </>
+                            )}
+                          </div>
+                          
+                          <div className="relative">
+                            <button
+                              onClick={() => setOpenMenuId(openMenuId === user.userId ? null : user.userId)}
+                              className="p-2 hover:bg-gray-200 rounded-lg transition-colors"
+                            >
+                              <MoreVertical className="w-5 h-5 text-gray-600" />
+                            </button>
+                            
+                            {openMenuId === user.userId && (
+                              <div className="absolute right-0 mt-1 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-10">
+                                <button
+                                  onClick={() => {
+                                    setEditingBanId(user.userId);
+                                    setEditReason(user.reason || '');
+                                    setOpenMenuId(null);
+                                  }}
+                                  className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                                >
+                                  <Edit className="w-4 h-4" />
+                                  Edit Reason
+                                </button>
+                                <button
+                                  onClick={() => handleUnbanFromList(user.userId)}
+                                  className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
+                                >
+                                  <X className="w-4 h-4" />
+                                  Unban User
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>
