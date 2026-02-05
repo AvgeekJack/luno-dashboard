@@ -108,8 +108,8 @@ export default function DeveloperPage() {
 
   if (status === 'loading') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-900">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-orange-900 to-gray-900">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
       </div>
     );
   }
@@ -121,10 +121,10 @@ export default function DeveloperPage() {
   // PIN verification screen
   if (!isVerified) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-900">
-        <div className="bg-gray-800 p-8 rounded-lg shadow-xl max-w-md w-full">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-orange-900 to-gray-900">
+        <div className="bg-gray-800/50 backdrop-blur-sm p-8 rounded-lg shadow-xl max-w-md w-full border border-orange-500/30">
           <div className="text-center mb-6">
-            <div className="text-red-500 text-4xl mb-4">🔐</div>
+            <div className="text-orange-500 text-4xl mb-4">🔐</div>
             <h1 className="text-2xl font-bold text-white mb-2">Developer Access</h1>
             <p className="text-gray-400">Enter PIN to continue</p>
           </div>
@@ -137,14 +137,14 @@ export default function DeveloperPage() {
                 onChange={(e) => setPin(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleVerifyPin()}
                 placeholder="Enter PIN"
-                className="w-full px-4 py-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-blue-500 text-center text-2xl tracking-widest"
+                className="w-full px-4 py-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-orange-500 text-center text-2xl tracking-widest"
                 maxLength={10}
                 autoFocus
               />
             </div>
 
             {verifyError && (
-              <div className="text-red-500 text-sm text-center">
+              <div className="text-orange-500 text-sm text-center">
                 {verifyError}
               </div>
             )}
@@ -152,7 +152,7 @@ export default function DeveloperPage() {
             <button
               onClick={handleVerifyPin}
               disabled={isVerifying}
-              className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed font-semibold"
+              className="w-full px-4 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 disabled:bg-gray-600 disabled:cursor-not-allowed font-semibold"
             >
               {isVerifying ? 'Verifying...' : 'Verify PIN'}
             </button>
@@ -173,7 +173,7 @@ export default function DeveloperPage() {
 
   // Main developer panel
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-orange-900/20 to-gray-900 text-white p-8">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -190,7 +190,7 @@ export default function DeveloperPage() {
             </button>
           </div>
           <div className="flex items-center gap-2 text-sm text-gray-400">
-            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+            <span className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></span>
             <span>Authenticated as Developer</span>
             <span className="ml-4">User ID: {session?.user?.id}</span>
           </div>
@@ -198,8 +198,8 @@ export default function DeveloperPage() {
 
         <div className="space-y-6">
             {/* Bot Server Management */}
-            <div className="bg-purple-900/20 border border-purple-800 rounded-lg p-6">
-              <h2 className="text-xl font-bold text-purple-400 mb-4">🤖 Bot Server Management</h2>
+            <div className="bg-orange-900/20 border border-orange-800 rounded-lg p-6">
+              <h2 className="text-xl font-bold text-orange-400 mb-4">🤖 Bot Server Management</h2>
               <p className="text-gray-400 mb-4">
                 Remove the bot from a specific server by entering the Guild ID.
               </p>
@@ -210,7 +210,7 @@ export default function DeveloperPage() {
                     value={guildIdToRemove}
                     onChange={(e) => setGuildIdToRemove(e.target.value)}
                     placeholder="Enter Guild ID (e.g., 123456789012345678)"
-                    className="flex-1 px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-purple-500"
+                    className="flex-1 px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-orange-500"
                     disabled={removeStatus === 'loading'}
                   />
                   <button
@@ -261,7 +261,7 @@ export default function DeveloperPage() {
                       }
                     }}
                     disabled={removeStatus === 'loading' || !guildIdToRemove.trim()}
-                    className="px-6 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg font-semibold transition-colors"
+                    className="px-6 py-2 bg-orange-600 hover:bg-orange-700 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg font-semibold transition-colors"
                   >
                     {removeStatus === 'loading' ? 'Removing...' : 'Remove Bot'}
                   </button>
@@ -270,8 +270,8 @@ export default function DeveloperPage() {
                 {removeMessage && (
                   <div className={`p-4 rounded-lg whitespace-pre-wrap ${ 
                     removeStatus === 'success' 
-                      ? 'bg-green-900/30 border border-green-700 text-green-400' 
-                      : 'bg-red-900/30 border border-red-700 text-red-400'
+                      ? 'bg-orange-900/30 border border-orange-700 text-orange-400' 
+                      : 'bg-orange-900/30 border border-orange-700 text-orange-400'
                   }`}>
                     {removeMessage}
                   </div>
@@ -284,8 +284,8 @@ export default function DeveloperPage() {
             </div>
 
             {/* Premium Management */}
-            <div className="bg-yellow-900/20 border border-yellow-800 rounded-lg p-6">
-              <h2 className="text-xl font-bold text-yellow-400 mb-4">⭐ Premium Management</h2>
+            <div className="bg-orange-900/20 border border-orange-800 rounded-lg p-6">
+              <h2 className="text-xl font-bold text-orange-400 mb-4">⭐ Premium Management</h2>
               <p className="text-gray-400 mb-4">
                 Grant or revoke premium access for a server by entering the Guild ID.
               </p>
@@ -296,7 +296,7 @@ export default function DeveloperPage() {
                     value={premiumGuildId}
                     onChange={(e) => setPremiumGuildId(e.target.value)}
                     placeholder="Enter Guild ID"
-                    className="flex-1 px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-yellow-500"
+                    className="flex-1 px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-orange-500"
                     disabled={premiumStatus === 'loading'}
                   />
                   <button
@@ -338,7 +338,7 @@ export default function DeveloperPage() {
                       }
                     }}
                     disabled={premiumStatus === 'loading' || !premiumGuildId.trim()}
-                    className="px-6 py-2 bg-yellow-600 hover:bg-yellow-700 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg font-semibold transition-colors"
+                    className="px-6 py-2 bg-orange-600 hover:bg-orange-700 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg font-semibold transition-colors"
                   >
                     {premiumStatus === 'loading' ? 'Granting...' : 'Grant Premium'}
                   </button>
@@ -393,8 +393,8 @@ export default function DeveloperPage() {
                 {premiumMessage && (
                   <div className={`p-4 rounded-lg whitespace-pre-wrap ${ 
                     premiumStatus === 'success' 
-                      ? 'bg-green-900/30 border border-green-700 text-green-400' 
-                      : 'bg-red-900/30 border border-red-700 text-red-400'
+                      ? 'bg-orange-900/30 border border-orange-700 text-orange-400' 
+                      : 'bg-orange-900/30 border border-orange-700 text-orange-400'
                   }`}>
                     {premiumMessage}
                   </div>
@@ -407,8 +407,8 @@ export default function DeveloperPage() {
             </div>
 
             {/* User Ban Management */}
-            <div className="bg-red-900/20 border border-red-800 rounded-lg p-6">
-              <h2 className="text-xl font-bold text-red-400 mb-4">🚫 User Ban Management</h2>
+            <div className="bg-orange-900/20 border border-orange-800 rounded-lg p-6">
+              <h2 className="text-xl font-bold text-orange-400 mb-4">🚫 User Ban Management</h2>
               <p className="text-gray-400 mb-4">
                 Ban or unban users from accessing the website. Banned users can only access the home page.
               </p>
@@ -419,14 +419,14 @@ export default function DeveloperPage() {
                     value={banUserId}
                     onChange={(e) => setBanUserId(e.target.value)}
                     placeholder="Enter User ID"
-                    className="w-full px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-red-500"
+                    className="w-full px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-orange-500"
                     disabled={banStatus === 'loading'}
                   />
                   <textarea
                     value={banReason}
                     onChange={(e) => setBanReason(e.target.value)}
                     placeholder="Ban reason (optional but recommended)"
-                    className="w-full px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-red-500 h-24 resize-none"
+                    className="w-full px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-orange-500 h-24 resize-none"
                     disabled={banStatus === 'loading'}
                   />
                   <div className="flex gap-4">
@@ -478,7 +478,7 @@ export default function DeveloperPage() {
                         }
                       }}
                       disabled={banStatus === 'loading' || !banUserId.trim()}
-                      className="flex-1 px-6 py-2 bg-red-600 hover:bg-red-700 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg font-semibold transition-colors"
+                      className="flex-1 px-6 py-2 bg-orange-600 hover:bg-orange-700 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg font-semibold transition-colors"
                     >
                       {banStatus === 'loading' ? 'Banning...' : 'Ban User'}
                     </button>
@@ -522,7 +522,7 @@ export default function DeveloperPage() {
                         }
                       }}
                       disabled={banStatus === 'loading' || !banUserId.trim()}
-                      className="flex-1 px-6 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg font-semibold transition-colors"
+                      className="flex-1 px-6 py-2 bg-orange-600 hover:bg-orange-700 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg font-semibold transition-colors"
                     >
                       {banStatus === 'loading' ? 'Unbanning...' : 'Unban User'}
                     </button>
@@ -532,8 +532,8 @@ export default function DeveloperPage() {
                 {banMessage && (
                   <div className={`p-4 rounded-lg whitespace-pre-wrap ${ 
                     banStatus === 'success' 
-                      ? 'bg-green-900/30 border border-green-700 text-green-400' 
-                      : 'bg-red-900/30 border border-red-700 text-red-400'
+                      ? 'bg-orange-900/30 border border-orange-700 text-orange-400' 
+                      : 'bg-orange-900/30 border border-orange-700 text-orange-400'
                   }`}>
                     {banMessage}
                   </div>
@@ -546,8 +546,8 @@ export default function DeveloperPage() {
             </div>
 
             {/* User Account View */}
-            <div className="bg-indigo-900/20 border border-indigo-800 rounded-lg p-6">
-              <h2 className="text-xl font-bold text-indigo-400 mb-4">👤 User Account View</h2>
+            <div className="bg-orange-900/20 border border-orange-800 rounded-lg p-6">
+              <h2 className="text-xl font-bold text-orange-400 mb-4">👤 User Account View</h2>
               <p className="text-gray-400 mb-4">
                 View any user's account information and their accessible servers.
               </p>
@@ -558,7 +558,7 @@ export default function DeveloperPage() {
                     value={userViewId}
                     onChange={(e) => setUserViewId(e.target.value)}
                     placeholder="Enter User ID (e.g., 123456789012345678)"
-                    className="flex-1 px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-indigo-500"
+                    className="flex-1 px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-orange-500"
                     disabled={userViewStatus === 'loading'}
                   />
                   <button
@@ -594,14 +594,14 @@ export default function DeveloperPage() {
                       }
                     }}
                     disabled={userViewStatus === 'loading' || !userViewId.trim()}
-                    className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg font-semibold transition-colors"
+                    className="px-6 py-2 bg-orange-600 hover:bg-orange-700 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg font-semibold transition-colors"
                   >
                     {userViewStatus === 'loading' ? 'Loading...' : 'View Account'}
                   </button>
                 </div>
                 
                 {userViewMessage && (
-                  <div className="p-4 rounded-lg bg-red-900/30 border border-red-700 text-red-400">
+                  <div className="p-4 rounded-lg bg-orange-900/30 border border-orange-700 text-orange-400">
                     {userViewMessage}
                   </div>
                 )}
@@ -609,8 +609,8 @@ export default function DeveloperPage() {
                 {userViewData && (
                   <div className="space-y-4">
                     {/* User Info Card */}
-                    <div className="bg-gray-800/50 rounded-lg p-6 border border-indigo-700">
-                      <h3 className="text-lg font-semibold text-indigo-300 mb-4">User Information</h3>
+                    <div className="bg-gray-800/50 rounded-lg p-6 border border-orange-700">
+                      <h3 className="text-lg font-semibold text-orange-300 mb-4">User Information</h3>
                       <div className="flex items-center gap-4">
                         {userViewData.user.avatar ? (
                           <img
@@ -619,7 +619,7 @@ export default function DeveloperPage() {
                             className="w-16 h-16 rounded-full"
                           />
                         ) : (
-                          <div className="w-16 h-16 rounded-full bg-indigo-600 flex items-center justify-center text-2xl font-bold">
+                          <div className="w-16 h-16 rounded-full bg-orange-600 flex items-center justify-center text-2xl font-bold">
                             {userViewData.user.username.charAt(0).toUpperCase()}
                           </div>
                         )}
@@ -629,7 +629,7 @@ export default function DeveloperPage() {
                               {userViewData.user.globalName || userViewData.user.username}
                             </h4>
                             {userViewData.user.bot && (
-                              <span className="px-2 py-0.5 bg-blue-600 text-xs font-semibold rounded">BOT</span>
+                              <span className="px-2 py-0.5 bg-orange-600 text-xs font-semibold rounded">BOT</span>
                             )}
                           </div>
                           <p className="text-gray-400">@{userViewData.user.username}</p>
@@ -639,8 +639,8 @@ export default function DeveloperPage() {
                     </div>
 
                     {/* Servers List */}
-                    <div className="bg-gray-800/50 rounded-lg p-6 border border-indigo-700">
-                      <h3 className="text-lg font-semibold text-indigo-300 mb-4">
+                    <div className="bg-gray-800/50 rounded-lg p-6 border border-orange-700">
+                      <h3 className="text-lg font-semibold text-orange-300 mb-4">
                         Accessible Servers ({userViewData.guildsCount})
                       </h3>
                       {userViewData.guilds.length === 0 ? (
@@ -655,7 +655,7 @@ export default function DeveloperPage() {
                               href={`/servers/${guild.id}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex items-center gap-3 p-3 bg-gray-700/50 rounded-lg hover:bg-gray-700 transition-colors border border-gray-600 hover:border-indigo-500"
+                              className="flex items-center gap-3 p-3 bg-gray-700/50 rounded-lg hover:bg-gray-700 transition-colors border border-gray-600 hover:border-orange-500"
                             >
                               {guild.icon ? (
                                 <img
@@ -664,7 +664,7 @@ export default function DeveloperPage() {
                                   className="w-12 h-12 rounded-full"
                                 />
                               ) : (
-                                <div className="w-12 h-12 rounded-full bg-indigo-600 flex items-center justify-center font-bold">
+                                <div className="w-12 h-12 rounded-full bg-orange-600 flex items-center justify-center font-bold">
                                   {guild.name.charAt(0)}
                                 </div>
                               )}
@@ -672,7 +672,7 @@ export default function DeveloperPage() {
                                 <div className="flex items-center gap-2">
                                   <p className="font-semibold text-white truncate">{guild.name}</p>
                                   {guild.owner && (
-                                    <span className="px-1.5 py-0.5 bg-yellow-600 text-xs font-semibold rounded">OWNER</span>
+                                    <span className="px-1.5 py-0.5 bg-orange-600 text-xs font-semibold rounded">OWNER</span>
                                   )}
                                 </div>
                                 <p className="text-xs text-gray-400 truncate">ID: {guild.id}</p>
@@ -695,8 +695,8 @@ export default function DeveloperPage() {
             </div>
 
             {/* New Server Defaults Configuration */}
-            <div className="bg-cyan-900/20 border border-cyan-800 rounded-lg p-6">
-              <h2 className="text-xl font-bold text-cyan-400 mb-4">🆕 New Server Defaults</h2>
+            <div className="bg-orange-900/20 border border-orange-800 rounded-lg p-6">
+              <h2 className="text-xl font-bold text-orange-400 mb-4">🆕 New Server Defaults</h2>
               <p className="text-gray-400 mb-6">
                 Configure default settings that will be applied when a server first adds the bot and sets up their dashboard.
               </p>
@@ -712,7 +712,7 @@ export default function DeveloperPage() {
                     value={serverDefaults.prefix}
                     onChange={(e) => setServerDefaults({ ...serverDefaults, prefix: e.target.value })}
                     placeholder="!"
-                    className="w-full px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-cyan-500"
+                    className="w-full px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-orange-500"
                   />
                   <p className="text-sm text-gray-500 mt-1">
                     The default prefix for bot commands (e.g., "!", "/", ".")
@@ -732,13 +732,13 @@ export default function DeveloperPage() {
                       onChange={(e) => setServerDefaults({ ...serverDefaults, premium: e.target.checked })}
                       className="sr-only peer"
                     />
-                    <div className="w-11 h-6 bg-gray-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-cyan-800 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
+                    <div className="w-11 h-6 bg-gray-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-800 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
                   </label>
                 </div>
 
                 {/* Modules Configuration */}
                 <div>
-                  <h3 className="text-lg font-semibold text-cyan-300 mb-4">Default Module States</h3>
+                  <h3 className="text-lg font-semibold text-orange-300 mb-4">Default Module States</h3>
                   <div className="space-y-3">
                     {/* Moderation Module */}
                     <div className="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">

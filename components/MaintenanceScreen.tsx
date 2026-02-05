@@ -106,12 +106,12 @@ export default function MaintenanceScreen({ userId, onBypass }: MaintenanceScree
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-orange-900 to-gray-900 p-4">
       <div className="max-w-2xl w-full">
         {/* Main Maintenance Card */}
-        <div className="bg-gray-800 rounded-2xl shadow-2xl p-8 mb-6 border border-gray-700">
+        <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl shadow-2xl p-8 mb-6 border border-orange-500/30">
           <div className="text-center mb-8">
-            <div className="text-yellow-500 text-6xl mb-6 animate-pulse">
+            <div className="text-orange-500 text-6xl mb-6 animate-pulse">
               🔧
             </div>
             <h1 className="text-4xl font-bold text-white mb-4">
@@ -127,7 +127,7 @@ export default function MaintenanceScreen({ userId, onBypass }: MaintenanceScree
 
           {/* Animated progress bar */}
           <div className="w-full bg-gray-700 rounded-full h-2 mb-8 overflow-hidden">
-            <div className="bg-gradient-to-r from-blue-500 to-purple-500 h-full rounded-full animate-pulse" 
+            <div className="bg-gradient-to-r from-orange-500 to-orange-600 h-full rounded-full animate-pulse" 
                  style={{ width: '70%' }}></div>
           </div>
 
@@ -146,11 +146,11 @@ export default function MaintenanceScreen({ userId, onBypass }: MaintenanceScree
 
         {/* Developer Bypass Section */}
         {isDeveloper && (
-          <div className="bg-gray-800/50 rounded-2xl shadow-xl p-6 border border-gray-700 backdrop-blur">
+          <div className="bg-gray-800/50 rounded-2xl shadow-xl p-6 border border-orange-500/30 backdrop-blur">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-                <span className="text-red-400 font-semibold text-sm">Developer Mode</span>
+                <span className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></span>
+                <span className="text-orange-400 font-semibold text-sm">Developer Mode</span>
               </div>
               <button
                 onClick={() => setShowBypass(!showBypass)}
@@ -172,16 +172,16 @@ export default function MaintenanceScreen({ userId, onBypass }: MaintenanceScree
                     onChange={(e) => setPin(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && handleBypassAttempt()}
                     placeholder="Enter PIN"
-                    className="w-full px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-blue-500 mb-2"
+                    className="w-full px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-orange-500 mb-2"
                     autoComplete="off"
                   />
                   {error && (
-                    <p className="text-red-500 text-sm mb-2">{error}</p>
+                    <p className="text-orange-500 text-sm mb-2">{error}</p>
                   )}
                   <button
                     onClick={handleBypassAttempt}
                     disabled={isVerifying}
-                    className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg disabled:bg-gray-600 disabled:cursor-not-allowed"
+                    className="w-full px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg disabled:bg-gray-600 disabled:cursor-not-allowed"
                   >
                     {isVerifying ? 'Verifying...' : 'Bypass Maintenance'}
                   </button>
@@ -193,7 +193,7 @@ export default function MaintenanceScreen({ userId, onBypass }: MaintenanceScree
             {debugStats && (
               <div className="mt-4 bg-gray-900/50 rounded-lg p-4">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-green-400 font-semibold text-sm">
+                  <h3 className="text-orange-400 font-semibold text-sm">
                     🐛 Live Debug Stats
                   </h3>
                   <span className="text-xs text-gray-500">

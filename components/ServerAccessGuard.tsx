@@ -163,22 +163,22 @@ export default function ServerAccessGuard({ guildId, children }: ServerAccessGua
 
   if (hasAccess === false) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-red-900 to-gray-900 flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-gray-800/50 backdrop-blur-sm rounded-lg p-8 text-center border border-red-500/30">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-orange-900 to-gray-900 flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-gray-800/50 backdrop-blur-sm rounded-lg p-8 text-center border border-orange-500/30">
           <div className="mb-6">
-            <svg className="w-20 h-20 mx-auto text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-20 h-20 mx-auto text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
           </div>
           
           <h1 className="text-2xl font-bold text-white mb-4">Access Denied</h1>
           <p className="text-gray-300 mb-6">
-            You don't have permission to access this server's dashboard. You need the <span className="font-semibold text-purple-400">MANAGE_GUILD</span> permission to view and modify server settings.
+            You don't have permission to access this server's dashboard. You need the <span className="font-semibold text-orange-400">MANAGE_GUILD</span> permission to view and modify server settings.
           </p>
 
           <button
             onClick={() => router.push('/servers')}
-            className="w-full px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg transition-colors"
+            className="w-full px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white font-medium rounded-lg transition-colors"
           >
             Return to Server List
           </button>
