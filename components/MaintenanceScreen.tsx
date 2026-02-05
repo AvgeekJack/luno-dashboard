@@ -27,6 +27,7 @@ export default function MaintenanceScreen({ userId, onBypass }: MaintenanceScree
   const [error, setError] = useState('');
   const [debugStats, setDebugStats] = useState<DebugStats | null>(null);
   const [maintenanceETA, setMaintenanceETA] = useState('');
+  const [progress, setProgress] = useState(70);
   
   const isDeveloper = userId === DEVELOPER_USER_ID;
   const [showBypass, setShowBypass] = useState(false);
@@ -45,6 +46,37 @@ export default function MaintenanceScreen({ userId, onBypass }: MaintenanceScree
       return () => clearInterval(interval);
     }
   }, [isDeveloper]);
+
+  useEffect(() => {
+    // Calculate and update progress based on ETA
+    if (maintenanceETA) {
+      calculateProgress();
+      const interval = setInterval(calculateProgress, 10000); // Update every 10 seconds
+      return () => clearInterval(interval);
+    }
+  }, [maintenanceETA]);
+
+  const calculateProgress = () => {
+    if (!maintenanceETA) {
+      setProgress(70);
+      return;
+    }
+
+    const now = new Date().getTime();
+    const etaTime = new Date(maintenanceETA).getTime();
+    
+    // Estimate maintenance started 2 hours before ETA (you can adjust this)
+    const estimatedStartTime = etaTime - (2 * 60 * 60 * 1000);
+    const totalDuration = etaTime - estimatedStartTime;
+    const elapsed = now - estimatedStartTime;
+    
+    let calculatedProgress = (elapsed / totalDuration) * 100;
+    
+    // Clamp between 10% and 95%
+    calculatedProgress = Math.max(10, Math.min(95, calculatedProgress));
+    
+    setProgress(Math.round(calculatedProgress));
+  };
 
   const fetchMaintenanceETA = async () => {
     try {
@@ -143,8 +175,10 @@ export default function MaintenanceScreen({ userId, onBypass }: MaintenanceScree
 
           {/* Animated progress bar */}
           <div className="w-full bg-orange-100 rounded-full h-2 mb-8 overflow-hidden">
-            <div className="bg-gradient-to-r from-orange-500 to-orange-600 h-full rounded-full animate-pulse" 
-                 style={{ width: '70%' }}></div>
+            <div 
+              className="bg-gradient-to-r from-orange-500 to-orange-600 h-full rounded-full transition-all duration-1000 ease-out" 
+              style={{ width: `${progress}%` }}
+            ></div>
           </div>
 
           <div className="space-y-4 text-center">
