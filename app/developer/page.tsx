@@ -239,20 +239,27 @@ export default function DeveloperPage() {
                           body: JSON.stringify({ maintenanceMode: newValue }),
                         });
                         
+                        const data = await response.json();
+                        
                         if (response.ok) {
                           setMaintenanceMode(newValue);
                           setMaintenanceStatus('success');
-                          setMaintenanceMessage(`Maintenance mode ${newValue ? 'enabled' : 'disabled'} successfully`);
+                          setMaintenanceMessage(data.message || `Maintenance mode ${newValue ? 'enabled' : 'disabled'} successfully`);
                           setTimeout(() => {
                             setMaintenanceStatus('idle');
                             setMaintenanceMessage('');
                           }, 3000);
                         } else {
+                          // Reset to previous value on error
+                          setMaintenanceMode(!newValue);
                           setMaintenanceStatus('error');
-                          setMaintenanceMessage('Failed to update maintenance mode');
+                          setMaintenanceMessage(data.error || 'Failed to update maintenance mode');
+                          console.error('Maintenance mode update failed:', data);
                         }
                       } catch (error) {
                         console.error('Maintenance mode error:', error);
+                        // Reset to previous value on error
+                        setMaintenanceMode(!newValue);
                         setMaintenanceStatus('error');
                         setMaintenanceMessage('Failed to update maintenance mode');
                       }
@@ -265,10 +272,10 @@ export default function DeveloperPage() {
               </div>
               
               {maintenanceMessage && (
-                <div className={`mt-4 p-3 rounded-lg ${ 
+                <div className={`mt-4 p-3 rounded-lg font-medium ${ 
                   maintenanceStatus === 'success' 
                     ? 'bg-orange-50 border-2 border-orange-500 text-orange-700' 
-                    : 'bg-orange-50 border-2 border-orange-500 text-orange-700'
+                    : 'bg-red-50 border-2 border-red-500 text-red-700'
                 }`}>
                   {maintenanceMessage}
                 </div>

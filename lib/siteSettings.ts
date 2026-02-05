@@ -12,6 +12,25 @@ export async function getSiteSetting(key: string, defaultValue: any = null) {
   }
 }
 
+export async function setSiteSetting(key: string, value: any, updatedBy?: string) {
+  try {
+    await connectDB();
+    const setting = await SiteSettings.findOneAndUpdate(
+      { settingKey: key },
+      { 
+        settingValue: value, 
+        updatedAt: new Date(),
+        updatedBy: updatedBy || 'system'
+      },
+      { upsert: true, new: true }
+    );
+    return setting;
+  } catch (error) {
+    console.error(`Error setting ${key}:`, error);
+    throw error;
+  }
+}
+
 export async function isMaintenanceMode(): Promise<boolean> {
   return await getSiteSetting('maintenanceMode', false);
 }
