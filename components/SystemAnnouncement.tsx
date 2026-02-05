@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { X } from 'lucide-react';
 
 interface AnnouncementConfig {
@@ -9,11 +11,17 @@ interface AnnouncementConfig {
   backgroundColor: string;
   buttonText: string;
   buttonUrl: string;
+  dismissable: boolean;
+  visibleOnHomePage: boolean;
+  visibleAfterLogin: boolean;
 }
 
 export default function SystemAnnouncement() {
+  const pathname = usePathname();
+  const { data: session, status } = useSession();
   const [visible, setVisible] = useState(false);
   const [config, setConfig] = useState<AnnouncementConfig | null>(null);
+  const [dismissed, setDismissed] = useState(false);
 
   useEffect(() => {
     const fetchAnnouncement = async () => {
@@ -23,7 +31,6 @@ export default function SystemAnnouncement() {
           const data = await response.json();
           if (data.systemAnnouncementsEnabled && data.announcementConfig?.title) {
             setConfig(data.announcementConfig);
-            setVisible(true);
           }
         }
       } catch (error) {
@@ -34,11 +41,45 @@ export default function SystemAnnouncement() {
     fetchAnnouncement();
   }, []);
 
-  if (!visible || !config) return null;
+  useEffect(() => {
+    if (!config) {
+      setVisible(false);
+      return;
+    }
+
+    const isHomePage = pathname === '/';
+    const isAuthenticated = status === 'authenticated';
+
+    // Check visibility rules
+    if (isHomePage && !config.visibleOnHomePage) {
+      setVisible(false);
+      return;
+    }
+
+    if (!isHomePage && isAuthenticated && !config.visibleAfterLogin) {
+      setVisible(false);
+      return;
+    }
+
+    if (!isHomePage && !isAuthenticated && !config.visibleOnHomePage) {
+      setVisible(false);
+      return;
+    }
+
+    setVisible(true);
+  }, [config, pathname, status]);
+
+  const handleDismiss = () => {
+    if (config?.dismissable) {
+      setDismissed(true);
+    }
+  };
+
+  if (!visible || !config || dismissed) return null;
 
   return (
     <div
-      className="w-full text-white shadow-lg relative"
+      className="w-full text-white shadow-lg relative z-50"
       style={{ backgroundColor: config.backgroundColor }}
     >
       <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
@@ -60,13 +101,15 @@ export default function SystemAnnouncement() {
                 {config.buttonText}
               </a>
             )}
-            <button
-              onClick={() => setVisible(false)}
-              className="p-1.5 hover:bg-white/20 rounded-lg transition-colors"
-              aria-label="Dismiss announcement"
-            >
-              <X className="w-5 h-5" />
-            </button>
+            {config.dismissable && (
+              <button
+                onClick={handleDismiss}
+                className="p-1.5 hover:bg-white/20 rounded-lg transition-colors"
+                aria-label="Dismiss announcement"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            )}
           </div>
         </div>
       </div>

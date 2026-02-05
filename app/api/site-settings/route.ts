@@ -21,7 +21,10 @@ export async function GET() {
       description: '',
       backgroundColor: '#f97316',
       buttonText: '',
-      buttonUrl: ''
+      buttonUrl: '',
+      dismissable: true,
+      visibleOnHomePage: true,
+      visibleAfterLogin: true
     });
 
     return NextResponse.json({

@@ -86,7 +86,10 @@ export default function DeveloperPage() {
     description: '',
     backgroundColor: '#f97316',
     buttonText: '',
-    buttonUrl: ''
+    buttonUrl: '',
+    dismissable: true,
+    visibleOnHomePage: true,
+    visibleAfterLogin: true
   });
   const [settingsStatus, setSettingsStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [settingsMessage, setSettingsMessage] = useState('');
@@ -2024,6 +2027,69 @@ export default function DeveloperPage() {
                             placeholder="https://example.com"
                             className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-gray-900"
                           />
+                        </div>
+                      </div>
+
+                      {/* Dismissable Toggle */}
+                      <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                        <div>
+                          <p className="font-medium text-gray-900">Dismissable</p>
+                          <p className="text-xs text-gray-500 mt-1">Allow users to close the announcement</p>
+                        </div>
+                        <button
+                          onClick={() => setAnnouncementConfig({ ...announcementConfig, dismissable: !announcementConfig.dismissable })}
+                          className={`relative inline-flex h-8 w-16 items-center rounded-full transition-all ${
+                            announcementConfig.dismissable ? 'bg-green-600' : 'bg-gray-300'
+                          }`}
+                        >
+                          <span
+                            className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform ${
+                              announcementConfig.dismissable ? 'translate-x-9' : 'translate-x-1'
+                            }`}
+                          />
+                        </button>
+                      </div>
+
+                      {/* Visibility Options */}
+                      <div className="space-y-3">
+                        <h5 className="font-semibold text-gray-900 text-sm">Visibility Settings</h5>
+                        
+                        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                          <div>
+                            <p className="font-medium text-gray-900">Visible on Home Page</p>
+                            <p className="text-xs text-gray-500 mt-1">Show announcement on the landing page</p>
+                          </div>
+                          <button
+                            onClick={() => setAnnouncementConfig({ ...announcementConfig, visibleOnHomePage: !announcementConfig.visibleOnHomePage })}
+                            className={`relative inline-flex h-8 w-16 items-center rounded-full transition-all ${
+                              announcementConfig.visibleOnHomePage ? 'bg-green-600' : 'bg-gray-300'
+                            }`}
+                          >
+                            <span
+                              className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform ${
+                                announcementConfig.visibleOnHomePage ? 'translate-x-9' : 'translate-x-1'
+                              }`}
+                            />
+                          </button>
+                        </div>
+
+                        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                          <div>
+                            <p className="font-medium text-gray-900">Visible After Login</p>
+                            <p className="text-xs text-gray-500 mt-1">Show announcement on authenticated pages (dashboard, servers, etc.)</p>
+                          </div>
+                          <button
+                            onClick={() => setAnnouncementConfig({ ...announcementConfig, visibleAfterLogin: !announcementConfig.visibleAfterLogin })}
+                            className={`relative inline-flex h-8 w-16 items-center rounded-full transition-all ${
+                              announcementConfig.visibleAfterLogin ? 'bg-green-600' : 'bg-gray-300'
+                            }`}
+                          >
+                            <span
+                              className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform ${
+                                announcementConfig.visibleAfterLogin ? 'translate-x-9' : 'translate-x-1'
+                              }`}
+                            />
+                          </button>
                         </div>
                       </div>
 
