@@ -81,7 +81,6 @@ export default function DefaultsAutomodPage() {
   const [originalSettings, setOriginalSettings] = useState<AutomodSettings>(settings);
 
   const isDeveloper = session?.user?.id === DEVELOPER_USER_ID;
-  const hasMasterLogin = session?.masterLoginVerified === true;
 
   useEffect(() => {
     if (status === 'loading') return;
@@ -92,11 +91,6 @@ export default function DefaultsAutomodPage() {
 
     if (!isDeveloper) {
       router.push('/');
-      return;
-    }
-
-    if (!hasMasterLogin) {
-      router.push('/masterlogin');
       return;
     }
 
@@ -119,7 +113,7 @@ export default function DefaultsAutomodPage() {
     };
 
     fetchSettings();
-  }, [session, status, router, isDeveloper, hasMasterLogin]);
+  }, [session, status, router, isDeveloper]);
 
   const handleSave = async () => {
     setSaving(true);
@@ -157,7 +151,7 @@ export default function DefaultsAutomodPage() {
     return <div className="flex min-h-screen items-center justify-center text-[#0f172a]">Loading...</div>;
   }
 
-  if (!isDeveloper || !hasMasterLogin) {
+  if (!isDeveloper) {
     return <div className="flex min-h-screen items-center justify-center text-[#0f172a]">Access Denied</div>;
   }
 

@@ -35,7 +35,6 @@ export default function DefaultsAnnouncementsPage() {
   const [helpCommand, setHelpCommand] = useState<{ name: string; description: string } | null>(null);
 
   const isDeveloper = session?.user?.id === DEVELOPER_USER_ID;
-  const hasMasterLogin = session?.masterLoginVerified === true;
 
   useEffect(() => {
     if (status === 'loading') return;
@@ -45,10 +44,6 @@ export default function DefaultsAnnouncementsPage() {
     }
     if (!isDeveloper) {
       router.push('/');
-      return;
-    }
-    if (!hasMasterLogin) {
-      router.push('/masterlogin');
       return;
     }
 
@@ -149,7 +144,7 @@ export default function DefaultsAnnouncementsPage() {
     return <div className="flex min-h-screen items-center justify-center text-[#0f172a]">Loading...</div>;
   }
 
-  if (!isDeveloper || !hasMasterLogin) {
+  if (!isDeveloper) {
     return <div className="flex min-h-screen items-center justify-center text-[#0f172a]">Access Denied</div>;
   }
 
