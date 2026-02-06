@@ -286,6 +286,12 @@ export default function DefaultsLoggingPage() {
                   <Link href="/developer/defaults/antiraid" className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '100ms'}} onClick={() => setMobileMenuOpen(false)}>
                     Anti-Raid
                   </Link>
+                  <span className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-gray-400 cursor-not-allowed text-left" style={{animationDelay: '150ms'}}>
+                    Reaction Roles (Coming Soon)
+                  </span>
+                  <span className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-gray-400 cursor-not-allowed text-left" style={{animationDelay: '200ms'}}>
+                    Verification (Coming Soon)
+                  </span>
                 </div>
               )}
             </details>
@@ -395,51 +401,6 @@ export default function DefaultsLoggingPage() {
                   <div className="flex-1">
                     <p className="font-semibold text-slate-900">Log Filter Triggers</p>
                     <p className="text-sm text-slate-500">Log which specific filters were triggered</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Anti-Raid Logging Card */}
-          {settings.enabled && (
-            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
-              <div className="mb-6">
-                <h2 className="text-lg font-semibold text-[#0f172a]">Anti-Raid Logging</h2>
-                <p className="text-sm text-slate-500">Default toggles for anti-raid alerts</p>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                  <Switch 
-                    checked={settings.logRaidDetections} 
-                    onCheckedChange={(checked) => updateSetting('logRaidDetections', checked)}
-                  />
-                  <div className="flex-1">
-                    <p className="font-semibold text-slate-900">Log Raid Detections</p>
-                    <p className="text-sm text-slate-500">Record when potential raids are detected</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                  <Switch 
-                    checked={settings.logRaidActions} 
-                    onCheckedChange={(checked) => updateSetting('logRaidActions', checked)}
-                  />
-                  <div className="flex-1">
-                    <p className="font-semibold text-slate-900">Log Raid Actions</p>
-                    <p className="text-sm text-slate-500">Log actions taken in response to raids</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                  <Switch 
-                    checked={settings.logJoinPatterns} 
-                    onCheckedChange={(checked) => updateSetting('logJoinPatterns', checked)}
-                  />
-                  <div className="flex-1">
-                    <p className="font-semibold text-slate-900">Log Join Patterns</p>
-                    <p className="text-sm text-slate-500">Track suspicious join patterns</p>
                   </div>
                 </div>
               </div>

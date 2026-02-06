@@ -254,6 +254,12 @@ export default function DefaultsAntiRaidPage() {
                 <Link href="/developer/defaults/antiraid" className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 bg-orange-100 text-orange-700 transition-colors text-left ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '100ms'}} onClick={() => setMobileMenuOpen(false)}>
                   Anti-Raid
                 </Link>
+                <span className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-gray-400 cursor-not-allowed text-left" style={{animationDelay: '150ms'}}>
+                  Reaction Roles (Coming Soon)
+                </span>
+                <span className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-gray-400 cursor-not-allowed text-left" style={{animationDelay: '200ms'}}>
+                  Verification (Coming Soon)
+                </span>
               </div>
             )}
           </details>
