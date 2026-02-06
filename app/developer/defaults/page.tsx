@@ -161,15 +161,15 @@ export default function DefaultsManagementPage() {
               </summary>
               {configOpen && (
                 <div className={`px-2 py-1 space-y-1 border-l-2 border-orange-400 ml-3 ${configOpen ? 'animate-dropdown-open' : 'animate-dropdown-close'}`}>
-                  <span className="flex w-full items-center gap-2 sm:gap-3 rounded-lg px-2 sm:px-3 py-2 text-gray-400 cursor-not-allowed text-left" style={{animationDelay: '0ms'}}>
-                    Automod (Coming Soon)
-                  </span>
-                  <span className="flex w-full items-center gap-2 sm:gap-3 rounded-lg px-2 sm:px-3 py-2 text-gray-400 cursor-not-allowed text-left" style={{animationDelay: '50ms'}}>
-                    Logging (Coming Soon)
-                  </span>
-                  <span className="flex w-full items-center gap-2 sm:gap-3 rounded-lg px-2 sm:px-3 py-2 text-gray-400 cursor-not-allowed text-left" style={{animationDelay: '100ms'}}>
-                    Anti-Raid (Coming Soon)
-                  </span>
+                  <Link href="/developer/defaults/automod" className="flex w-full items-center gap-2 sm:gap-3 rounded-lg px-2 sm:px-3 py-2 hover:bg-orange-50 transition-colors text-left" style={{animationDelay: '0ms'}} onClick={() => setMobileMenuOpen(false)}>
+                    Automod
+                  </Link>
+                  <Link href="/developer/defaults/logging" className="flex w-full items-center gap-2 sm:gap-3 rounded-lg px-2 sm:px-3 py-2 hover:bg-orange-50 transition-colors text-left" style={{animationDelay: '50ms'}} onClick={() => setMobileMenuOpen(false)}>
+                    Logging
+                  </Link>
+                  <Link href="/developer/defaults/antiraid" className="flex w-full items-center gap-2 sm:gap-3 rounded-lg px-2 sm:px-3 py-2 hover:bg-orange-50 transition-colors text-left" style={{animationDelay: '100ms'}} onClick={() => setMobileMenuOpen(false)}>
+                    Anti-Raid
+                  </Link>
                 </div>
               )}
             </details>
