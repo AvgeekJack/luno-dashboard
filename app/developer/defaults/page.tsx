@@ -45,6 +45,7 @@ export default function DefaultsManagementPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const isDeveloper = session?.user?.id === DEVELOPER_USER_ID;
+  const hasMasterLogin = session?.masterLoginVerified === true;
 
   useEffect(() => {
     if (status === 'loading') return;
@@ -55,6 +56,11 @@ export default function DefaultsManagementPage() {
 
     if (!isDeveloper) {
       router.push('/');
+      return;
+    }
+
+    if (!hasMasterLogin) {
+      router.push('/masterlogin');
       return;
     }
 
@@ -69,13 +75,13 @@ export default function DefaultsManagementPage() {
         console.error(err);
         setLoading(false);
       });
-  }, [session, status, router, isDeveloper]);
+  }, [session, status, router, isDeveloper, hasMasterLogin]);
 
   if (status === 'loading' || loading) {
     return <div className="flex min-h-screen items-center justify-center text-[#0f172a]">Loading...</div>;
   }
 
-  if (!isDeveloper || !settings) {
+  if (!isDeveloper || !hasMasterLogin || !settings) {
     return <div className="flex min-h-screen items-center justify-center text-[#0f172a]">Access Denied</div>;
   }
 
