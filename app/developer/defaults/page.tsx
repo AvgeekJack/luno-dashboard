@@ -35,6 +35,10 @@ interface Channel {
 export default function DefaultsManagementPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const [pin, setPin] = useState('');
+  const [isVerified, setIsVerified] = useState(false);
+  const [verifyError, setVerifyError] = useState('');
+  const [isVerifying, setIsVerifying] = useState(false);
   const [settings, setSettings] = useState<Settings | null>(null);
   const [loading, setLoading] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -71,12 +75,93 @@ export default function DefaultsManagementPage() {
       });
   }, [session, status, router, isDeveloper]);
 
+  const handleVerifyPin = async () => {
+    if (!pin.trim()) {
+      setVerifyError('Please enter PIN');
+      return;
+    }
+
+    setIsVerifying(true);
+    setVerifyError('');
+
+    try {
+      const response = await fetch('/api/developer/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pin }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        setVerifyError(data.error || 'Invalid PIN');
+        setIsVerifying(false);
+        return;
+      }
+
+      setIsVerified(true);
+      setPin('');
+    } catch (error) {
+      setVerifyError('Error verifying PIN');
+    } finally {
+      setIsVerifying(false);
+    }
+  };
+
   if (status === 'loading' || loading) {
     return <div className="flex min-h-screen items-center justify-center text-[#0f172a]">Loading...</div>;
   }
 
   if (!isDeveloper || !settings) {
     return <div className="flex min-h-screen items-center justify-center text-[#0f172a]">Access Denied</div>;
+  }
+
+  if (!isVerified) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-orange-50/30 via-white to-orange-50/30 flex items-center justify-center p-4">
+        <div className="w-full max-w-md">
+          <div className="bg-white rounded-2xl shadow-xl border border-orange-100 p-8">
+            <div className="flex justify-center mb-6">
+              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center">
+                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 text-center mb-2">Developer Verification</h2>
+            <p className="text-gray-600 text-center mb-6">Enter your PIN to access default settings</p>
+            
+            <div className="space-y-4">
+              <input
+                type="password"
+                value={pin}
+                onChange={(e) => setPin(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleVerifyPin()}
+                placeholder="Enter Developer PIN"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                disabled={isVerifying}
+              />
+              
+              {verifyError && (
+                <div className="flex items-center gap-2 text-red-600 text-sm bg-red-50 p-3 rounded-lg">
+                  <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                  <span>{verifyError}</span>
+                </div>
+              )}
+              
+              <button
+                onClick={handleVerifyPin}
+                disabled={isVerifying || !pin.trim()}
+                className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 rounded-lg font-medium hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isVerifying ? 'Verifying...' : 'Verify PIN'}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (

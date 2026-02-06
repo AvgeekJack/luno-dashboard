@@ -36,6 +36,10 @@ export default function DeveloperPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabType>('overview');
+  const [pin, setPin] = useState('');
+  const [isVerified, setIsVerified] = useState(false);
+  const [verifyError, setVerifyError] = useState('');
+  const [isVerifying, setIsVerifying] = useState(false);
   
   const [guildIdToRemove, setGuildIdToRemove] = useState('');
   const [removeStatus, setRemoveStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -333,6 +337,38 @@ export default function DeveloperPage() {
       fetchSettings();
     }
   }, [activeTab]);
+
+  const handleVerifyPin = async () => {
+    if (!pin.trim()) {
+      setVerifyError('Please enter PIN');
+      return;
+    }
+
+    setIsVerifying(true);
+    setVerifyError('');
+
+    try {
+      const response = await fetch('/api/developer/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pin }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        setVerifyError(data.error || 'Invalid PIN');
+        setIsVerifying(false);
+        return;
+      }
+
+      setIsVerified(true);
+      setPin('');
+    } catch (error) {
+      setVerifyError('Error verifying PIN');
+    } finally {
+      setIsVerifying(false);
+    }
+  };
 
   const fetchMaintenanceStatus = async () => {
     try {
@@ -1052,6 +1088,51 @@ export default function DeveloperPage() {
 
   if (!isDeveloper) {
     return null;
+  }
+
+  if (!isVerified) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-orange-50/30 via-white to-orange-50/30 flex items-center justify-center p-4">
+        <div className="w-full max-w-md">
+          <div className="bg-white rounded-2xl shadow-xl border border-orange-100 p-8">
+            <div className="flex justify-center mb-6">
+              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center">
+                <Shield className="w-8 h-8 text-white" />
+              </div>
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 text-center mb-2">Developer Verification</h2>
+            <p className="text-gray-600 text-center mb-6">Enter your PIN to access the developer panel</p>
+            
+            <div className="space-y-4">
+              <input
+                type="password"
+                value={pin}
+                onChange={(e) => setPin(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleVerifyPin()}
+                placeholder="Enter Developer PIN"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                disabled={isVerifying}
+              />
+              
+              {verifyError && (
+                <div className="flex items-center gap-2 text-red-600 text-sm bg-red-50 p-3 rounded-lg">
+                  <AlertTriangle className="w-4 h-4 flex-shrink-0" />
+                  <span>{verifyError}</span>
+                </div>
+              )}
+              
+              <button
+                onClick={handleVerifyPin}
+                disabled={isVerifying || !pin.trim()}
+                className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 rounded-lg font-medium hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isVerifying ? 'Verifying...' : 'Verify PIN'}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
