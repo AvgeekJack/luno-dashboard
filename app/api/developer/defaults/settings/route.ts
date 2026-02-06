@@ -31,25 +31,36 @@ export async function GET(req: NextRequest) {
     // Fetch default settings (simulating server settings structure)
     const defaultPrefix = await SiteSettings.findOne({ settingKey: 'defaultServerPrefix' });
     const defaultPremium = await SiteSettings.findOne({ settingKey: 'defaultServerPremium' });
+    const defaultSettings = await SiteSettings.findOne({ settingKey: 'defaultServerSettings' });
+
+    // Parse the default settings or use defaults
+    const parsedSettings = defaultSettings?.settingValue ? 
+      (typeof defaultSettings.settingValue === 'string' ? JSON.parse(defaultSettings.settingValue) : defaultSettings.settingValue) : 
+      {};
 
     // Return in the same format as server settings
     return NextResponse.json({
       guildId: 'defaults', // Special ID for defaults
       prefix: defaultPrefix?.settingValue ?? '!',
       premium: defaultPremium?.settingValue ?? false,
-      configuration: {
+      configuration: parsedSettings.configuration || {
         botNickname: '',
         timezone: 'UTC',
         updatesChannel: '',
-        automod: {
-          enabled: false
-        },
-        logging: {
-          enabled: false
-        },
-        antiraid: {
-          enabled: false
-        }
+        automod: { enabled: false },
+        logging: { enabled: false },
+        antiraid: { enabled: false },
+        reactionRoles: { enabled: false },
+        verification: { enabled: false }
+      },
+      modules: parsedSettings.modules || {
+        moderation: { enabled: false },
+        roleManagement: { enabled: false },
+        memberManagement: { enabled: false },
+        announcements: { enabled: false },
+        welcomeMessages: { enabled: false },
+        fun: { enabled: false },
+        utilities: { enabled: false }
       }
     });
   } catch (error) {
@@ -95,22 +106,43 @@ export async function PUT(req: NextRequest) {
       );
     }
 
+    // Update default settings (configuration and modules)
+    if (body.configuration !== undefined || body.modules !== undefined) {
+      // First, fetch existing settings
+      const existingSettings = await SiteSettings.findOne({ settingKey: 'defaultServerSettings' });
+      const currentSettings = existingSettings?.settingValue ? 
+        (typeof existingSettings.settingValue === 'string' ? JSON.parse(existingSettings.settingValue) : existingSettings.settingValue) : 
+        {};
+
+      // Merge with new settings
+      const updatedSettings = {
+        configuration: body.configuration !== undefined ? body.configuration : (currentSettings.configuration || {}),
+        modules: body.modules !== undefined ? body.modules : (currentSettings.modules || {})
+      };
+
+      // Save merged settings
+      await SiteSettings.findOneAndUpdate(
+        { settingKey: 'defaultServerSettings' },
+        { settingValue: JSON.stringify(updatedSettings) },
+        { upsert: true, new: true }
+      );
+    }
+
     // Return updated settings
     const defaultPrefix = await SiteSettings.findOne({ settingKey: 'defaultServerPrefix' });
     const defaultPremium = await SiteSettings.findOne({ settingKey: 'defaultServerPremium' });
+    const defaultSettings = await SiteSettings.findOne({ settingKey: 'defaultServerSettings' });
+
+    const parsedSettings = defaultSettings?.settingValue ? 
+      (typeof defaultSettings.settingValue === 'string' ? JSON.parse(defaultSettings.settingValue) : defaultSettings.settingValue) : 
+      {};
 
     return NextResponse.json({
       guildId: 'defaults',
       prefix: defaultPrefix?.settingValue ?? '!',
       premium: defaultPremium?.settingValue ?? false,
-      configuration: {
-        botNickname: body.configuration?.botNickname ?? '',
-        timezone: body.configuration?.timezone ?? 'UTC',
-        updatesChannel: body.configuration?.updatesChannel ?? '',
-        automod: body.configuration?.automod ?? { enabled: false },
-        logging: body.configuration?.logging ?? { enabled: false },
-        antiraid: body.configuration?.antiraid ?? { enabled: false }
-      }
+      configuration: parsedSettings.configuration || {},
+      modules: parsedSettings.modules || {}
     });
   } catch (error) {
     console.error('[Defaults Settings API] Error updating:', error);
