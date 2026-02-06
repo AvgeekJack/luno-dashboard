@@ -286,12 +286,12 @@ export default function DefaultsLoggingPage() {
                   <Link href="/developer/defaults/antiraid" className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '100ms'}} onClick={() => setMobileMenuOpen(false)}>
                     Anti-Raid
                   </Link>
-                  <span className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-gray-400 cursor-not-allowed text-left" style={{animationDelay: '150ms'}}>
-                    Reaction Roles (Coming Soon)
-                  </span>
-                  <span className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-gray-400 cursor-not-allowed text-left" style={{animationDelay: '200ms'}}>
-                    Verification (Coming Soon)
-                  </span>
+                  <Link href="/developer/defaults/reaction-roles" className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '150ms'}} onClick={() => setMobileMenuOpen(false)}>
+                    Reaction Roles
+                  </Link>
+                  <Link href="/developer/defaults/verification" className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-orange-50 transition-colors text-left ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '200ms'}} onClick={() => setMobileMenuOpen(false)}>
+                    Verification
+                  </Link>
                 </div>
               )}
             </details>
