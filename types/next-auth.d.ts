@@ -5,6 +5,7 @@ declare module 'next-auth' {
     accessToken?: string;
     guilds?: any[];
     error?: string;
+    masterLoginVerified?: boolean;
     user?: {
       id?: string;
       username?: string;

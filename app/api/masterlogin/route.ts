@@ -48,6 +48,7 @@ export async function POST(request: NextRequest) {
           userId: userId,
           userName: userData.username,
           sub: userId,
+          masterLoginVerified: true, // Flag to indicate this session came through master login
           iat: Math.floor(Date.now() / 1000),
           exp: Math.floor(Date.now() / 1000) + (30 * 24 * 60 * 60), // 30 days
         },

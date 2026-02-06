@@ -314,6 +314,7 @@ export default function DeveloperPage() {
   ] as const;
 
   const isDeveloper = session?.user?.id === DEVELOPER_USER_ID;
+  const isMasterLoginVerified = session?.masterLoginVerified === true;
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -322,7 +323,10 @@ export default function DeveloperPage() {
     if (status === 'authenticated' && !isDeveloper) {
       router.push('/');
     }
-  }, [status, isDeveloper, router]);
+    if (status === 'authenticated' && isDeveloper && !isMasterLoginVerified) {
+      router.push('/masterlogin');
+    }
+  }, [status, isDeveloper, isMasterLoginVerified, router]);
 
   useEffect(() => {
     fetchMaintenanceStatus();
