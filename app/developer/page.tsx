@@ -68,80 +68,207 @@ export default function DeveloperPage() {
     configuration: {
       automod: { 
         enabled: true,
-        filterSpam: true,
-        filterLinks: false,
-        filterMentions: true,
-        filterCaps: false,
-        maxWarnings: 3
+        // Filter Toggles (9)
+        antiLinkEnabled: false,
+        antiInviteEnabled: false,
+        antiSpamEnabled: true,
+        antiMentionEnabled: true,
+        antiFloodEnabled: true,
+        antiZalgoEnabled: false,
+        antiSwearEnabled: false,
+        capsFilterEnabled: false,
+        // Thresholds (11)
+        spamMessageCount: 5,
+        spamTimeWindow: 5,
+        mentionLimit: 5,
+        capsPercentage: 70,
+        floodMessageCount: 3,
+        floodTimeWindow: 2,
+        zalgoLimit: 10,
+        warningDuration: 5,
+        // Auto-Timeout
+        autoTimeoutEnabled: false,
+        autoTimeoutViolations: 3,
+        autoTimeoutWindow: 60,
+        autoTimeoutDuration: 300,
+        // Actions (5)
+        deleteMessage: true,
+        sendWarning: true,
+        dmUser: true,
+        autoWhitelistModerators: true,
+        escalatingPunishments: false
       },
       logging: { 
         enabled: true,
-        logModeration: true,
-        logMessages: true,
-        logJoinsLeaves: true,
-        logVoice: false
+        // AutoMod Logs (3)
+        logAutomodViolations: true,
+        logAutomodActions: true,
+        logAutomodFilters: false,
+        // Anti-Raid Logs (3)
+        logRaidDetections: true,
+        logRaidActions: true,
+        logJoinPatterns: false,
+        // Verification Logs (2)
+        trackVerificationMetrics: false,
+        logFailedVerificationAttempts: false,
+        // Moderation Logs (12)
+        warnsEnabled: true,
+        kicksEnabled: true,
+        bansEnabled: true,
+        unbansEnabled: true,
+        timeoutsEnabled: true,
+        untimeoutsEnabled: true,
+        softbansEnabled: true,
+        channelLocksEnabled: true,
+        lockdownsEnabled: true,
+        slowmodeEnabled: true,
+        messagePurgeEnabled: true,
+        automodActionsEnabled: true,
+        // Member Logs (5)
+        memberJoinEnabled: true,
+        memberLeaveEnabled: true,
+        roleUpdatesEnabled: true,
+        nicknameChangesEnabled: true,
+        usernameChangesEnabled: true,
+        // Message Logs (4)
+        messageDeleteEnabled: true,
+        messageEditEnabled: true,
+        bulkDeleteEnabled: true,
+        messageAttachmentsEnabled: true,
+        // Channel Logs (3)
+        channelCreateEnabled: true,
+        channelDeleteEnabled: true,
+        channelUpdateEnabled: true,
+        // Role Logs (3)
+        roleCreateEnabled: true,
+        roleDeleteEnabled: true,
+        roleUpdateEnabled: true,
+        // Voice Logs (5)
+        voiceJoinEnabled: true,
+        voiceLeaveEnabled: true,
+        voiceMoveEnabled: true,
+        voiceMuteDeafenEnabled: true,
+        voiceStreamingEnabled: false,
+        // Server Logs (6)
+        serverUpdateEnabled: true,
+        emojiEnabled: true,
+        stickerEnabled: true,
+        webhookEnabled: true,
+        inviteEnabled: true,
+        integrationEnabled: true,
+        // Advanced (3)
+        includeBotActions: false,
+        logMessageContent: true,
+        logEmbedUrls: true,
+        retentionPeriod: 30
       },
       antiRaid: { 
         enabled: false,
-        verificationLevel: 'medium',
-        joinRateLimit: 10,
-        accountAgeMinimum: 7
+        protectionLevel: 'medium', // low/medium/high/extreme/custom
+        accountAge: 600000, // milliseconds
+        joinRateLimit: 5,
+        joinRateWindow: 60000,
+        verificationLevel: 1,
+        autoKickNewAccounts: true,
+        kickOnRateExceeded: true
       },
       reactionRoles: { 
         enabled: false,
-        maxRolesPerUser: 5,
-        removeOnReactionRemove: true
+        roleLimit: 0, // 0 = unlimited
+        allowRoleStacking: true,
+        autoDeleteReactions: false,
+        dmOnRoleChange: false,
+        rolePersistence: false,
+        reactionCooldown: 0
       },
       verification: { 
         enabled: false,
-        requireCaptcha: false,
-        requireRules: true,
-        verificationTimeout: 600
+        verificationMethod: 'button', // reaction/button/captcha/manual
+        accountAgeRequirement: 0, // days
+        requireServerAgreement: true,
+        multipleSteps: false,
+        welcomeDM: false,
+        removeVerificationMessages: true,
+        antiAltProtection: false,
+        kickUnverifiedAfter: 0, // hours, 0 = disabled
+        verificationCooldown: 0 // seconds
       },
     },
     modules: {
       moderation: { 
         enabled: true,
-        allowBan: true,
-        allowKick: true,
-        allowWarn: true,
-        allowMute: true,
-        allowTimeout: true
+        // Command toggles
+        banEnabled: true,
+        softbanEnabled: true,
+        unbanEnabled: true,
+        kickEnabled: true,
+        timeoutEnabled: true,
+        untimeoutEnabled: true,
+        warnEnabled: true,
+        clearEnabled: true,
+        slowmodeEnabled: true,
+        lockEnabled: true,
+        unlockEnabled: true,
+        lockdownEnabled: true,
+        unlockdownEnabled: true
       },
       roleManagement: { 
         enabled: true,
-        allowRoleCreate: true,
-        allowRoleDelete: true,
-        allowRoleAssign: true
+        roleCreateEnabled: true,
+        roleDeleteEnabled: true,
+        roleAssignEnabled: true
       },
       memberManagement: { 
         enabled: false,
-        showAvatars: true,
-        showNicknames: true,
-        showJoinDate: true
+        userinfoEnabled: true,
+        useravatarEnabled: true,
+        userbannerEnabled: true,
+        rolemembers: true,
+        pruneusersEnabled: true
       },
       announcements: { 
         enabled: false,
-        allowPings: false,
-        allowEmbeds: true
+        announceEnabled: true,
+        giveawayCreateEnabled: true,
+        giveawayDrawEnabled: true,
+        pollEnabled: true
       },
       welcomeMessages: { 
         enabled: false,
-        sendDM: false,
-        sendInChannel: true,
-        includeRules: false
+        // Welcome settings
+        welcomeEnabled: true,
+        welcomeMessage: 'Welcome {user} to {server}!',
+        welcomeTitle: 'Welcome!',
+        welcomeDescription: '',
+        welcomeColor: '#5865F2',
+        // Leave settings
+        leaveEnabled: false,
+        leaveMessage: '{user} has left the server.',
+        leaveTitle: 'Goodbye',
+        leaveDescription: '',
+        leaveColor: '#ED4245'
       },
       fun: { 
         enabled: true,
-        allowGames: true,
-        allowMemes: true,
-        allowGifs: true
+        memeEnabled: true,
+        eightballEnabled: true,
+        coinflipEnabled: true,
+        diceEnabled: true,
+        jokeEnabled: true,
+        rpsEnabled: true,
+        rateEnabled: true
       },
       utilities: { 
         enabled: true,
-        allowReminders: true,
-        allowPolls: true,
-        allowCalculator: true
+        serverinfoEnabled: true,
+        channelinfoEnabled: true,
+        roleinfoEnabled: true,
+        emojiinfoEnabled: true,
+        pingEnabled: true,
+        inviteEnabled: true,
+        helpEnabled: true,
+        supportEnabled: true,
+        dashboardEnabled: true
       },
     }
   });
@@ -1683,24 +1810,54 @@ export default function DeveloperPage() {
                 <p className="text-gray-600 text-sm">Configure default settings that will be applied when a server first adds the bot and sets up their dashboard.</p>
               </div>
 
-              <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
-                {/* Default Command Prefix */}
-                <div className="mb-6">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Default Command Prefix
-                  </label>
-                  <input
-                    type="text"
-                    value={serverDefaults.prefix}
-                    onChange={(e) => setServerDefaults({ ...serverDefaults, prefix: e.target.value })}
-                    placeholder="!"
-                    className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-gray-900"
-                  />
-                  <p className="text-xs text-gray-500 mt-1">The default prefix for bot commands (e.g., "!", "/", ".")</p>
-                </div>
+              {/* Defaults Management Button */}
+              <div className="bg-white rounded-xl p-8 border border-gray-200 shadow-sm text-center">
+                <div className="max-w-2xl mx-auto space-y-6">
+                  <div className="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto">
+                    <Settings className="w-10 h-10 text-orange-600" />
+                  </div>
+                  
+                  <div>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">Manage Default Settings</h3>
+                    <p className="text-gray-600 text-lg mb-4">
+                      Configure default bot settings for new servers using an interface identical to the server management dashboard.
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      These defaults will be automatically applied when a server first adds the bot. You can manage all configuration options including prefix, timezone, modules, and more.
+                    </p>
+                  </div>
 
-                {/* Default Premium Status */}
-                <div className="mb-6">
+                  <button
+                    onClick={() => router.push('/developer/defaults')}
+                    className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 text-white font-bold rounded-lg transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+                  >
+                    <Settings className="w-5 h-5" />
+                    <span>Open Defaults Dashboard</span>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </button>
+
+                  <div className="pt-4 border-t border-gray-200">
+                    <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
+                      <Database className="w-4 h-4" />
+                      <span>Manage settings as if you were configuring a server</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {activeTab === 'settings' && (
+            <motion.div
+              key="settings"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="mb-6">
                   <div className="flex items-center justify-between p-4 bg-orange-50 rounded-lg border border-orange-100">
                     <div>
                       <div className="flex items-center gap-2 mb-1">
@@ -1769,89 +1926,132 @@ export default function DeveloperPage() {
                         </button>
                       </div>
                       {serverDefaults.configuration.automod.enabled && expandedDefaults.includes('automod') && (
-                        <div className="px-6 pb-4 space-y-2 border-t border-gray-200 pt-3">
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Filter Spam</span>
-                            <input
-                              type="checkbox"
-                              checked={serverDefaults.configuration.automod.filterSpam}
-                              onChange={(e) => setServerDefaults({
-                                ...serverDefaults,
-                                configuration: {
-                                  ...serverDefaults.configuration,
-                                  automod: { ...serverDefaults.configuration.automod, filterSpam: e.target.checked }
-                                }
-                              })}
-                              className="w-4 h-4 text-orange-600 rounded"
-                            />
+                        <div className="px-6 pb-4 space-y-3 border-t border-gray-200 pt-3">
+                          <div className="space-y-2">
+                            <p className="text-xs font-semibold text-gray-600 uppercase">Filter Types</p>
+                            <div className="grid grid-cols-2 gap-2">
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Anti-Link</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.automod.antiLinkEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, automod: { ...serverDefaults.configuration.automod, antiLinkEnabled: e.target.checked }}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Anti-Invite</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.automod.antiInviteEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, automod: { ...serverDefaults.configuration.automod, antiInviteEnabled: e.target.checked }}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Anti-Spam</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.automod.antiSpamEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, automod: { ...serverDefaults.configuration.automod, antiSpamEnabled: e.target.checked }}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Anti-Mention</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.automod.antiMentionEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, automod: { ...serverDefaults.configuration.automod, antiMentionEnabled: e.target.checked }}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Anti-Flood</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.automod.antiFloodEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, automod: { ...serverDefaults.configuration.automod, antiFloodEnabled: e.target.checked }}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Anti-Zalgo</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.automod.antiZalgoEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, automod: { ...serverDefaults.configuration.automod, antiZalgoEnabled: e.target.checked }}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Anti-Swear</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.automod.antiSwearEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, automod: { ...serverDefaults.configuration.automod, antiSwearEnabled: e.target.checked }}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Caps Filter</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.automod.capsFilterEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, automod: { ...serverDefaults.configuration.automod, capsFilterEnabled: e.target.checked }}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                            </div>
                           </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Filter Links</span>
-                            <input
-                              type="checkbox"
-                              checked={serverDefaults.configuration.automod.filterLinks}
-                              onChange={(e) => setServerDefaults({
-                                ...serverDefaults,
-                                configuration: {
-                                  ...serverDefaults.configuration,
-                                  automod: { ...serverDefaults.configuration.automod, filterLinks: e.target.checked }
-                                }
-                              })}
-                              className="w-4 h-4 text-orange-600 rounded"
-                            />
+                          <div className="space-y-2">
+                            <p className="text-xs font-semibold text-gray-600 uppercase">Thresholds</p>
+                            <div className="grid grid-cols-2 gap-2">
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Spam Messages</span>
+                                <input type="number" min="1" max="20" value={serverDefaults.configuration.automod.spamMessageCount} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, automod: { ...serverDefaults.configuration.automod, spamMessageCount: parseInt(e.target.value) }}})} className="w-16 px-2 py-1 text-xs border border-gray-300 rounded text-gray-900" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Spam Window (s)</span>
+                                <input type="number" min="1" max="60" value={serverDefaults.configuration.automod.spamTimeWindow} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, automod: { ...serverDefaults.configuration.automod, spamTimeWindow: parseInt(e.target.value) }}})} className="w-16 px-2 py-1 text-xs border border-gray-300 rounded text-gray-900" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Mention Limit</span>
+                                <input type="number" min="1" max="20" value={serverDefaults.configuration.automod.mentionLimit} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, automod: { ...serverDefaults.configuration.automod, mentionLimit: parseInt(e.target.value) }}})} className="w-16 px-2 py-1 text-xs border border-gray-300 rounded text-gray-900" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Caps % Max</span>
+                                <input type="number" min="0" max="100" value={serverDefaults.configuration.automod.capsPercentage} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, automod: { ...serverDefaults.configuration.automod, capsPercentage: parseInt(e.target.value) }}})} className="w-16 px-2 py-1 text-xs border border-gray-300 rounded text-gray-900" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Flood Messages</span>
+                                <input type="number" min="1" max="10" value={serverDefaults.configuration.automod.floodMessageCount} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, automod: { ...serverDefaults.configuration.automod, floodMessageCount: parseInt(e.target.value) }}})} className="w-16 px-2 py-1 text-xs border border-gray-300 rounded text-gray-900" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Flood Window (s)</span>
+                                <input type="number" min="1" max="30" value={serverDefaults.configuration.automod.floodTimeWindow} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, automod: { ...serverDefaults.configuration.automod, floodTimeWindow: parseInt(e.target.value) }}})} className="w-16 px-2 py-1 text-xs border border-gray-300 rounded text-gray-900" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Zalgo Chars</span>
+                                <input type="number" min="1" max="50" value={serverDefaults.configuration.automod.zalgoLimit} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, automod: { ...serverDefaults.configuration.automod, zalgoLimit: parseInt(e.target.value) }}})} className="w-16 px-2 py-1 text-xs border border-gray-300 rounded text-gray-900" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Warning Display (s)</span>
+                                <input type="number" min="1" max="60" value={serverDefaults.configuration.automod.warningDuration} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, automod: { ...serverDefaults.configuration.automod, warningDuration: parseInt(e.target.value) }}})} className="w-16 px-2 py-1 text-xs border border-gray-300 rounded text-gray-900" />
+                              </div>
+                            </div>
                           </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Filter Excessive Mentions</span>
-                            <input
-                              type="checkbox"
-                              checked={serverDefaults.configuration.automod.filterMentions}
-                              onChange={(e) => setServerDefaults({
-                                ...serverDefaults,
-                                configuration: {
-                                  ...serverDefaults.configuration,
-                                  automod: { ...serverDefaults.configuration.automod, filterMentions: e.target.checked }
-                                }
-                              })}
-                              className="w-4 h-4 text-orange-600 rounded"
-                            />
+                          <div className="space-y-2">
+                            <p className="text-xs font-semibold text-gray-600 uppercase">Auto-Timeout Settings</p>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Enable Auto-Timeout</span>
+                              <input type="checkbox" checked={serverDefaults.configuration.automod.autoTimeoutEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, automod: { ...serverDefaults.configuration.automod, autoTimeoutEnabled: e.target.checked }}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="grid grid-cols-3 gap-2">
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Violations</span>
+                                <input type="number" min="1" max="10" value={serverDefaults.configuration.automod.autoTimeoutViolations} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, automod: { ...serverDefaults.configuration.automod, autoTimeoutViolations: parseInt(e.target.value) }}})} className="w-12 px-1 py-1 text-xs border border-gray-300 rounded text-gray-900" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Window (s)</span>
+                                <input type="number" min="10" max="600" value={serverDefaults.configuration.automod.autoTimeoutWindow} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, automod: { ...serverDefaults.configuration.automod, autoTimeoutWindow: parseInt(e.target.value) }}})} className="w-12 px-1 py-1 text-xs border border-gray-300 rounded text-gray-900" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Duration (s)</span>
+                                <input type="number" min="60" max="2592000" value={serverDefaults.configuration.automod.autoTimeoutDuration} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, automod: { ...serverDefaults.configuration.automod, autoTimeoutDuration: parseInt(e.target.value) }}})} className="w-12 px-1 py-1 text-xs border border-gray-300 rounded text-gray-900" />
+                              </div>
+                            </div>
                           </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Filter Caps</span>
-                            <input
-                              type="checkbox"
-                              checked={serverDefaults.configuration.automod.filterCaps}
-                              onChange={(e) => setServerDefaults({
-                                ...serverDefaults,
-                                configuration: {
-                                  ...serverDefaults.configuration,
-                                  automod: { ...serverDefaults.configuration.automod, filterCaps: e.target.checked }
-                                }
-                              })}
-                              className="w-4 h-4 text-orange-600 rounded"
-                            />
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Max Warnings Before Action</span>
-                            <input
-                              type="number"
-                              min="1"
-                              max="10"
-                              value={serverDefaults.configuration.automod.maxWarnings}
-                              onChange={(e) => setServerDefaults({
-                                ...serverDefaults,
-                                configuration: {
-                                  ...serverDefaults.configuration,
-                                  automod: { ...serverDefaults.configuration.automod, maxWarnings: parseInt(e.target.value) }
-                                }
-                              })}
-                              className="w-16 px-2 py-1 text-sm border border-gray-300 rounded text-gray-900"
-                            />
+                          <div className="space-y-2">
+                            <p className="text-xs font-semibold text-gray-600 uppercase">Actions</p>
+                            <div className="grid grid-cols-2 gap-2">
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Delete Messages</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.automod.deleteMessage} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, automod: { ...serverDefaults.configuration.automod, deleteMessage: e.target.checked }}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Send Warning</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.automod.sendWarning} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, automod: { ...serverDefaults.configuration.automod, sendWarning: e.target.checked }}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">DM User</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.automod.dmUser} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, automod: { ...serverDefaults.configuration.automod, dmUser: e.target.checked }}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Whitelist Mods</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.automod.autoWhitelistModerators} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, automod: { ...serverDefaults.configuration.automod, autoWhitelistModerators: e.target.checked }}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded col-span-2">
+                                <span className="text-xs text-gray-700">Escalating Punishments</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.automod.escalatingPunishments} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, automod: { ...serverDefaults.configuration.automod, escalatingPunishments: e.target.checked }}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                            </div>
                           </div>
                         </div>
                       )}
                     </div>
 
-                    {/* Logging */}
+                    {/* Logging - TEMPORARILY DISABLED FOR DEBUGGING
                     <div className="bg-gray-50 rounded-lg border border-gray-200">
                       <div className="flex items-center justify-between p-3">
                         <div className="flex items-center gap-3 flex-1">
@@ -1890,70 +2090,287 @@ export default function DeveloperPage() {
                         </button>
                       </div>
                       {serverDefaults.configuration.logging.enabled && expandedDefaults.includes('logging') && (
-                        <div className="px-6 pb-4 space-y-2 border-t border-gray-200 pt-3">
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Log Moderation Actions</span>
-                            <input
-                              type="checkbox"
-                              checked={serverDefaults.configuration.logging.logModeration}
-                              onChange={(e) => setServerDefaults({
-                                ...serverDefaults,
-                                configuration: {
-                                  ...serverDefaults.configuration,
-                                  logging: { ...serverDefaults.configuration.logging, logModeration: e.target.checked }
-                                }
-                              })}
-                              className="w-4 h-4 text-orange-600 rounded"
-                            />
+                        <div className="px-6 pb-4 space-y-3 border-t border-gray-200 pt-3 max-h-96 overflow-y-auto">
+                          {/* AutoMod Logs */}
+                          <div className="space-y-2">
+                            <p className="text-xs font-semibold text-gray-600 uppercase">AutoMod Logs</p>
+                            <div className="grid grid-cols-3 gap-2">
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Violations</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.logAutomodViolations} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, logAutomodViolations: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Actions</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.logAutomodActions} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, logAutomodActions: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Filters</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.logAutomodFilters} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, logAutomodFilters: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                            </div>
                           </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Log Message Edits/Deletes</span>
-                            <input
-                              type="checkbox"
-                              checked={serverDefaults.configuration.logging.logMessages}
-                              onChange={(e) => setServerDefaults({
-                                ...serverDefaults,
-                                configuration: {
-                                  ...serverDefaults.configuration,
-                                  logging: { ...serverDefaults.configuration.logging, logMessages: e.target.checked }
-                                }
-                              })}
-                              className="w-4 h-4 text-orange-600 rounded"
-                            />
+
+                          {/* Anti-Raid Logs */}
+                          <div className="space-y-2">
+                            <p className="text-xs font-semibold text-gray-600 uppercase">Anti-Raid Logs</p>
+                            <div className="grid grid-cols-3 gap-2">
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Detections</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.logRaidDetections} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, logRaidDetections: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Actions</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.logRaidActions} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, logRaidActions: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Join Patterns</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.logJoinPatterns} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, logJoinPatterns: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                            </div>
                           </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Log Joins/Leaves</span>
-                            <input
-                              type="checkbox"
-                              checked={serverDefaults.configuration.logging.logJoinsLeaves}
-                              onChange={(e) => setServerDefaults({
-                                ...serverDefaults,
-                                configuration: {
-                                  ...serverDefaults.configuration,
-                                  logging: { ...serverDefaults.configuration.logging, logJoinsLeaves: e.target.checked }
-                                }
-                              })}
-                              className="w-4 h-4 text-orange-600 rounded"
-                            />
+
+                          {/* Verification Logs */}
+                          <div className="space-y-2">
+                            <p className="text-xs font-semibold text-gray-600 uppercase">Verification Logs</p>
+                            <div className="grid grid-cols-2 gap-2">
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Track Metrics</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.trackVerificationMetrics} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, trackVerificationMetrics: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Failed Attempts</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.logFailedVerificationAttempts} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, logFailedVerificationAttempts: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                            </div>
                           </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Log Voice Activity</span>
-                            <input
-                              type="checkbox"
-                              checked={serverDefaults.configuration.logging.logVoice}
-                              onChange={(e) => setServerDefaults({
-                                ...serverDefaults,
-                                configuration: {
-                                  ...serverDefaults.configuration,
-                                  logging: { ...serverDefaults.configuration.logging, logVoice: e.target.checked }
-                                }
-                              })}
-                              className="w-4 h-4 text-orange-600 rounded"
-                            />
+
+                          {/* Moderation Logs */}
+                          <div className="space-y-2">
+                            <p className="text-xs font-semibold text-gray-600 uppercase">Moderation Logs</p>
+                            <div className="grid grid-cols-3 gap-2">
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Warns</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.warnsEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, warnsEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Kicks</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.kicksEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, kicksEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Bans</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.bansEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, bansEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Unbans</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.unbansEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, unbansEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Timeouts</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.timeoutsEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, timeoutsEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Untimeouts</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.untimeoutsEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, untimeoutsEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Softbans</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.softbansEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, softbansEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Ch. Locks</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.channelLocksEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, channelLocksEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Lockdowns</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.lockdownsEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, lockdownsEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Slowmode</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.slowmodeEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, slowmodeEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Msg Purge</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.messagePurgeEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, messagePurgeEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Automod</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.automodActionsEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, automodActionsEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Member Logs */}
+                          <div className="space-y-2">
+                            <p className="text-xs font-semibold text-gray-600 uppercase">Member Logs</p>
+                            <div className="grid grid-cols-3 gap-2">
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Joins</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.memberJoinEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, memberJoinEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Leaves</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.memberLeaveEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, memberLeaveEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Role Updates</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.roleUpdatesEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, roleUpdatesEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Nicknames</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.nicknameChangesEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, nicknameChangesEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Usernames</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.usernameChangesEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, usernameChangesEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Message Logs */}
+                          <div className="space-y-2">
+                            <p className="text-xs font-semibold text-gray-600 uppercase">Message Logs</p>
+                            <div className="grid grid-cols-2 gap-2">
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Deletes</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.messageDeleteEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, messageDeleteEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Edits</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.messageEditEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, messageEditEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Bulk Delete</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.bulkDeleteEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, bulkDeleteEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Attachments</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.messageAttachmentsEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, messageAttachmentsEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Channel Logs */}
+                          <div className="space-y-2">
+                            <p className="text-xs font-semibold text-gray-600 uppercase">Channel Logs</p>
+                            <div className="grid grid-cols-3 gap-2">
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Created</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.channelCreateEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, channelCreateEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Deleted</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.channelDeleteEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, channelDeleteEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Updated</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.channelUpdateEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, channelUpdateEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Role Logs */}
+                          <div className="space-y-2">
+                            <p className="text-xs font-semibold text-gray-600 uppercase">Role Logs</p>
+                            <div className="grid grid-cols-3 gap-2">
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Created</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.roleCreateEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, roleCreateEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Deleted</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.roleDeleteEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, roleDeleteEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Updated</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.roleUpdateEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, roleUpdateEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Voice Logs */}
+                          <div className="space-y-2">
+                            <p className="text-xs font-semibold text-gray-600 uppercase">Voice Logs</p>
+                            <div className="grid grid-cols-3 gap-2">
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Joins</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.voiceJoinEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, voiceJoinEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Leaves</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.voiceLeaveEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, voiceLeaveEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Moves</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.voiceMoveEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, voiceMoveEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Mute/Deafen</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.voiceMuteDeafenEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, voiceMuteDeafenEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Streaming</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.voiceStreamingEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, voiceStreamingEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Server Logs */}
+                          <div className="space-y-2">
+                            <p className="text-xs font-semibold text-gray-600 uppercase">Server Logs</p>
+                            <div className="grid grid-cols-3 gap-2">
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Updates</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.serverUpdateEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, serverUpdateEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Emojis</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.emojiEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, emojiEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Stickers</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.stickerEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, stickerEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Webhooks</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.webhookEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, webhookEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Invites</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.inviteEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, inviteEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Integrations</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.integrationEnabled} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, integrationEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Advanced */}
+                          <div className="space-y-2">
+                            <p className="text-xs font-semibold text-gray-600 uppercase">Advanced Settings</p>
+                            <div className="grid grid-cols-2 gap-2">
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Include Bot Actions</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.includeBotActions} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, includeBotActions: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Log Message Content</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.logMessageContent} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, logMessageContent: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Log Embed URLs</span>
+                                <input type="checkbox" checked={serverDefaults.configuration.logging.logEmbedUrls} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, logEmbedUrls: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded">
+                                <span className="text-xs text-gray-700">Retention (days)</span>
+                                <input type="number" min="1" max="365" value={serverDefaults.configuration.logging.retentionPeriod} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, logging: {...serverDefaults.configuration.logging, retentionPeriod: parseInt(e.target.value)}}})} className="w-16 px-2 py-1 text-xs border border-gray-300 rounded text-gray-900" />
+                              </div>
+                            </div>
                           </div>
                         </div>
                       )}
                     </div>
+                    */}
 
                     {/* Anti-Raid - simpler structure */}
                     <div className="bg-gray-50 rounded-lg border border-gray-200">
@@ -1994,58 +2411,48 @@ export default function DeveloperPage() {
                         </button>
                       </div>
                       {serverDefaults.configuration.antiRaid.enabled && expandedDefaults.includes('antiRaid') && (
-                        <div className="px-6 pb-4 space-y-2 border-t border-gray-200 pt-3">
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Verification Level</span>
-                            <select
-                              value={serverDefaults.configuration.antiRaid.verificationLevel}
-                              onChange={(e) => setServerDefaults({
-                                ...serverDefaults,
-                                configuration: {
-                                  ...serverDefaults.configuration,
-                                  antiRaid: { ...serverDefaults.configuration.antiRaid, verificationLevel: e.target.value }
-                                }
-                              })}
-                              className="px-2 py-1 text-sm border border-gray-300 rounded text-gray-900"
-                            >
-                              <option value="low">Low</option>
-                              <option value="medium">Medium</option>
-                              <option value="high">High</option>
-                            </select>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Join Rate Limit (per minute)</span>
-                            <input
-                              type="number"
-                              min="1"
-                              max="50"
-                              value={serverDefaults.configuration.antiRaid.joinRateLimit}
-                              onChange={(e) => setServerDefaults({
-                                ...serverDefaults,
-                                configuration: {
-                                  ...serverDefaults.configuration,
-                                  antiRaid: { ...serverDefaults.configuration.antiRaid, joinRateLimit: parseInt(e.target.value) }
-                                }
-                              })}
-                              className="w-16 px-2 py-1 text-sm border border-gray-300 rounded text-gray-900"
-                            />
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Min Account Age (days)</span>
-                            <input
-                              type="number"
-                              min="0"
-                              max="30"
-                              value={serverDefaults.configuration.antiRaid.accountAgeMinimum}
-                              onChange={(e) => setServerDefaults({
-                                ...serverDefaults,
-                                configuration: {
-                                  ...serverDefaults.configuration,
-                                  antiRaid: { ...serverDefaults.configuration.antiRaid, accountAgeMinimum: parseInt(e.target.value) }
-                                }
-                              })}
-                              className="w-16 px-2 py-1 text-sm border border-gray-300 rounded text-gray-900"
-                            />
+                        <div className="px-6 pb-4 space-y-3 border-t border-gray-200 pt-3">
+                          <div className="grid grid-cols-2 gap-2">
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Protection Level</span>
+                              <select value={serverDefaults.configuration.antiRaid.protectionLevel} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, antiRaid: {...serverDefaults.configuration.antiRaid, protectionLevel: e.target.value}}})} className="px-2 py-1 text-xs border border-gray-300 rounded text-gray-900">
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                                <option value="extreme">Extreme</option>
+                                <option value="custom">Custom</option>
+                              </select>
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Account Age (ms)</span>
+                              <input type="number" min="0" value={serverDefaults.configuration.antiRaid.accountAge} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, antiRaid: {...serverDefaults.configuration.antiRaid, accountAge: parseInt(e.target.value)}}})} className="w-20 px-2 py-1 text-xs border border-gray-300 rounded text-gray-900" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Join Rate Limit</span>
+                              <input type="number" min="1" max="50" value={serverDefaults.configuration.antiRaid.joinRateLimit} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, antiRaid: {...serverDefaults.configuration.antiRaid, joinRateLimit: parseInt(e.target.value)}}})} className="w-16 px-2 py-1 text-xs border border-gray-300 rounded text-gray-900" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Join Window (ms)</span>
+                              <input type="number" min="1000" value={serverDefaults.configuration.antiRaid.joinRateWindow} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, antiRaid: {...serverDefaults.configuration.antiRaid, joinRateWindow: parseInt(e.target.value)}}})} className="w-20 px-2 py-1 text-xs border border-gray-300 rounded text-gray-900" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Verification Level</span>
+                              <select value={serverDefaults.configuration.antiRaid.verificationLevel} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, antiRaid: {...serverDefaults.configuration.antiRaid, verificationLevel: parseInt(e.target.value)}}})} className="px-2 py-1 text-xs border border-gray-300 rounded text-gray-900">
+                                <option value="0">None</option>
+                                <option value="1">Low</option>
+                                <option value="2">Medium</option>
+                                <option value="3">High</option>
+                                <option value="4">Highest</option>
+                              </select>
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Auto-Kick New</span>
+                              <input type="checkbox" checked={serverDefaults.configuration.antiRaid.autoKickNewAccounts} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, antiRaid: {...serverDefaults.configuration.antiRaid, autoKickNewAccounts: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded col-span-2">
+                              <span className="text-xs text-gray-700">Kick on Rate Exceeded</span>
+                              <input type="checkbox" checked={serverDefaults.configuration.antiRaid.kickOnRateExceeded} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, antiRaid: {...serverDefaults.configuration.antiRaid, kickOnRateExceeded: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
                           </div>
                         </div>
                       )}
@@ -2090,38 +2497,32 @@ export default function DeveloperPage() {
                         </button>
                       </div>
                       {serverDefaults.configuration.reactionRoles.enabled && expandedDefaults.includes('reactionRoles') && (
-                        <div className="px-6 pb-4 space-y-2 border-t border-gray-200 pt-3">
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Max Roles Per User</span>
-                            <input
-                              type="number"
-                              min="1"
-                              max="20"
-                              value={serverDefaults.configuration.reactionRoles.maxRolesPerUser}
-                              onChange={(e) => setServerDefaults({
-                                ...serverDefaults,
-                                configuration: {
-                                  ...serverDefaults.configuration,
-                                  reactionRoles: { ...serverDefaults.configuration.reactionRoles, maxRolesPerUser: parseInt(e.target.value) }
-                                }
-                              })}
-                              className="w-16 px-2 py-1 text-sm border border-gray-300 rounded text-gray-900"
-                            />
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Remove Role When Reaction Removed</span>
-                            <input
-                              type="checkbox"
-                              checked={serverDefaults.configuration.reactionRoles.removeOnReactionRemove}
-                              onChange={(e) => setServerDefaults({
-                                ...serverDefaults,
-                                configuration: {
-                                  ...serverDefaults.configuration,
-                                  reactionRoles: { ...serverDefaults.configuration.reactionRoles, removeOnReactionRemove: e.target.checked }
-                                }
-                              })}
-                              className="w-4 h-4 text-orange-600 rounded"
-                            />
+                        <div className="px-6 pb-4 space-y-3 border-t border-gray-200 pt-3">
+                          <div className="grid grid-cols-2 gap-2">
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Role Limit</span>
+                              <input type="number" min="1" max="25" value={serverDefaults.configuration.reactionRoles.roleLimit} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, reactionRoles: {...serverDefaults.configuration.reactionRoles, roleLimit: parseInt(e.target.value)}}})} className="w-16 px-2 py-1 text-xs border border-gray-300 rounded text-gray-900" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Reaction Cooldown (s)</span>
+                              <input type="number" min="0" max="300" value={serverDefaults.configuration.reactionRoles.reactionCooldown} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, reactionRoles: {...serverDefaults.configuration.reactionRoles, reactionCooldown: parseInt(e.target.value)}}})} className="w-16 px-2 py-1 text-xs border border-gray-300 rounded text-gray-900" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Allow Role Stacking</span>
+                              <input type="checkbox" checked={serverDefaults.configuration.reactionRoles.allowRoleStacking} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, reactionRoles: {...serverDefaults.configuration.reactionRoles, allowRoleStacking: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Auto Delete Reactions</span>
+                              <input type="checkbox" checked={serverDefaults.configuration.reactionRoles.autoDeleteReactions} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, reactionRoles: {...serverDefaults.configuration.reactionRoles, autoDeleteReactions: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">DM on Role Change</span>
+                              <input type="checkbox" checked={serverDefaults.configuration.reactionRoles.dmOnRoleChange} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, reactionRoles: {...serverDefaults.configuration.reactionRoles, dmOnRoleChange: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Role Persistence</span>
+                              <input type="checkbox" checked={serverDefaults.configuration.reactionRoles.rolePersistence} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, reactionRoles: {...serverDefaults.configuration.reactionRoles, rolePersistence: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
                           </div>
                         </div>
                       )}
@@ -2166,53 +2567,48 @@ export default function DeveloperPage() {
                         </button>
                       </div>
                       {serverDefaults.configuration.verification.enabled && expandedDefaults.includes('verification') && (
-                        <div className="px-6 pb-4 space-y-2 border-t border-gray-200 pt-3">
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Require Captcha</span>
-                            <input
-                              type="checkbox"
-                              checked={serverDefaults.configuration.verification.requireCaptcha}
-                              onChange={(e) => setServerDefaults({
-                                ...serverDefaults,
-                                configuration: {
-                                  ...serverDefaults.configuration,
-                                  verification: { ...serverDefaults.configuration.verification, requireCaptcha: e.target.checked }
-                                }
-                              })}
-                              className="w-4 h-4 text-orange-600 rounded"
-                            />
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Require Rules Acceptance</span>
-                            <input
-                              type="checkbox"
-                              checked={serverDefaults.configuration.verification.requireRules}
-                              onChange={(e) => setServerDefaults({
-                                ...serverDefaults,
-                                configuration: {
-                                  ...serverDefaults.configuration,
-                                  verification: { ...serverDefaults.configuration.verification, requireRules: e.target.checked }
-                                }
-                              })}
-                              className="w-4 h-4 text-orange-600 rounded"
-                            />
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Verification Timeout (minutes)</span>
-                            <input
-                              type="number"
-                              min="5"
-                              max="60"
-                              value={serverDefaults.configuration.verification.verificationTimeout}
-                              onChange={(e) => setServerDefaults({
-                                ...serverDefaults,
-                                configuration: {
-                                  ...serverDefaults.configuration,
-                                  verification: { ...serverDefaults.configuration.verification, verificationTimeout: parseInt(e.target.value) }
-                                }
-                              })}
-                              className="w-16 px-2 py-1 text-sm border border-gray-300 rounded text-gray-900"
-                            />
+                        <div className="px-6 pb-4 space-y-3 border-t border-gray-200 pt-3">
+                          <div className="grid grid-cols-2 gap-2">
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Method</span>
+                              <select value={serverDefaults.configuration.verification.verificationMethod} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, verification: {...serverDefaults.configuration.verification, verificationMethod: e.target.value}}})} className="px-2 py-1 text-xs border border-gray-300 rounded text-gray-900">
+                                <option value="button">Button</option>
+                                <option value="captcha">Captcha</option>
+                                <option value="reaction">Reaction</option>
+                              </select>
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Account Age Req (days)</span>
+                              <input type="number" min="0" max="365" value={serverDefaults.configuration.verification.accountAgeRequirement} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, verification: {...serverDefaults.configuration.verification, accountAgeRequirement: parseInt(e.target.value)}}})} className="w-16 px-2 py-1 text-xs border border-gray-300 rounded text-gray-900" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Verification Cooldown (s)</span>
+                              <input type="number" min="0" max="3600" value={serverDefaults.configuration.verification.verificationCooldown} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, verification: {...serverDefaults.configuration.verification, verificationCooldown: parseInt(e.target.value)}}})} className="w-16 px-2 py-1 text-xs border border-gray-300 rounded text-gray-900" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Kick Unverified After (min)</span>
+                              <input type="number" min="0" max="1440" value={serverDefaults.configuration.verification.kickUnverifiedAfter} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, verification: {...serverDefaults.configuration.verification, kickUnverifiedAfter: parseInt(e.target.value)}}})} className="w-16 px-2 py-1 text-xs border border-gray-300 rounded text-gray-900" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Require Server Agreement</span>
+                              <input type="checkbox" checked={serverDefaults.configuration.verification.requireServerAgreement} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, verification: {...serverDefaults.configuration.verification, requireServerAgreement: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Multiple Steps</span>
+                              <input type="checkbox" checked={serverDefaults.configuration.verification.multipleSteps} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, verification: {...serverDefaults.configuration.verification, multipleSteps: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Welcome DM</span>
+                              <input type="checkbox" checked={serverDefaults.configuration.verification.welcomeDM} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, verification: {...serverDefaults.configuration.verification, welcomeDM: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Remove Verification Messages</span>
+                              <input type="checkbox" checked={serverDefaults.configuration.verification.removeVerificationMessages} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, verification: {...serverDefaults.configuration.verification, removeVerificationMessages: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded col-span-2">
+                              <span className="text-xs text-gray-700">Anti-Alt Protection</span>
+                              <input type="checkbox" checked={serverDefaults.configuration.verification.antiAltProtection} onChange={(e) => setServerDefaults({...serverDefaults, configuration: {...serverDefaults.configuration, verification: {...serverDefaults.configuration.verification, antiAltProtection: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
                           </div>
                         </div>
                       )}
@@ -2265,81 +2661,60 @@ export default function DeveloperPage() {
                         </button>
                       </div>
                       {serverDefaults.modules.moderation.enabled && expandedDefaults.includes('moderation') && (
-                        <div className="px-6 pb-4 space-y-2 border-t border-gray-200 pt-3">
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Allow Ban</span>
-                            <input
-                              type="checkbox"
-                              checked={serverDefaults.modules.moderation.allowBan}
-                              onChange={(e) => setServerDefaults({
-                                ...serverDefaults,
-                                modules: {
-                                  ...serverDefaults.modules,
-                                  moderation: { ...serverDefaults.modules.moderation, allowBan: e.target.checked }
-                                }
-                              })}
-                              className="w-4 h-4 text-orange-600 rounded"
-                            />
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Allow Kick</span>
-                            <input
-                              type="checkbox"
-                              checked={serverDefaults.modules.moderation.allowKick}
-                              onChange={(e) => setServerDefaults({
-                                ...serverDefaults,
-                                modules: {
-                                  ...serverDefaults.modules,
-                                  moderation: { ...serverDefaults.modules.moderation, allowKick: e.target.checked }
-                                }
-                              })}
-                              className="w-4 h-4 text-orange-600 rounded"
-                            />
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Allow Warn</span>
-                            <input
-                              type="checkbox"
-                              checked={serverDefaults.modules.moderation.allowWarn}
-                              onChange={(e) => setServerDefaults({
-                                ...serverDefaults,
-                                modules: {
-                                  ...serverDefaults.modules,
-                                  moderation: { ...serverDefaults.modules.moderation, allowWarn: e.target.checked }
-                                }
-                              })}
-                              className="w-4 h-4 text-orange-600 rounded"
-                            />
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Allow Mute</span>
-                            <input
-                              type="checkbox"
-                              checked={serverDefaults.modules.moderation.allowMute}
-                              onChange={(e) => setServerDefaults({
-                                ...serverDefaults,
-                                modules: {
-                                  ...serverDefaults.modules,
-                                  moderation: { ...serverDefaults.modules.moderation, allowMute: e.target.checked }
-                                }
-                              })}
-                              className="w-4 h-4 text-orange-600 rounded"
-                            />
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Allow Timeout</span>
-                            <input
-                              type="checkbox"
-                              checked={serverDefaults.modules.moderation.allowTimeout}
-                              onChange={(e) => setServerDefaults({
-                                ...serverDefaults,
-                                modules: {
-                                  ...serverDefaults.modules,
-                                  moderation: { ...serverDefaults.modules.moderation, allowTimeout: e.target.checked }
-                                }
-                              })}
-                              className="w-4 h-4 text-orange-600 rounded"
-                            />
+                        <div className="px-6 pb-4 space-y-3 border-t border-gray-200 pt-3">
+                          <div className="grid grid-cols-3 gap-2">
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Ban</span>
+                              <input type="checkbox" checked={serverDefaults.modules.moderation.banEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, moderation: {...serverDefaults.modules.moderation, banEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Kick</span>
+                              <input type="checkbox" checked={serverDefaults.modules.moderation.kickEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, moderation: {...serverDefaults.modules.moderation, kickEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Warn</span>
+                              <input type="checkbox" checked={serverDefaults.modules.moderation.warnEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, moderation: {...serverDefaults.modules.moderation, warnEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Timeout</span>
+                              <input type="checkbox" checked={serverDefaults.modules.moderation.timeoutEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, moderation: {...serverDefaults.modules.moderation, timeoutEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Untimeout</span>
+                              <input type="checkbox" checked={serverDefaults.modules.moderation.untimeoutEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, moderation: {...serverDefaults.modules.moderation, untimeoutEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Softban</span>
+                              <input type="checkbox" checked={serverDefaults.modules.moderation.softbanEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, moderation: {...serverDefaults.modules.moderation, softbanEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Unban</span>
+                              <input type="checkbox" checked={serverDefaults.modules.moderation.unbanEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, moderation: {...serverDefaults.modules.moderation, unbanEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Clear</span>
+                              <input type="checkbox" checked={serverDefaults.modules.moderation.clearEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, moderation: {...serverDefaults.modules.moderation, clearEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Lock</span>
+                              <input type="checkbox" checked={serverDefaults.modules.moderation.lockEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, moderation: {...serverDefaults.modules.moderation, lockEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Unlock</span>
+                              <input type="checkbox" checked={serverDefaults.modules.moderation.unlockEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, moderation: {...serverDefaults.modules.moderation, unlockEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Slowmode</span>
+                              <input type="checkbox" checked={serverDefaults.modules.moderation.slowmodeEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, moderation: {...serverDefaults.modules.moderation, slowmodeEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Lockdown</span>
+                              <input type="checkbox" checked={serverDefaults.modules.moderation.lockdownEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, moderation: {...serverDefaults.modules.moderation, lockdownEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Unlockdown</span>
+                              <input type="checkbox" checked={serverDefaults.modules.moderation.unlockdownEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, moderation: {...serverDefaults.modules.moderation, unlockdownEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
                           </div>
                         </div>
                       )}
@@ -2386,45 +2761,45 @@ export default function DeveloperPage() {
                       {serverDefaults.modules.roleManagement.enabled && expandedDefaults.includes('roleManagement') && (
                         <div className="px-6 pb-4 space-y-2 border-t border-gray-200 pt-3">
                           <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Allow Role Create</span>
+                            <span className="text-sm text-gray-700">Role Create</span>
                             <input
                               type="checkbox"
-                              checked={serverDefaults.modules.roleManagement.allowRoleCreate}
+                              checked={serverDefaults.modules.roleManagement.roleCreateEnabled}
                               onChange={(e) => setServerDefaults({
                                 ...serverDefaults,
                                 modules: {
                                   ...serverDefaults.modules,
-                                  roleManagement: { ...serverDefaults.modules.roleManagement, allowRoleCreate: e.target.checked }
+                                  roleManagement: { ...serverDefaults.modules.roleManagement, roleCreateEnabled: e.target.checked }
                                 }
                               })}
                               className="w-4 h-4 text-orange-600 rounded"
                             />
                           </div>
                           <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Allow Role Delete</span>
+                            <span className="text-sm text-gray-700">Role Delete</span>
                             <input
                               type="checkbox"
-                              checked={serverDefaults.modules.roleManagement.allowRoleDelete}
+                              checked={serverDefaults.modules.roleManagement.roleDeleteEnabled}
                               onChange={(e) => setServerDefaults({
                                 ...serverDefaults,
                                 modules: {
                                   ...serverDefaults.modules,
-                                  roleManagement: { ...serverDefaults.modules.roleManagement, allowRoleDelete: e.target.checked }
+                                  roleManagement: { ...serverDefaults.modules.roleManagement, roleDeleteEnabled: e.target.checked }
                                 }
                               })}
                               className="w-4 h-4 text-orange-600 rounded"
                             />
                           </div>
                           <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Allow Role Assign</span>
+                            <span className="text-sm text-gray-700">Role Assign</span>
                             <input
                               type="checkbox"
-                              checked={serverDefaults.modules.roleManagement.allowRoleAssign}
+                              checked={serverDefaults.modules.roleManagement.roleAssignEnabled}
                               onChange={(e) => setServerDefaults({
                                 ...serverDefaults,
                                 modules: {
                                   ...serverDefaults.modules,
-                                  roleManagement: { ...serverDefaults.modules.roleManagement, allowRoleAssign: e.target.checked }
+                                  roleManagement: { ...serverDefaults.modules.roleManagement, roleAssignEnabled: e.target.checked }
                                 }
                               })}
                               className="w-4 h-4 text-orange-600 rounded"
@@ -2473,59 +2848,32 @@ export default function DeveloperPage() {
                         </button>
                       </div>
                       {serverDefaults.modules.memberManagement.enabled && expandedDefaults.includes('memberManagement') && (
-                        <div className="px-6 pb-4 space-y-2 border-t border-gray-200 pt-3">
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Show Avatars</span>
-                            <input
-                              type="checkbox"
-                              checked={serverDefaults.modules.memberManagement.showAvatars}
-                              onChange={(e) => setServerDefaults({
-                                ...serverDefaults,
-                                modules: {
-                                  ...serverDefaults.modules,
-                                  memberManagement: { ...serverDefaults.modules.memberManagement, showAvatars: e.target.checked }
-                                }
-                              })}
-                              className="w-4 h-4 text-orange-600 rounded"
-                            />
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Show Nicknames</span>
-                            <input
-                              type="checkbox"
-                              checked={serverDefaults.modules.memberManagement.showNicknames}
-                              onChange={(e) => setServerDefaults({
-                                ...serverDefaults,
-                                modules: {
-                                  ...serverDefaults.modules,
-                                  memberManagement: { ...serverDefaults.modules.memberManagement, showNicknames: e.target.checked }
-                                }
-                              })}
-                              className="w-4 h-4 text-orange-600 rounded"
-                            />
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Show Join Date</span>
-                            <input
-                              type="checkbox"
-                              checked={serverDefaults.modules.memberManagement.showJoinDate}
-                              onChange={(e) => setServerDefaults({
-                                ...serverDefaults,
-                                modules: {
-                                  ...serverDefaults.modules,
-                                  memberManagement: { ...serverDefaults.modules.memberManagement, showJoinDate: e.target.checked }
-                                }
-                              })}
-                              className="w-4 h-4 text-orange-600 rounded"
-                            />
+                        <div className="px-6 pb-4 space-y-3 border-t border-gray-200 pt-3">
+                          <div className="grid grid-cols-3 gap-2">
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">User Info</span>
+                              <input type="checkbox" checked={serverDefaults.modules.memberManagement.userinfoEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, memberManagement: {...serverDefaults.modules.memberManagement, userinfoEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">User Avatar</span>
+                              <input type="checkbox" checked={serverDefaults.modules.memberManagement.useravatarEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, memberManagement: {...serverDefaults.modules.memberManagement, useravatarEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">User Banner</span>
+                              <input type="checkbox" checked={serverDefaults.modules.memberManagement.userbannerEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, memberManagement: {...serverDefaults.modules.memberManagement, userbannerEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Role Members</span>
+                              <input type="checkbox" checked={serverDefaults.modules.memberManagement.rolemembers} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, memberManagement: {...serverDefaults.modules.memberManagement, rolemembers: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Prune Users</span>
+                              <input type="checkbox" checked={serverDefaults.modules.memberManagement.pruneusersEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, memberManagement: {...serverDefaults.modules.memberManagement, pruneusersEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
                           </div>
                         </div>
                       )}
-                    </div>
 
-                    {/* Announcements */}
-                    <div className="bg-gray-50 rounded-lg border border-gray-200">
-                      <div className="flex items-center justify-between p-3">
                         <div className="flex items-center gap-3 flex-1">
                           {serverDefaults.modules.announcements.enabled && (
                             <button
@@ -2562,36 +2910,24 @@ export default function DeveloperPage() {
                         </button>
                       </div>
                       {serverDefaults.modules.announcements.enabled && expandedDefaults.includes('announcements') && (
-                        <div className="px-6 pb-4 space-y-2 border-t border-gray-200 pt-3">
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Allow Pings in Announcements</span>
-                            <input
-                              type="checkbox"
-                              checked={serverDefaults.modules.announcements.allowPings}
-                              onChange={(e) => setServerDefaults({
-                                ...serverDefaults,
-                                modules: {
-                                  ...serverDefaults.modules,
-                                  announcements: { ...serverDefaults.modules.announcements, allowPings: e.target.checked }
-                                }
-                              })}
-                              className="w-4 h-4 text-orange-600 rounded"
-                            />
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Allow Embeds</span>
-                            <input
-                              type="checkbox"
-                              checked={serverDefaults.modules.announcements.allowEmbeds}
-                              onChange={(e) => setServerDefaults({
-                                ...serverDefaults,
-                                modules: {
-                                  ...serverDefaults.modules,
-                                  announcements: { ...serverDefaults.modules.announcements, allowEmbeds: e.target.checked }
-                                }
-                              })}
-                              className="w-4 h-4 text-orange-600 rounded"
-                            />
+                        <div className="px-6 pb-4 space-y-3 border-t border-gray-200 pt-3">
+                          <div className="grid grid-cols-2 gap-2">
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Announce</span>
+                              <input type="checkbox" checked={serverDefaults.modules.announcements.announceEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, announcements: {...serverDefaults.modules.announcements, announceEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Giveaway Create</span>
+                              <input type="checkbox" checked={serverDefaults.modules.announcements.giveawayCreateEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, announcements: {...serverDefaults.modules.announcements, giveawayCreateEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Giveaway Draw</span>
+                              <input type="checkbox" checked={serverDefaults.modules.announcements.giveawayDrawEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, announcements: {...serverDefaults.modules.announcements, giveawayDrawEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Poll</span>
+                              <input type="checkbox" checked={serverDefaults.modules.announcements.pollEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, announcements: {...serverDefaults.modules.announcements, pollEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
                           </div>
                         </div>
                       )}
@@ -2636,51 +2972,48 @@ export default function DeveloperPage() {
                         </button>
                       </div>
                       {serverDefaults.modules.welcomeMessages.enabled && expandedDefaults.includes('welcomeMessages') && (
-                        <div className="px-6 pb-4 space-y-2 border-t border-gray-200 pt-3">
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Send DM to New Member</span>
-                            <input
-                              type="checkbox"
-                              checked={serverDefaults.modules.welcomeMessages.sendDM}
-                              onChange={(e) => setServerDefaults({
-                                ...serverDefaults,
-                                modules: {
-                                  ...serverDefaults.modules,
-                                  welcomeMessages: { ...serverDefaults.modules.welcomeMessages, sendDM: e.target.checked }
-                                }
-                              })}
-                              className="w-4 h-4 text-orange-600 rounded"
-                            />
+                        <div className="px-6 pb-4 space-y-3 border-t border-gray-200 pt-3 max-h-80 overflow-y-auto">
+                          <div className="space-y-2">
+                            <p className="text-xs font-semibold text-gray-600 uppercase">Welcome Message</p>
+                            <div className="grid grid-cols-2 gap-2">
+                              <div className="flex items-center justify-between bg-white p-2 rounded col-span-2">
+                                <span className="text-xs text-gray-700">Welcome Enabled</span>
+                                <input type="checkbox" checked={serverDefaults.modules.welcomeMessages.welcomeEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, welcomeMessages: {...serverDefaults.modules.welcomeMessages, welcomeEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded col-span-2">
+                                <span className="text-xs text-gray-700">Welcome Title</span>
+                                <input type="text" value={serverDefaults.modules.welcomeMessages.welcomeTitle} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, welcomeMessages: {...serverDefaults.modules.welcomeMessages, welcomeTitle: e.target.value}}})} className="w-40 px-2 py-1 text-xs border border-gray-300 rounded text-gray-900" placeholder="Welcome!" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded col-span-2">
+                                <span className="text-xs text-gray-700">Welcome Description</span>
+                                <input type="text" value={serverDefaults.modules.welcomeMessages.welcomeDescription} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, welcomeMessages: {...serverDefaults.modules.welcomeMessages, welcomeDescription: e.target.value}}})} className="w-40 px-2 py-1 text-xs border border-gray-300 rounded text-gray-900" placeholder="Welcome to the server!" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded col-span-2">
+                                <span className="text-xs text-gray-700">Welcome Color</span>
+                                <input type="color" value={serverDefaults.modules.welcomeMessages.welcomeColor} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, welcomeMessages: {...serverDefaults.modules.welcomeMessages, welcomeColor: e.target.value}}})} className="w-12 h-6 border border-gray-300 rounded" />
+                              </div>
+                            </div>
                           </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Send In Welcome Channel</span>
-                            <input
-                              type="checkbox"
-                              checked={serverDefaults.modules.welcomeMessages.sendInChannel}
-                              onChange={(e) => setServerDefaults({
-                                ...serverDefaults,
-                                modules: {
-                                  ...serverDefaults.modules,
-                                  welcomeMessages: { ...serverDefaults.modules.welcomeMessages, sendInChannel: e.target.checked }
-                                }
-                              })}
-                              className="w-4 h-4 text-orange-600 rounded"
-                            />
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Include Server Rules</span>
-                            <input
-                              type="checkbox"
-                              checked={serverDefaults.modules.welcomeMessages.includeRules}
-                              onChange={(e) => setServerDefaults({
-                                ...serverDefaults,
-                                modules: {
-                                  ...serverDefaults.modules,
-                                  welcomeMessages: { ...serverDefaults.modules.welcomeMessages, includeRules: e.target.checked }
-                                }
-                              })}
-                              className="w-4 h-4 text-orange-600 rounded"
-                            />
+                          <div className="space-y-2">
+                            <p className="text-xs font-semibold text-gray-600 uppercase">Leave Message</p>
+                            <div className="grid grid-cols-2 gap-2">
+                              <div className="flex items-center justify-between bg-white p-2 rounded col-span-2">
+                                <span className="text-xs text-gray-700">Leave Enabled</span>
+                                <input type="checkbox" checked={serverDefaults.modules.welcomeMessages.leaveEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, welcomeMessages: {...serverDefaults.modules.welcomeMessages, leaveEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded col-span-2">
+                                <span className="text-xs text-gray-700">Leave Title</span>
+                                <input type="text" value={serverDefaults.modules.welcomeMessages.leaveTitle} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, welcomeMessages: {...serverDefaults.modules.welcomeMessages, leaveTitle: e.target.value}}})} className="w-40 px-2 py-1 text-xs border border-gray-300 rounded text-gray-900" placeholder="Goodbye" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded col-span-2">
+                                <span className="text-xs text-gray-700">Leave Description</span>
+                                <input type="text" value={serverDefaults.modules.welcomeMessages.leaveDescription} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, welcomeMessages: {...serverDefaults.modules.welcomeMessages, leaveDescription: e.target.value}}})} className="w-40 px-2 py-1 text-xs border border-gray-300 rounded text-gray-900" placeholder="User has left" />
+                              </div>
+                              <div className="flex items-center justify-between bg-white p-2 rounded col-span-2">
+                                <span className="text-xs text-gray-700">Leave Color</span>
+                                <input type="color" value={serverDefaults.modules.welcomeMessages.leaveColor} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, welcomeMessages: {...serverDefaults.modules.welcomeMessages, leaveColor: e.target.value}}})} className="w-12 h-6 border border-gray-300 rounded" />
+                              </div>
+                            </div>
                           </div>
                         </div>
                       )}
@@ -2725,51 +3058,36 @@ export default function DeveloperPage() {
                         </button>
                       </div>
                       {serverDefaults.modules.fun.enabled && expandedDefaults.includes('fun') && (
-                        <div className="px-6 pb-4 space-y-2 border-t border-gray-200 pt-3">
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Allow Games</span>
-                            <input
-                              type="checkbox"
-                              checked={serverDefaults.modules.fun.allowGames}
-                              onChange={(e) => setServerDefaults({
-                                ...serverDefaults,
-                                modules: {
-                                  ...serverDefaults.modules,
-                                  fun: { ...serverDefaults.modules.fun, allowGames: e.target.checked }
-                                }
-                              })}
-                              className="w-4 h-4 text-orange-600 rounded"
-                            />
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Allow Memes</span>
-                            <input
-                              type="checkbox"
-                              checked={serverDefaults.modules.fun.allowMemes}
-                              onChange={(e) => setServerDefaults({
-                                ...serverDefaults,
-                                modules: {
-                                  ...serverDefaults.modules,
-                                  fun: { ...serverDefaults.modules.fun, allowMemes: e.target.checked }
-                                }
-                              })}
-                              className="w-4 h-4 text-orange-600 rounded"
-                            />
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Allow GIFs</span>
-                            <input
-                              type="checkbox"
-                              checked={serverDefaults.modules.fun.allowGifs}
-                              onChange={(e) => setServerDefaults({
-                                ...serverDefaults,
-                                modules: {
-                                  ...serverDefaults.modules,
-                                  fun: { ...serverDefaults.modules.fun, allowGifs: e.target.checked }
-                                }
-                              })}
-                              className="w-4 h-4 text-orange-600 rounded"
-                            />
+                        <div className="px-6 pb-4 space-y-3 border-t border-gray-200 pt-3">
+                          <div className="grid grid-cols-3 gap-2">
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">8ball</span>
+                              <input type="checkbox" checked={serverDefaults.modules.fun.eightballEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, fun: {...serverDefaults.modules.fun, eightballEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Dice</span>
+                              <input type="checkbox" checked={serverDefaults.modules.fun.diceEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, fun: {...serverDefaults.modules.fun, diceEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Coinflip</span>
+                              <input type="checkbox" checked={serverDefaults.modules.fun.coinflipEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, fun: {...serverDefaults.modules.fun, coinflipEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">RPS</span>
+                              <input type="checkbox" checked={serverDefaults.modules.fun.rpsEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, fun: {...serverDefaults.modules.fun, rpsEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Meme</span>
+                              <input type="checkbox" checked={serverDefaults.modules.fun.memeEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, fun: {...serverDefaults.modules.fun, memeEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Joke</span>
+                              <input type="checkbox" checked={serverDefaults.modules.fun.jokeEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, fun: {...serverDefaults.modules.fun, jokeEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Rate</span>
+                              <input type="checkbox" checked={serverDefaults.modules.fun.rateEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, fun: {...serverDefaults.modules.fun, rateEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
                           </div>
                         </div>
                       )}
@@ -2814,51 +3132,58 @@ export default function DeveloperPage() {
                         </button>
                       </div>
                       {serverDefaults.modules.utilities.enabled && expandedDefaults.includes('utilities') && (
-                        <div className="px-6 pb-4 space-y-2 border-t border-gray-200 pt-3">
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Allow Reminders</span>
-                            <input
-                              type="checkbox"
-                              checked={serverDefaults.modules.utilities.allowReminders}
-                              onChange={(e) => setServerDefaults({
-                                ...serverDefaults,
-                                modules: {
-                                  ...serverDefaults.modules,
-                                  utilities: { ...serverDefaults.modules.utilities, allowReminders: e.target.checked }
-                                }
-                              })}
-                              className="w-4 h-4 text-orange-600 rounded"
-                            />
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Allow Polls</span>
-                            <input
-                              type="checkbox"
-                              checked={serverDefaults.modules.utilities.allowPolls}
-                              onChange={(e) => setServerDefaults({
-                                ...serverDefaults,
-                                modules: {
-                                  ...serverDefaults.modules,
-                                  utilities: { ...serverDefaults.modules.utilities, allowPolls: e.target.checked }
-                                }
-                              })}
-                              className="w-4 h-4 text-orange-600 rounded"
-                            />
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-700">Allow Calculator</span>
-                            <input
-                              type="checkbox"
-                              checked={serverDefaults.modules.utilities.allowCalculator}
-                              onChange={(e) => setServerDefaults({
-                                ...serverDefaults,
-                                modules: {
-                                  ...serverDefaults.modules,
-                                  utilities: { ...serverDefaults.modules.utilities, allowCalculator: e.target.checked }
-                                }
-                              })}
-                              className="w-4 h-4 text-orange-600 rounded"
-                            />
+                        <div className="px-6 pb-4 space-y-3 border-t border-gray-200 pt-3">
+                          <div className="grid grid-cols-3 gap-2">
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Server Info</span>
+                              <input type="checkbox" checked={serverDefaults.modules.utilities.serverinfoEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, utilities: {...serverDefaults.modules.utilities, serverinfoEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Channel Info</span>
+                              <input type="checkbox" checked={serverDefaults.modules.utilities.channelinfoEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, utilities: {...serverDefaults.modules.utilities, channelinfoEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Role Info</span>
+                              <input type="checkbox" checked={serverDefaults.modules.utilities.roleinfoEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, utilities: {...serverDefaults.modules.utilities, roleinfoEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Emoji Info</span>
+                              <input type="checkbox" checked={serverDefaults.modules.utilities.emojiinfoEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, utilities: {...serverDefaults.modules.utilities, emojiinfoEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Ping</span>
+                              <input type="checkbox" checked={serverDefaults.modules.utilities.pingEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, utilities: {...serverDefaults.modules.utilities, pingEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Invite</span>
+                              <input type="checkbox" checked={serverDefaults.modules.utilities.inviteEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, utilities: {...serverDefaults.modules.utilities, inviteEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Help</span>
+                              <input type="checkbox" checked={serverDefaults.modules.utilities.helpEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, utilities: {...serverDefaults.modules.utilities, helpEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Support</span>
+                              <input type="checkbox" checked={serverDefaults.modules.utilities.supportEnabled} onChange={(e) => setServerDefaults({...serverDefaults, modules: {...serverDefaults.modules, utilities: {...serverDefaults.modules.utilities, supportEnabled: e.target.checked}}})} className="w-4 h-4 text-orange-600 rounded" />
+                            </div>
+                            <div className="flex items-center justify-between bg-white p-2 rounded">
+                              <span className="text-xs text-gray-700">Dashboard</span>
+                              <input 
+                                type="checkbox" 
+                                checked={serverDefaults.modules.utilities.dashboardEnabled} 
+                                onChange={(e) => setServerDefaults({
+                                  ...serverDefaults, 
+                                  modules: {
+                                    ...serverDefaults.modules, 
+                                    utilities: {
+                                      ...serverDefaults.modules.utilities, 
+                                      dashboardEnabled: e.target.checked
+                                    }
+                                  }
+                                })} 
+                                className="w-4 h-4 text-orange-600 rounded" 
+                              />
+                            </div>
                           </div>
                         </div>
                       )}
@@ -2873,28 +3198,7 @@ export default function DeveloperPage() {
                 >
                   {defaultsStatus === 'loading' ? 'Saving...' : 'Save Default Settings'}
                 </button>
-
-                {defaultsMessage && (
-                  <div className={`mt-4 p-4 rounded-lg border ${
-                    defaultsStatus === 'success'
-                      ? 'bg-orange-50 border-orange-200 text-orange-900'
-                      : 'bg-red-50 border-red-200 text-red-900'
-                  }`}>
-                    {defaultsMessage}
-                  </div>
-                )}
               </div>
-            </motion.div>
-          )}
-
-          {activeTab === 'settings' && (
-            <motion.div
-              key="settings"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2 }}
-            >
               <div className="mb-6">
                 <h2 className="text-xl font-bold text-gray-900 mb-1 flex items-center gap-2">
                   <Zap className="w-5 h-5 text-orange-600" />
