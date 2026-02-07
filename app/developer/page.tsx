@@ -1797,6 +1797,129 @@ export default function DeveloperPage() {
                   </div>
                 </div>
 
+                {/* Announcement Message Builder */}
+                <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+                  <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <Megaphone className="w-5 h-5 text-orange-600" />
+                    Announcement Message Builder
+                  </h3>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-900 mb-2">
+                        Title
+                      </label>
+                      <input
+                        type="text"
+                        value={announcementConfig.title}
+                        onChange={(e) => setAnnouncementConfig({ ...announcementConfig, title: e.target.value })}
+                        placeholder="Announcement title"
+                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-900 mb-2">
+                        Message
+                      </label>
+                      <textarea
+                        value={announcementConfig.description}
+                        onChange={(e) => setAnnouncementConfig({ ...announcementConfig, description: e.target.value })}
+                        placeholder="Announcement message"
+                        rows={3}
+                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all resize-none"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-900 mb-2">
+                          Button Text
+                        </label>
+                        <input
+                          type="text"
+                          value={announcementConfig.buttonText}
+                          onChange={(e) => setAnnouncementConfig({ ...announcementConfig, buttonText: e.target.value })}
+                          placeholder="Learn More"
+                          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-900 mb-2">
+                          Button Link
+                        </label>
+                        <input
+                          type="text"
+                          value={announcementConfig.buttonUrl}
+                          onChange={(e) => setAnnouncementConfig({ ...announcementConfig, buttonUrl: e.target.value })}
+                          placeholder="https://..."
+                          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-900 mb-2">
+                        Background Color
+                      </label>
+                      <div className="flex gap-3">
+                        <div className="relative">
+                          <input
+                            type="color"
+                            value={announcementConfig.backgroundColor}
+                            onChange={(e) => setAnnouncementConfig({ ...announcementConfig, backgroundColor: e.target.value })}
+                            className="h-12 w-16 rounded-lg cursor-pointer border-2 border-gray-200"
+                          />
+                        </div>
+                        <input
+                          type="text"
+                          value={announcementConfig.backgroundColor}
+                          onChange={(e) => setAnnouncementConfig({ ...announcementConfig, backgroundColor: e.target.value })}
+                          placeholder="#f97316"
+                          className="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all font-mono"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                      <p className="text-xs font-semibold text-gray-600 mb-3 uppercase tracking-wide">Preview</p>
+                      <div 
+                        className="rounded-lg p-4 text-white"
+                        style={{ backgroundColor: announcementConfig.backgroundColor }}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1">
+                            {announcementConfig.title && (
+                              <h4 className="font-bold text-sm mb-1">{announcementConfig.title}</h4>
+                            )}
+                            {announcementConfig.description && (
+                              <p className="text-sm opacity-90">{announcementConfig.description}</p>
+                            )}
+                          </div>
+                          {announcementConfig.buttonText && (
+                            <button className="ml-4 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-colors whitespace-nowrap">
+                              {announcementConfig.buttonText}
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={handleSaveAnnouncementConfig}
+                      disabled={settingsStatus === 'loading'}
+                      className={`w-full py-3 px-6 rounded-lg font-semibold text-white transition-all ${
+                        settingsStatus === 'loading'
+                          ? 'bg-gray-400 cursor-not-allowed'
+                          : 'bg-orange-600 hover:bg-orange-700 shadow-sm hover:shadow-md'
+                      }`}
+                    >
+                      {settingsStatus === 'loading' ? 'Saving...' : 'Save Announcement Configuration'}
+                    </button>
+                  </div>
+                </div>
+
                 {settingsMessage && (
                   <div className={`p-4 rounded-lg border ${
                     settingsStatus === 'success'
