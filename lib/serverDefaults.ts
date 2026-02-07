@@ -67,8 +67,8 @@ export async function getServerDefaults(): Promise<ServerDefaults> {
         memberManagement: { enabled: false },
         announcements: { enabled: false },
         welcomeMessages: { enabled: false },
-        fun: { enabled: false },
-        utilities: { enabled: false },
+        fun: { enabled: true },
+        utilities: { enabled: true },
         notifications: { enabled: false },
       },
     };
