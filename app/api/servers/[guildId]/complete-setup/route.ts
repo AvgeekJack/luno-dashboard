@@ -6,7 +6,7 @@ import ServerSettings from '@/lib/models/ServerSettings';
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { guildId: string } }
+  { params }: { params: Promise<{ guildId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -18,7 +18,7 @@ export async function POST(
       );
     }
 
-    const { guildId } = params;
+    const { guildId } = await params;
     const body = await req.json();
     const { config, skipSetup } = body;
 
