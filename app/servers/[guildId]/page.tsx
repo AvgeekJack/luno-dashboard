@@ -279,7 +279,7 @@ export default function ServerSettings() {
     <div className="min-h-screen bg-gray-50 text-[#0f172a] flex flex-col md:flex-row">
       {/* Mobile Menu Button */}
       <button 
-        className="md:hidden fixed top-20 left-4 z-[60] bg-orange-500 hover:bg-orange-600 text-white p-3 rounded-lg shadow-lg transition-colors"
+        className="md:hidden fixed top-4 left-4 z-[60] bg-orange-500 hover:bg-orange-600 text-white p-2.5 rounded-lg shadow-lg transition-colors"
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         aria-label="Toggle menu"
       >
@@ -309,7 +309,7 @@ export default function ServerSettings() {
             </Link>
           </div>
           
-          <div className="px-3 sm:px-4 py-3 sm:py-4">
+          <div className="px-3 sm:px-4 py-3 sm:py-4 pt-16 md:pt-3">
             <Link 
               href="/servers" 
               className="text-orange-600 font-semibold hover:text-orange-700 transition-colors text-xs sm:text-sm px-2 sm:px-3"

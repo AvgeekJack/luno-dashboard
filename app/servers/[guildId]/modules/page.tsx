@@ -18,6 +18,7 @@ export default function ModulesPage() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [configOpen, setConfigOpen] = useState(false);
   const [modulesOpen, setModulesOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const moduleList = [
     { key: 'moderation', label: 'Moderation', desc: 'Warn, kick, and ban members.' },
@@ -89,7 +90,30 @@ export default function ModulesPage() {
 
   return (
     <div className="min-h-screen bg-orange-50 text-[#0f172a] flex">
-      <aside className="fixed left-0 top-0 h-screen w-64 bg-white border-r border-orange-100 shadow-sm overflow-y-auto flex flex-col">
+      {/* Mobile Menu Button */}
+      <button 
+        className="md:hidden fixed top-4 left-4 z-[60] bg-orange-500 hover:bg-orange-600 text-white p-2.5 rounded-lg shadow-lg transition-colors"
+        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        aria-label="Toggle menu"
+      >
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          {mobileMenuOpen ? (
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          ) : (
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          )}
+        </svg>
+      </button>
+
+      {/* Mobile Overlay */}
+      {mobileMenuOpen && (
+        <div 
+          className="md:hidden fixed inset-0 bg-black/50 z-[45]"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+
+      <aside className={`fixed left-0 top-0 h-screen w-64 bg-white border-r border-orange-100 shadow-sm overflow-y-auto flex flex-col z-[50] transition-transform duration-300 ease-in-out ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
           <div className="p-6 border-b border-orange-100">
             <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
               <img src="/luno-logo.png" alt="Luno Bot" className="w-10 h-10 object-contain" />
@@ -97,8 +121,8 @@ export default function ModulesPage() {
             </Link>
           </div>
           
-          <div className="px-4 py-4">
-            <Link href="/servers" className="text-orange-600 font-semibold hover:text-orange-700 transition-colors text-sm px-3">← Back to Servers</Link>
+          <div className="px-4 py-4 pt-16 md:pt-4">
+            <Link href="/servers" className="text-orange-600 font-semibold hover:text-orange-700 transition-colors text-sm px-3" onClick={() => setMobileMenuOpen(false)}>← Back to Servers</Link>
           </div>
           
           <nav className="px-4 space-y-2 text-sm font-semibold text-slate-700">
@@ -189,7 +213,7 @@ export default function ModulesPage() {
           </nav>
       </aside>
 
-      <main className="flex-1 ml-64 py-12 px-4 md:px-8 flex justify-center">
+      <main className="flex-1 md:ml-64 py-12 px-4 md:px-8 pt-20 md:pt-12 flex justify-center">
         <div className="max-w-6xl space-y-4 md:space-y-6">
           <div className="space-y-1">
             <p className="text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">Modules</p>

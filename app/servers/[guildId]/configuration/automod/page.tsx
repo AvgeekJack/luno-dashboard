@@ -229,7 +229,7 @@ export default function AutomodPage() {
     <div className="min-h-screen bg-[#f8f9fa] text-[#0f172a] flex">
       {/* Mobile Menu Button */}
       <button 
-        className="md:hidden fixed top-20 left-4 z-[60] bg-orange-500 hover:bg-orange-600 text-white p-3 rounded-lg shadow-lg transition-colors"
+        className="md:hidden fixed top-4 left-4 z-[60] bg-orange-500 hover:bg-orange-600 text-white p-2.5 rounded-lg shadow-lg transition-colors"
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         aria-label="Toggle menu"
       >
@@ -259,7 +259,7 @@ export default function AutomodPage() {
             </Link>
           </div>
           
-          <div className="px-4 py-4">
+          <div className="px-4 py-4 pt-16 md:pt-4">
             <Link href="/servers" className="text-orange-600 font-semibold hover:text-orange-700 transition-colors text-sm px-3" onClick={() => setMobileMenuOpen(false)}>← Back to Servers</Link>
           </div>
           
