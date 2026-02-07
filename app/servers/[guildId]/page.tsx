@@ -522,7 +522,7 @@ export default function ServerSettings() {
         </div>
         
         <main className="flex-1 py-12 px-4 md:px-6 lg:px-8 pt-20 lg:pt-12">
-        <div className="w-full max-w-full md:max-w-4xl lg:max-w-7xl mx-auto space-y-8">
+        <div className="w-full max-w-full md:max-w-3xl lg:max-w-7xl mx-auto space-y-8">
           {/* Dashboard Header */}
           <div className="mb-8">
             <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-2">
