@@ -107,9 +107,11 @@ export async function PUT(req: NextRequest) {
     await connectDB();
 
     const body = await req.json();
+    console.log('[Defaults API] Received update request:', JSON.stringify(body, null, 2));
 
     // Update default prefix
     if (body.prefix !== undefined) {
+      console.log('[Defaults API] Updating prefix to:', body.prefix);
       await SiteSettings.findOneAndUpdate(
         { settingKey: 'defaultServerPrefix' },
         { settingValue: body.prefix },
@@ -119,6 +121,7 @@ export async function PUT(req: NextRequest) {
 
     // Update default premium status
     if (body.premium !== undefined) {
+      console.log('[Defaults API] Updating premium to:', body.premium);
       await SiteSettings.findOneAndUpdate(
         { settingKey: 'defaultServerPremium' },
         { settingValue: body.premium },
@@ -147,9 +150,11 @@ export async function PUT(req: NextRequest) {
 
     // Update individual module defaults
     if (body.modules !== undefined) {
+      console.log('[Defaults API] Updating modules:', body.modules);
       const moduleUpdates = [];
       
       if (body.modules.moderation !== undefined) {
+        console.log('[Defaults API] Setting moderation to:', body.modules.moderation.enabled);
         moduleUpdates.push(
           SiteSettings.findOneAndUpdate(
             { settingKey: 'defaultModuleModeration' },
@@ -160,6 +165,7 @@ export async function PUT(req: NextRequest) {
       }
       
       if (body.modules.roleManagement !== undefined) {
+        console.log('[Defaults API] Setting roleManagement to:', body.modules.roleManagement.enabled);
         moduleUpdates.push(
           SiteSettings.findOneAndUpdate(
             { settingKey: 'defaultModuleRoleManagement' },
@@ -170,6 +176,7 @@ export async function PUT(req: NextRequest) {
       }
       
       if (body.modules.memberManagement !== undefined) {
+        console.log('[Defaults API] Setting memberManagement to:', body.modules.memberManagement.enabled);
         moduleUpdates.push(
           SiteSettings.findOneAndUpdate(
             { settingKey: 'defaultModuleMemberManagement' },
@@ -180,6 +187,7 @@ export async function PUT(req: NextRequest) {
       }
       
       if (body.modules.announcements !== undefined) {
+        console.log('[Defaults API] Setting announcements to:', body.modules.announcements.enabled);
         moduleUpdates.push(
           SiteSettings.findOneAndUpdate(
             { settingKey: 'defaultModuleAnnouncements' },
@@ -190,6 +198,7 @@ export async function PUT(req: NextRequest) {
       }
       
       if (body.modules.fun !== undefined) {
+        console.log('[Defaults API] Setting fun to:', body.modules.fun.enabled);
         moduleUpdates.push(
           SiteSettings.findOneAndUpdate(
             { settingKey: 'defaultModuleFun' },
@@ -200,6 +209,7 @@ export async function PUT(req: NextRequest) {
       }
       
       if (body.modules.utilities !== undefined) {
+        console.log('[Defaults API] Setting utilities to:', body.modules.utilities.enabled);
         moduleUpdates.push(
           SiteSettings.findOneAndUpdate(
             { settingKey: 'defaultModuleUtilities' },
@@ -210,6 +220,7 @@ export async function PUT(req: NextRequest) {
       }
       
       if (body.modules.notifications !== undefined) {
+        console.log('[Defaults API] Setting notifications to:', body.modules.notifications.enabled);
         moduleUpdates.push(
           SiteSettings.findOneAndUpdate(
             { settingKey: 'defaultModuleNotifications' },
@@ -220,6 +231,7 @@ export async function PUT(req: NextRequest) {
       }
 
       await Promise.all(moduleUpdates);
+      console.log('[Defaults API] All module updates completed');
     }
 
     // Return updated settings
@@ -251,7 +263,7 @@ export async function PUT(req: NextRequest) {
       (typeof defaultSettings.settingValue === 'string' ? JSON.parse(defaultSettings.settingValue) : defaultSettings.settingValue) : 
       {};
 
-    return NextResponse.json({
+    const response = {
       guildId: 'defaults',
       prefix: defaultPrefix?.settingValue ?? '!',
       premium: defaultPremium?.settingValue ?? false,
@@ -265,7 +277,10 @@ export async function PUT(req: NextRequest) {
         utilities: { enabled: defaultUtilities?.settingValue ?? false },
         notifications: { enabled: defaultNotifications?.settingValue ?? false },
       }
-    });
+    };
+
+    console.log('[Defaults API] Returning response:', JSON.stringify(response, null, 2));
+    return NextResponse.json(response);
   } catch (error) {
     console.error('[Defaults Settings API] Error updating:', error);
     return NextResponse.json(

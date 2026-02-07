@@ -82,7 +82,21 @@ export default function DefaultsManagementPage() {
     fetch('/api/developer/defaults/settings')
       .then(res => res.json())
       .then(data => {
-        setSettings(data);
+        // Ensure modules object exists with all properties
+        const normalizedData = {
+          ...data,
+          modules: {
+            moderation: data.modules?.moderation || { enabled: false },
+            roleManagement: data.modules?.roleManagement || { enabled: false },
+            memberManagement: data.modules?.memberManagement || { enabled: false },
+            announcements: data.modules?.announcements || { enabled: false },
+            welcomeMessages: data.modules?.welcomeMessages || { enabled: false },
+            fun: data.modules?.fun || { enabled: false },
+            utilities: data.modules?.utilities || { enabled: false },
+            notifications: data.modules?.notifications || { enabled: false },
+          }
+        };
+        setSettings(normalizedData);
         setLoading(false);
       })
       .catch(err => {
@@ -457,28 +471,39 @@ export default function DefaultsManagementPage() {
                       if (!settings) return;
                       setSaving(true);
                       try {
+                        const payload = {
+                          prefix: settings.prefix,
+                          premium: settings.premium,
+                          configuration: {
+                            botNickname: settings.configuration?.botNickname,
+                            timezone: settings.configuration?.timezone,
+                            automod: settings.configuration?.automod,
+                            logging: settings.configuration?.logging,
+                            antiraid: settings.configuration?.antiraid,
+                            reactionRoles: settings.configuration?.reactionRoles,
+                            verification: settings.configuration?.verification
+                          },
+                          modules: settings.modules
+                        };
+                        
+                        console.log('Saving defaults:', payload);
+                        
                         const res = await fetch('/api/developer/defaults/settings', {
                           method: 'PUT',
                           headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({
-                            prefix: settings.prefix,
-                            premium: settings.premium,
-                            configuration: {
-                              botNickname: settings.configuration?.botNickname,
-                              timezone: settings.configuration?.timezone,
-                              automod: settings.configuration?.automod,
-                              logging: settings.configuration?.logging,
-                              antiraid: settings.configuration?.antiraid,
-                              reactionRoles: settings.configuration?.reactionRoles,
-                              verification: settings.configuration?.verification
-                            },
-                            modules: settings.modules
-                          })
+                          body: JSON.stringify(payload)
                         });
+                        
+                        const responseData = await res.json();
+                        console.log('Save response:', responseData);
+                        
                         if (res.ok) {
                           alert('Default settings saved successfully! These will apply to all new servers.');
+                          // Refresh the data to show what was actually saved
+                          setSettings(responseData);
                         } else {
-                          alert('Failed to save default settings');
+                          console.error('Save failed:', responseData);
+                          alert('Failed to save default settings: ' + (responseData.error || 'Unknown error'));
                         }
                       } catch (error) {
                         console.error('Failed to save settings:', error);
