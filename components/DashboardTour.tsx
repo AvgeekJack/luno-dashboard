@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { X, ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useRouter, useParams } from 'next/navigation';
 
 interface DashboardTourProps {
   isOpen: boolean;
@@ -14,67 +15,119 @@ interface TourStep {
   title: string;
   description: string;
   position: 'top' | 'bottom' | 'left' | 'right';
+  page: 'dashboard' | 'commands' | 'modules' | 'settings';
+  navigateTo?: string;
 }
 
 const tourSteps: TourStep[] = [
   {
     target: 'sidebar',
-    title: 'Navigation Sidebar',
-    description: 'Use this sidebar to navigate between Dashboard, Commands, Modules, and Settings. You can also return to your server list from here.',
+    title: '👋 Welcome to Your Dashboard!',
+    description: 'This sidebar is your navigation hub. Use it to explore Commands, Modules, and Settings. Let\'s take you on a quick tour!',
     position: 'right',
+    page: 'dashboard',
   },
   {
     target: 'server-stats',
-    title: 'Server Statistics',
-    description: 'View your server\'s member count, channels, roles, and online status at a glance.',
+    title: '📊 Server Statistics',
+    description: 'Here you can see your server\'s member count, online users, and other key metrics at a glance.',
     position: 'bottom',
+    page: 'dashboard',
   },
   {
     target: 'quick-actions',
-    title: 'Quick Actions',
-    description: 'Quickly access premium features, bot invite link, and important settings from here.',
+    title: '⚡ Quick Actions & Premium',
+    description: 'Access premium features and important quick actions from this card.',
     position: 'bottom',
+    page: 'dashboard',
   },
   {
     target: 'bot-status',
-    title: 'Bot Status',
-    description: 'Monitor your bot\'s online status and current configuration. Green means your bot is online and ready.',
+    title: '🤖 Bot Status Monitor',
+    description: 'Keep track of your bot\'s configuration status. Green indicators mean features are active!',
     position: 'bottom',
+    page: 'dashboard',
   },
   {
     target: 'commands-link',
-    title: 'Commands Page',
-    description: 'Click here to manage individual commands - enable/disable them, set permissions, and configure channels.',
+    title: '⚙️ Configuration Section',
+    description: 'Click here to access configuration options like Auto-Mod, Logging, and Anti-Raid. Let\'s check it out!',
     position: 'right',
+    page: 'dashboard',
+    navigateTo: 'configuration/automod',
+  },
+  {
+    target: 'page-content',
+    title: '🛡️ Configuration Pages',
+    description: 'Here you can configure Auto-Moderation, Logging, and Anti-Raid protection. Each has detailed settings to customize how your bot protects your server.',
+    position: 'bottom',
+    page: 'commands',
   },
   {
     target: 'modules-link',
-    title: 'Modules Page',
-    description: 'Enable or disable entire command modules like Moderation, Fun, Utilities, and more.',
+    title: '🧩 Modules Section',
+    description: 'Now let\'s explore Modules! This is where you enable/disable entire command categories.',
     position: 'right',
+    page: 'commands',
+    navigateTo: 'modules/moderation',
+  },
+  {
+    target: 'page-content',
+    title: '🛠️ Module Management',
+    description: 'Each module (Moderation, Fun, Utilities, etc.) can be toggled on/off. You can also configure individual commands within each module.',
+    position: 'bottom',
+    page: 'modules',
   },
   {
     target: 'settings-link',
-    title: 'Settings Page',
-    description: 'Configure advanced features like logging, anti-raid protection, auto-moderation, and your command prefix.',
+    title: '⚙️ Settings Section',
+    description: 'Finally, let\'s look at Settings where you can configure the basics.',
     position: 'right',
+    page: 'modules',
+    navigateTo: 'general',
+  },
+  {
+    target: 'page-content',
+    title: '📝 General Settings',
+    description: 'Here you can change your bot\'s command prefix, nickname, timezone, and other general configuration options.',
+    position: 'bottom',
+    page: 'settings',
+  },
+  {
+    target: 'sidebar',
+    title: '✅ Tour Complete!',
+    description: 'You\'re all set! Feel free to explore on your own. You can always access the documentation or support if you need help.',
+    position: 'right',
+    page: 'settings',
   },
 ];
 
 export default function DashboardTour({ isOpen, onClose }: DashboardTourProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [highlightPosition, setHighlightPosition] = useState({ top: 0, left: 0, width: 0, height: 0 });
+  const router = useRouter();
+  const params = useParams();
+  const guildId = params?.guildId as string;
 
   useEffect(() => {
     if (!isOpen) return;
 
+    const step = tourSteps[currentStep];
+    
+    // Navigate to the correct page if specified
+    if (step.navigateTo && guildId) {
+      router.push(`/servers/${guildId}/${step.navigateTo}`);
+    }
+
     const updatePosition = () => {
-      const step = tourSteps[currentStep];
       let element: HTMLElement | null = null;
 
       // Find the target element based on the step
       if (step.target === 'sidebar') {
         element = document.querySelector('aside') as HTMLElement;
+      } else if (step.target === 'page-content') {
+        element = document.querySelector('main[data-tour="page-content"]') as HTMLElement;
+        if (!element) element = document.querySelector('main') as HTMLElement;
       } else if (step.target === 'server-stats') {
         element = document.querySelector('[data-tour="server-stats"]') as HTMLElement;
       } else if (step.target === 'quick-actions') {
@@ -82,11 +135,14 @@ export default function DashboardTour({ isOpen, onClose }: DashboardTourProps) {
       } else if (step.target === 'bot-status') {
         element = document.querySelector('[data-tour="bot-status"]') as HTMLElement;
       } else if (step.target === 'commands-link') {
-        element = document.querySelector('[href*="/commands"]') as HTMLElement;
+        // Find Configuration nav item
+        element = document.querySelector('[href*="/configuration"]') as HTMLElement;
+        if (!element) element = document.querySelector('[href*="/commands"]') as HTMLElement;
       } else if (step.target === 'modules-link') {
         element = document.querySelector('[href*="/modules"]') as HTMLElement;
       } else if (step.target === 'settings-link') {
-        element = document.querySelector('[href*="/settings"]') as HTMLElement;
+        element = document.querySelector('[href*="/general"]') as HTMLElement;
+        if (!element) element = document.querySelector('[href*="/settings"]') as HTMLElement;
       }
 
       if (element) {
@@ -103,15 +159,18 @@ export default function DashboardTour({ isOpen, onClose }: DashboardTourProps) {
       }
     };
 
-    updatePosition();
+    // Delay to allow page navigation to complete
+    const timer = setTimeout(updatePosition, step.navigateTo ? 800 : 200);
+    
     window.addEventListener('resize', updatePosition);
     window.addEventListener('scroll', updatePosition);
 
     return () => {
+      clearTimeout(timer);
       window.removeEventListener('resize', updatePosition);
       window.removeEventListener('scroll', updatePosition);
     };
-  }, [currentStep, isOpen]);
+  }, [currentStep, isOpen, guildId, router]);
 
   const handleNext = () => {
     if (currentStep < tourSteps.length - 1) {
@@ -137,27 +196,28 @@ export default function DashboardTour({ isOpen, onClose }: DashboardTourProps) {
 
   return (
     <>
-      {/* Backdrop overlay */}
+      {/* Backdrop overlay - lighter background */}
       <div className="fixed inset-0 z-[60] pointer-events-none">
-        {/* Dark overlay with cutout */}
-        <div className="absolute inset-0 bg-black/70" />
+        {/* Light overlay with cutout */}
+        <div className="absolute inset-0 bg-black/30" />
         
-        {/* Highlight cutout */}
+        {/* Highlight cutout with bright border */}
         <AnimatePresence mode="wait">
           <motion.div
             key={currentStep}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute"
+            className="absolute pointer-events-none"
             style={{
               top: highlightPosition.top - 8,
               left: highlightPosition.left - 8,
               width: highlightPosition.width + 16,
               height: highlightPosition.height + 16,
-              boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.7), 0 0 24px rgba(59, 130, 246, 0.5)',
+              boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.3), 0 0 32px rgba(59, 130, 246, 0.8), inset 0 0 0 4px rgba(59, 130, 246, 0.6)',
               borderRadius: '12px',
               border: '3px solid rgb(59, 130, 246)',
+              animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
             }}
           />
         </AnimatePresence>

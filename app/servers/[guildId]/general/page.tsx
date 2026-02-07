@@ -276,7 +276,7 @@ export default function GeneralPage() {
       {/* Debug Info Popup */}
       <DebugInfoPopup isOpen={showDebugInfo} onClose={() => setShowDebugInfo(false)} />
 
-      <main className="flex-1 md:ml-64 py-12 px-4 md:px-8 pt-20 md:pt-12">
+      <main data-tour="page-content" className="flex-1 md:ml-64 py-12 px-4 md:px-8 pt-20 md:pt-12">
         <div className="w-full space-y-4 md:space-y-6">
           <div className="space-y-1">
             <p className="text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">Settings</p>
