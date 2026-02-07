@@ -514,9 +514,14 @@ export default function ServerSettings() {
       <DebugInfoPopup isOpen={showDebugInfo} onClose={() => setShowDebugInfo(false)} />
       <DeveloperTools isOpen={showDeveloperTools} onClose={() => setShowDeveloperTools(false)} />
 
-      <div className="flex-1 md:ml-64">
-        <SystemAnnouncement />
-        <main className="py-12 px-4 md:px-8 pt-20 md:pt-12">
+      {/* Main Content */}
+      <div className="flex-1 md:ml-64 flex flex-col">
+        {/* System Announcement - positioned at top */}
+        <div className="w-full">
+          <SystemAnnouncement />
+        </div>
+        
+        <main className="flex-1 py-12 px-4 md:px-8 pt-20 md:pt-12">
         <div className="w-full max-w-7xl mx-auto space-y-8">
           {/* Dashboard Header */}
           <div className="mb-8">

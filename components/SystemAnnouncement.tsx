@@ -79,8 +79,11 @@ export default function SystemAnnouncement() {
 
   return (
     <div
-      className="w-full text-white shadow-lg relative z-50"
-      style={{ backgroundColor: config.backgroundColor }}
+      className="w-full text-white shadow-lg relative"
+      style={{ 
+        backgroundColor: config.backgroundColor,
+        zIndex: 60
+      }}
     >
       <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
         <div className="flex items-start justify-between gap-4">
