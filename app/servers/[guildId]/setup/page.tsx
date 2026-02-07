@@ -179,10 +179,10 @@ export default function SetupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-orange-50 text-[#0f172a] flex flex-col md:flex-row">
+    <div className="min-h-screen bg-orange-50 text-[#0f172a] flex flex-col lg:flex-row">
       {/* Mobile Menu Button */}
       <button 
-        className="md:hidden fixed top-20 left-4 z-[60] bg-orange-500 hover:bg-orange-600 text-white p-3 rounded-lg shadow-lg transition-colors"
+        className="lg:hidden fixed top-20 left-4 z-[60] bg-orange-500 hover:bg-orange-600 text-white p-3 rounded-lg shadow-lg transition-colors"
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         aria-label="Toggle menu"
       >
@@ -198,15 +198,15 @@ export default function SetupPage() {
       {/* Mobile Overlay */}
       {mobileMenuOpen && (
         <div 
-          className="md:hidden fixed inset-0 bg-black/50 z-[45]"
+          className="lg:hidden fixed inset-0 bg-black/50 z-[45]"
           onClick={() => setMobileMenuOpen(false)}
         />
       )}
 
       {/* Sidebar */}
-      <aside className={`fixed md:static left-0 top-0 h-screen w-64 bg-white border-r border-orange-100 shadow-lg md:shadow-sm overflow-y-auto flex flex-col z-[50] transition-transform duration-300 ease-in-out ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
-          <div className="p-6 border-b border-orange-100">
-            <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity ml-12 md:ml-0">
+      <aside className={`fixed lg:static left-0 top-0 h-screen w-64 bg-white border-r border-orange-100 shadow-lg lg:shadow-sm overflow-y-auto flex flex-col z-[50] transition-transform duration-300 ease-in-out ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
+          <div className="p-6 pt-16 lg:pt-6 border-b border-orange-100">
+            <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity ml-12 lg:ml-0">
               <img src="/luno-logo.png" alt="Luno Bot" className="w-10 h-10 object-contain" />
               <span className="text-xl font-bold text-[#0f172a]">Luno</span>
             </Link>
@@ -304,7 +304,7 @@ export default function SetupPage() {
           </nav>
       </aside>
 
-      <main className="flex-1 md:ml-64 py-12 px-4 md:px-8 pt-20 md:pt-12 flex justify-center">
+      <main className="flex-1 lg:ml-64 py-12 px-4 lg:px-8 pt-20 lg:pt-12 flex justify-center">
         <div className="w-full max-w-5xl space-y-4 md:space-y-6">
           <div className="space-y-1">
             <p className="text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">Settings</p>

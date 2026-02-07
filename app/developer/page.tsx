@@ -1068,13 +1068,13 @@ export default function DeveloperPage() {
                   <button
                     onClick={handleMaintenanceToggle}
                     disabled={maintenanceStatus === 'loading'}
-                    className={`relative inline-flex h-10 w-20 items-center rounded-full transition-all ${
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-all ${
                       maintenanceMode ? 'bg-orange-600' : 'bg-gray-300'
                     } ${maintenanceStatus === 'loading' ? 'opacity-50 cursor-not-allowed' : 'shadow-sm'}`}
                   >
                     <span
-                      className={`inline-block h-8 w-8 transform rounded-full bg-white shadow-md transition-transform ${
-                        maintenanceMode ? 'translate-x-11' : 'translate-x-1'
+                      className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform ${
+                        maintenanceMode ? 'translate-x-6' : 'translate-x-0.5'
                       }`}
                     />
                   </button>
@@ -1655,13 +1655,13 @@ export default function DeveloperPage() {
                       <button
                         onClick={handlePremiumPurchaseToggle}
                         disabled={settingsStatus === 'loading'}
-                        className={`relative inline-flex h-10 w-20 items-center rounded-full transition-all ${
+                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-all ${
                           premiumPurchaseEnabled ? 'bg-orange-600' : 'bg-gray-300'
                         } ${settingsStatus === 'loading' ? 'opacity-50 cursor-not-allowed' : 'shadow-sm'}`}
                       >
                         <span
-                          className={`inline-block h-8 w-8 transform rounded-full bg-white shadow-md transition-transform ${
-                            premiumPurchaseEnabled ? 'translate-x-11' : 'translate-x-1'
+                          className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform ${
+                            premiumPurchaseEnabled ? 'translate-x-6' : 'translate-x-0.5'
                           }`}
                         />
                       </button>
@@ -1677,13 +1677,13 @@ export default function DeveloperPage() {
                       <button
                         onClick={handlePremiumManagementToggle}
                         disabled={settingsStatus === 'loading'}
-                        className={`relative inline-flex h-10 w-20 items-center rounded-full transition-all ${
+                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-all ${
                           premiumManagementEnabled ? 'bg-orange-600' : 'bg-gray-300'
                         } ${settingsStatus === 'loading' ? 'opacity-50 cursor-not-allowed' : 'shadow-sm'}`}
                       >
                         <span
-                          className={`inline-block h-8 w-8 transform rounded-full bg-white shadow-md transition-transform ${
-                            premiumManagementEnabled ? 'translate-x-11' : 'translate-x-1'
+                          className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform ${
+                            premiumManagementEnabled ? 'translate-x-6' : 'translate-x-0.5'
                           }`}
                         />
                       </button>
@@ -1708,13 +1708,13 @@ export default function DeveloperPage() {
                     <button
                       onClick={handleBotInviteToggle}
                       disabled={settingsStatus === 'loading'}
-                      className={`relative inline-flex h-10 w-20 items-center rounded-full transition-all ${
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-all ${
                         botInviteEnabled ? 'bg-orange-600' : 'bg-gray-300'
                       } ${settingsStatus === 'loading' ? 'opacity-50 cursor-not-allowed' : 'shadow-sm'}`}
                     >
                       <span
-                        className={`inline-block h-8 w-8 transform rounded-full bg-white shadow-md transition-transform ${
-                          botInviteEnabled ? 'translate-x-11' : 'translate-x-1'
+                        className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform ${
+                          botInviteEnabled ? 'translate-x-6' : 'translate-x-0.5'
                         }`}
                       />
                     </button>
@@ -1739,13 +1739,13 @@ export default function DeveloperPage() {
                       <button
                         onClick={handleSystemAnnouncementsToggle}
                         disabled={settingsStatus === 'loading'}
-                        className={`relative inline-flex h-10 w-20 items-center rounded-full transition-all ${
+                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-all ${
                           systemAnnouncementsEnabled ? 'bg-orange-600' : 'bg-gray-300'
                         } ${settingsStatus === 'loading' ? 'opacity-50 cursor-not-allowed' : 'shadow-sm'}`}
                       >
                         <span
-                          className={`inline-block h-8 w-8 transform rounded-full bg-white shadow-md transition-transform ${
-                            systemAnnouncementsEnabled ? 'translate-x-11' : 'translate-x-1'
+                          className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform ${
+                            systemAnnouncementsEnabled ? 'translate-x-6' : 'translate-x-0.5'
                           }`}
                         />
                       </button>
@@ -1761,13 +1761,13 @@ export default function DeveloperPage() {
                       <button
                         onClick={handleAnalyticsToggle}
                         disabled={settingsStatus === 'loading'}
-                        className={`relative inline-flex h-10 w-20 items-center rounded-full transition-all ${
+                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-all ${
                           analyticsEnabled ? 'bg-orange-600' : 'bg-gray-300'
                         } ${settingsStatus === 'loading' ? 'opacity-50 cursor-not-allowed' : 'shadow-sm'}`}
                       >
                         <span
-                          className={`inline-block h-8 w-8 transform rounded-full bg-white shadow-md transition-transform ${
-                            analyticsEnabled ? 'translate-x-11' : 'translate-x-1'
+                          className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform ${
+                            analyticsEnabled ? 'translate-x-6' : 'translate-x-0.5'
                           }`}
                         />
                       </button>
@@ -1783,13 +1783,13 @@ export default function DeveloperPage() {
                       <button
                         onClick={handleBetaFeaturesToggle}
                         disabled={settingsStatus === 'loading'}
-                        className={`relative inline-flex h-10 w-20 items-center rounded-full transition-all ${
+                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-all ${
                           betaFeaturesEnabled ? 'bg-orange-600' : 'bg-gray-300'
                         } ${settingsStatus === 'loading' ? 'opacity-50 cursor-not-allowed' : 'shadow-sm'}`}
                       >
                         <span
-                          className={`inline-block h-8 w-8 transform rounded-full bg-white shadow-md transition-transform ${
-                            betaFeaturesEnabled ? 'translate-x-11' : 'translate-x-1'
+                          className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform ${
+                            betaFeaturesEnabled ? 'translate-x-6' : 'translate-x-0.5'
                           }`}
                         />
                       </button>
@@ -1892,13 +1892,13 @@ export default function DeveloperPage() {
                         </div>
                         <button
                           onClick={() => setAnnouncementConfig({ ...announcementConfig, dismissable: !announcementConfig.dismissable })}
-                          className={`relative inline-flex h-10 w-20 items-center rounded-full transition-all ${
+                          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-all ${
                             announcementConfig.dismissable ? 'bg-orange-600' : 'bg-gray-300'
                           } shadow-sm`}
                         >
                           <span
-                            className={`inline-block h-8 w-8 transform rounded-full bg-white shadow-md transition-transform ${
-                              announcementConfig.dismissable ? 'translate-x-11' : 'translate-x-1'
+                            className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform ${
+                              announcementConfig.dismissable ? 'translate-x-6' : 'translate-x-0.5'
                             }`}
                           />
                         </button>

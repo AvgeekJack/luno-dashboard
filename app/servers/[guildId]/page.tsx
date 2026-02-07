@@ -276,10 +276,10 @@ export default function ServerSettings() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 text-[#0f172a] flex flex-col md:flex-row">
+    <div className="min-h-screen bg-gray-50 text-[#0f172a] flex flex-col lg:flex-row">
       {/* Mobile Menu Button */}
       <button 
-        className="md:hidden fixed top-4 left-4 z-[60] bg-orange-500 hover:bg-orange-600 text-white p-2.5 rounded-lg shadow-lg transition-colors"
+        className="lg:hidden fixed top-4 left-4 z-[60] bg-orange-500 hover:bg-orange-600 text-white p-2.5 rounded-lg shadow-lg transition-colors"
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         aria-label="Toggle menu"
       >
@@ -295,21 +295,21 @@ export default function ServerSettings() {
       {/* Mobile Overlay */}
       {mobileMenuOpen && (
         <div 
-          className="md:hidden fixed inset-0 bg-black/50 z-[45]"
+          className="lg:hidden fixed inset-0 bg-black/50 z-[45]"
           onClick={() => setMobileMenuOpen(false)}
         />
       )}
 
       {/* Sidebar */}
-      <aside className={`fixed md:static left-0 top-0 h-screen w-64 bg-white border-r border-orange-100 shadow-lg md:shadow-sm overflow-y-auto flex flex-col z-[50] transition-transform duration-300 ease-in-out ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
-          <div className="p-4 sm:p-6 border-b border-orange-100">
+      <aside className={`fixed lg:static left-0 top-0 h-screen w-64 bg-white border-r border-orange-100 shadow-lg lg:shadow-sm overflow-y-auto flex flex-col z-[50] transition-transform duration-300 ease-in-out ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
+          <div className="p-4 sm:p-6 pt-16 lg:pt-4 sm:lg:pt-6 border-b border-orange-100">
             <Link href="/" className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity">
               <img src="/luno-logo.png" alt="Luno Bot" className="w-8 h-8 sm:w-10 sm:h-10 object-contain" />
               <span className="text-lg sm:text-xl font-bold text-[#0f172a]">Luno</span>
             </Link>
           </div>
           
-          <div className="px-3 sm:px-4 py-3 sm:py-4 pt-16 md:pt-3">
+          <div className="px-3 sm:px-4 py-3 sm:py-4">
             <Link 
               href="/servers" 
               className="text-orange-600 font-semibold hover:text-orange-700 transition-colors text-xs sm:text-sm px-2 sm:px-3"
@@ -515,13 +515,13 @@ export default function ServerSettings() {
       <DeveloperTools isOpen={showDeveloperTools} onClose={() => setShowDeveloperTools(false)} />
 
       {/* Main Content */}
-      <div className="flex-1 md:ml-64 flex flex-col">
+      <div className="flex-1 lg:ml-64 flex flex-col">
         {/* System Announcement - positioned at top */}
         <div className="w-full">
           <SystemAnnouncement />
         </div>
         
-        <main className="flex-1 py-12 px-4 md:px-8 pt-20 md:pt-12">
+        <main className="flex-1 py-12 px-4 lg:px-8 pt-20 lg:pt-12">
         <div className="w-full max-w-7xl mx-auto space-y-8">
           {/* Dashboard Header */}
           <div className="mb-8">
