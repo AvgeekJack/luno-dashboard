@@ -7,6 +7,8 @@ const ServerSettingsSchema = new mongoose.Schema({
   premium: { type: Boolean, default: false },
   stripeCustomerId: { type: String, default: null },
   stripeSubscriptionId: { type: String, default: null },
+  setupCompleted: { type: Boolean, default: false },
+  setupCompletedAt: { type: Date, default: null },
   modules: {
     moderation: {
       enabled: { type: Boolean, default: true },

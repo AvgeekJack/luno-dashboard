@@ -8,11 +8,14 @@ import MaintenanceScreen from '@/components/MaintenanceScreen';
 import DebugInfoPopup from '@/components/DebugInfoPopup';
 import DeveloperTools from '@/components/DeveloperTools';
 import SystemAnnouncement from '@/components/SystemAnnouncement';
+import WelcomeSetupModal from '@/components/WelcomeSetupModal';
+import SetupWizard from '@/components/SetupWizard';
 
 interface Settings {
   guildId: string;
   prefix: string;
   premium?: boolean;
+  setupCompleted?: boolean;
   configuration?: {
     botNickname: string;
     timezone: string;
@@ -64,6 +67,9 @@ export default function ServerSettings() {
   const [bypassMaintenance, setBypassMaintenance] = useState(false);
   const [premiumPurchaseEnabled, setPremiumPurchaseEnabled] = useState(true);
   const [premiumManagementEnabled, setPremiumManagementEnabled] = useState(true);
+  const [showWelcomeModal, setShowWelcomeModal] = useState(false);
+  const [showSetupWizard, setShowSetupWizard] = useState(false);
+  const [hasCheckedSetup, setHasCheckedSetup] = useState(false);
 
   // Check maintenance mode and premium purchase status
   useEffect(() => {
@@ -181,6 +187,65 @@ export default function ServerSettings() {
         console.error(err);
       });
   }, [session, status, guildId, router]);
+
+  // Check if we need to show welcome modal for first-time setup
+  useEffect(() => {
+    if (!hasCheckedSetup && settings && !settings.setupCompleted) {
+      // Small delay to let the page load first
+      setTimeout(() => {
+        setShowWelcomeModal(true);
+        setHasCheckedSetup(true);
+      }, 800);
+    }
+  }, [settings, hasCheckedSetup]);
+
+  const handleStartSetup = () => {
+    setShowWelcomeModal(false);
+    setShowSetupWizard(true);
+  };
+
+  const handleSkipSetup = async () => {
+    setShowWelcomeModal(false);
+    
+    // Mark setup as completed even though they skipped
+    try {
+      await fetch(`/api/servers/${guildId}/complete-setup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ skipSetup: true }),
+      });
+      
+      // Update local settings
+      if (settings) {
+        setSettings({ ...settings, setupCompleted: true });
+      }
+    } catch (error) {
+      console.error('Failed to mark setup as completed:', error);
+    }
+  };
+
+  const handleCompleteSetup = async (config: any) => {
+    try {
+      const response = await fetch(`/api/servers/${guildId}/complete-setup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ config }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setSettings(data.settings);
+        setShowSetupWizard(false);
+        
+        // Refresh the page to load new settings
+        window.location.reload();
+      } else {
+        console.error('Setup completion failed');
+      }
+    } catch (error) {
+      console.error('Failed to complete setup:', error);
+    }
+  };
 
   if (loading) {
     return <div className="flex min-h-screen items-center justify-center text-[#0f172a]">Loading...</div>;
@@ -783,6 +848,23 @@ export default function ServerSettings() {
         </div>
       </main>
       </div>
+
+      {/* Welcome Setup Modal */}
+      <WelcomeSetupModal
+        isOpen={showWelcomeModal}
+        onClose={handleSkipSetup}
+        onStartSetup={handleStartSetup}
+        serverName={serverName || 'Your Server'}
+      />
+
+      {/* Setup Wizard */}
+      <SetupWizard
+        isOpen={showSetupWizard}
+        onClose={() => setShowSetupWizard(false)}
+        onComplete={handleCompleteSetup}
+        serverName={serverName || 'Your Server'}
+        initialPrefix={settings?.prefix}
+      />
     </div>
   );
 }
