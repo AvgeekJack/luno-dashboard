@@ -146,9 +146,9 @@ export default function SetupWizard({ isOpen, onClose, onComplete, serverName, i
 
         {/* Progress bar */}
         <div className="bg-gray-100 px-6 py-4">
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center justify-center mb-3 max-w-2xl mx-auto">
             {steps.map((step, index) => (
-              <div key={index} className="flex items-center flex-1">
+              <div key={index} className="flex items-center">
                 <div className={`flex items-center justify-center w-10 h-10 rounded-full font-semibold text-sm transition-all ${
                   index < currentStep
                     ? 'bg-green-500 text-white'
@@ -159,7 +159,7 @@ export default function SetupWizard({ isOpen, onClose, onComplete, serverName, i
                   {index < currentStep ? <Check className="w-5 h-5" /> : index + 1}
                 </div>
                 {index < steps.length - 1 && (
-                  <div className={`flex-1 h-1 mx-2 rounded-full transition-all ${
+                  <div className={`w-20 h-1 mx-2 rounded-full transition-all ${
                     index < currentStep ? 'bg-green-500' : 'bg-gray-300'
                   }`} />
                 )}

@@ -72,7 +72,7 @@ export default function WelcomeSetupModal({ isOpen, onClose, onStartSetup, serve
                 transition={{ delay: 0.3 }}
                 className="text-3xl font-bold mb-2"
               >
-                Welcome to {serverName}!
+                Welcome to {serverName}'s Dashboard!
               </motion.h2>
               
               <motion.p
