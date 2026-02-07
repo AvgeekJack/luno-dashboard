@@ -479,11 +479,6 @@ function ModuleToggle({ title, description, icon: Icon, enabled, onToggle, recom
           : 'bg-white border-gray-200 hover:border-gray-300'
       }`}
     >
-      {recommended && (
-        <span className="absolute top-2 right-2 px-2 py-0.5 bg-green-500 text-white text-xs font-semibold rounded">
-          Recommended
-        </span>
-      )}
       <div className="flex items-start gap-3">
         <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
           enabled ? 'bg-orange-500' : 'bg-gray-200'
@@ -491,9 +486,16 @@ function ModuleToggle({ title, description, icon: Icon, enabled, onToggle, recom
           <Icon className={`w-5 h-5 ${enabled ? 'text-white' : 'text-gray-600'}`} />
         </div>
         <div className="flex-1 pt-1">
-          <h4 className={`font-semibold mb-1 ${enabled ? 'text-gray-900' : 'text-gray-700'}`}>
-            {title}
-          </h4>
+          <div className="flex items-center gap-2 mb-1">
+            <h4 className={`font-semibold ${enabled ? 'text-gray-900' : 'text-gray-700'}`}>
+              {title}
+            </h4>
+            {recommended && (
+              <span className="px-2 py-0.5 bg-green-500 text-white text-xs font-semibold rounded">
+                Recommended
+              </span>
+            )}
+          </div>
           <p className="text-xs text-gray-600">{description}</p>
         </div>
         <div className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 mt-2 ${
