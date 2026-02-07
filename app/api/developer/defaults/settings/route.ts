@@ -37,6 +37,7 @@ export async function GET(req: NextRequest) {
       defaultRoleManagement,
       defaultMemberManagement,
       defaultAnnouncements,
+      defaultWelcomeMessages,
       defaultFun,
       defaultUtilities,
       defaultNotifications,
@@ -48,6 +49,7 @@ export async function GET(req: NextRequest) {
       SiteSettings.findOne({ settingKey: 'defaultModuleRoleManagement' }),
       SiteSettings.findOne({ settingKey: 'defaultModuleMemberManagement' }),
       SiteSettings.findOne({ settingKey: 'defaultModuleAnnouncements' }),
+      SiteSettings.findOne({ settingKey: 'defaultModuleWelcomeMessages' }),
       SiteSettings.findOne({ settingKey: 'defaultModuleFun' }),
       SiteSettings.findOne({ settingKey: 'defaultModuleUtilities' }),
       SiteSettings.findOne({ settingKey: 'defaultModuleNotifications' }),
@@ -78,6 +80,7 @@ export async function GET(req: NextRequest) {
         roleManagement: { enabled: defaultRoleManagement?.settingValue ?? false },
         memberManagement: { enabled: defaultMemberManagement?.settingValue ?? false },
         announcements: { enabled: defaultAnnouncements?.settingValue ?? false },
+        welcomeMessages: { enabled: defaultWelcomeMessages?.settingValue ?? false },
         fun: { enabled: defaultFun?.settingValue ?? false },
         utilities: { enabled: defaultUtilities?.settingValue ?? false },
         notifications: { enabled: defaultNotifications?.settingValue ?? false },
@@ -197,6 +200,17 @@ export async function PUT(req: NextRequest) {
         );
       }
       
+      if (body.modules.welcomeMessages !== undefined) {
+        console.log('[Defaults API] Setting welcomeMessages to:', body.modules.welcomeMessages.enabled);
+        moduleUpdates.push(
+          SiteSettings.findOneAndUpdate(
+            { settingKey: 'defaultModuleWelcomeMessages' },
+            { settingValue: body.modules.welcomeMessages.enabled },
+            { upsert: true, new: true }
+          )
+        );
+      }
+      
       if (body.modules.fun !== undefined) {
         console.log('[Defaults API] Setting fun to:', body.modules.fun.enabled);
         moduleUpdates.push(
@@ -243,6 +257,7 @@ export async function PUT(req: NextRequest) {
       defaultRoleManagement,
       defaultMemberManagement,
       defaultAnnouncements,
+      defaultWelcomeMessages,
       defaultFun,
       defaultUtilities,
       defaultNotifications,
@@ -254,6 +269,7 @@ export async function PUT(req: NextRequest) {
       SiteSettings.findOne({ settingKey: 'defaultModuleRoleManagement' }),
       SiteSettings.findOne({ settingKey: 'defaultModuleMemberManagement' }),
       SiteSettings.findOne({ settingKey: 'defaultModuleAnnouncements' }),
+      SiteSettings.findOne({ settingKey: 'defaultModuleWelcomeMessages' }),
       SiteSettings.findOne({ settingKey: 'defaultModuleFun' }),
       SiteSettings.findOne({ settingKey: 'defaultModuleUtilities' }),
       SiteSettings.findOne({ settingKey: 'defaultModuleNotifications' }),
@@ -273,6 +289,7 @@ export async function PUT(req: NextRequest) {
         roleManagement: { enabled: defaultRoleManagement?.settingValue ?? false },
         memberManagement: { enabled: defaultMemberManagement?.settingValue ?? false },
         announcements: { enabled: defaultAnnouncements?.settingValue ?? false },
+        welcomeMessages: { enabled: defaultWelcomeMessages?.settingValue ?? false },
         fun: { enabled: defaultFun?.settingValue ?? false },
         utilities: { enabled: defaultUtilities?.settingValue ?? false },
         notifications: { enabled: defaultNotifications?.settingValue ?? false },

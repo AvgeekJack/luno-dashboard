@@ -8,6 +8,7 @@ interface ServerDefaults {
     roleManagement: { enabled: boolean };
     memberManagement: { enabled: boolean };
     announcements: { enabled: boolean };
+    welcomeMessages: { enabled: boolean };
     fun: { enabled: boolean };
     utilities: { enabled: boolean };
     notifications: { enabled: boolean };
@@ -23,6 +24,7 @@ export async function getServerDefaults(): Promise<ServerDefaults> {
       defaultRoleManagement,
       defaultMemberManagement,
       defaultAnnouncements,
+      defaultWelcomeMessages,
       defaultFun,
       defaultUtilities,
       defaultNotifications,
@@ -33,6 +35,7 @@ export async function getServerDefaults(): Promise<ServerDefaults> {
       SiteSettings.findOne({ settingKey: 'defaultModuleRoleManagement' }),
       SiteSettings.findOne({ settingKey: 'defaultModuleMemberManagement' }),
       SiteSettings.findOne({ settingKey: 'defaultModuleAnnouncements' }),
+      SiteSettings.findOne({ settingKey: 'defaultModuleWelcomeMessages' }),
       SiteSettings.findOne({ settingKey: 'defaultModuleFun' }),
       SiteSettings.findOne({ settingKey: 'defaultModuleUtilities' }),
       SiteSettings.findOne({ settingKey: 'defaultModuleNotifications' }),
@@ -46,6 +49,7 @@ export async function getServerDefaults(): Promise<ServerDefaults> {
         roleManagement: { enabled: defaultRoleManagement?.settingValue ?? false },
         memberManagement: { enabled: defaultMemberManagement?.settingValue ?? false },
         announcements: { enabled: defaultAnnouncements?.settingValue ?? false },
+        welcomeMessages: { enabled: defaultWelcomeMessages?.settingValue ?? false },
         fun: { enabled: defaultFun?.settingValue ?? false },
         utilities: { enabled: defaultUtilities?.settingValue ?? false },
         notifications: { enabled: defaultNotifications?.settingValue ?? false },
@@ -62,6 +66,7 @@ export async function getServerDefaults(): Promise<ServerDefaults> {
         roleManagement: { enabled: false },
         memberManagement: { enabled: false },
         announcements: { enabled: false },
+        welcomeMessages: { enabled: false },
         fun: { enabled: false },
         utilities: { enabled: false },
         notifications: { enabled: false },
