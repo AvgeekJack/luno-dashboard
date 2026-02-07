@@ -134,7 +134,7 @@ export default function PremiumPage() {
 
   return (
     <ServerPageWrapper>
-    <div className="min-h-screen bg-[#f8f9fa] text-[#0f172a] flex flex-col md:flex-row">
+    <div className="min-h-screen bg-[#f8f9fa] text-[#0f172a] flex flex-col lg:flex-row overflow-x-hidden">
       {/* Mobile Menu Button */}
       <button 
         className="md:hidden fixed top-20 left-4 z-[60] bg-orange-500 hover:bg-orange-600 text-white p-3 rounded-lg shadow-lg transition-colors"
@@ -259,7 +259,7 @@ export default function PremiumPage() {
         </nav>
       </aside>
 
-      <main className="flex-1 ml-0 md:ml-64 py-12 px-4 md:px-8 pt-20 md:pt-12 flex justify-center">
+      <main className="flex-1 ml-0 md:ml-64 py-12 px-4 md:px-6 lg:px-8 pt-20 md:pt-12 flex justify-center">
         <div className="w-full max-w-4xl space-y-6">
           <div className="space-y-1">
             <p className="text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">PREMIUM</p>

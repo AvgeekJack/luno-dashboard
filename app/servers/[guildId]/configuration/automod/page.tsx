@@ -226,7 +226,7 @@ export default function AutomodPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f8f9fa] text-[#0f172a] flex">
+    <div className="min-h-screen bg-[#f8f9fa] text-[#0f172a] flex overflow-x-hidden">
       {/* Mobile Menu Button */}
       <button 
         className="lg:hidden fixed top-4 left-4 z-[60] bg-orange-500 hover:bg-orange-600 text-white p-2.5 rounded-lg shadow-lg transition-colors"
@@ -374,7 +374,7 @@ export default function AutomodPage() {
       {/* Debug Info Popup */}
       <DebugInfoPopup isOpen={showDebugInfo} onClose={() => setShowDebugInfo(false)} />
 
-      <main data-tour="page-content" className="flex-1 lg:ml-64 py-12 px-4 lg:px-8 pt-20 lg:pt-12 flex justify-center bg-[#f8f9fa]">
+      <main data-tour="page-content" className="flex-1 lg:ml-64 py-12 px-4 md:px-6 lg:px-8 pt-20 lg:pt-12 flex justify-center bg-[#f8f9fa]">
         <div className="w-full max-w-5xl space-y-6">
           <div className="space-y-1">
             <p className="text-xs uppercase tracking-[0.15em] text-orange-500 font-semibold">CONFIGURATION</p>

@@ -152,7 +152,7 @@ export default function FunPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f8f9fa] text-[#0f172a] flex flex-col lg:flex-row">
+    <div className="min-h-screen bg-[#f8f9fa] text-[#0f172a] flex flex-col lg:flex-row overflow-x-hidden">
       {/* Mobile Menu Button */}
       <button 
         className="lg:hidden fixed top-4 left-4 z-[60] bg-orange-500 hover:bg-orange-600 text-white p-2.5 rounded-lg shadow-lg transition-colors"
@@ -184,7 +184,7 @@ export default function FunPage() {
               <span className="text-xl font-bold text-[#0f172a]">Luno</span>
             </Link>
           </div>
-          <div className="px-4 py-4 pt-16 md:pt-4">
+          <div className="px-4 py-4">
             <Link href="/servers" className="text-orange-600 font-semibold hover:text-orange-700 transition-colors text-sm px-3" onClick={() => setMobileMenuOpen(false)}>← Back to Servers</Link>
           </div>
           <nav className="px-4 space-y-2 text-sm font-semibold text-slate-700">
@@ -275,7 +275,7 @@ export default function FunPage() {
           </nav>
       </aside>
 
-      <main className="flex-1 ml-0 lg:ml-64 py-12 px-4 lg:px-8 pt-20 lg:pt-12 flex justify-center">
+      <main className="flex-1 ml-0 lg:ml-64 py-12 px-4 md:px-6 lg:px-8 pt-20 lg:pt-12 flex justify-center">
         <div className="w-full max-w-6xl space-y-6">
           <div className="space-y-1">
             <p className="text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">MODULES</p>

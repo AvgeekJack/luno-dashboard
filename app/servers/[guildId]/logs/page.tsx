@@ -46,7 +46,7 @@ export default function LogsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-orange-50 text-[#0f172a] flex">
+    <div className="min-h-screen bg-orange-50 text-[#0f172a] flex overflow-x-hidden">
       {/* Mobile Menu Button */}
       <button 
         className="md:hidden fixed top-4 left-4 z-[60] bg-orange-500 hover:bg-orange-600 text-white p-2.5 rounded-lg shadow-lg transition-colors"
@@ -78,7 +78,7 @@ export default function LogsPage() {
             </Link>
           </div>
           
-          <div className="px-4 py-4 pt-16 md:pt-4">
+          <div className="px-4 py-4">
             <Link href="/servers" className="text-orange-600 font-semibold hover:text-orange-700 transition-colors text-sm px-3" onClick={() => setMobileMenuOpen(false)}>← Back to Servers</Link>
           </div>
           
@@ -176,7 +176,7 @@ export default function LogsPage() {
           </nav>
       </aside>
 
-      <main className="flex-1 md:ml-64 py-12 px-4 md:px-8 pt-20 md:pt-12 flex justify-center">
+      <main className="flex-1 md:ml-64 py-12 px-4 md:px-6 lg:px-8 pt-20 md:pt-12 flex justify-center">
         <div className="max-w-6xl space-y-4 md:space-y-6">
           <div className="space-y-1">
             <p className="text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">Logs</p>

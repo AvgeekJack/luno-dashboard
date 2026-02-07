@@ -89,7 +89,7 @@ export default function ModulesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-orange-50 text-[#0f172a] flex">
+    <div className="min-h-screen bg-orange-50 text-[#0f172a] flex overflow-x-hidden">
       {/* Mobile Menu Button */}
       <button 
         className="lg:hidden fixed top-4 left-4 z-[60] bg-orange-500 hover:bg-orange-600 text-white p-2.5 rounded-lg shadow-lg transition-colors"
@@ -213,7 +213,7 @@ export default function ModulesPage() {
           </nav>
       </aside>
 
-      <main className="flex-1 lg:ml-64 py-12 px-4 lg:px-8 pt-20 lg:pt-12 flex justify-center">
+      <main className="flex-1 lg:ml-64 py-12 px-4 md:px-6 lg:px-8 pt-20 lg:pt-12 flex justify-center">
         <div className="max-w-6xl space-y-4 md:space-y-6">
           <div className="space-y-1">
             <p className="text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold">Modules</p>

@@ -262,7 +262,7 @@ export default function ManageSubscriptionPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f8f9fa] text-[#0f172a] py-12 px-4 md:px-8 relative">
+    <div className="min-h-screen bg-[#f8f9fa] text-[#0f172a] py-12 px-4 md:px-6 lg:px-8 relative">
       {/* Coming Soon Overlay */}
       {!premiumManagementEnabled && (
         <div className="fixed inset-0 backdrop-blur-sm bg-orange-500/20 z-50 flex items-center justify-center p-4">

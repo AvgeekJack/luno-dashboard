@@ -276,7 +276,7 @@ export default function ServerSettings() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 text-[#0f172a] flex flex-col lg:flex-row">
+    <div className="min-h-screen bg-gray-50 text-[#0f172a] flex flex-col lg:flex-row overflow-x-hidden">
       {/* Mobile Menu Button */}
       <button 
         className="lg:hidden fixed top-4 left-4 z-[60] bg-orange-500 hover:bg-orange-600 text-white p-2.5 rounded-lg shadow-lg transition-colors"
@@ -521,8 +521,8 @@ export default function ServerSettings() {
           <SystemAnnouncement />
         </div>
         
-        <main className="flex-1 py-12 px-4 lg:px-8 pt-20 lg:pt-12">
-        <div className="w-full max-w-7xl mx-auto space-y-8">
+        <main className="flex-1 py-12 px-4 md:px-6 lg:px-8 pt-20 lg:pt-12">
+        <div className="w-full max-w-6xl lg:max-w-7xl mx-auto space-y-8">
           {/* Dashboard Header */}
           <div className="mb-8">
             <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-2">

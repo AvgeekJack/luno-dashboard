@@ -379,7 +379,7 @@ export default function LoggingPage() {
             </Link>
           </div>
           
-          <div className="px-4 py-4 pt-16 md:pt-4">
+          <div className="px-4 py-4">
             <Link href="/servers" className="text-orange-600 font-semibold hover:text-orange-700 transition-colors text-sm px-3" onClick={() => setMobileMenuOpen(false)}>← Back to Servers</Link>
           </div>
           
@@ -494,7 +494,7 @@ export default function LoggingPage() {
       {/* Debug Info Popup */}
       <DebugInfoPopup isOpen={showDebugInfo} onClose={() => setShowDebugInfo(false)} />
 
-      <main className="flex-1 md:ml-64 py-12 px-4 md:px-8 pt-20 md:pt-12 flex justify-center">
+      <main className="flex-1 md:ml-64 py-12 px-4 md:px-6 lg:px-8 pt-20 md:pt-12 flex justify-center">
         <div className="w-full max-w-7xl space-y-6">
           <div className="space-y-1">
             <p className="text-xs uppercase tracking-[0.15em] text-orange-500 font-semibold">CONFIGURATION</p>

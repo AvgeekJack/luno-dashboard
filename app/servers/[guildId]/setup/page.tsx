@@ -179,7 +179,7 @@ export default function SetupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-orange-50 text-[#0f172a] flex flex-col lg:flex-row">
+    <div className="min-h-screen bg-orange-50 text-[#0f172a] flex flex-col lg:flex-row overflow-x-hidden">
       {/* Mobile Menu Button */}
       <button 
         className="lg:hidden fixed top-20 left-4 z-[60] bg-orange-500 hover:bg-orange-600 text-white p-3 rounded-lg shadow-lg transition-colors"
