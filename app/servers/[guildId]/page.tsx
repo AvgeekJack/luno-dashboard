@@ -302,7 +302,7 @@ export default function ServerSettings() {
 
       {/* Sidebar */}
       <aside className={`fixed lg:static left-0 top-0 h-screen w-64 bg-white border-r border-orange-100 shadow-lg lg:shadow-sm overflow-y-auto flex flex-col z-[50] transition-transform duration-300 ease-in-out ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
-          <div className="p-6 border-b border-orange-100">
+          <div className="p-4 border-b border-orange-100 flex items-center justify-between">
             <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
               <img src="/luno-logo.png" alt="Luno Bot" className="w-10 h-10 object-contain ml-12 lg:ml-0" />
               <span className="text-xl font-bold text-[#0f172a]">Luno</span>
@@ -322,7 +322,7 @@ export default function ServerSettings() {
           <nav className="px-4 space-y-2 text-sm font-semibold text-slate-700">
             <Link 
               href={`/servers/${guildId}`} 
-              className="flex items-center gap-3 px-3 py-6 bg-orange-100 text-orange-700 transition-colors rounded-lg"
+              className="flex items-center gap-3 px-3 py-6 hover:bg-orange-50 transition-colors rounded-lg"
               onClick={() => setMobileMenuOpen(false)}
             >
               <img src="/dashbaord.png" alt="" className="w-5 h-5" />

@@ -1869,18 +1869,12 @@ export default function DeveloperPage() {
                             Allow users to close the announcement
                           </p>
                         </div>
-                        <button
-                          onClick={() => setAnnouncementConfig({ ...announcementConfig, dismissable: !announcementConfig.dismissable })}
-                          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-all ${
-                            announcementConfig.dismissable ? 'bg-orange-600' : 'bg-gray-300'
-                          } shadow-sm`}
-                        >
-                          <span
-                            className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform ${
-                              announcementConfig.dismissable ? 'translate-x-6' : 'translate-x-0.5'
-                            }`}
-                          />
-                        </button>
+                        <input
+                          type="checkbox"
+                          checked={announcementConfig.dismissable}
+                          onChange={(e) => setAnnouncementConfig({ ...announcementConfig, dismissable: e.target.checked })}
+                          className="w-5 h-5 text-orange-600 bg-white border-gray-300 rounded focus:ring-orange-500 focus:ring-2 cursor-pointer"
+                        />
                       </div>
 
                       <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
