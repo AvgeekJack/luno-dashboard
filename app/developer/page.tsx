@@ -1815,7 +1815,7 @@ export default function DeveloperPage() {
                           value={announcementConfig.title}
                           onChange={(e) => setAnnouncementConfig({ ...announcementConfig, title: e.target.value })}
                           placeholder="Announcement title"
-                          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all text-gray-900"
                         />
                       </div>
 
@@ -1828,7 +1828,7 @@ export default function DeveloperPage() {
                           onChange={(e) => setAnnouncementConfig({ ...announcementConfig, description: e.target.value })}
                           placeholder="Announcement message"
                           rows={3}
-                          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all resize-none"
+                          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all resize-none text-gray-900"
                         />
                       </div>
 
@@ -1842,7 +1842,7 @@ export default function DeveloperPage() {
                             value={announcementConfig.buttonText}
                             onChange={(e) => setAnnouncementConfig({ ...announcementConfig, buttonText: e.target.value })}
                             placeholder="Learn More"
-                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all text-gray-900"
                           />
                         </div>
 
@@ -1855,7 +1855,7 @@ export default function DeveloperPage() {
                             value={announcementConfig.buttonUrl}
                             onChange={(e) => setAnnouncementConfig({ ...announcementConfig, buttonUrl: e.target.value })}
                             placeholder="https://..."
-                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all text-gray-900"
                           />
                         </div>
                       </div>
@@ -1878,7 +1878,7 @@ export default function DeveloperPage() {
                             value={announcementConfig.backgroundColor}
                             onChange={(e) => setAnnouncementConfig({ ...announcementConfig, backgroundColor: e.target.value })}
                             placeholder="#f97316"
-                            className="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all font-mono"
+                            className="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all font-mono text-gray-900"
                           />
                         </div>
                       </div>
