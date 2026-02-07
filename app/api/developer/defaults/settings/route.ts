@@ -28,10 +28,30 @@ export async function GET(req: NextRequest) {
 
     await connectDB();
 
-    // Fetch default settings (simulating server settings structure)
-    const defaultPrefix = await SiteSettings.findOne({ settingKey: 'defaultServerPrefix' });
-    const defaultPremium = await SiteSettings.findOne({ settingKey: 'defaultServerPremium' });
-    const defaultSettings = await SiteSettings.findOne({ settingKey: 'defaultServerSettings' });
+    // Fetch all default settings in parallel
+    const [
+      defaultPrefix,
+      defaultPremium,
+      defaultSettings,
+      defaultModeration,
+      defaultRoleManagement,
+      defaultMemberManagement,
+      defaultAnnouncements,
+      defaultFun,
+      defaultUtilities,
+      defaultNotifications,
+    ] = await Promise.all([
+      SiteSettings.findOne({ settingKey: 'defaultServerPrefix' }),
+      SiteSettings.findOne({ settingKey: 'defaultServerPremium' }),
+      SiteSettings.findOne({ settingKey: 'defaultServerSettings' }),
+      SiteSettings.findOne({ settingKey: 'defaultModuleModeration' }),
+      SiteSettings.findOne({ settingKey: 'defaultModuleRoleManagement' }),
+      SiteSettings.findOne({ settingKey: 'defaultModuleMemberManagement' }),
+      SiteSettings.findOne({ settingKey: 'defaultModuleAnnouncements' }),
+      SiteSettings.findOne({ settingKey: 'defaultModuleFun' }),
+      SiteSettings.findOne({ settingKey: 'defaultModuleUtilities' }),
+      SiteSettings.findOne({ settingKey: 'defaultModuleNotifications' }),
+    ]);
 
     // Parse the default settings or use defaults
     const parsedSettings = defaultSettings?.settingValue ? 
@@ -53,14 +73,14 @@ export async function GET(req: NextRequest) {
         reactionRoles: { enabled: false },
         verification: { enabled: false }
       },
-      modules: parsedSettings.modules || {
-        moderation: { enabled: false },
-        roleManagement: { enabled: false },
-        memberManagement: { enabled: false },
-        announcements: { enabled: false },
-        welcomeMessages: { enabled: false },
-        fun: { enabled: false },
-        utilities: { enabled: false }
+      modules: {
+        moderation: { enabled: defaultModeration?.settingValue ?? true },
+        roleManagement: { enabled: defaultRoleManagement?.settingValue ?? false },
+        memberManagement: { enabled: defaultMemberManagement?.settingValue ?? false },
+        announcements: { enabled: defaultAnnouncements?.settingValue ?? false },
+        fun: { enabled: defaultFun?.settingValue ?? false },
+        utilities: { enabled: defaultUtilities?.settingValue ?? false },
+        notifications: { enabled: defaultNotifications?.settingValue ?? false },
       }
     });
   } catch (error) {
@@ -106,21 +126,18 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    // Update default settings (configuration and modules)
-    if (body.configuration !== undefined || body.modules !== undefined) {
-      // First, fetch existing settings
+    // Update default configuration settings
+    if (body.configuration !== undefined) {
       const existingSettings = await SiteSettings.findOne({ settingKey: 'defaultServerSettings' });
       const currentSettings = existingSettings?.settingValue ? 
         (typeof existingSettings.settingValue === 'string' ? JSON.parse(existingSettings.settingValue) : existingSettings.settingValue) : 
         {};
 
-      // Merge with new settings
       const updatedSettings = {
-        configuration: body.configuration !== undefined ? body.configuration : (currentSettings.configuration || {}),
-        modules: body.modules !== undefined ? body.modules : (currentSettings.modules || {})
+        configuration: body.configuration,
+        modules: currentSettings.modules || {}
       };
 
-      // Save merged settings
       await SiteSettings.findOneAndUpdate(
         { settingKey: 'defaultServerSettings' },
         { settingValue: JSON.stringify(updatedSettings) },
@@ -128,10 +145,107 @@ export async function PUT(req: NextRequest) {
       );
     }
 
+    // Update individual module defaults
+    if (body.modules !== undefined) {
+      const moduleUpdates = [];
+      
+      if (body.modules.moderation !== undefined) {
+        moduleUpdates.push(
+          SiteSettings.findOneAndUpdate(
+            { settingKey: 'defaultModuleModeration' },
+            { settingValue: body.modules.moderation.enabled },
+            { upsert: true, new: true }
+          )
+        );
+      }
+      
+      if (body.modules.roleManagement !== undefined) {
+        moduleUpdates.push(
+          SiteSettings.findOneAndUpdate(
+            { settingKey: 'defaultModuleRoleManagement' },
+            { settingValue: body.modules.roleManagement.enabled },
+            { upsert: true, new: true }
+          )
+        );
+      }
+      
+      if (body.modules.memberManagement !== undefined) {
+        moduleUpdates.push(
+          SiteSettings.findOneAndUpdate(
+            { settingKey: 'defaultModuleMemberManagement' },
+            { settingValue: body.modules.memberManagement.enabled },
+            { upsert: true, new: true }
+          )
+        );
+      }
+      
+      if (body.modules.announcements !== undefined) {
+        moduleUpdates.push(
+          SiteSettings.findOneAndUpdate(
+            { settingKey: 'defaultModuleAnnouncements' },
+            { settingValue: body.modules.announcements.enabled },
+            { upsert: true, new: true }
+          )
+        );
+      }
+      
+      if (body.modules.fun !== undefined) {
+        moduleUpdates.push(
+          SiteSettings.findOneAndUpdate(
+            { settingKey: 'defaultModuleFun' },
+            { settingValue: body.modules.fun.enabled },
+            { upsert: true, new: true }
+          )
+        );
+      }
+      
+      if (body.modules.utilities !== undefined) {
+        moduleUpdates.push(
+          SiteSettings.findOneAndUpdate(
+            { settingKey: 'defaultModuleUtilities' },
+            { settingValue: body.modules.utilities.enabled },
+            { upsert: true, new: true }
+          )
+        );
+      }
+      
+      if (body.modules.notifications !== undefined) {
+        moduleUpdates.push(
+          SiteSettings.findOneAndUpdate(
+            { settingKey: 'defaultModuleNotifications' },
+            { settingValue: body.modules.notifications.enabled },
+            { upsert: true, new: true }
+          )
+        );
+      }
+
+      await Promise.all(moduleUpdates);
+    }
+
     // Return updated settings
-    const defaultPrefix = await SiteSettings.findOne({ settingKey: 'defaultServerPrefix' });
-    const defaultPremium = await SiteSettings.findOne({ settingKey: 'defaultServerPremium' });
-    const defaultSettings = await SiteSettings.findOne({ settingKey: 'defaultServerSettings' });
+    const [
+      defaultPrefix,
+      defaultPremium,
+      defaultSettings,
+      defaultModeration,
+      defaultRoleManagement,
+      defaultMemberManagement,
+      defaultAnnouncements,
+      defaultFun,
+      defaultUtilities,
+      defaultNotifications,
+    ] = await Promise.all([
+      SiteSettings.findOne({ settingKey: 'defaultServerPrefix' }),
+      SiteSettings.findOne({ settingKey: 'defaultServerPremium' }),
+      SiteSettings.findOne({ settingKey: 'defaultServerSettings' }),
+      SiteSettings.findOne({ settingKey: 'defaultModuleModeration' }),
+      SiteSettings.findOne({ settingKey: 'defaultModuleRoleManagement' }),
+      SiteSettings.findOne({ settingKey: 'defaultModuleMemberManagement' }),
+      SiteSettings.findOne({ settingKey: 'defaultModuleAnnouncements' }),
+      SiteSettings.findOne({ settingKey: 'defaultModuleFun' }),
+      SiteSettings.findOne({ settingKey: 'defaultModuleUtilities' }),
+      SiteSettings.findOne({ settingKey: 'defaultModuleNotifications' }),
+    ]);
 
     const parsedSettings = defaultSettings?.settingValue ? 
       (typeof defaultSettings.settingValue === 'string' ? JSON.parse(defaultSettings.settingValue) : defaultSettings.settingValue) : 
@@ -142,7 +256,15 @@ export async function PUT(req: NextRequest) {
       prefix: defaultPrefix?.settingValue ?? '!',
       premium: defaultPremium?.settingValue ?? false,
       configuration: parsedSettings.configuration || {},
-      modules: parsedSettings.modules || {}
+      modules: {
+        moderation: { enabled: defaultModeration?.settingValue ?? true },
+        roleManagement: { enabled: defaultRoleManagement?.settingValue ?? false },
+        memberManagement: { enabled: defaultMemberManagement?.settingValue ?? false },
+        announcements: { enabled: defaultAnnouncements?.settingValue ?? false },
+        fun: { enabled: defaultFun?.settingValue ?? false },
+        utilities: { enabled: defaultUtilities?.settingValue ?? false },
+        notifications: { enabled: defaultNotifications?.settingValue ?? false },
+      }
     });
   } catch (error) {
     console.error('[Defaults Settings API] Error updating:', error);

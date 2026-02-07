@@ -24,6 +24,22 @@ interface Settings {
     antiraid?: {
       enabled: boolean;
     };
+    reactionRoles?: {
+      enabled: boolean;
+    };
+    verification?: {
+      enabled: boolean;
+    };
+  };
+  modules?: {
+    moderation?: { enabled: boolean };
+    roleManagement?: { enabled: boolean };
+    memberManagement?: { enabled: boolean };
+    announcements?: { enabled: boolean };
+    welcomeMessages?: { enabled: boolean };
+    fun?: { enabled: boolean };
+    utilities?: { enabled: boolean };
+    notifications?: { enabled: boolean };
   };
 }
 
@@ -449,8 +465,14 @@ export default function DefaultsManagementPage() {
                             premium: settings.premium,
                             configuration: {
                               botNickname: settings.configuration?.botNickname,
-                              timezone: settings.configuration?.timezone
-                            }
+                              timezone: settings.configuration?.timezone,
+                              automod: settings.configuration?.automod,
+                              logging: settings.configuration?.logging,
+                              antiraid: settings.configuration?.antiraid,
+                              reactionRoles: settings.configuration?.reactionRoles,
+                              verification: settings.configuration?.verification
+                            },
+                            modules: settings.modules
                           })
                         });
                         if (res.ok) {
@@ -474,66 +496,165 @@ export default function DefaultsManagementPage() {
               </div>
             </div>
 
-            {/* Status Card */}
+            {/* Modules Card */}
             <div className="space-y-6">
               <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
-                <h2 className="text-xl font-bold text-slate-900 mb-4">Default Status</h2>
+                <h2 className="text-xl font-bold text-slate-900 mb-4">Default Modules</h2>
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-600">Automod</span>
-                    {settings?.configuration?.automod?.enabled ? (
-                      <span className="flex items-center gap-2 text-green-600 font-medium text-sm">
-                        <span className="w-2 h-2 bg-green-600 rounded-full"></span>
-                        Enabled by Default
-                      </span>
-                    ) : (
-                      <span className="flex items-center gap-2 text-gray-500 font-medium text-sm">
-                        <span className="w-2 h-2 bg-gray-400 rounded-full"></span>
-                        Disabled by Default
-                      </span>
-                    )}
+                    <span className="text-slate-600">Moderation</span>
+                    <button
+                      onClick={() => {
+                        if (settings) {
+                          setSettings({
+                            ...settings,
+                            modules: {
+                              ...settings.modules,
+                              moderation: { enabled: !settings.modules?.moderation?.enabled }
+                            }
+                          });
+                        }
+                      }}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        settings?.modules?.moderation?.enabled ? 'bg-green-600' : 'bg-gray-300'
+                      }`}
+                    >
+                      <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        settings?.modules?.moderation?.enabled ? 'translate-x-6' : 'translate-x-1'
+                      }`} />
+                    </button>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-600">Logging</span>
-                    {settings?.configuration?.logging?.enabled ? (
-                      <span className="flex items-center gap-2 text-green-600 font-medium text-sm">
-                        <span className="w-2 h-2 bg-green-600 rounded-full"></span>
-                        Enabled by Default
-                      </span>
-                    ) : (
-                      <span className="flex items-center gap-2 text-gray-500 font-medium text-sm">
-                        <span className="w-2 h-2 bg-gray-400 rounded-full"></span>
-                        Disabled by Default
-                      </span>
-                    )}
+                    <span className="text-slate-600">Role Management</span>
+                    <button
+                      onClick={() => {
+                        if (settings) {
+                          setSettings({
+                            ...settings,
+                            modules: {
+                              ...settings.modules,
+                              roleManagement: { enabled: !settings.modules?.roleManagement?.enabled }
+                            }
+                          });
+                        }
+                      }}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        settings?.modules?.roleManagement?.enabled ? 'bg-green-600' : 'bg-gray-300'
+                      }`}
+                    >
+                      <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        settings?.modules?.roleManagement?.enabled ? 'translate-x-6' : 'translate-x-1'
+                      }`} />
+                    </button>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-600">Anti-Raid</span>
-                    {settings?.configuration?.antiraid?.enabled ? (
-                      <span className="flex items-center gap-2 text-green-600 font-medium text-sm">
-                        <span className="w-2 h-2 bg-green-600 rounded-full"></span>
-                        Enabled by Default
-                      </span>
-                    ) : (
-                      <span className="flex items-center gap-2 text-gray-500 font-medium text-sm">
-                        <span className="w-2 h-2 bg-gray-400 rounded-full"></span>
-                        Disabled by Default
-                      </span>
-                    )}
+                    <span className="text-slate-600">Member Management</span>
+                    <button
+                      onClick={() => {
+                        if (settings) {
+                          setSettings({
+                            ...settings,
+                            modules: {
+                              ...settings.modules,
+                              memberManagement: { enabled: !settings.modules?.memberManagement?.enabled }
+                            }
+                          });
+                        }
+                      }}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        settings?.modules?.memberManagement?.enabled ? 'bg-green-600' : 'bg-gray-300'
+                      }`}
+                    >
+                      <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        settings?.modules?.memberManagement?.enabled ? 'translate-x-6' : 'translate-x-1'
+                      }`} />
+                    </button>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-600">Announcements</span>
+                    <button
+                      onClick={() => {
+                        if (settings) {
+                          setSettings({
+                            ...settings,
+                            modules: {
+                              ...settings.modules,
+                              announcements: { enabled: !settings.modules?.announcements?.enabled }
+                            }
+                          });
+                        }
+                      }}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        settings?.modules?.announcements?.enabled ? 'bg-green-600' : 'bg-gray-300'
+                      }`}
+                    >
+                      <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        settings?.modules?.announcements?.enabled ? 'translate-x-6' : 'translate-x-1'
+                      }`} />
+                    </button>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-600">Fun</span>
+                    <button
+                      onClick={() => {
+                        if (settings) {
+                          setSettings({
+                            ...settings,
+                            modules: {
+                              ...settings.modules,
+                              fun: { enabled: !settings.modules?.fun?.enabled }
+                            }
+                          });
+                        }
+                      }}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        settings?.modules?.fun?.enabled ? 'bg-green-600' : 'bg-gray-300'
+                      }`}
+                    >
+                      <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        settings?.modules?.fun?.enabled ? 'translate-x-6' : 'translate-x-1'
+                      }`} />
+                    </button>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-600">Utilities</span>
+                    <button
+                      onClick={() => {
+                        if (settings) {
+                          setSettings({
+                            ...settings,
+                            modules: {
+                              ...settings.modules,
+                              utilities: { enabled: !settings.modules?.utilities?.enabled }
+                            }
+                          });
+                        }
+                      }}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        settings?.modules?.utilities?.enabled ? 'bg-green-600' : 'bg-gray-300'
+                      }`}
+                    >
+                      <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        settings?.modules?.utilities?.enabled ? 'translate-x-6' : 'translate-x-1'
+                      }`} />
+                    </button>
                   </div>
                   <div className="flex items-center justify-between pt-3 border-t border-gray-200">
                     <span className="text-slate-600">Premium</span>
-                    {settings?.premium ? (
-                      <span className="flex items-center gap-2 text-orange-600 font-medium text-sm">
-                        <span className="w-2 h-2 bg-orange-600 rounded-full"></span>
-                        Enabled by Default
-                      </span>
-                    ) : (
-                      <span className="flex items-center gap-2 text-gray-500 font-medium text-sm">
-                        <span className="w-2 h-2 bg-gray-400 rounded-full"></span>
-                        Disabled by Default
-                      </span>
-                    )}
+                    <button
+                      onClick={() => {
+                        if (settings) {
+                          setSettings({ ...settings, premium: !settings.premium });
+                        }
+                      }}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        settings?.premium ? 'bg-orange-600' : 'bg-gray-300'
+                      }`}
+                    >
+                      <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        settings?.premium ? 'translate-x-6' : 'translate-x-1'
+                      }`} />
+                    </button>
                   </div>
                 </div>
               </div>
