@@ -1065,19 +1065,16 @@ export default function DeveloperPage() {
                       {maintenanceMode ? 'System is offline for maintenance' : 'System is operational'}
                     </p>
                   </div>
-                  <button
-                    onClick={handleMaintenanceToggle}
+                  <input
+                    type="checkbox"
+                    checked={maintenanceMode}
+                    onChange={(e) => {
+                      setMaintenanceMode(e.target.checked);
+                      handleMaintenanceToggle();
+                    }}
                     disabled={maintenanceStatus === 'loading'}
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-all ${
-                      maintenanceMode ? 'bg-orange-600' : 'bg-gray-300'
-                    } ${maintenanceStatus === 'loading' ? 'opacity-50 cursor-not-allowed' : 'shadow-sm'}`}
-                  >
-                    <span
-                      className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform ${
-                        maintenanceMode ? 'translate-x-6' : 'translate-x-0.5'
-                      }`}
-                    />
-                  </button>
+                    className="w-5 h-5 text-orange-600 bg-white border-gray-300 rounded focus:ring-orange-500 focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  />
                 </div>
 
                 <div className="mb-6">
@@ -1652,19 +1649,16 @@ export default function DeveloperPage() {
                           Allow users to purchase premium subscriptions via Stripe
                         </p>
                       </div>
-                      <button
-                        onClick={handlePremiumPurchaseToggle}
+                      <input
+                        type="checkbox"
+                        checked={premiumPurchaseEnabled}
+                        onChange={(e) => {
+                          setPremiumPurchaseEnabled(e.target.checked);
+                          handlePremiumPurchaseToggle();
+                        }}
                         disabled={settingsStatus === 'loading'}
-                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-all ${
-                          premiumPurchaseEnabled ? 'bg-orange-600' : 'bg-gray-300'
-                        } ${settingsStatus === 'loading' ? 'opacity-50 cursor-not-allowed' : 'shadow-sm'}`}
-                      >
-                        <span
-                          className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform ${
-                            premiumPurchaseEnabled ? 'translate-x-6' : 'translate-x-0.5'
-                          }`}
-                        />
-                      </button>
+                        className="w-5 h-5 text-orange-600 bg-white border-gray-300 rounded focus:ring-orange-500 focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                      />
                     </div>
 
                     <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
@@ -1674,19 +1668,16 @@ export default function DeveloperPage() {
                           Allow users to manage their premium subscriptions (cancel, view details)
                         </p>
                       </div>
-                      <button
-                        onClick={handlePremiumManagementToggle}
+                      <input
+                        type="checkbox"
+                        checked={premiumManagementEnabled}
+                        onChange={(e) => {
+                          setPremiumManagementEnabled(e.target.checked);
+                          handlePremiumManagementToggle();
+                        }}
                         disabled={settingsStatus === 'loading'}
-                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-all ${
-                          premiumManagementEnabled ? 'bg-orange-600' : 'bg-gray-300'
-                        } ${settingsStatus === 'loading' ? 'opacity-50 cursor-not-allowed' : 'shadow-sm'}`}
-                      >
-                        <span
-                          className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform ${
-                            premiumManagementEnabled ? 'translate-x-6' : 'translate-x-0.5'
-                          }`}
-                        />
-                      </button>
+                        className="w-5 h-5 text-orange-600 bg-white border-gray-300 rounded focus:ring-orange-500 focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                      />
                     </div>
                   </div>
                 </div>
@@ -1705,19 +1696,16 @@ export default function DeveloperPage() {
                         Show bot invite link on the home page
                       </p>
                     </div>
-                    <button
-                      onClick={handleBotInviteToggle}
+                    <input
+                      type="checkbox"
+                      checked={botInviteEnabled}
+                      onChange={(e) => {
+                        setBotInviteEnabled(e.target.checked);
+                        handleBotInviteToggle();
+                      }}
                       disabled={settingsStatus === 'loading'}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-all ${
-                        botInviteEnabled ? 'bg-orange-600' : 'bg-gray-300'
-                      } ${settingsStatus === 'loading' ? 'opacity-50 cursor-not-allowed' : 'shadow-sm'}`}
-                    >
-                      <span
-                        className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform ${
-                          botInviteEnabled ? 'translate-x-6' : 'translate-x-0.5'
-                        }`}
-                      />
-                    </button>
+                      className="w-5 h-5 text-orange-600 bg-white border-gray-300 rounded focus:ring-orange-500 focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                    />
                   </div>
                 </div>
 
@@ -1736,19 +1724,16 @@ export default function DeveloperPage() {
                           Display system-wide announcements to users
                         </p>
                       </div>
-                      <button
-                        onClick={handleSystemAnnouncementsToggle}
+                      <input
+                        type="checkbox"
+                        checked={systemAnnouncementsEnabled}
+                        onChange={(e) => {
+                          setSystemAnnouncementsEnabled(e.target.checked);
+                          handleSystemAnnouncementsToggle();
+                        }}
                         disabled={settingsStatus === 'loading'}
-                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-all ${
-                          systemAnnouncementsEnabled ? 'bg-orange-600' : 'bg-gray-300'
-                        } ${settingsStatus === 'loading' ? 'opacity-50 cursor-not-allowed' : 'shadow-sm'}`}
-                      >
-                        <span
-                          className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform ${
-                            systemAnnouncementsEnabled ? 'translate-x-6' : 'translate-x-0.5'
-                          }`}
-                        />
-                      </button>
+                        className="w-5 h-5 text-orange-600 bg-white border-gray-300 rounded focus:ring-orange-500 focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                      />
                     </div>
 
                     <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
@@ -1758,19 +1743,16 @@ export default function DeveloperPage() {
                           Enable usage analytics and tracking
                         </p>
                       </div>
-                      <button
-                        onClick={handleAnalyticsToggle}
+                      <input
+                        type="checkbox"
+                        checked={analyticsEnabled}
+                        onChange={(e) => {
+                          setAnalyticsEnabled(e.target.checked);
+                          handleAnalyticsToggle();
+                        }}
                         disabled={settingsStatus === 'loading'}
-                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-all ${
-                          analyticsEnabled ? 'bg-orange-600' : 'bg-gray-300'
-                        } ${settingsStatus === 'loading' ? 'opacity-50 cursor-not-allowed' : 'shadow-sm'}`}
-                      >
-                        <span
-                          className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform ${
-                            analyticsEnabled ? 'translate-x-6' : 'translate-x-0.5'
-                          }`}
-                        />
-                      </button>
+                        className="w-5 h-5 text-orange-600 bg-white border-gray-300 rounded focus:ring-orange-500 focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                      />
                     </div>
 
                     <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
@@ -1780,19 +1762,16 @@ export default function DeveloperPage() {
                           Enable experimental features for testing
                         </p>
                       </div>
-                      <button
-                        onClick={handleBetaFeaturesToggle}
+                      <input
+                        type="checkbox"
+                        checked={betaFeaturesEnabled}
+                        onChange={(e) => {
+                          setBetaFeaturesEnabled(e.target.checked);
+                          handleBetaFeaturesToggle();
+                        }}
                         disabled={settingsStatus === 'loading'}
-                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-all ${
-                          betaFeaturesEnabled ? 'bg-orange-600' : 'bg-gray-300'
-                        } ${settingsStatus === 'loading' ? 'opacity-50 cursor-not-allowed' : 'shadow-sm'}`}
-                      >
-                        <span
-                          className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform ${
-                            betaFeaturesEnabled ? 'translate-x-6' : 'translate-x-0.5'
-                          }`}
-                        />
-                      </button>
+                        className="w-5 h-5 text-orange-600 bg-white border-gray-300 rounded focus:ring-orange-500 focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                      />
                     </div>
                   </div>
                 </div>
