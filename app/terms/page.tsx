@@ -7,23 +7,23 @@ export default function TermsOfService() {
     <div className="min-h-screen bg-white">
       {/* Header */}
       <nav className="fixed top-0 w-full bg-white/90 backdrop-blur border-b border-orange-100 z-50">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3">
-            <img src="/luno-logo.png" alt="Luno Bot" className="w-10 h-10" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2 sm:gap-3">
+            <img src="/luno-logo.png" alt="Luno Bot" className="w-8 h-8 sm:w-10 sm:h-10" />
             <div className="text-left">
-              <span className="block text-xl font-bold tracking-tight">LUNO</span>
-              <span className="block text-sm text-slate-500">Dashboard</span>
+              <span className="block text-base sm:text-xl font-bold tracking-tight">LUNO</span>
+              <span className="hidden sm:block text-sm text-slate-500">Dashboard</span>
             </div>
           </Link>
-          <Link href="/" className="text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">
-            ← Back to Home
+          <Link href="/" className="text-xs sm:text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors whitespace-nowrap">
+            ← Back
           </Link>
         </div>
       </nav>
 
       {/* Content */}
-      <main className="max-w-4xl mx-auto px-6 py-24 mt-16">
-        <h1 className="text-4xl font-bold text-slate-900 mb-4">Terms of Service</h1>
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-20 sm:py-24 mt-12 sm:mt-16">
+        <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-3 sm:mb-4">Terms of Service</h1>
         <p className="text-slate-600 mb-8">Last updated: 6 January 2026</p>
         <p className="text-slate-600 mb-8">These Terms of Service are governed by the laws of England and Wales (United Kingdom).</p>
 

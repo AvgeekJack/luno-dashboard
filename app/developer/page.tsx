@@ -891,50 +891,50 @@ export default function DeveloperPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="max-w-7xl mx-auto p-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
         {/* Header */}
-        <div className="mb-6">
-          <div className="flex items-center justify-between mb-4">
+        <div className="mb-4 sm:mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-4">
             <div>
-              <div className="flex items-center gap-3 mb-2">
-                <Wrench className="w-7 h-7 text-orange-600" />
-                <h1 className="text-3xl font-bold text-gray-900">Developer Control Panel</h1>
+              <div className="flex items-center gap-2 sm:gap-3 mb-2">
+                <Wrench className="w-6 h-6 sm:w-7 sm:h-7 text-orange-600" />
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Developer Control Panel</h1>
               </div>
-              <p className="text-gray-600">Master controls for the entire site</p>
+              <p className="text-sm sm:text-base text-gray-600">Master controls for the entire site</p>
             </div>
             <button
               onClick={() => router.push('/')}
-              className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 hover:bg-orange-50 hover:border-orange-200 text-gray-700 rounded-lg transition-all shadow-sm"
+              className="flex items-center justify-center gap-2 px-4 py-2 bg-white border border-gray-200 hover:bg-orange-50 hover:border-orange-200 text-gray-700 rounded-lg transition-all shadow-sm w-full sm:w-auto"
             >
               <ArrowLeft className="w-4 h-4" />
-              Back to Dashboard
+              <span className="text-sm sm:text-base">Back to Dashboard</span>
             </button>
           </div>
-          <div className="flex items-center gap-2 text-sm text-gray-600">
+          <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-gray-600">
             <span className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></span>
             <span className="font-medium text-orange-600">Authenticated as Developer</span>
-            <span className="text-gray-400">•</span>
-            <span className="text-gray-500">User ID: {session?.user?.id}</span>
+            <span className="hidden sm:inline text-gray-400">•</span>
+            <span className="text-gray-500 truncate">User ID: {session?.user?.id}</span>
           </div>
         </div>
 
         {/* Tab Navigation */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-1 mb-6">
-          <div className="flex gap-1 overflow-x-auto">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-1 mb-4 sm:mb-6 overflow-hidden">
+          <div className="flex gap-1 overflow-x-auto scrollbar-hide pb-1">
             {tabs.map((tab) => {
               const Icon = tab.icon;
               return (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as TabType)}
-                  className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all whitespace-nowrap ${
+                  className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg font-medium transition-all whitespace-nowrap text-sm sm:text-base ${
                     activeTab === tab.id
                       ? 'bg-orange-600 text-white shadow-sm'
                       : 'text-gray-600 hover:bg-gray-50'
                   }`}
                 >
-                  <Icon className="w-4 h-4" />
-                  {tab.label}
+                  <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
+                  <span className="text-xs sm:text-sm">{tab.label}</span>
                 </button>
               );
             })}

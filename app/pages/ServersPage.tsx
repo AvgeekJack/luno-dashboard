@@ -89,7 +89,7 @@ export default function ServersPage() {
       <SystemAnnouncement />
       
       <main className="pt-24 sm:pt-28 pb-12 sm:pb-16 px-4 sm:px-6 md:px-8">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-7xl mx-auto w-full">
           {/* Header Section */}
           <div className="text-center mb-8 sm:mb-10">
             <p className="text-xs sm:text-sm uppercase tracking-[0.2em] text-orange-500 font-semibold mb-2">SERVERS</p>
