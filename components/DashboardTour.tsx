@@ -230,12 +230,14 @@ export default function DashboardTour({ isOpen, onClose }: DashboardTourProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          className="fixed z-[70] bg-white rounded-xl shadow-2xl max-w-md w-full border-2 border-blue-500"
+          className="fixed z-[70] bg-white rounded-xl shadow-2xl max-w-md w-full border-2 border-blue-500 pointer-events-auto"
           style={{
             top: calculateCardPosition(step.position, highlightPosition).top,
             left: calculateCardPosition(step.position, highlightPosition).left,
             right: calculateCardPosition(step.position, highlightPosition).right,
             bottom: calculateCardPosition(step.position, highlightPosition).bottom,
+            maxHeight: 'calc(100vh - 32px)',
+            margin: '16px',
           }}
         >
           {/* Header */}
@@ -326,35 +328,69 @@ function calculateCardPosition(
 ) {
   const margin = 24;
   const cardWidth = 448; // max-w-md
+  const cardHeight = 300; // Approximate card height
+  const viewportHeight = window.innerHeight;
+  const viewportWidth = window.innerWidth;
+
+  let result: { top: number | 'auto'; left: number | 'auto'; right: number | 'auto'; bottom: number | 'auto' };
 
   switch (position) {
     case 'right':
-      return {
-        top: highlight.top + highlight.height / 2 - 150,
+      result = {
+        top: highlight.top + highlight.height / 2 - cardHeight / 2,
         left: highlight.left + highlight.width + margin,
         right: 'auto',
         bottom: 'auto',
       };
+      // Check if card goes off right edge
+      if (typeof result.left === 'number' && result.left + cardWidth > viewportWidth - 16) {
+        result.left = viewportWidth - cardWidth - 16;
+      }
+      break;
     case 'left':
-      return {
-        top: highlight.top + highlight.height / 2 - 150,
-        left: 'auto',
-        right: window.innerWidth - highlight.left + margin,
+      result = {
+        top: highlight.top + highlight.height / 2 - cardHeight / 2,
+        left: Math.max(16, highlight.left - cardWidth - margin),
+        right: 'auto',
         bottom: 'auto',
       };
+      break;
     case 'bottom':
-      return {
+      result = {
         top: highlight.top + highlight.height + margin,
-        left: Math.max(16, Math.min(highlight.left, window.innerWidth - cardWidth - 16)),
+        left: Math.max(16, Math.min(highlight.left, viewportWidth - cardWidth - 16)),
         right: 'auto',
         bottom: 'auto',
       };
+      // Check if card goes off bottom edge
+      if (typeof result.top === 'number' && result.top + cardHeight > viewportHeight - 16) {
+        // Position above instead
+        result.top = Math.max(16, highlight.top - cardHeight - margin);
+      }
+      break;
     case 'top':
-      return {
-        top: 'auto',
-        left: Math.max(16, Math.min(highlight.left, window.innerWidth - cardWidth - 16)),
+      result = {
+        top: Math.max(16, highlight.top - cardHeight - margin),
+        left: Math.max(16, Math.min(highlight.left, viewportWidth - cardWidth - 16)),
         right: 'auto',
-        bottom: window.innerHeight - highlight.top + margin,
+        bottom: 'auto',
       };
+      // If doesn't fit above, position below
+      if (typeof result.top === 'number' && result.top < 16) {
+        result.top = highlight.top + highlight.height + margin;
+      }
+      break;
   }
+
+  // Final bounds check for top position
+  if (typeof result.top === 'number') {
+    result.top = Math.max(16, Math.min(result.top, viewportHeight - cardHeight - 16));
+  }
+
+  // Final bounds check for left position
+  if (typeof result.left === 'number') {
+    result.left = Math.max(16, Math.min(result.left, viewportWidth - cardWidth - 16));
+  }
+
+  return result;
 }

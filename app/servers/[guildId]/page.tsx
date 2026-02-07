@@ -11,7 +11,6 @@ import SystemAnnouncement from '@/components/SystemAnnouncement';
 import WelcomeSetupModal from '@/components/WelcomeSetupModal';
 import SetupWizard from '@/components/SetupWizard';
 import SetupCompleteModal from '@/components/SetupCompleteModal';
-import DashboardTour from '@/components/DashboardTour';
 
 interface Settings {
   guildId: string;
@@ -253,17 +252,12 @@ export default function ServerSettings() {
 
   const handleStartTour = () => {
     setShowCompleteModal(false);
-    setShowTour(true);
+    // Dispatch event to start tour in layout
+    window.dispatchEvent(new Event('start-dashboard-tour'));
   };
 
   const handleSkipTour = () => {
     setShowCompleteModal(false);
-    // Refresh the page to load new settings
-    window.location.reload();
-  };
-
-  const handleEndTour = () => {
-    setShowTour(false);
     // Refresh the page to load new settings
     window.location.reload();
   };
@@ -893,12 +887,6 @@ export default function ServerSettings() {
         onClose={handleSkipTour}
         onStartTour={handleStartTour}
         serverName={serverName || 'Your Server'}
-      />
-
-      {/* Dashboard Tour */}
-      <DashboardTour
-        isOpen={showTour}
-        onClose={handleEndTour}
       />
     </div>
   );
