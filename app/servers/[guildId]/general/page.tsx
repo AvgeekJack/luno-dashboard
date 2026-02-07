@@ -171,7 +171,7 @@ export default function GeneralPage() {
               Dashboard
             </Link>
             <details className="text-slate-800" open={settingsOpen}>
-              <summary className="flex items-center justify-between px-3 py-6 cursor-pointer select-none" onClick={(e) => { e.preventDefault(); setSettingsOpen(!settingsOpen); }}>
+              <summary data-tour="settings-link" className="flex items-center justify-between px-3 py-6 cursor-pointer select-none" onClick={(e) => { e.preventDefault(); setSettingsOpen(!settingsOpen); }}>
                 <span className="flex items-center gap-3">
                   <img src="/settings.png" alt="" className="w-5 h-5" />
                   Settings
@@ -190,7 +190,7 @@ export default function GeneralPage() {
               )}
             </details>
             <details className="text-slate-800" open={configOpen}>
-              <summary className="flex items-center justify-between px-3 py-6 cursor-pointer select-none" onClick={(e) => { e.preventDefault(); setConfigOpen(!configOpen); }}>
+              <summary data-tour="commands-link" className="flex items-center justify-between px-3 py-6 cursor-pointer select-none" onClick={(e) => { e.preventDefault(); setConfigOpen(!configOpen); }}>
                 <span className="flex items-center gap-3">
                   <img src="/configuration.png" alt="" className="w-5 h-5" />
                   Configuration
@@ -218,7 +218,7 @@ export default function GeneralPage() {
               )}
             </details>
             <details className="text-slate-800" open={modulesOpen}>
-              <summary className="flex items-center justify-between px-3 py-6 cursor-pointer select-none" onClick={(e) => { e.preventDefault(); setModulesOpen(!modulesOpen); }}>
+              <summary data-tour="modules-link" className="flex items-center justify-between px-3 py-6 cursor-pointer select-none" onClick={(e) => { e.preventDefault(); setModulesOpen(!modulesOpen); }}>
                 <span className="flex items-center gap-3">
                   <img src="/modules.png" alt="" className="w-5 h-5" />
                   Modules

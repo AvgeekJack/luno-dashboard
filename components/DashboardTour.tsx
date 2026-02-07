@@ -135,14 +135,38 @@ export default function DashboardTour({ isOpen, onClose }: DashboardTourProps) {
       } else if (step.target === 'bot-status') {
         element = document.querySelector('[data-tour="bot-status"]') as HTMLElement;
       } else if (step.target === 'commands-link') {
-        // Find Configuration nav item
-        element = document.querySelector('[href*="/configuration"]') as HTMLElement;
-        if (!element) element = document.querySelector('[href*="/commands"]') as HTMLElement;
+        // Find Configuration nav summary with data-tour attribute
+        element = document.querySelector('[data-tour="commands-link"]') as HTMLElement;
+        if (!element) element = document.querySelector('summary:has(img[src="/configuration.png"])') as HTMLElement;
+        // Ensure the details element is open
+        if (element) {
+          const details = element.closest('details');
+          if (details && !details.open) {
+            details.open = true;
+          }
+        }
       } else if (step.target === 'modules-link') {
-        element = document.querySelector('[href*="/modules"]') as HTMLElement;
+        // Find Modules nav summary with data-tour attribute
+        element = document.querySelector('[data-tour="modules-link"]') as HTMLElement;
+        if (!element) element = document.querySelector('summary:has(img[src="/modules.png"])') as HTMLElement;
+        // Ensure the details element is open
+        if (element) {
+          const details = element.closest('details');
+          if (details && !details.open) {
+            details.open = true;
+          }
+        }
       } else if (step.target === 'settings-link') {
-        element = document.querySelector('[href*="/general"]') as HTMLElement;
-        if (!element) element = document.querySelector('[href*="/settings"]') as HTMLElement;
+        // Find Settings nav summary with data-tour attribute
+        element = document.querySelector('[data-tour="settings-link"]') as HTMLElement;
+        if (!element) element = document.querySelector('summary:has(img[src="/settings.png"])') as HTMLElement;
+        // Ensure the details element is open
+        if (element) {
+          const details = element.closest('details');
+          if (details && !details.open) {
+            details.open = true;
+          }
+        }
       }
 
       if (element) {

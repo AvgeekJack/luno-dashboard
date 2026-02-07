@@ -206,7 +206,7 @@ export default function ModerationPage() {
               Dashboard
             </Link>
             <details className="text-slate-700" open={settingsOpen}>
-              <summary className="flex items-center justify-between px-3 py-6 cursor-pointer select-none hover:bg-orange-50 transition-colors" onClick={(e) => { e.preventDefault(); setSettingsOpen(!settingsOpen); }}>
+              <summary data-tour="settings-link" className="flex items-center justify-between px-3 py-6 cursor-pointer select-none hover:bg-orange-50 transition-colors" onClick={(e) => { e.preventDefault(); setSettingsOpen(!settingsOpen); }}>
                 <span className="flex items-center gap-3">
                   <img src="/settings.png" alt="" className="w-5 h-5" />
                   Settings
@@ -225,7 +225,7 @@ export default function ModerationPage() {
               )}
             </details>
             <details className="text-slate-700" open={configOpen}>
-              <summary className="flex items-center justify-between px-3 py-6 cursor-pointer select-none transition-colors" onClick={(e) => { e.preventDefault(); setConfigOpen(!configOpen); }}>
+              <summary data-tour="commands-link" className="flex items-center justify-between px-3 py-6 cursor-pointer select-none hover:bg-orange-50 transition-colors" onClick={(e) => { e.preventDefault(); setConfigOpen(!configOpen); }}>
                 <span className="flex items-center gap-3">
                   <img src="/configuration.png" alt="" className="w-5 h-5" />
                   Configuration
@@ -253,7 +253,7 @@ export default function ModerationPage() {
               )}
             </details>
             <details className="text-slate-700" open={modulesOpen}>
-              <summary className="flex items-center justify-between px-3 py-6 cursor-pointer select-none hover:bg-orange-50 transition-colors" onClick={(e) => { e.preventDefault(); setModulesOpen(!modulesOpen); }}>
+              <summary data-tour="modules-link" className="flex items-center justify-between px-3 py-6 cursor-pointer select-none hover:bg-orange-50 transition-colors" onClick={(e) => { e.preventDefault(); setModulesOpen(!modulesOpen); }}>
                 <span className="flex items-center gap-3">                  <img src="/modules.png" alt="" className="w-5 h-5" />                  Modules
                 </span>
                 <span className="text-xs text-orange-600">▾</span>
