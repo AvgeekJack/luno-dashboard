@@ -1136,7 +1136,7 @@ export default function DeveloperPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Enter Guild ID (e.g., 1234567890123456678)
                   </label>
-                  <div className="flex gap-3">
+                  <div className="flex flex-col sm:flex-row gap-3">
                     <input
                       type="text"
                       value={guildIdToRemove}
@@ -1147,7 +1147,7 @@ export default function DeveloperPage() {
                     <button
                       onClick={handleViewServer}
                       disabled={serverProfileLoading}
-                      className="px-6 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="px-6 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed sm:whitespace-nowrap"
                     >
                       {serverProfileLoading ? 'Loading...' : 'View Server'}
                     </button>
@@ -1559,7 +1559,7 @@ export default function DeveloperPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Enter User ID (e.g., 1234567890123456678)
                   </label>
-                  <div className="flex gap-3">
+                  <div className="flex flex-col sm:flex-row gap-3">
                     <input
                       type="text"
                       value={userViewId}
@@ -1570,7 +1570,7 @@ export default function DeveloperPage() {
                     <button
                       onClick={handleViewUser}
                       disabled={userViewStatus === 'loading'}
-                      className="px-6 py-2.5 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="px-6 py-2.5 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed sm:whitespace-nowrap"
                     >
                       {userViewStatus === 'loading' ? 'Loading...' : 'View Account'}
                     </button>
