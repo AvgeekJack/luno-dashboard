@@ -10,6 +10,8 @@ import DeveloperTools from '@/components/DeveloperTools';
 import SystemAnnouncement from '@/components/SystemAnnouncement';
 import WelcomeSetupModal from '@/components/WelcomeSetupModal';
 import SetupWizard from '@/components/SetupWizard';
+import SetupCompleteModal from '@/components/SetupCompleteModal';
+import DashboardTour from '@/components/DashboardTour';
 
 interface Settings {
   guildId: string;
@@ -69,6 +71,8 @@ export default function ServerSettings() {
   const [premiumManagementEnabled, setPremiumManagementEnabled] = useState(true);
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
   const [showSetupWizard, setShowSetupWizard] = useState(false);
+  const [showCompleteModal, setShowCompleteModal] = useState(false);
+  const [showTour, setShowTour] = useState(false);
   const [hasCheckedSetup, setHasCheckedSetup] = useState(false);
 
   // Check maintenance mode and premium purchase status
@@ -237,14 +241,31 @@ export default function ServerSettings() {
         setSettings(data.settings);
         setShowSetupWizard(false);
         
-        // Refresh the page to load new settings
-        window.location.reload();
+        // Show completion modal instead of immediately reloading
+        setShowCompleteModal(true);
       } else {
         console.error('Setup completion failed');
       }
     } catch (error) {
       console.error('Failed to complete setup:', error);
     }
+  };
+
+  const handleStartTour = () => {
+    setShowCompleteModal(false);
+    setShowTour(true);
+  };
+
+  const handleSkipTour = () => {
+    setShowCompleteModal(false);
+    // Refresh the page to load new settings
+    window.location.reload();
+  };
+
+  const handleEndTour = () => {
+    setShowTour(false);
+    // Refresh the page to load new settings
+    window.location.reload();
   };
 
   if (loading) {
@@ -314,7 +335,7 @@ export default function ServerSettings() {
               Dashboard
             </Link>
             <details className="text-slate-800" open={settingsOpen}>
-              <summary className="flex items-center justify-between px-2 sm:px-3 py-4 sm:py-6 cursor-pointer select-none bg-white hover:bg-orange-50/30 transition-colors rounded-lg" onClick={(e) => { e.preventDefault(); setSettingsOpen(!settingsOpen); }}>
+              <summary className="flex items-center justify-between px-2 sm:px-3 py-4 sm:py-6 cursor-pointer select-none bg-white hover:bg-orange-50/30 transition-colors rounded-lg" onClick={(e) => { e.preventDefault(); setSettingsOpen(!settingsOpen); }} data-tour="settings-link">
                 <span className="flex items-center gap-2 sm:gap-3">
                   <img src="/settings.png" alt="" className="w-4 h-4 sm:w-5 sm:h-5" />
                   Settings
@@ -343,7 +364,7 @@ export default function ServerSettings() {
               )}
             </details>
             <details className="text-slate-800" open={configOpen}>
-              <summary className="flex items-center justify-between px-2 sm:px-3 py-4 sm:py-6 cursor-pointer select-none rounded-lg" onClick={(e) => { e.preventDefault(); setConfigOpen(!configOpen); }}>
+              <summary className="flex items-center justify-between px-2 sm:px-3 py-4 sm:py-6 cursor-pointer select-none rounded-lg" onClick={(e) => { e.preventDefault(); setConfigOpen(!configOpen); }} data-tour="commands-link">
                 <span className="flex items-center gap-2 sm:gap-3">
                   <img src="/configuration.png" alt="" className="w-4 h-4 sm:w-5 sm:h-5" />
                   Configuration
@@ -396,7 +417,7 @@ export default function ServerSettings() {
               )}
             </details>
             <details className="text-slate-800" open={modulesOpen}>
-              <summary className="flex items-center justify-between px-2 sm:px-3 py-4 sm:py-6 cursor-pointer select-none bg-white hover:bg-orange-50/30 transition-colors rounded-lg" onClick={(e) => { e.preventDefault(); setModulesOpen(!modulesOpen); }}>
+              <summary className="flex items-center justify-between px-2 sm:px-3 py-4 sm:py-6 cursor-pointer select-none transition-colors rounded-lg" onClick={(e) => { e.preventDefault(); setModulesOpen(!modulesOpen); }} data-tour="modules-link">
                 <span className="flex items-center gap-2 sm:gap-3">
                   <img src="/modules.png" alt="" className="w-4 h-4 sm:w-5 sm:h-5" />
                   Modules
@@ -512,7 +533,7 @@ export default function ServerSettings() {
           </div>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" data-tour="server-stats">
 
             {/* Total Members Card */}
             <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
@@ -543,7 +564,7 @@ export default function ServerSettings() {
             </div>
 
             {/* Premium Status Card */}
-            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow relative">
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow relative" data-tour="quick-actions">
               {((!premiumPurchaseEnabled && !settings?.premium) || (!premiumManagementEnabled && settings?.premium)) && (
                 <div className="absolute inset-0 backdrop-blur-sm bg-orange-500/20 rounded-2xl flex items-center justify-center z-10">
                   <div className="bg-white/90 rounded-xl p-6 shadow-xl text-center">
@@ -796,7 +817,7 @@ export default function ServerSettings() {
               </div>
 
               {/* Server Status */}
-              <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+              <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm" data-tour="bot-status">
                 <h2 className="text-xl font-bold text-slate-900 mb-4">Server Status</h2>
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
@@ -864,6 +885,20 @@ export default function ServerSettings() {
         onComplete={handleCompleteSetup}
         serverName={serverName || 'Your Server'}
         initialPrefix={settings?.prefix}
+      />
+
+      {/* Setup Complete Modal */}
+      <SetupCompleteModal
+        isOpen={showCompleteModal}
+        onClose={handleSkipTour}
+        onStartTour={handleStartTour}
+        serverName={serverName || 'Your Server'}
+      />
+
+      {/* Dashboard Tour */}
+      <DashboardTour
+        isOpen={showTour}
+        onClose={handleEndTour}
       />
     </div>
   );
