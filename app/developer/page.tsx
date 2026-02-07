@@ -1620,6 +1620,196 @@ export default function DeveloperPage() {
             </motion.div>
           )}
 
+          {activeTab === 'settings' && (
+            <motion.div
+              key="settings"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="mb-6">
+                <h2 className="text-xl font-bold text-gray-900 mb-1 flex items-center gap-2">
+                  <Zap className="w-5 h-5 text-orange-600" />
+                  Site Settings
+                </h2>
+                <p className="text-gray-600 text-sm">Control global site features and functionality.</p>
+              </div>
+
+              <div className="space-y-6">
+                {/* Premium Settings */}
+                <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+                  <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <Gem className="w-5 h-5 text-orange-600" />
+                    Premium Features
+                  </h3>
+                  
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                      <div>
+                        <p className="font-semibold text-gray-900 mb-1">Enable Premium Purchases</p>
+                        <p className="text-sm text-gray-600">
+                          Allow users to purchase premium subscriptions via Stripe
+                        </p>
+                      </div>
+                      <button
+                        onClick={handlePremiumPurchaseToggle}
+                        disabled={settingsStatus === 'loading'}
+                        className={`relative inline-flex h-10 w-20 items-center rounded-full transition-all ${
+                          premiumPurchaseEnabled ? 'bg-orange-600' : 'bg-gray-300'
+                        } ${settingsStatus === 'loading' ? 'opacity-50 cursor-not-allowed' : 'shadow-sm'}`}
+                      >
+                        <span
+                          className={`inline-block h-8 w-8 transform rounded-full bg-white shadow-md transition-transform ${
+                            premiumPurchaseEnabled ? 'translate-x-11' : 'translate-x-1'
+                          }`}
+                        />
+                      </button>
+                    </div>
+
+                    <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                      <div>
+                        <p className="font-semibold text-gray-900 mb-1">Enable Premium Management</p>
+                        <p className="text-sm text-gray-600">
+                          Allow users to manage their premium subscriptions (cancel, view details)
+                        </p>
+                      </div>
+                      <button
+                        onClick={handlePremiumManagementToggle}
+                        disabled={settingsStatus === 'loading'}
+                        className={`relative inline-flex h-10 w-20 items-center rounded-full transition-all ${
+                          premiumManagementEnabled ? 'bg-orange-600' : 'bg-gray-300'
+                        } ${settingsStatus === 'loading' ? 'opacity-50 cursor-not-allowed' : 'shadow-sm'}`}
+                      >
+                        <span
+                          className={`inline-block h-8 w-8 transform rounded-full bg-white shadow-md transition-transform ${
+                            premiumManagementEnabled ? 'translate-x-11' : 'translate-x-1'
+                          }`}
+                        />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bot Settings */}
+                <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+                  <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <Link2 className="w-5 h-5 text-orange-600" />
+                    Bot Settings
+                  </h3>
+                  
+                  <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                    <div>
+                      <p className="font-semibold text-gray-900 mb-1">Enable Bot Invite</p>
+                      <p className="text-sm text-gray-600">
+                        Show bot invite link on the home page
+                      </p>
+                    </div>
+                    <button
+                      onClick={handleBotInviteToggle}
+                      disabled={settingsStatus === 'loading'}
+                      className={`relative inline-flex h-10 w-20 items-center rounded-full transition-all ${
+                        botInviteEnabled ? 'bg-orange-600' : 'bg-gray-300'
+                      } ${settingsStatus === 'loading' ? 'opacity-50 cursor-not-allowed' : 'shadow-sm'}`}
+                    >
+                      <span
+                        className={`inline-block h-8 w-8 transform rounded-full bg-white shadow-md transition-transform ${
+                          botInviteEnabled ? 'translate-x-11' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Feature Flags */}
+                <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+                  <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <Beaker className="w-5 h-5 text-orange-600" />
+                    Feature Flags
+                  </h3>
+                  
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                      <div>
+                        <p className="font-semibold text-gray-900 mb-1">System Announcements</p>
+                        <p className="text-sm text-gray-600">
+                          Display system-wide announcements to users
+                        </p>
+                      </div>
+                      <button
+                        onClick={handleSystemAnnouncementsToggle}
+                        disabled={settingsStatus === 'loading'}
+                        className={`relative inline-flex h-10 w-20 items-center rounded-full transition-all ${
+                          systemAnnouncementsEnabled ? 'bg-orange-600' : 'bg-gray-300'
+                        } ${settingsStatus === 'loading' ? 'opacity-50 cursor-not-allowed' : 'shadow-sm'}`}
+                      >
+                        <span
+                          className={`inline-block h-8 w-8 transform rounded-full bg-white shadow-md transition-transform ${
+                            systemAnnouncementsEnabled ? 'translate-x-11' : 'translate-x-1'
+                          }`}
+                        />
+                      </button>
+                    </div>
+
+                    <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                      <div>
+                        <p className="font-semibold text-gray-900 mb-1">Analytics</p>
+                        <p className="text-sm text-gray-600">
+                          Enable usage analytics and tracking
+                        </p>
+                      </div>
+                      <button
+                        onClick={handleAnalyticsToggle}
+                        disabled={settingsStatus === 'loading'}
+                        className={`relative inline-flex h-10 w-20 items-center rounded-full transition-all ${
+                          analyticsEnabled ? 'bg-orange-600' : 'bg-gray-300'
+                        } ${settingsStatus === 'loading' ? 'opacity-50 cursor-not-allowed' : 'shadow-sm'}`}
+                      >
+                        <span
+                          className={`inline-block h-8 w-8 transform rounded-full bg-white shadow-md transition-transform ${
+                            analyticsEnabled ? 'translate-x-11' : 'translate-x-1'
+                          }`}
+                        />
+                      </button>
+                    </div>
+
+                    <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                      <div>
+                        <p className="font-semibold text-gray-900 mb-1">Beta Features</p>
+                        <p className="text-sm text-gray-600">
+                          Enable experimental features for testing
+                        </p>
+                      </div>
+                      <button
+                        onClick={handleBetaFeaturesToggle}
+                        disabled={settingsStatus === 'loading'}
+                        className={`relative inline-flex h-10 w-20 items-center rounded-full transition-all ${
+                          betaFeaturesEnabled ? 'bg-orange-600' : 'bg-gray-300'
+                        } ${settingsStatus === 'loading' ? 'opacity-50 cursor-not-allowed' : 'shadow-sm'}`}
+                      >
+                        <span
+                          className={`inline-block h-8 w-8 transform rounded-full bg-white shadow-md transition-transform ${
+                            betaFeaturesEnabled ? 'translate-x-11' : 'translate-x-1'
+                          }`}
+                        />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {settingsMessage && (
+                  <div className={`p-4 rounded-lg border ${
+                    settingsStatus === 'success'
+                      ? 'bg-orange-50 border-orange-200 text-orange-900'
+                      : 'bg-red-50 border-red-200 text-red-900'
+                  }`}>
+                    {settingsMessage}
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          )}
+
         </AnimatePresence>
       </div>
     </div>
