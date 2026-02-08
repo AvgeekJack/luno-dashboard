@@ -263,6 +263,33 @@ export default function ServerSettings() {
     window.location.reload();
   };
 
+  const handleSave = async () => {
+    if (!settings) return;
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/servers/${guildId}/settings`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prefix: settings.prefix,
+          configuration: {
+            botNickname: settings.configuration?.botNickname,
+            timezone: settings.configuration?.timezone,
+            updatesChannel: settings.configuration?.updatesChannel
+          }
+        })
+      });
+      if (res.ok) {
+        alert('Settings saved successfully!');
+      }
+    } catch (error) {
+      console.error('Failed to save settings:', error);
+      alert('Failed to save settings');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   if (loading) {
     return <div className="flex min-h-screen items-center justify-center text-[#0f172a]">Loading...</div>;
   }
