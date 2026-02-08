@@ -506,9 +506,9 @@ export default function ServerSettingsDemo() {
               {/* Coming Soon Overlay - Shows when premium purchase is disabled */}
               {((!premiumPurchaseEnabled && !settings?.premium) || (!premiumManagementEnabled && settings?.premium)) && (
                 <div className="absolute inset-0 backdrop-blur-sm bg-orange-500/20 rounded-2xl flex items-center justify-center z-10">
-                  <div className="bg-white/90 rounded-xl p-4 lg:p-6 shadow-xl text-center max-w-[200px] lg:max-w-none">
-                    <div className="text-3xl lg:text-4xl mb-2 lg:mb-3">🚀</div>
-                    <h3 className="text-lg lg:text-2xl font-bold text-orange-600 mb-1">Coming Soon</h3>
+                  <div className="bg-white/90 rounded-xl p-3 lg:p-6 shadow-xl text-center">
+                    <div className="text-3xl lg:text-4xl mb-1 lg:mb-3">🚀</div>
+                    <h3 className="text-base lg:text-2xl font-bold text-orange-600 mb-0.5 lg:mb-1">Coming Soon</h3>
                     <p className="text-xs lg:text-sm text-slate-600">Premium subscriptions will be available soon!</p>
                   </div>
                 </div>
