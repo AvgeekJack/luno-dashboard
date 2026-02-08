@@ -477,8 +477,8 @@ export default function ServerSettingsDemo() {
 
           {/* HOME TAB CONTENT */}
           {activeTab === 'home' && (
-            <div className="lg:pt-0 pt-4">
-              {/* Server Stats - Mobile Redesigned */}
+            <div className="lg:pt-0 pt-[52px]">
+              {/* Server Stats - Mobile Redesigned */}}
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6" data-tour="server-stats">
 
             {/* Total Members Card */}
