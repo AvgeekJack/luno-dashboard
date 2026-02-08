@@ -141,20 +141,55 @@ export default function ServerSettingsDemo() {
 
   return (
     <div className="min-h-screen bg-gray-50 text-[#0f172a] flex flex-col lg:flex-row overflow-x-hidden">
-      {/* Mobile Menu Button */}
-      <button 
-        className="lg:hidden fixed top-4 left-4 z-[60] bg-orange-500 hover:bg-orange-600 text-white p-2.5 rounded-lg shadow-lg transition-colors"
-        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        aria-label="Toggle menu"
-      >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          {mobileMenuOpen ? (
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          ) : (
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-          )}
-        </svg>
-      </button>
+      {/* Mobile Header - Only visible on mobile */}
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200">
+        {/* Top Bar with Server Info */}
+        <div className="flex items-center justify-between px-4 py-3">
+          <div className="flex items-center gap-3">
+            <div className="flex gap-1">
+              <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center text-white font-bold text-xl">
+                D
+              </div>
+              <div className="w-10 h-10 bg-orange-400 rounded-lg flex items-center justify-center text-white font-bold text-xl">
+                S
+              </div>
+            </div>
+            <div>
+              <h1 className="font-bold text-base text-slate-900">Demo Server</h1>
+            </div>
+          </div>
+          <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
+            <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+            </svg>
+          </div>
+        </div>
+        
+        {/* Navigation Tabs */}
+        <div className="flex border-t border-gray-100">
+          <button className="flex-1 flex items-center justify-center gap-2 py-3 text-orange-600 border-b-2 border-orange-600 font-semibold text-sm">
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+            </svg>
+            Home
+          </button>
+          <button 
+            onClick={() => setMobileMenuOpen(true)}
+            className="flex-1 flex items-center justify-center gap-2 py-3 text-slate-600 font-semibold text-sm"
+          >
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
+            </svg>
+            Settings
+          </button>
+          <button className="flex-1 flex items-center justify-center gap-2 py-3 text-slate-600 font-semibold text-sm">
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+            </svg>
+            Status
+          </button>
+        </div>
+      </div>
 
       {/* Mobile Overlay */}
       {mobileMenuOpen && (
@@ -335,8 +370,8 @@ export default function ServerSettingsDemo() {
             </details>
           </nav>
           
-          {/* Developer Debug Button - Show for demo */}
-          <div className="mt-auto p-4 border-t-2 border-orange-500 space-y-2">
+          {/* Debug & Developer Tools - Desktop only */}
+          <div className="px-4 py-4 mt-auto space-y-3 hidden lg:block">
             <button
               onClick={() => setShowDebugInfo(true)}
               className="w-full bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white font-bold py-3 px-4 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
@@ -360,97 +395,132 @@ export default function ServerSettingsDemo() {
               🚀 DEMO MODE ACTIVE
             </p>
           </div>
-      </aside>
+        </aside>
 
-      {/* Debug Info Popup */}
-      <DebugInfoPopup isOpen={showDebugInfo} onClose={() => setShowDebugInfo(false)} />
-      <DeveloperTools isOpen={showDeveloperTools} onClose={() => setShowDeveloperTools(false)} />
+        {/* Debug Info Popup */}
+        <DebugInfoPopup isOpen={showDebugInfo} onClose={() => setShowDebugInfo(false)} />
+        <DeveloperTools isOpen={showDeveloperTools} onClose={() => setShowDeveloperTools(false)} />
 
-      {/* Main Content */}
-      <div className="flex-1 lg:ml-64 flex flex-col">
-        {/* System Announcement - positioned at top */}
-        <div className="w-full">
-          <SystemAnnouncement />
-        </div>
-        
-        <main className="flex-1 py-12 px-4 md:px-6 lg:px-8 pt-20 lg:pt-12">
-        <div className="w-full max-w-full md:max-w-3xl lg:max-w-7xl mx-auto space-y-8">
-          {/* Dashboard Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-2">
-              Dashboard - {serverName}
-            </h1>
-            <p className="text-slate-600">Overview of your server's activity and statistics</p>
-            <div className="mt-2 px-3 py-1 bg-orange-100 text-orange-800 text-sm rounded-full inline-block">
-              🚀 Demo Mode - No authentication required
+        {/* Main Content */}
+        <div className="flex-1 lg:ml-64 flex flex-col">
+          {/* System Announcement - Desktop only */}
+          <div className="w-full hidden lg:block">
+            <SystemAnnouncement />
+          </div>
+          
+          <main className="flex-1 py-4 px-4 md:px-6 lg:px-8 pt-[140px] lg:pt-12">
+            <div className="w-full max-w-full md:max-w-3xl lg:max-w-7xl mx-auto space-y-6">
+          {/* Demo Mode Banner - Mobile */}
+          <div className="lg:hidden bg-orange-50 border-l-4 border-orange-500 p-3 rounded">
+            <div className="flex items-center gap-2">
+              <svg className="w-5 h-5 text-orange-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+              <p className="text-sm font-semibold text-slate-900">
+                Demo Mode - No authentication required
+              </p>
             </div>
           </div>
 
-          {/* Stats Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" data-tour="server-stats">
+          {/* Dashboard Header - Desktop */}
+          <div className="mb-8 hidden lg:block">
+            <h1 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-2">{serverName}</h1>
+            <p className="text-slate-600">Manage your server settings and configurations</p>
+          </div>
+
+          {/* Server Stats - Mobile Redesigned */}
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4" data-tour="server-stats">
 
             {/* Total Members Card */}
-            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex items-start justify-between mb-4">
-                <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="bg-white rounded-2xl p-5 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-start justify-between mb-3">
+                <div className="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center">
+                  <svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                   </svg>
                 </div>
               </div>
-              <div className="text-sm text-slate-500 mb-1">Total Members</div>
-              <div className="text-3xl font-bold text-slate-900">
+              <div className="text-xs text-slate-500 mb-1 uppercase tracking-wide">Total Members</div>
+              <div className="text-2xl lg:text-3xl font-bold text-slate-900">
                 {stats?.members?.toLocaleString() ?? '—'}
               </div>
             </div>
 
             {/* Active Now Card */}
-            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex items-start justify-between mb-4">
-                <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="bg-white rounded-2xl p-5 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-start justify-between mb-3">
+                <div className="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center">
+                  <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                   </svg>
                 </div>
               </div>
-              <div className="text-sm text-slate-500 mb-1">Active Now</div>
-              <div className="text-3xl font-bold text-slate-900">{stats?.presences ?? '—'}</div>
+              <div className="text-xs text-slate-500 mb-1 uppercase tracking-wide">Active Now</div>
+              <div className="text-2xl lg:text-3xl font-bold text-slate-900">
+                {stats?.presences ?? '—'}
+              </div>
             </div>
 
-            {/* Premium Status Card */}
-            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow relative" data-tour="quick-actions">
-              <div className="flex items-start justify-between mb-4">
-                <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center">
-                  <img src="/premium-icon.svg" alt="Premium" className="w-7 h-7 text-white" />
-                </div>
-                {settings?.premium ? (
-                  <button 
-                    onClick={() => alert('Demo mode: Premium management not available')}
-                    className="px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white font-semibold rounded-lg transition text-sm flex items-center gap-2"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            {/* Premium Status Card - Full Width on Mobile */}
+            <div className="col-span-2 lg:col-span-1 bg-white rounded-2xl p-5 border border-gray-200 shadow-sm hover:shadow-md transition-shadow relative" data-tour="quick-actions">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center">
+                    <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                     </svg>
-                    Manage
-                  </button>
-                ) : (
-                  <button 
-                    onClick={() => alert('Demo mode: Premium enrollment not available')}
-                    className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition text-sm flex items-center gap-2"
-                  >
-                    <img src="/premium-icon.svg" alt="" className="w-4 h-4" />
-                    Enroll Now
-                  </button>
-                )}
-              </div>
-              <div className="text-sm text-slate-500 mb-1">Premium Status</div>
-              <div className="text-3xl font-bold text-slate-900">
-                {settings?.premium ? 'Server Enrolled' : 'Not Enrolled'}
+                  </div>
+                  <div>
+                    <div className="text-xs text-slate-500 uppercase tracking-wide">Premium Status</div>
+                    <div className="text-lg font-bold text-slate-900">
+                      {settings?.premium ? 'Server Enrolled' : 'Not Enrolled'}
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-green-50 rounded-full p-2">
+                  <svg className="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                </div>
               </div>
             </div>
+          </div>
 
-            
+          {/* Quick Actions - Mobile Styled */}
+          <div className="lg:hidden">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-bold text-slate-900">Quick Actions</h2>
+              <button className="text-orange-600 text-sm font-semibold uppercase tracking-wide">
+                View All
+              </button>
+            </div>
+            <div className="grid grid-cols-3 gap-4">
+              <Link href="/devtest/001/configuration/automod" className="flex flex-col items-center">
+                <div className="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center mb-2 hover:bg-orange-200 transition-colors">
+                  <svg className="w-7 h-7 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
+                </div>
+                <span className="text-xs font-semibold text-slate-900">Automod</span>
+              </Link>
+              <Link href="/devtest/001/configuration/logging" className="flex flex-col items-center">
+                <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mb-2 hover:bg-blue-200 transition-colors">
+                  <svg className="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                  </svg>
+                </div>
+                <span className="text-xs font-semibold text-slate-900">Logging</span>
+              </Link>
+              <button onClick={() => setMobileMenuOpen(true)} className="flex flex-col items-center">
+                <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mb-2 hover:bg-slate-200 transition-colors">
+                  <svg className="w-7 h-7 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                </div>
+                <span className="text-xs font-semibold text-slate-900">Setup</span>
+              </button>
+            </div>
           </div>
 
           {/* Two Column Layout for Bot Settings and Quick Actions */}
