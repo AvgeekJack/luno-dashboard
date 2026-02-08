@@ -239,10 +239,20 @@ export default function ServerSettingsDemo() {
       {/* Sidebar */}
       <aside className={`fixed lg:static left-0 top-0 h-screen w-64 bg-white border-r border-orange-100 shadow-lg lg:shadow-sm overflow-y-auto flex flex-col z-[50] transition-transform duration-300 ease-in-out ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
           <div className="p-4 border-b border-orange-100 flex items-center justify-between">
+            <button
+              onClick={() => setMobileMenuOpen(false)}
+              className="lg:hidden w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors"
+              aria-label="Close menu"
+            >
+              <svg className="w-5 h-5 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
             <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-              <img src="/luno-logo.png" alt="Luno Bot" className="w-10 h-10 object-contain ml-12 lg:ml-0" />
+              <img src="/luno-logo.png" alt="Luno Bot" className="w-10 h-10 object-contain" />
               <span className="text-xl font-bold text-[#0f172a]">Luno</span>
             </Link>
+            <div className="w-8 lg:hidden"></div>
           </div>
           
           <div className="px-4 py-4">
@@ -467,9 +477,9 @@ export default function ServerSettingsDemo() {
 
           {/* HOME TAB CONTENT */}
           {activeTab === 'home' && (
-            <>
-          {/* Server Stats - Mobile Redesigned */}
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6" data-tour="server-stats">
+            <div className="lg:pt-0 pt-4">
+              {/* Server Stats - Mobile Redesigned */}
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6" data-tour="server-stats">
 
             {/* Total Members Card */}
             <div className="bg-white rounded-2xl p-5 lg:p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
@@ -562,13 +572,13 @@ export default function ServerSettingsDemo() {
                 </div>
               </div>
             </div>
-          </div>
-
-            </>
+              </div>
+            </div>
           )}
 
           {/* SETTINGS TAB CONTENT */}
           {activeTab === 'settings' && (
+            <div className="lg:pt-0 pt-4">
             <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
               <h2 className="text-xl font-bold text-slate-900 mb-6">Bot Settings</h2>
               <div className="space-y-6">
@@ -703,10 +713,12 @@ export default function ServerSettingsDemo() {
                 </div>
               </div>
             </div>
+            </div>
           )}
 
           {/* STATUS TAB CONTENT */}
           {activeTab === 'status' && (
+            <div className="lg:pt-0 pt-4">
             <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm" data-tour="bot-status">
                 <h2 className="text-xl font-bold text-slate-900 mb-4">Server Status</h2>
                 <div className="space-y-3">
@@ -754,6 +766,7 @@ export default function ServerSettingsDemo() {
                   </div>
                 </div>
               </div>
+            </div>
           )}
 
           {/* Desktop: Two Column Layout for Bot Settings and Quick Actions */}
