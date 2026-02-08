@@ -618,7 +618,7 @@ export default function HomePage() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 {session ? (
-                  <Link href="/servers" className="bg-white text-orange-500 px-10 py-4 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl hover:bg-orange-50 transition-all inline-block">
+                  <Link href="/servers" className="bg-white text-orange-500 px-10 py-4 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl transition-all inline-block">
                     Open Dashboard
                   </Link>
                 ) : (
