@@ -578,7 +578,7 @@ export default function ServerSettingsDemo() {
 
           {/* SETTINGS TAB CONTENT */}
           {activeTab === 'settings' && (
-            <div className="lg:pt-0 pt-4">
+            <div className="lg:pt-0 pt-[52px]">
             <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
               <h2 className="text-xl font-bold text-slate-900 mb-6">Bot Settings</h2>
               <div className="space-y-6">
@@ -718,7 +718,7 @@ export default function ServerSettingsDemo() {
 
           {/* STATUS TAB CONTENT */}
           {activeTab === 'status' && (
-            <div className="lg:pt-0 pt-4">
+            <div className="lg:pt-0 pt-[52px]">
             <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm" data-tour="bot-status">
                 <h2 className="text-xl font-bold text-slate-900 mb-4">Server Status</h2>
                 <div className="space-y-3">
