@@ -176,9 +176,12 @@ export default function ServerSettingsDemo() {
               <h1 className="font-bold text-base text-slate-900">Demo Server</h1>
             </div>
           </div>
-          <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center p-2">
-            <img src="/premium-icon.svg" alt="Premium" className="w-full h-full" />
-          </div>
+          {/* Premium Icon - Hidden when Coming Soon overlay is active */}
+          {!((!premiumPurchaseEnabled && !settings?.premium) || (!premiumManagementEnabled && settings?.premium)) && (
+            <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center p-2">
+              <img src="/premium-icon.svg" alt="Premium" className="w-full h-full" />
+            </div>
+          )}
         </div>
         
         {/* Navigation Tabs */}
@@ -503,10 +506,10 @@ export default function ServerSettingsDemo() {
               {/* Coming Soon Overlay - Shows when premium purchase is disabled */}
               {((!premiumPurchaseEnabled && !settings?.premium) || (!premiumManagementEnabled && settings?.premium)) && (
                 <div className="absolute inset-0 backdrop-blur-sm bg-orange-500/20 rounded-2xl flex items-center justify-center z-10">
-                  <div className="bg-white/90 rounded-xl p-6 shadow-xl text-center">
-                    <div className="text-4xl mb-3">🚀</div>
-                    <h3 className="text-2xl font-bold text-orange-600 mb-1">Coming Soon</h3>
-                    <p className="text-sm text-slate-600">Premium subscriptions will be available soon!</p>
+                  <div className="bg-white/90 rounded-xl p-4 lg:p-6 shadow-xl text-center max-w-[200px] lg:max-w-none">
+                    <div className="text-3xl lg:text-4xl mb-2 lg:mb-3">🚀</div>
+                    <h3 className="text-lg lg:text-2xl font-bold text-orange-600 mb-1">Coming Soon</h3>
+                    <p className="text-xs lg:text-sm text-slate-600">Premium subscriptions will be available soon!</p>
                   </div>
                 </div>
               )}
