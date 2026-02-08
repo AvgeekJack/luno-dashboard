@@ -174,7 +174,7 @@ export default function PremiumPage() {
         </div>
         
         <nav className="px-4 space-y-2 text-sm font-semibold text-slate-700">
-          <Link href={`/servers/${guildId}`} className="flex items-center gap-3 px-3 py-6 bg-white/30 text-slate-700 hover:text-orange-700 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+          <Link href={`/servers/${guildId}`} className="flex items-center gap-3 px-3 py-6 bg-white text-slate-700 hover:text-orange-700 transition-colors" onClick={() => setMobileMenuOpen(false)}>
             <img src="/dashbaord.png" alt="" className="w-5 h-5" />
             Dashboard
           </Link>
