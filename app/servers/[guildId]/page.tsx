@@ -277,20 +277,31 @@ export default function ServerSettings() {
 
   return (
     <div className="min-h-screen bg-gray-50 text-[#0f172a] flex flex-col lg:flex-row overflow-x-hidden">
-      {/* Mobile Menu Button */}
-      <button 
-        className="lg:hidden fixed top-4 left-4 z-[60] bg-orange-500 hover:bg-orange-600 text-white p-2.5 rounded-lg shadow-lg transition-colors"
-        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        aria-label="Toggle menu"
-      >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          {mobileMenuOpen ? (
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          ) : (
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+      {/* Mobile Header - Only visible on mobile */}
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200">
+        {/* Top Bar with Server Info */}
+        <div className="flex items-center justify-between px-4 py-3">
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={() => setMobileMenuOpen(true)}
+              className="w-10 h-10 bg-white border-2 border-gray-200 rounded-lg flex items-center justify-center hover:bg-gray-50 transition-colors"
+            >
+              <svg className="w-5 h-5 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+            <div>
+              <h1 className="font-bold text-base text-slate-900">{serverName || 'Dashboard'}</h1>
+            </div>
+          </div>
+          {/* Premium Icon - Hidden when Coming Soon overlay is active */}
+          {!((!premiumPurchaseEnabled && !settings?.premium) || (!premiumManagementEnabled && settings?.premium)) && (
+            <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center p-2">
+              <img src="/premium-icon.svg" alt="Premium" className="w-full h-full" />
+            </div>
           )}
-        </svg>
-      </button>
+        </div>
+      </div>
 
       {/* Mobile Overlay */}
       {mobileMenuOpen && (
@@ -521,8 +532,7 @@ export default function ServerSettings() {
           <SystemAnnouncement />
         </div>
         
-        <main className="flex-1 py-12 px-4 md:px-6 lg:px-8 pt-20 lg:pt-12">
-        <div className="w-full max-w-full md:max-w-3xl lg:max-w-7xl mx-auto space-y-8">
+        <main className="flex-1 py-4 px-4 md:px-6 lg:px-8 pt-20 lg:pt-12">\n        <div className="w-full max-w-full md:max-w-3xl lg:max-w-7xl mx-auto space-y-6 lg:space-y-8">
           {/* Dashboard Header */}
           <div className="mb-8">
             <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-2">
@@ -532,10 +542,10 @@ export default function ServerSettings() {
           </div>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" data-tour="server-stats">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6" data-tour="server-stats">
 
             {/* Total Members Card */}
-            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+            <div className="bg-white rounded-2xl p-5 lg:p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
               <div className="flex items-start justify-between mb-4">
                 <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center">
                   <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -550,7 +560,7 @@ export default function ServerSettings() {
             </div>
 
             {/* Active Now Card */}
-            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+            <div className="bg-white rounded-2xl p-5 lg:p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
               <div className="flex items-start justify-between mb-4">
                 <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center">
                   <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -562,43 +572,69 @@ export default function ServerSettings() {
               <div className="text-3xl font-bold text-slate-900">{stats?.presences ?? '—'}</div>
             </div>
 
-            {/* Premium Status Card */}
-            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow relative" data-tour="quick-actions">
+            {/* Coming Soon Card - Desktop, Premium Status - Mobile */}
+            <div className="col-span-2 lg:col-span-1 bg-white rounded-2xl p-5 lg:p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow relative" data-tour="quick-actions">
+              {/* Coming Soon Overlay - Shows when premium purchase is disabled */}
               {((!premiumPurchaseEnabled && !settings?.premium) || (!premiumManagementEnabled && settings?.premium)) && (
                 <div className="absolute inset-0 backdrop-blur-sm bg-orange-500/20 rounded-2xl flex items-center justify-center z-10">
-                  <div className="bg-white/90 rounded-xl p-6 shadow-xl text-center">
-                    <div className="text-4xl mb-3">🚀</div>
-                    <h3 className="text-2xl font-bold text-orange-600 mb-1">Coming Soon</h3>
-                    <p className="text-sm text-slate-600">Premium subscriptions will be available soon!</p>
+                  <div className="bg-white/90 rounded-xl px-6 py-2 lg:p-6 shadow-xl text-center max-w-[240px] lg:max-w-none">
+                    <div className="text-2xl lg:text-4xl mb-0.5 lg:mb-3">🚀</div>
+                    <h3 className="text-sm lg:text-2xl font-bold text-orange-600 mb-0.5 lg:mb-1">Coming Soon</h3>
+                    <p className="text-[10px] leading-tight lg:text-sm text-slate-600">Premium subscriptions will be available soon!</p>
                   </div>
                 </div>
               )}
-              <div className="flex items-start justify-between mb-4">
-                <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center">
-                  <img src="/premium-icon.svg" alt="Premium" className="w-7 h-7 text-white" />
+              {/* Mobile: Premium Status */}
+              <div className="lg:hidden flex items-center justify-between mb-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center">
+                    <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="text-xs text-slate-500 uppercase tracking-wide">Premium Status</div>
+                    <div className="text-lg font-bold text-slate-900">
+                      {settings?.premium ? 'Server Enrolled' : 'Not Enrolled'}
+                    </div>
+                  </div>
                 </div>
-                {settings?.premium ? (
-                  <Link href={`/servers/${guildId}/premium/manage`}>
-                    <button className="px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white font-semibold rounded-lg transition text-sm flex items-center gap-2">
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                      Manage
-                    </button>
-                  </Link>
-                ) : (
-                  <Link href={`/servers/${guildId}/premium`}>
-                    <button disabled={!premiumPurchaseEnabled} className="px-4 py-2 bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition text-sm flex items-center gap-2">
-                      <img src="/premium-icon.svg" alt="" className="w-4 h-4" />
-                      Enroll Now
-                    </button>
-                  </Link>
-                )}
+                <div className="bg-green-50 rounded-full p-2">
+                  <svg className="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                </div>
               </div>
-              <div className="text-sm text-slate-500 mb-1">Premium Status</div>
-              <div className="text-3xl font-bold text-slate-900">
-                {settings?.premium ? 'Server Enrolled' : 'Not Enrolled'}
+              
+              {/* Desktop: Premium Status with Coming Soon overlay */}
+              <div className="hidden lg:block">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center">
+                    <img src="/premium-icon.svg" alt="Premium" className="w-7 h-7 text-white" />
+                  </div>
+                  {settings?.premium ? (
+                    <Link href={`/servers/${guildId}/premium/manage`}>
+                      <button className="px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white font-semibold rounded-lg transition text-sm flex items-center gap-2">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        Manage
+                      </button>
+                    </Link>
+                  ) : (
+                    <Link href={`/servers/${guildId}/premium`}>
+                      <button disabled={!premiumPurchaseEnabled} className="px-4 py-2 bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition text-sm flex items-center gap-2">
+                        <img src="/premium-icon.svg" alt="" className="w-4 h-4" />
+                        Enroll Now
+                      </button>
+                    </Link>
+                  )}
+                </div>
+                <div className="text-sm text-slate-500 mb-1">Premium Status</div>
+                <div className="text-3xl font-bold text-slate-900">
+                  {settings?.premium ? 'Server Enrolled' : 'Not Enrolled'}
+                </div>
               </div>
             </div>
 
