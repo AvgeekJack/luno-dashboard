@@ -17,18 +17,57 @@ export default function LoggingDemo() {
   const [showDeveloperTools, setShowDeveloperTools] = useState(false);
 
   const [events, setEvents] = useState({
-    messageDelete: true,
-    messageEdit: true,
+    // Moderation Events
+    warns: true,
+    kicks: true,
+    bans: true,
+    unbans: true,
+    timeouts: true,
+    untimeouts: false,
+    softbans: false,
+    channelLocks: false,
+    lockdowns: false,
+    slowmode: false,
+    messagePurge: true,
+    automodActions: true,
+    
+    // Member Events
     memberJoin: true,
     memberLeave: true,
-    memberBan: true,
-    memberUnban: true,
-    roleCreate: false,
-    roleDelete: false,
+    roleUpdates: false,
+    nicknameChanges: false,
+    usernameChanges: false,
+    
+    // Message Events
+    messageDelete: true,
+    messageEdit: true,
+    bulkDelete: true,
+    messageAttachments: false,
+    
+    // Channel Events
     channelCreate: false,
     channelDelete: false,
+    channelUpdate: false,
+    
+    // Role Events
+    roleCreate: false,
+    roleDelete: false,
+    roleUpdate: false,
+    
+    // Voice Events
     voiceJoin: true,
     voiceLeave: true,
+    voiceMove: false,
+    voiceMuteDeafen: false,
+    voiceStreaming: false,
+    
+    // Server Events
+    serverUpdate: false,
+    emoji: false,
+    sticker: false,
+    webhook: false,
+    invite: true,
+    integration: false,
   });
 
   const channels = [
@@ -60,7 +99,7 @@ export default function LoggingDemo() {
       )}
       
       {/* Sidebar */}
-      <aside className={`fixed lg:static left-0 top-0 h-screen w-64 bg-white border-r border-orange-100 shadow-lg lg:shadow-sm overflow-y-auto flex flex-col z-[50] transition-transform duration-300 ease-in-out ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
+      <aside className={`fixed left-0 top-0 h-screen w-64 bg-white border-r border-orange-100 shadow-lg lg:shadow-sm overflow-y-auto flex flex-col z-[50] transition-transform duration-300 ease-in-out ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
           <div className="p-4 border-b border-orange-100 flex items-center justify-between">
             <button
               onClick={() => setMobileMenuOpen(false)}
@@ -348,50 +387,45 @@ export default function LoggingDemo() {
           <h2 className="text-xl font-bold text-slate-900 mb-6">Logged Events</h2>
           
           <div className="space-y-4">
-            {/* Message Events */}
+            {/* Moderation Events */}
             <div>
-              <h3 className="text-sm font-semibold text-slate-700 mb-3 uppercase tracking-wide">Message Events</h3>
+              <h3 className="text-sm font-semibold text-slate-700 mb-3 uppercase tracking-wide">Moderation Events</h3>
               <div className="space-y-3">
-                <div className="flex items-center justify-between py-2">
-                  <div className="flex items-center gap-3">
-                    <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                    <span className="text-slate-900">Message Deleted</span>
-                  </div>
-                  <button
-                    onClick={() => toggleEvent('messageDelete')}
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                      events.messageDelete ? 'bg-green-600' : 'bg-gray-300'
-                    }`}
-                  >
-                    <span
-                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                        events.messageDelete ? 'translate-x-6' : 'translate-x-1'
+                {[
+                  { key: 'warns', label: 'Warns', icon: 'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z' },
+                  { key: 'kicks', label: 'Kicks', icon: 'M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1' },
+                  { key: 'bans', label: 'Bans', icon: 'M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636' },
+                  { key: 'unbans', label: 'Unbans', icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' },
+                  { key: 'timeouts', label: 'Timeouts', icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' },
+                  { key: 'untimeouts', label: 'Untimeouts', icon: 'M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
+                  { key: 'softbans', label: 'Softbans', icon: 'M13 7a4 4 0 11-8 0 4 4 0 018 0zM9 14a6 6 0 00-6 6v1h12v-1a6 6 0 00-6-6zM21 12h-6' },
+                  { key: 'channelLocks', label: 'Channel Locks', icon: 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z' },
+                  { key: 'lockdowns', label: 'Server Lockdowns', icon: 'M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z' },
+                  { key: 'slowmode', label: 'Slowmode Changes', icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' },
+                  { key: 'messagePurge', label: 'Message Purges', icon: 'M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16' },
+                  { key: 'automodActions', label: 'Automod Actions', icon: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z' },
+                ].map(event => (
+                  <div key={event.key} className="flex items-center justify-between py-2">
+                    <div className="flex items-center gap-3">
+                      <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={event.icon} />
+                      </svg>
+                      <span className="text-slate-900">{event.label}</span>
+                    </div>
+                    <button
+                      onClick={() => toggleEvent(event.key as keyof typeof events)}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        events[event.key as keyof typeof events] ? 'bg-green-600' : 'bg-gray-300'
                       }`}
-                    />
-                  </button>
-                </div>
-                <div className="flex items-center justify-between py-2">
-                  <div className="flex items-center gap-3">
-                    <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                    </svg>
-                    <span className="text-slate-900">Message Edited</span>
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          events[event.key as keyof typeof events] ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
                   </div>
-                  <button
-                    onClick={() => toggleEvent('messageEdit')}
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                      events.messageEdit ? 'bg-green-600' : 'bg-gray-300'
-                    }`}
-                  >
-                    <span
-                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                        events.messageEdit ? 'translate-x-6' : 'translate-x-1'
-                      }`}
-                    />
-                  </button>
-                </div>
+                ))}
               </div>
             </div>
 
@@ -399,86 +433,134 @@ export default function LoggingDemo() {
             <div className="pt-4 border-t border-gray-100">
               <h3 className="text-sm font-semibold text-slate-700 mb-3 uppercase tracking-wide">Member Events</h3>
               <div className="space-y-3">
-                <div className="flex items-center justify-between py-2">
-                  <div className="flex items-center gap-3">
-                    <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-                    </svg>
-                    <span className="text-slate-900">Member Joined</span>
-                  </div>
-                  <button
-                    onClick={() => toggleEvent('memberJoin')}
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                      events.memberJoin ? 'bg-green-600' : 'bg-gray-300'
-                    }`}
-                  >
-                    <span
-                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                        events.memberJoin ? 'translate-x-6' : 'translate-x-1'
+                {[
+                  { key: 'memberJoin', label: 'Member Joins', icon: 'M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z' },
+                  { key: 'memberLeave', label: 'Member Leaves', icon: 'M13 7a4 4 0 11-8 0 4 4 0 018 0zM9 14a6 6 0 00-6 6v1h12v-1a6 6 0 00-6-6zM21 12h-6' },
+                  { key: 'roleUpdates', label: 'Role Updates', icon: 'M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z' },
+                  { key: 'nicknameChanges', label: 'Nickname Changes', icon: 'M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z' },
+                  { key: 'usernameChanges', label: 'Username Changes', icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' },
+                ].map(event => (
+                  <div key={event.key} className="flex items-center justify-between py-2">
+                    <div className="flex items-center gap-3">
+                      <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={event.icon} />
+                      </svg>
+                      <span className="text-slate-900">{event.label}</span>
+                    </div>
+                    <button
+                      onClick={() => toggleEvent(event.key as keyof typeof events)}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        events[event.key as keyof typeof events] ? 'bg-green-600' : 'bg-gray-300'
                       }`}
-                    />
-                  </button>
-                </div>
-                <div className="flex items-center justify-between py-2">
-                  <div className="flex items-center gap-3">
-                    <svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7a4 4 0 11-8 0 4 4 0 018 0zM9 14a6 6 0 00-6 6v1h12v-1a6 6 0 00-6-6zM21 12h-6" />
-                    </svg>
-                    <span className="text-slate-900">Member Left</span>
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          events[event.key as keyof typeof events] ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
                   </div>
-                  <button
-                    onClick={() => toggleEvent('memberLeave')}
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                      events.memberLeave ? 'bg-green-600' : 'bg-gray-300'
-                    }`}
-                  >
-                    <span
-                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                        events.memberLeave ? 'translate-x-6' : 'translate-x-1'
+                ))}
+              </div>
+            </div>
+
+            {/* Message Events */}
+            <div className="pt-4 border-t border-gray-100">
+              <h3 className="text-sm font-semibold text-slate-700 mb-3 uppercase tracking-wide">Message Events</h3>
+              <div className="space-y-3">
+                {[
+                  { key: 'messageDelete', label: 'Message Deletes', icon: 'M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16' },
+                  { key: 'messageEdit', label: 'Message Edits', icon: 'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z' },
+                  { key: 'bulkDelete', label: 'Bulk Deletes', icon: 'M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16' },
+                  { key: 'messageAttachments', label: 'Message Attachments', icon: 'M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13' },
+                ].map(event => (
+                  <div key={event.key} className="flex items-center justify-between py-2">
+                    <div className="flex items-center gap-3">
+                      <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={event.icon} />
+                      </svg>
+                      <span className="text-slate-900">{event.label}</span>
+                    </div>
+                    <button
+                      onClick={() => toggleEvent(event.key as keyof typeof events)}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        events[event.key as keyof typeof events] ? 'bg-green-600' : 'bg-gray-300'
                       }`}
-                    />
-                  </button>
-                </div>
-                <div className="flex items-center justify-between py-2">
-                  <div className="flex items-center gap-3">
-                    <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
-                    </svg>
-                    <span className="text-slate-900">Member Banned</span>
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          events[event.key as keyof typeof events] ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
                   </div>
-                  <button
-                    onClick={() => toggleEvent('memberBan')}
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                      events.memberBan ? 'bg-green-600' : 'bg-gray-300'
-                    }`}
-                  >
-                    <span
-                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                        events.memberBan ? 'translate-x-6' : 'translate-x-1'
+                ))}
+              </div>
+            </div>
+
+            {/* Channel Events */}
+            <div className="pt-4 border-t border-gray-100">
+              <h3 className="text-sm font-semibold text-slate-700 mb-3 uppercase tracking-wide">Channel Events</h3>
+              <div className="space-y-3">
+                {[
+                  { key: 'channelCreate', label: 'Channel Created', icon: 'M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z' },
+                  { key: 'channelDelete', label: 'Channel Deleted', icon: 'M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16' },
+                  { key: 'channelUpdate', label: 'Channel Updated', icon: 'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z' },
+                ].map(event => (
+                  <div key={event.key} className="flex items-center justify-between py-2">
+                    <div className="flex items-center gap-3">
+                      <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={event.icon} />
+                      </svg>
+                      <span className="text-slate-900">{event.label}</span>
+                    </div>
+                    <button
+                      onClick={() => toggleEvent(event.key as keyof typeof events)}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        events[event.key as keyof typeof events] ? 'bg-green-600' : 'bg-gray-300'
                       }`}
-                    />
-                  </button>
-                </div>
-                <div className="flex items-center justify-between py-2">
-                  <div className="flex items-center gap-3">
-                    <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <span className="text-slate-900">Member Unbanned</span>
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          events[event.key as keyof typeof events] ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
                   </div>
-                  <button
-                    onClick={() => toggleEvent('memberUnban')}
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                      events.memberUnban ? 'bg-green-600' : 'bg-gray-300'
-                    }`}
-                  >
-                    <span
-                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                        events.memberUnban ? 'translate-x-6' : 'translate-x-1'
+                ))}
+              </div>
+            </div>
+
+            {/* Role Events */}
+            <div className="pt-4 border-t border-gray-100">
+              <h3 className="text-sm font-semibold text-slate-700 mb-3 uppercase tracking-wide">Role Events</h3>
+              <div className="space-y-3">
+                {[
+                  { key: 'roleCreate', label: 'Role Created', icon: 'M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z' },
+                  { key: 'roleDelete', label: 'Role Deleted', icon: 'M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16' },
+                  { key: 'roleUpdate', label: 'Role Updated', icon: 'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z' },
+                ].map(event => (
+                  <div key={event.key} className="flex items-center justify-between py-2">
+                    <div className="flex items-center gap-3">
+                      <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={event.icon} />
+                      </svg>
+                      <span className="text-slate-900">{event.label}</span>
+                    </div>
+                    <button
+                      onClick={() => toggleEvent(event.key as keyof typeof events)}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        events[event.key as keyof typeof events] ? 'bg-green-600' : 'bg-gray-300'
                       }`}
-                    />
-                  </button>
-                </div>
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          events[event.key as keyof typeof events] ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -486,47 +568,70 @@ export default function LoggingDemo() {
             <div className="pt-4 border-t border-gray-100">
               <h3 className="text-sm font-semibold text-slate-700 mb-3 uppercase tracking-wide">Voice Events</h3>
               <div className="space-y-3">
-                <div className="flex items-center justify-between py-2">
-                  <div className="flex items-center gap-3">
-                    <svg className="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                    </svg>
-                    <span className="text-slate-900">Voice Channel Joined</span>
-                  </div>
-                  <button
-                    onClick={() => toggleEvent('voiceJoin')}
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                      events.voiceJoin ? 'bg-green-600' : 'bg-gray-300'
-                    }`}
-                  >
-                    <span
-                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                        events.voiceJoin ? 'translate-x-6' : 'translate-x-1'
+                {[
+                  { key: 'voiceJoin', label: 'Voice Join', icon: 'M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z' },
+                  { key: 'voiceLeave', label: 'Voice Leave', icon: 'M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z' },
+                  { key: 'voiceMove', label: 'Voice Move', icon: 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4' },
+                  { key: 'voiceMuteDeafen', label: 'Mute/Deafen', icon: 'M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z' },
+                  { key: 'voiceStreaming', label: 'Voice Streaming', icon: 'M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z' },
+                ].map(event => (
+                  <div key={event.key} className="flex items-center justify-between py-2">
+                    <div className="flex items-center gap-3">
+                      <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={event.icon} />
+                      </svg>
+                      <span className="text-slate-900">{event.label}</span>
+                    </div>
+                    <button
+                      onClick={() => toggleEvent(event.key as keyof typeof events)}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        events[event.key as keyof typeof events] ? 'bg-green-600' : 'bg-gray-300'
                       }`}
-                    />
-                  </button>
-                </div>
-                <div className="flex items-center justify-between py-2">
-                  <div className="flex items-center gap-3">
-                    <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" clipRule="evenodd" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
-                    </svg>
-                    <span className="text-slate-900">Voice Channel Left</span>
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          events[event.key as keyof typeof events] ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
                   </div>
-                  <button
-                    onClick={() => toggleEvent('voiceLeave')}
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                      events.voiceLeave ? 'bg-green-600' : 'bg-gray-300'
-                    }`}
-                  >
-                    <span
-                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                        events.voiceLeave ? 'translate-x-6' : 'translate-x-1'
+                ))}
+              </div>
+            </div>
+
+            {/* Server Events */}
+            <div className="pt-4 border-t border-gray-100">
+              <h3 className="text-sm font-semibold text-slate-700 mb-3 uppercase tracking-wide">Server Events</h3>
+              <div className="space-y-3">
+                {[
+                  { key: 'serverUpdate', label: 'Server Updates', icon: 'M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4' },
+                  { key: 'emoji', label: 'Emoji Changes', icon: 'M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
+                  { key: 'sticker', label: 'Sticker Changes', icon: 'M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01' },
+                  { key: 'webhook', label: 'Webhook Changes', icon: 'M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1' },
+                  { key: 'invite', label: 'Invite Tracking', icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z' },
+                  { key: 'integration', label: 'Integration Changes', icon: 'M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z' },
+                ].map(event => (
+                  <div key={event.key} className="flex items-center justify-between py-2">
+                    <div className="flex items-center gap-3">
+                      <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={event.icon} />
+                      </svg>
+                      <span className="text-slate-900">{event.label}</span>
+                    </div>
+                    <button
+                      onClick={() => toggleEvent(event.key as keyof typeof events)}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        events[event.key as keyof typeof events] ? 'bg-green-600' : 'bg-gray-300'
                       }`}
-                    />
-                  </button>
-                </div>
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          events[event.key as keyof typeof events] ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -542,13 +647,13 @@ export default function LoggingDemo() {
             {saving ? 'Saving...' : 'Save Configuration'}
           </button>
         </div>
-            </div>
-          </div>
-        </div>
 
         {/* Debug Info Popup */}
         <DebugInfoPopup isOpen={showDebugInfo} onClose={() => setShowDebugInfo(false)} />
         <DeveloperTools isOpen={showDeveloperTools} onClose={() => setShowDeveloperTools(false)} />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
