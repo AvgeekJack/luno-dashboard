@@ -6,13 +6,8 @@ import DebugInfoPopup from '@/components/DebugInfoPopup';
 import DeveloperTools from '@/components/DeveloperTools';
 
 export default function AutomodDemo() {
+  // State Management
   const [enabled, setEnabled] = useState(true);
-  const [antiSpam, setAntiSpam] = useState(true);
-  const [antiLinks, setAntiLinks] = useState(false);
-  const [antiInvites, setAntiInvites] = useState(true);
-  const [filterWords, setFilterWords] = useState(true);
-  const [wordList, setWordList] = useState('badword1, badword2, badword3');
-  const [maxMentions, setMaxMentions] = useState('5');
   const [saving, setSaving] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [configOpen, setConfigOpen] = useState(true);
@@ -20,6 +15,61 @@ export default function AutomodDemo() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showDebugInfo, setShowDebugInfo] = useState(false);
   const [showDeveloperTools, setShowDeveloperTools] = useState(false);
+
+  // All Automod Settings (47+ settings)
+  const [antiLinkEnabled, setAntiLinkEnabled] = useState(false);
+  const [antiInviteEnabled, setAntiInviteEnabled] = useState(true);
+  const [antiSpamEnabled, setAntiSpamEnabled] = useState(true);
+  const [antiMentionEnabled, setAntiMentionEnabled] = useState(true);
+  const [antiFloodEnabled, setAntiFloodEnabled] = useState(true);
+  const [antiZalgoEnabled, setAntiZalgoEnabled] = useState(false);
+  const [antiSwearEnabled, setAntiSwearEnabled] = useState(true);
+  const [capsFilterEnabled, setCapsFilterEnabled] = useState(false);
+
+  // Threshold Settings
+  const [spamMessageCount, setSpamMessageCount] = useState(5);
+  const [spamTimeWindow, setSpamTimeWindow] = useState(5);
+  const [mentionLimit, setMentionLimit] = useState(5);
+  const [capsPercentage, setCapsPercentage] = useState(70);
+  const [floodMessageCount, setFloodMessageCount] = useState(3);
+  const [floodTimeWindow, setFloodTimeWindow] = useState(2);
+  const [zalgoLimit, setZalgoLimit] = useState(10);
+
+  // Whitelist Settings
+  const [whitelistedChannels, setWhitelistedChannels] = useState<string[]>([]);
+  const [whitelistedRoles, setWhitelistedRoles] = useState<string[]>([]);
+  const [autoWhitelistModerators, setAutoWhitelistModerators] = useState(true);
+
+  // Action Settings
+  const [deleteMessage, setDeleteMessage] = useState(true);
+  const [sendWarning, setSendWarning] = useState(true);
+  const [warningDuration, setWarningDuration] = useState(5);
+  const [dmUser, setDmUser] = useState(true);
+
+  // Auto-Timeout Settings
+  const [autoTimeoutEnabled, setAutoTimeoutEnabled] = useState(false);
+  const [autoTimeoutViolations, setAutoTimeoutViolations] = useState(3);
+  const [autoTimeoutWindow, setAutoTimeoutWindow] = useState(60);
+  const [autoTimeoutDuration, setAutoTimeoutDuration] = useState(300);
+
+  // Premium Setting
+  const [escalatingPunishments, setEscalatingPunishments] = useState(false);
+  const premium = false; // Demo mode is not premium
+
+  // Demo Data
+  const channels = [
+    { id: '123456789', name: 'general' },
+    { id: '987654321', name: 'announcements' },
+    { id: '456789123', name: 'staff-chat' },
+    { id: '789123456', name: 'bot-commands' }
+  ];
+
+  const roles = [
+    { id: '111111111', name: 'Admin' },
+    { id: '222222222', name: 'Moderator' },
+    { id: '333333333', name: 'Member' },
+    { id: '444444444', name: 'VIP' }
+  ];
 
   const handleSave = async () => {
     setSaving(true);
@@ -129,27 +179,30 @@ export default function AutomodDemo() {
                   >
                     Logging
                   </Link>
-                  <div 
-                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left cursor-pointer hover:bg-gray-100 ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                  <Link 
+                    href="/devtest/001/configuration/anti-raid"
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} 
                     style={{animationDelay: '100ms'}}
-                    onClick={() => {alert('Demo mode: Anti-Raid page not available yet'); setMobileMenuOpen(false);}}
+                    onClick={() => setMobileMenuOpen(false)}
                   >
                     Anti-Raid
-                  </div>
-                  <div 
-                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left cursor-pointer hover:bg-gray-100 ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                  </Link>
+                  <Link 
+                    href="/devtest/001/configuration/reaction-roles"
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} 
                     style={{animationDelay: '150ms'}}
-                    onClick={() => {alert('Demo mode: Reaction Roles page not available yet'); setMobileMenuOpen(false);}}
+                    onClick={() => setMobileMenuOpen(false)}
                   >
                     Reaction Roles
-                  </div>
-                  <div 
-                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left cursor-pointer hover:bg-gray-100 ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                  </Link>
+                  <Link 
+                    href="/devtest/001/configuration/verification"
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} 
                     style={{animationDelay: '200ms'}}
-                    onClick={() => {alert('Demo mode: Verification page not available yet'); setMobileMenuOpen(false);}}
+                    onClick={() => setMobileMenuOpen(false)}
                   >
                     Verification
-                  </div>
+                  </Link>
                 </div>
               )}
             </details>
@@ -265,6 +318,7 @@ export default function AutomodDemo() {
         <div className="flex-1 lg:ml-0">
           <div className="pt-16 lg:pt-8 px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto">
+        {/* Demo Mode Warning Banner */}
         <div className="bg-orange-100 border-l-4 border-orange-500 p-4 mb-6">
           <div className="flex">
             <div className="flex-shrink-0">
@@ -280,12 +334,12 @@ export default function AutomodDemo() {
           </div>
         </div>
 
-        {/* Enable/Disable Automod */}
+        {/* Automod Configuration Card */}
         <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-xl font-bold text-slate-900">Enable Automod</h2>
-              <p className="text-sm text-slate-600 mt-1">Turn automated moderation on or off</p>
+              <h2 className="text-xl font-bold text-slate-900">Automod Configuration</h2>
+              <p className="text-sm text-slate-600 mt-1">Configure automatic moderation filters and rules for your server</p>
             </div>
             <button
               onClick={() => setEnabled(!enabled)}
@@ -300,137 +354,586 @@ export default function AutomodDemo() {
               />
             </button>
           </div>
+
+          {enabled && (
+            <div className="mt-4 p-4 rounded-lg bg-blue-50 border border-blue-200">
+              <div className="flex items-start gap-3">
+                <svg className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+                <div>
+                  <p className="text-sm font-semibold text-blue-900">AutoMod Log Channel</p>
+                  <p className="text-sm text-blue-700 mt-1">
+                    AutoMod logging is now configured on the <Link href="/devtest/001/configuration/logging" className="underline hover:text-blue-800">Logging page</Link> at the top of the configuration.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* Automod Features */}
-        <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
-          <h2 className="text-xl font-bold text-slate-900 mb-6">Protection Features</h2>
-          
-          <div className="space-y-6">
-            {/* Anti-Spam */}
-            <div className="flex items-center justify-between pb-6 border-b border-gray-100">
-              <div className="flex-1">
-                <h3 className="font-semibold text-slate-900">Anti-Spam Protection</h3>
-                <p className="text-sm text-slate-600 mt-1">Prevent users from spamming messages</p>
-              </div>
-              <button
-                onClick={() => setAntiSpam(!antiSpam)}
-                className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors ${
-                  antiSpam ? 'bg-green-600' : 'bg-gray-300'
-                }`}
-              >
-                <span
-                  className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${
-                    antiSpam ? 'translate-x-7' : 'translate-x-1'
-                  }`}
-                />
-              </button>
+        {/* Filter Features Card */}
+        {enabled && (
+          <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
+            <div className="mb-6">
+              <h2 className="text-xl font-bold text-slate-900">Filter Features</h2>
+              <p className="text-sm text-slate-600">Enable or disable specific filter types</p>
             </div>
 
-            {/* Anti-Links */}
-            <div className="flex items-center justify-between pb-6 border-b border-gray-100">
-              <div className="flex-1">
-                <h3 className="font-semibold text-slate-900">Block External Links</h3>
-                <p className="text-sm text-slate-600 mt-1">Prevent posting of external URLs</p>
-              </div>
-              <button
-                onClick={() => setAntiLinks(!antiLinks)}
-                className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors ${
-                  antiLinks ? 'bg-green-600' : 'bg-gray-300'
-                }`}
-              >
-                <span
-                  className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${
-                    antiLinks ? 'translate-x-7' : 'translate-x-1'
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
+                <div>
+                  <p className="font-semibold text-slate-900">Anti-Link</p>
+                  <p className="text-sm text-slate-500">Block all external URLs</p>
+                </div>
+                <button
+                  onClick={() => setAntiLinkEnabled(!antiLinkEnabled)}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                    antiLinkEnabled ? 'bg-green-600' : 'bg-gray-300'
                   }`}
-                />
-              </button>
-            </div>
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      antiLinkEnabled ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
+              </div>
 
-            {/* Anti-Invites */}
-            <div className="flex items-center justify-between pb-6 border-b border-gray-100">
-              <div className="flex-1">
-                <h3 className="font-semibold text-slate-900">Block Server Invites</h3>
-                <p className="text-sm text-slate-600 mt-1">Prevent posting of Discord invite links</p>
-              </div>
-              <button
-                onClick={() => setAntiInvites(!antiInvites)}
-                className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors ${
-                  antiInvites ? 'bg-green-600' : 'bg-gray-300'
-                }`}
-              >
-                <span
-                  className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${
-                    antiInvites ? 'translate-x-7' : 'translate-x-1'
+              <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
+                <div>
+                  <p className="font-semibold text-slate-900">Anti-Invite</p>
+                  <p className="text-sm text-slate-500">Block Discord invite links</p>
+                </div>
+                <button
+                  onClick={() => setAntiInviteEnabled(!antiInviteEnabled)}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                    antiInviteEnabled ? 'bg-green-600' : 'bg-gray-300'
                   }`}
-                />
-              </button>
-            </div>
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      antiInviteEnabled ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
+              </div>
 
-            {/* Word Filter */}
-            <div className="flex items-center justify-between">
-              <div className="flex-1">
-                <h3 className="font-semibold text-slate-900">Profanity Filter</h3>
-                <p className="text-sm text-slate-600 mt-1">Block messages containing blacklisted words</p>
-              </div>
-              <button
-                onClick={() => setFilterWords(!filterWords)}
-                className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors ${
-                  filterWords ? 'bg-green-600' : 'bg-gray-300'
-                }`}
-              >
-                <span
-                  className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${
-                    filterWords ? 'translate-x-7' : 'translate-x-1'
+              <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
+                <div>
+                  <p className="font-semibold text-slate-900">Anti-Spam</p>
+                  <p className="text-sm text-slate-500">Prevent rapid message sending</p>
+                </div>
+                <button
+                  onClick={() => setAntiSpamEnabled(!antiSpamEnabled)}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                    antiSpamEnabled ? 'bg-green-600' : 'bg-gray-300'
                   }`}
-                />
-              </button>
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      antiSpamEnabled ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
+              </div>
+
+              <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
+                <div>
+                  <p className="font-semibold text-slate-900">Anti-Mention</p>
+                  <p className="text-sm text-slate-500">Block excessive mentions</p>
+                </div>
+                <button
+                  onClick={() => setAntiMentionEnabled(!antiMentionEnabled)}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                    antiMentionEnabled ? 'bg-green-600' : 'bg-gray-300'
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      antiMentionEnabled ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
+              </div>
+
+              <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
+                <div>
+                  <p className="font-semibold text-slate-900">Anti-Flood/Duplicate</p>
+                  <p className="text-sm text-slate-500">Stop repeated messages</p>
+                </div>
+                <button
+                  onClick={() => setAntiFloodEnabled(!antiFloodEnabled)}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                    antiFloodEnabled ? 'bg-green-600' : 'bg-gray-300'
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      antiFloodEnabled ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
+              </div>
+
+              <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
+                <div>
+                  <p className="font-semibold text-slate-900">Anti-Zalgo</p>
+                  <p className="text-sm text-slate-500">Block corrupted text</p>
+                </div>
+                <button
+                  onClick={() => setAntiZalgoEnabled(!antiZalgoEnabled)}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                    antiZalgoEnabled ? 'bg-green-600' : 'bg-gray-300'
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      antiZalgoEnabled ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
+              </div>
+
+              <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
+                <div>
+                  <p className="font-semibold text-slate-900">Anti-Swear/Profanity</p>
+                  <p className="text-sm text-slate-500">Block bad words</p>
+                </div>
+                <button
+                  onClick={() => setAntiSwearEnabled(!antiSwearEnabled)}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                    antiSwearEnabled ? 'bg-green-600' : 'bg-gray-300'
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      antiSwearEnabled ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
+              </div>
+
+              <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
+                <div>
+                  <p className="font-semibold text-slate-900">Caps Filter</p>
+                  <p className="text-sm text-slate-500">Block excessive capitals</p>
+                </div>
+                <button
+                  onClick={() => setCapsFilterEnabled(!capsFilterEnabled)}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                    capsFilterEnabled ? 'bg-green-600' : 'bg-gray-300'
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      capsFilterEnabled ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
-        {/* Advanced Settings */}
-        <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
-          <h2 className="text-xl font-bold text-slate-900 mb-6">Advanced Settings</h2>
-          
-          <div className="space-y-6">
-            {/* Word Blacklist */}
-            {filterWords && (
+        {/* Thresholds & Limits Card */}
+        {enabled && (
+          <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
+            <div className="mb-6">
+              <h2 className="text-xl font-bold text-slate-900">Thresholds & Limits</h2>
+              <p className="text-sm text-slate-600">Configure detection sensitivity</p>
+            </div>
+
+            <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Blacklisted Words (comma-separated)
-                </label>
-                <textarea
-                  value={wordList}
-                  onChange={(e) => setWordList(e.target.value)}
-                  rows={4}
-                  className="w-full px-4 py-2.5 bg-white text-slate-900 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                  placeholder="word1, word2, word3"
-                />
-                <p className="text-xs text-slate-500 mt-2">Messages containing these words will be automatically deleted</p>
+                <label className="block text-sm font-semibold text-slate-900 mb-2">Spam Threshold</label>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-xs text-slate-500 block mb-1">Messages</label>
+                    <input 
+                      type="number" 
+                      value={spamMessageCount} 
+                      onChange={(e) => setSpamMessageCount(parseInt(e.target.value))}
+                      className="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500" 
+                      min="1" 
+                      max="20" 
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs text-slate-500 block mb-1">Seconds</label>
+                    <input 
+                      type="number" 
+                      value={spamTimeWindow} 
+                      onChange={(e) => setSpamTimeWindow(parseInt(e.target.value))}
+                      className="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500" 
+                      min="1" 
+                      max="60" 
+                    />
+                  </div>
+                </div>
               </div>
-            )}
 
-            {/* Max Mentions */}
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Maximum Mentions Per Message
-              </label>
-              <input
-                type="number"
-                value={maxMentions}
-                onChange={(e) => setMaxMentions(e.target.value)}
-                className="w-full px-4 py-2.5 bg-white text-slate-900 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                min="1"
-                max="20"
-              />
-              <p className="text-xs text-slate-500 mt-2">Messages exceeding this limit will be deleted</p>
+              <div>
+                <label className="block text-sm font-semibold text-slate-900 mb-2">Mention Limit</label>
+                <input 
+                  type="number" 
+                  value={mentionLimit} 
+                  onChange={(e) => setMentionLimit(parseInt(e.target.value))}
+                  className="w-full max-w-md px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500" 
+                  min="1" 
+                  max="50" 
+                />
+                <p className="text-xs text-slate-500 mt-1">Max mentions per message</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-slate-900 mb-2">Caps Percentage</label>
+                <input 
+                  type="number" 
+                  value={capsPercentage} 
+                  onChange={(e) => setCapsPercentage(parseInt(e.target.value))}
+                  className="w-full max-w-md px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500" 
+                  min="0" 
+                  max="100" 
+                />
+                <p className="text-xs text-slate-500 mt-1">% of caps allowed</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-slate-900 mb-2">Flood/Duplicate Threshold</label>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-xs text-slate-500 block mb-1">Messages</label>
+                    <input 
+                      type="number" 
+                      value={floodMessageCount} 
+                      onChange={(e) => setFloodMessageCount(parseInt(e.target.value))}
+                      className="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500" 
+                      min="1" 
+                      max="20" 
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs text-slate-500 block mb-1">Seconds</label>
+                    <input 
+                      type="number" 
+                      value={floodTimeWindow} 
+                      onChange={(e) => setFloodTimeWindow(parseInt(e.target.value))}
+                      className="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500" 
+                      min="1" 
+                      max="60" 
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-slate-900 mb-2">Zalgo Character Limit</label>
+                <input 
+                  type="number" 
+                  value={zalgoLimit} 
+                  onChange={(e) => setZalgoLimit(parseInt(e.target.value))}
+                  className="w-full max-w-md px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500" 
+                  min="0" 
+                  max="100" 
+                />
+                <p className="text-xs text-slate-500 mt-1">Combining characters allowed</p>
+              </div>
             </div>
           </div>
-        </div>
+        )}
+
+        {/* Whitelist System Card */}
+        {enabled && (
+          <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
+            <div className="mb-6">
+              <h2 className="text-xl font-bold text-slate-900">Whitelist System</h2>
+              <p className="text-sm text-slate-600">Exempt channels, roles, or users</p>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-semibold text-slate-900 mb-2">Whitelisted Channels</label>
+                <select 
+                  className="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500" 
+                  onChange={(e) => {
+                    if (e.target.value && !whitelistedChannels.includes(e.target.value)) {
+                      setWhitelistedChannels([...whitelistedChannels, e.target.value]);
+                    }
+                    e.target.value = '';
+                  }}
+                >
+                  <option value="">Select a channel to add...</option>
+                  {channels.filter(ch => !whitelistedChannels.includes(ch.id)).map(ch => (
+                    <option key={ch.id} value={ch.id}>#{ch.name}</option>
+                  ))}
+                </select>
+                {whitelistedChannels.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-3">
+                    {whitelistedChannels.map(chId => {
+                      const channel = channels.find(c => c.id === chId);
+                      return (
+                        <span key={chId} className="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm flex items-center gap-2">
+                          #{channel?.name || chId}
+                          <button type="button" onClick={() => setWhitelistedChannels(whitelistedChannels.filter(id => id !== chId))}
+                            className="hover:text-orange-600 font-bold">✕</button>
+                        </span>
+                      );
+                    })}
+                  </div>
+                )}
+                <p className="text-xs text-slate-500 mt-1">Channels exempt from AutoMod</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-slate-900 mb-2">Whitelisted Roles</label>
+                <select 
+                  className="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500" 
+                  onChange={(e) => {
+                    if (e.target.value && !whitelistedRoles.includes(e.target.value)) {
+                      setWhitelistedRoles([...whitelistedRoles, e.target.value]);
+                    }
+                    e.target.value = '';
+                  }}
+                >
+                  <option value="">Select a role to add...</option>
+                  {roles.filter(r => !whitelistedRoles.includes(r.id)).map(r => (
+                    <option key={r.id} value={r.id}>@{r.name}</option>
+                  ))}
+                </select>
+                {whitelistedRoles.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-3">
+                    {whitelistedRoles.map(roleId => {
+                      const role = roles.find(r => r.id === roleId);
+                      return (
+                        <span key={roleId} className="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm flex items-center gap-2">
+                          @{role?.name || roleId}
+                          <button type="button" onClick={() => setWhitelistedRoles(whitelistedRoles.filter(id => id !== roleId))}
+                            className="hover:text-orange-600 font-bold">✕</button>
+                        </span>
+                      );
+                    })}
+                  </div>
+                )}
+                <p className="text-xs text-slate-500 mt-1">Roles exempt from AutoMod</p>
+              </div>
+
+              <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
+                <div>
+                  <p className="font-semibold text-slate-900">Auto-whitelist Moderators</p>
+                  <p className="text-sm text-slate-500">Automatically exempt users with Manage Messages/Admin</p>
+                </div>
+                <button
+                  onClick={() => setAutoWhitelistModerators(!autoWhitelistModerators)}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                    autoWhitelistModerators ? 'bg-green-600' : 'bg-gray-300'
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      autoWhitelistModerators ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Action Settings Card */}
+        {enabled && (
+          <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
+            <div className="mb-6">
+              <h2 className="text-xl font-bold text-slate-900">Action Settings</h2>
+              <p className="text-sm text-slate-600">Configure how AutoMod responds to violations</p>
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
+                <div>
+                  <p className="font-semibold text-slate-900">Delete Message</p>
+                  <p className="text-sm text-slate-500">Automatically delete violating messages</p>
+                </div>
+                <button
+                  onClick={() => setDeleteMessage(!deleteMessage)}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                    deleteMessage ? 'bg-green-600' : 'bg-gray-300'
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      deleteMessage ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
+              </div>
+
+              <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
+                <div>
+                  <p className="font-semibold text-slate-900">Send Warning</p>
+                  <p className="text-sm text-slate-500">Post warning message in channel</p>
+                </div>
+                <button
+                  onClick={() => setSendWarning(!sendWarning)}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                    sendWarning ? 'bg-green-600' : 'bg-gray-300'
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      sendWarning ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-slate-900 mb-2">Warning Duration</label>
+                <input 
+                  type="number" 
+                  value={warningDuration} 
+                  onChange={(e) => setWarningDuration(parseInt(e.target.value))}
+                  className="w-full max-w-md px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500" 
+                  min="1" 
+                  max="60" 
+                />
+                <p className="text-xs text-slate-500 mt-1">Seconds warning stays visible</p>
+              </div>
+
+              <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
+                <div>
+                  <p className="font-semibold text-slate-900">DM User</p>
+                  <p className="text-sm text-slate-500">Send DM notification to user</p>
+                </div>
+                <button
+                  onClick={() => setDmUser(!dmUser)}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                    dmUser ? 'bg-green-600' : 'bg-gray-300'
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      dmUser ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
+              </div>
+
+              <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
+                <div>
+                  <p className="font-semibold text-slate-900">Auto-Timeout</p>
+                  <p className="text-sm text-slate-500">Automatically timeout after violations</p>
+                </div>
+                <button
+                  onClick={() => setAutoTimeoutEnabled(!autoTimeoutEnabled)}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                    autoTimeoutEnabled ? 'bg-green-600' : 'bg-gray-300'
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      autoTimeoutEnabled ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
+              </div>
+
+              {autoTimeoutEnabled && (
+                <div className="ml-4 grid md:grid-cols-3 gap-3 p-4 rounded-lg bg-orange-50/50 border border-orange-200">
+                  <div className="space-y-2">
+                    <label className="block text-xs font-semibold text-slate-700">Violations</label>
+                    <input type="number" value={autoTimeoutViolations} onChange={(e) => setAutoTimeoutViolations(parseInt(e.target.value))}
+                      className="w-full px-3 py-2 bg-white border border-orange-200 rounded-lg text-sm" min="1" max="20" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="block text-xs font-semibold text-slate-700">Within (seconds)</label>
+                    <input type="number" value={autoTimeoutWindow} onChange={(e) => setAutoTimeoutWindow(parseInt(e.target.value))}
+                      className="w-full px-3 py-2 bg-white border border-orange-200 rounded-lg text-sm" min="1" max="3600" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="block text-xs font-semibold text-slate-700">Duration (seconds)</label>
+                    <input type="number" value={autoTimeoutDuration} onChange={(e) => setAutoTimeoutDuration(parseInt(e.target.value))}
+                      className="w-full px-3 py-2 bg-white border border-orange-200 rounded-lg text-sm" min="60" max="2419200" />
+                  </div>
+                </div>
+              )}
+
+              {/* Escalating Punishments Premium Banner */}
+              {!premium ? (
+                <div className="relative p-6 rounded-lg bg-orange-50 border border-orange-200 overflow-hidden">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                      <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-base font-bold text-slate-900 mb-1">Escalating Punishments</h3>
+                      <p className="text-sm text-slate-600 mb-4">Automatically increase punishment severity based on violation history</p>
+                      <div className="space-y-2 mb-4">
+                        <div className="flex items-center gap-2">
+                          <div className="w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                            </svg>
+                          </div>
+                          <span className="text-sm text-slate-900">Warn → Timeout → Kick → Ban progression</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                            </svg>
+                          </div>
+                          <span className="text-sm text-slate-900">Configurable violation thresholds</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                            </svg>
+                          </div>
+                          <span className="text-sm text-slate-900">Time-based violation decay</span>
+                        </div>
+                      </div>
+                      <button className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold px-4 py-2.5 rounded-lg flex items-center justify-center gap-2 transition">
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                        Upgrade to Premium
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
+                  <div>
+                    <p className="font-semibold text-slate-900">Escalating Punishments</p>
+                    <p className="text-sm text-slate-500">Warn → Timeout → Kick → Ban based on violations</p>
+                  </div>
+                  <button
+                    onClick={() => setEscalatingPunishments(!escalatingPunishments)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      escalatingPunishments ? 'bg-green-600' : 'bg-gray-300'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        escalatingPunishments ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Save Button */}
-        <div className="flex justify-end">
+        <div className="flex justify-end mb-8">
           <button
             onClick={handleSave}
             disabled={saving}
@@ -439,13 +942,13 @@ export default function AutomodDemo() {
             {saving ? 'Saving...' : 'Save Configuration'}
           </button>
         </div>
-            </div>
-          </div>
-        </div>
 
         {/* Debug Info Popup */}
         <DebugInfoPopup isOpen={showDebugInfo} onClose={() => setShowDebugInfo(false)} />
         <DeveloperTools isOpen={showDeveloperTools} onClose={() => setShowDeveloperTools(false)} />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

@@ -189,27 +189,30 @@ export default function LoggingDemo() {
                   >
                     Logging
                   </Link>
-                  <div 
-                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left cursor-pointer hover:bg-gray-100 ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                  <Link 
+                    href="/devtest/001/configuration/anti-raid"
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} 
                     style={{animationDelay: '100ms'}}
-                    onClick={() => {alert('Demo mode: Anti-Raid page not available yet'); setMobileMenuOpen(false);}}
+                    onClick={() => setMobileMenuOpen(false)}
                   >
                     Anti-Raid
-                  </div>
-                  <div 
-                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left cursor-pointer hover:bg-gray-100 ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                  </Link>
+                  <Link 
+                    href="/devtest/001/configuration/reaction-roles"
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} 
                     style={{animationDelay: '150ms'}}
-                    onClick={() => {alert('Demo mode: Reaction Roles page not available yet'); setMobileMenuOpen(false);}}
+                    onClick={() => setMobileMenuOpen(false)}
                   >
                     Reaction Roles
-                  </div>
-                  <div 
-                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left cursor-pointer hover:bg-gray-100 ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                  </Link>
+                  <Link 
+                    href="/devtest/001/configuration/verification"
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} 
                     style={{animationDelay: '200ms'}}
-                    onClick={() => {alert('Demo mode: Verification page not available yet'); setMobileMenuOpen(false);}}
+                    onClick={() => setMobileMenuOpen(false)}
                   >
                     Verification
-                  </div>
+                  </Link>
                 </div>
               )}
             </details>
