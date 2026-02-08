@@ -271,7 +271,7 @@ export default function ModerationDemo() {
         <div className="flex-1 lg:ml-0">
           <div className="pt-16 lg:pt-8 px-4 sm:px-6 lg:px-8">
             <div className="max-w-6xl mx-auto">
-        <div className="bg-orange-100 border-l-4 border-orange-500 p-4 mb-6">
+              <div className="bg-orange-100 border-l-4 border-orange-500 p-4 mb-6">
           <div className="flex">
             <div className="flex-shrink-0">
               <svg className="h-5 w-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
@@ -560,6 +560,7 @@ export default function ModerationDemo() {
             >
               {saving ? 'Saving...' : 'Save Settings'}
             </button>
+            </div>
           </div>
         </div>
       </div>
@@ -567,6 +568,7 @@ export default function ModerationDemo() {
       {/* Debug Info Popup */}
       <DebugInfoPopup isOpen={showDebugInfo} onClose={() => setShowDebugInfo(false)} />
       <DeveloperTools isOpen={showDeveloperTools} onClose={() => setShowDeveloperTools(false)} />
+    </div>
     </div>
   );
 }

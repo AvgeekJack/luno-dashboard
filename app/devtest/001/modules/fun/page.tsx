@@ -274,10 +274,7 @@ export default function FunDemo() {
         <div className="flex-1 lg:ml-0">
           <div className="pt-16 lg:pt-8 px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto">
-
-      {/* Main Content */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-orange-100 border-l-4 border-orange-500 p-4 mb-6">
+              <div className="bg-orange-100 border-l-4 border-orange-500 p-4 mb-6">
           <div className="flex">
             <div className="flex-shrink-0">
               <svg className="h-5 w-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20">

@@ -29,7 +29,7 @@ export default function AutomodDemo() {
   };
 
   return (
-    </div> className="min-h-screen bg-gray-50 text-[#0f172a] flex">
+    <div className="min-h-screen bg-gray-50 text-[#0f172a] flex">
       {/* Mobile menu overlay */}
       {mobileMenuOpen && (
         <div 
