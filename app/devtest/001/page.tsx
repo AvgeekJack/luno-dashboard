@@ -101,6 +101,23 @@ export default function ServerSettingsDemo() {
   const [premiumManagementEnabled, setPremiumManagementEnabled] = useState(true);
   const [activeTab, setActiveTab] = useState<'home' | 'settings' | 'status'>('home');
 
+  // Check site settings for premium purchase toggle
+  useEffect(() => {
+    const checkSettings = async () => {
+      try {
+        const siteSettingsRes = await fetch('/api/site-settings');
+        if (siteSettingsRes.ok) {
+          const siteData = await siteSettingsRes.json();
+          setPremiumPurchaseEnabled(siteData.premiumPurchaseEnabled ?? true);
+          setPremiumManagementEnabled(siteData.premiumManagementEnabled ?? true);
+        }
+      } catch (error) {
+        console.error('Failed to check site settings:', error);
+      }
+    };
+    checkSettings();
+  }, []);
+
   const handleBypass = () => {
     setBypassMaintenance(true);
   };
@@ -483,6 +500,16 @@ export default function ServerSettingsDemo() {
 
             {/* Coming Soon Card - Desktop, Premium Status - Mobile */}
             <div className="col-span-2 lg:col-span-1 bg-white rounded-2xl p-5 lg:p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow relative" data-tour="quick-actions">
+              {/* Coming Soon Overlay - Shows when premium purchase is disabled */}
+              {((!premiumPurchaseEnabled && !settings?.premium) || (!premiumManagementEnabled && settings?.premium)) && (
+                <div className="absolute inset-0 backdrop-blur-sm bg-orange-500/20 rounded-2xl flex items-center justify-center z-10">
+                  <div className="bg-white/90 rounded-xl p-6 shadow-xl text-center">
+                    <div className="text-4xl mb-3">🚀</div>
+                    <h3 className="text-2xl font-bold text-orange-600 mb-1">Coming Soon</h3>
+                    <p className="text-sm text-slate-600">Premium subscriptions will be available soon!</p>
+                  </div>
+                </div>
+              )}
               {/* Mobile: Premium Status */}
               <div className="lg:hidden flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3">
@@ -505,11 +532,31 @@ export default function ServerSettingsDemo() {
                 </div>
               </div>
               
-              {/* Desktop: Coming Soon */}
-              <div className="hidden lg:flex flex-col items-center justify-center text-center h-full py-4">
-                <div className="text-5xl mb-3">🚀</div>
-                <div className="text-2xl font-bold text-orange-600 mb-2">Coming Soon</div>
-                <div className="text-sm text-slate-600">Premium subscriptions will be available soon!</div>
+              {/* Desktop: Premium Status with Coming Soon overlay */}
+              <div className="hidden lg:block">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center">
+                    <img src="/premium-icon.svg" alt="Premium" className="w-7 h-7 text-white" />
+                  </div>
+                  {settings?.premium ? (
+                    <button className="px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white font-semibold rounded-lg transition text-sm flex items-center gap-2">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      Manage
+                    </button>
+                  ) : (
+                    <button disabled={!premiumPurchaseEnabled} className="px-4 py-2 bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition text-sm flex items-center gap-2">
+                      <img src="/premium-icon.svg" alt="" className="w-4 h-4" />
+                      Enroll Now
+                    </button>
+                  )}
+                </div>
+                <div className="text-sm text-slate-500 mb-1">Premium Status</div>
+                <div className="text-3xl font-bold text-slate-900">
+                  {settings?.premium ? 'Server Enrolled' : 'Not Enrolled'}
+                </div>
               </div>
             </div>
           </div>
