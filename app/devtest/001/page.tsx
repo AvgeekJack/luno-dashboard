@@ -99,6 +99,7 @@ export default function ServerSettingsDemo() {
   const [bypassMaintenance, setBypassMaintenance] = useState(false);
   const [premiumPurchaseEnabled, setPremiumPurchaseEnabled] = useState(true);
   const [premiumManagementEnabled, setPremiumManagementEnabled] = useState(true);
+  const [activeTab, setActiveTab] = useState<'home' | 'settings' | 'status'>('home');
 
   const handleBypass = () => {
     setBypassMaintenance(true);
@@ -146,43 +147,59 @@ export default function ServerSettingsDemo() {
         {/* Top Bar with Server Info */}
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-3">
-            <div className="flex gap-1">
-              <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center text-white font-bold text-xl">
-                D
-              </div>
-              <div className="w-10 h-10 bg-orange-400 rounded-lg flex items-center justify-center text-white font-bold text-xl">
-                S
-              </div>
-            </div>
+            <button 
+              onClick={() => setMobileMenuOpen(true)}
+              className="w-10 h-10 bg-white border-2 border-gray-200 rounded-lg flex items-center justify-center hover:bg-gray-50 transition-colors"
+            >
+              <svg className="w-5 h-5 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
             <div>
               <h1 className="font-bold text-base text-slate-900">Demo Server</h1>
             </div>
           </div>
-          <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
-            <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-            </svg>
+          <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center p-2">
+            <img src="/premium-icon.svg" alt="Premium" className="w-full h-full" />
           </div>
         </div>
         
         {/* Navigation Tabs */}
         <div className="flex border-t border-gray-100">
-          <button className="flex-1 flex items-center justify-center gap-2 py-3 text-orange-600 border-b-2 border-orange-600 font-semibold text-sm">
+          <button 
+            onClick={() => setActiveTab('home')}
+            className={`flex-1 flex items-center justify-center gap-2 py-3 font-semibold text-sm transition-colors ${
+              activeTab === 'home' 
+                ? 'text-orange-600 border-b-2 border-orange-600' 
+                : 'text-slate-600 border-b-2 border-transparent'
+            }`}
+          >
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
               <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
             </svg>
             Home
           </button>
           <button 
-            onClick={() => setMobileMenuOpen(true)}
-            className="flex-1 flex items-center justify-center gap-2 py-3 text-slate-600 font-semibold text-sm"
+            onClick={() => setActiveTab('settings')}
+            className={`flex-1 flex items-center justify-center gap-2 py-3 font-semibold text-sm transition-colors ${
+              activeTab === 'settings' 
+                ? 'text-orange-600 border-b-2 border-orange-600' 
+                : 'text-slate-600 border-b-2 border-transparent'
+            }`}
           >
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
             </svg>
             Settings
           </button>
-          <button className="flex-1 flex items-center justify-center gap-2 py-3 text-slate-600 font-semibold text-sm">
+          <button 
+            onClick={() => setActiveTab('status')}
+            className={`flex-1 flex items-center justify-center gap-2 py-3 font-semibold text-sm transition-colors ${
+              activeTab === 'status' 
+                ? 'text-orange-600 border-b-2 border-orange-600' 
+                : 'text-slate-600 border-b-2 border-transparent'
+            }`}
+          >
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
             </svg>
@@ -428,6 +445,9 @@ export default function ServerSettingsDemo() {
             <p className="text-slate-600">Manage your server settings and configurations</p>
           </div>
 
+          {/* HOME TAB CONTENT */}
+          {activeTab === 'home' && (
+            <>
           {/* Server Stats - Mobile Redesigned */}
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-4" data-tour="server-stats">
 
@@ -486,49 +506,13 @@ export default function ServerSettingsDemo() {
             </div>
           </div>
 
-          {/* Quick Actions - Mobile Styled */}
-          <div className="lg:hidden">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-slate-900">Quick Actions</h2>
-              <button className="text-orange-600 text-sm font-semibold uppercase tracking-wide">
-                View All
-              </button>
-            </div>
-            <div className="grid grid-cols-3 gap-4">
-              <Link href="/devtest/001/configuration/automod" className="flex flex-col items-center">
-                <div className="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center mb-2 hover:bg-orange-200 transition-colors">
-                  <svg className="w-7 h-7 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                  </svg>
-                </div>
-                <span className="text-xs font-semibold text-slate-900">Automod</span>
-              </Link>
-              <Link href="/devtest/001/configuration/logging" className="flex flex-col items-center">
-                <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mb-2 hover:bg-blue-200 transition-colors">
-                  <svg className="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                  </svg>
-                </div>
-                <span className="text-xs font-semibold text-slate-900">Logging</span>
-              </Link>
-              <button onClick={() => setMobileMenuOpen(true)} className="flex flex-col items-center">
-                <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mb-2 hover:bg-slate-200 transition-colors">
-                  <svg className="w-7 h-7 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                </div>
-                <span className="text-xs font-semibold text-slate-900">Setup</span>
-              </button>
-            </div>
-          </div>
+            </>
+          )}
 
-          {/* Two Column Layout for Bot Settings and Quick Actions */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Bot Settings - Takes 2 columns */}
-            <div className="lg:col-span-2 bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+          {/* SETTINGS TAB CONTENT */}
+          {activeTab === 'settings' && (
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
               <h2 className="text-xl font-bold text-slate-900 mb-6">Bot Settings</h2>
-              
               <div className="space-y-6">
                 {/* Two Column Grid for Form Fields */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -661,44 +645,11 @@ export default function ServerSettingsDemo() {
                 </div>
               </div>
             </div>
+          )}
 
-            {/* Quick Actions */}
-            <div className="space-y-6">
-              <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
-                <h2 className="text-xl font-bold text-slate-900 mb-4">Quick Actions</h2>
-                <div className="space-y-3">
-                  <Link 
-                    href="/devtest/001/configuration/automod"
-                    className="flex items-center gap-3 w-full bg-orange-100 hover:bg-orange-200 text-orange-700 px-4 py-3 rounded-lg font-medium transition-colors"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                    </svg>
-                    <span>Automod</span>
-                  </Link>
-                  <Link 
-                    href="/devtest/001/configuration/logging"
-                    className="flex items-center gap-3 w-full bg-gray-100 hover:bg-gray-200 text-slate-700 px-4 py-3 rounded-lg font-medium transition-colors"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                    <span>Logging</span>
-                  </Link>
-                  <Link 
-                    href="/devtest/001/modules/fun"
-                    className="flex items-center gap-3 w-full bg-gray-100 hover:bg-gray-200 text-slate-700 px-4 py-3 rounded-lg font-medium transition-colors"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <span>Fun Commands</span>
-                  </Link>
-                </div>
-              </div>
-
-              {/* Server Status */}
-              <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm" data-tour="bot-status">
+          {/* STATUS TAB CONTENT */}
+          {activeTab === 'status' && (
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm" data-tour="bot-status">
                 <h2 className="text-xl font-bold text-slate-900 mb-4">Server Status</h2>
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
@@ -745,11 +696,241 @@ export default function ServerSettingsDemo() {
                   </div>
                 </div>
               </div>
+          )}
+
+          {/* Desktop: Two Column Layout for Bot Settings and Quick Actions */}
+          <div className="hidden lg:block">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Bot Settings - Takes 2 columns */}
+              <div className="lg:col-span-2 bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+                <h2 className="text-xl font-bold text-slate-900 mb-6">Bot Settings</h2>
+                
+                <div className="space-y-6">
+                  {/* Two Column Grid for Form Fields */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Command Prefix */}
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-2">
+                        Command Prefix
+                      </label>
+                      <input
+                        type="text"
+                        value={settings?.prefix || ''}
+                        onChange={(e) => {
+                          if (settings) {
+                            setSettings({ ...settings, prefix: e.target.value });
+                          }
+                        }}
+                        className="w-full px-4 py-2.5 bg-white text-slate-900 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                        placeholder="!"
+                      />
+                    </div>
+
+                    {/* Bot Nickname */}
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-2">
+                        Bot Nickname
+                      </label>
+                      <input
+                        type="text"
+                        value={settings?.configuration?.botNickname || ''}
+                        onChange={(e) => {
+                          if (settings) {
+                            setSettings({
+                              ...settings,
+                              configuration: {
+                                ...settings.configuration,
+                                botNickname: e.target.value,
+                                timezone: settings.configuration?.timezone || 'UTC',
+                              }
+                            });
+                          }
+                        }}
+                        className="w-full px-4 py-2.5 bg-white text-slate-900 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                        placeholder="Luno Bot"
+                      />
+                    </div>
+
+                    {/* Updates Channel */}
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-2">
+                        Updates Channel
+                      </label>
+                      <select
+                        value={settings?.configuration?.updatesChannel || ''}
+                        onChange={(e) => {
+                          if (settings) {
+                            setSettings({
+                              ...settings,
+                              configuration: {
+                                ...settings.configuration,
+                                updatesChannel: e.target.value,
+                                botNickname: settings.configuration?.botNickname || '',
+                                timezone: settings.configuration?.timezone || 'UTC',
+                              }
+                            });
+                          }
+                        }}
+                        className="w-full px-4 py-2.5 bg-white text-slate-900 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      >
+                        <option value="">Select a channel...</option>
+                        {channels.map(channel => (
+                          <option key={channel.id} value={channel.id}>#{channel.name}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Timezone */}
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-2">
+                        Timezone
+                      </label>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={settings?.configuration?.timezone || 'UTC'}
+                          onChange={(e) => {
+                            if (settings) {
+                              setSettings({
+                                ...settings,
+                                configuration: {
+                                  ...settings.configuration,
+                                  timezone: e.target.value,
+                                  botNickname: settings.configuration?.botNickname || '',
+                                }
+                              });
+                            }
+                          }}
+                          className="flex-1 px-4 py-2.5 bg-white text-slate-900 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                          placeholder="UTC"
+                        />
+                        <button
+                          onClick={autoDetectTimezone}
+                          className="px-4 py-2.5 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-medium transition-colors"
+                        >
+                          Auto
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Save Button */}
+                  <div className="flex justify-end pt-4">
+                    <button
+                      onClick={handleSave}
+                      disabled={saving}
+                      className="px-6 py-2.5 bg-orange-600 hover:bg-orange-700 disabled:bg-orange-400 text-white rounded-lg font-medium transition-colors flex items-center gap-2"
+                    >
+                      {saving ? (
+                        <>
+                          <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                          Saving...
+                        </>
+                      ) : (
+                        <>
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                          Save Changes
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quick Actions */}
+              <div className="space-y-6">
+                <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+                  <h2 className="text-xl font-bold text-slate-900 mb-4">Quick Actions</h2>
+                  <div className="space-y-3">
+                    <Link 
+                      href="/devtest/001/configuration/automod"
+                      className="flex items-center gap-3 w-full bg-orange-100 hover:bg-orange-200 text-orange-700 px-4 py-3 rounded-lg font-medium transition-colors"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                      </svg>
+                      <span>Automod</span>
+                    </Link>
+                    <Link 
+                      href="/devtest/001/configuration/logging"
+                      className="flex items-center gap-3 w-full bg-gray-100 hover:bg-gray-200 text-slate-700 px-4 py-3 rounded-lg font-medium transition-colors"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      <span>Logging</span>
+                    </Link>
+                    <Link 
+                      href="/devtest/001/modules/fun"
+                      className="flex items-center gap-3 w-full bg-gray-100 hover:bg-gray-200 text-slate-700 px-4 py-3 rounded-lg font-medium transition-colors"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span>Fun Commands</span>
+                    </Link>
+                  </div>
+                </div>
+
+                {/* Server Status */}
+                <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm" data-tour="bot-status">
+                  <h2 className="text-xl font-bold text-slate-900 mb-4">Server Status</h2>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-600">Automod</span>
+                      {settings?.configuration?.automod?.enabled ? (
+                        <span className="flex items-center gap-2 text-green-600 font-medium text-sm">
+                          <span className="w-2 h-2 bg-green-600 rounded-full"></span>
+                          Active
+                        </span>
+                      ) : (
+                        <span className="flex items-center gap-2 text-red-600 font-medium text-sm">
+                          <span className="w-2 h-2 bg-red-600 rounded-full"></span>
+                          Disabled
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-600">Logging</span>
+                      {settings?.configuration?.logging?.enabled ? (
+                        <span className="flex items-center gap-2 text-green-600 font-medium text-sm">
+                          <span className="w-2 h-2 bg-green-600 rounded-full"></span>
+                          Active
+                        </span>
+                      ) : (
+                        <span className="flex items-center gap-2 text-red-600 font-medium text-sm">
+                          <span className="w-2 h-2 bg-red-600 rounded-full"></span>
+                          Disabled
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-600">Anti-Raid</span>
+                      {settings?.configuration?.antiraid?.enabled ? (
+                        <span className="flex items-center gap-2 text-green-600 font-medium text-sm">
+                          <span className="w-2 h-2 bg-green-600 rounded-full"></span>
+                          Active
+                        </span>
+                      ) : (
+                        <span className="flex items-center gap-2 text-red-600 font-medium text-sm">
+                          <span className="w-2 h-2 bg-red-600 rounded-full"></span>
+                          Disabled
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </main>
-      </div>
     </div>
-  );
+  </div>
+);
 }
