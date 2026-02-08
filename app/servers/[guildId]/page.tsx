@@ -73,6 +73,7 @@ export default function ServerSettings() {
   const [showCompleteModal, setShowCompleteModal] = useState(false);
   const [showTour, setShowTour] = useState(false);
   const [hasCheckedSetup, setHasCheckedSetup] = useState(false);
+  const [activeTab, setActiveTab] = useState<'home' | 'settings' | 'status'>('home');
 
   // Check maintenance mode and premium purchase status
   useEffect(() => {
@@ -300,6 +301,49 @@ export default function ServerSettings() {
               <img src="/premium-icon.svg" alt="Premium" className="w-full h-full" />
             </div>
           )}
+        </div>
+        
+        {/* Navigation Tabs */}
+        <div className="flex border-t border-gray-100">
+          <button 
+            onClick={() => setActiveTab('home')}
+            className={`flex-1 flex items-center justify-center gap-2 py-3 font-semibold text-sm transition-colors ${
+              activeTab === 'home' 
+                ? 'text-orange-600 border-b-2 border-orange-600' 
+                : 'text-slate-600 border-b-2 border-transparent'
+            }`}
+          >
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+            </svg>
+            Home
+          </button>
+          <button 
+            onClick={() => setActiveTab('settings')}
+            className={`flex-1 flex items-center justify-center gap-2 py-3 font-semibold text-sm transition-colors ${
+              activeTab === 'settings' 
+                ? 'text-orange-600 border-b-2 border-orange-600' 
+                : 'text-slate-600 border-b-2 border-transparent'
+            }`}
+          >
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
+            </svg>
+            Settings
+          </button>
+          <button 
+            onClick={() => setActiveTab('status')}
+            className={`flex-1 flex items-center justify-center gap-2 py-3 font-semibold text-sm transition-colors ${
+              activeTab === 'status' 
+                ? 'text-orange-600 border-b-2 border-orange-600' 
+                : 'text-slate-600 border-b-2 border-transparent'
+            }`}
+          >
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+            </svg>
+            Status
+          </button>
         </div>
       </div>
 
@@ -532,16 +576,18 @@ export default function ServerSettings() {
           <SystemAnnouncement />
         </div>
         
-        <main className="flex-1 py-4 px-4 md:px-6 lg:px-8 pt-20 lg:pt-12">\n        <div className="w-full max-w-full md:max-w-3xl lg:max-w-7xl mx-auto space-y-6 lg:space-y-8">
-          {/* Dashboard Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-2">
-              {serverName ? `Dashboard - ${serverName}` : 'Dashboard'}
-            </h1>
-            <p className="text-slate-600">Overview of your server's activity and statistics</p>
+        <main className="flex-1 py-4 px-4 md:px-6 lg:px-8 pt-20 lg:pt-12">
+        <div className="w-full max-w-full md:max-w-3xl lg:max-w-7xl mx-auto space-y-6 lg:space-y-8">
+          {/* Dashboard Header - Desktop */}
+          <div className="mb-8 hidden lg:block">
+            <h1 className="text-3xl font-bold text-slate-900 mb-2">Dashboard - {serverName}</h1>
+            <p className="text-slate-500">Overview of your server's activity and statistics</p>
           </div>
 
-          {/* Stats Grid */}
+          {/* HOME TAB CONTENT */}
+          {activeTab === 'home' && (
+            <>
+          {/* Server Stats - Mobile Redesigned */}
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6" data-tour="server-stats">
 
             {/* Total Members Card */}
@@ -641,7 +687,216 @@ export default function ServerSettings() {
             
           </div>
 
-          {/* Two Column Layout for Bot Settings and Quick Actions */}
+            </>
+          )}
+
+          {/* SETTINGS TAB CONTENT */}
+          {activeTab === 'settings' && (
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+              <h2 className="text-xl font-bold text-slate-900 mb-6">Bot Settings</h2>
+              <div className="space-y-6">
+                {/* Two Column Grid for Form Fields */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Command Prefix */}
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                      Command Prefix
+                    </label>
+                    <input
+                      type="text"
+                      value={settings?.prefix || ''}
+                      onChange={(e) => {
+                        if (settings) {
+                          setSettings({ ...settings, prefix: e.target.value });
+                        }
+                      }}
+                      className="w-full px-4 py-2.5 bg-white text-slate-900 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      placeholder="!"
+                    />
+                  </div>
+
+                  {/* Bot Nickname */}
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                      Bot Nickname
+                    </label>
+                    <input
+                      type="text"
+                      value={settings?.configuration?.botNickname || ''}
+                      onChange={(e) => {
+                        if (settings) {
+                          setSettings({
+                            ...settings,
+                            configuration: {
+                              ...settings.configuration,
+                              botNickname: e.target.value,
+                              timezone: settings.configuration?.timezone || 'UTC'
+                            }
+                          });
+                        }
+                      }}
+                      className="w-full px-4 py-2.5 bg-white text-slate-900 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      placeholder="Enter bot nickname"
+                    />
+                  </div>
+
+                  {/* Updates Channel */}
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                      Updates Channel
+                    </label>
+                    <select
+                      value={settings?.configuration?.updatesChannel || ''}
+                      onChange={(e) => {
+                        if (settings) {
+                          setSettings({
+                            ...settings,
+                            configuration: {
+                              ...settings.configuration,
+                              updatesChannel: e.target.value,
+                              botNickname: settings.configuration?.botNickname || '',
+                              timezone: settings.configuration?.timezone || 'UTC',
+                            }
+                          });
+                        }
+                      }}
+                      className="w-full px-4 py-2.5 bg-white text-slate-900 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    >
+                      <option value="">Select a channel...</option>
+                      {channels.map(channel => (
+                        <option key={channel.id} value={channel.id}>#{channel.name}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Timezone */}
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                      Timezone
+                    </label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={settings?.configuration?.timezone || 'UTC'}
+                        onChange={(e) => {
+                          if (settings) {
+                            setSettings({
+                              ...settings,
+                              configuration: {
+                                ...settings.configuration,
+                                timezone: e.target.value,
+                                botNickname: settings.configuration?.botNickname || '',
+                              }
+                            });
+                          }
+                        }}
+                        className="flex-1 px-4 py-2.5 bg-white text-slate-900 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                        placeholder="UTC"
+                      />
+                      <button
+                        onClick={() => {
+                          const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                          if (settings) {
+                            setSettings({
+                              ...settings,
+                              configuration: {
+                                ...settings.configuration,
+                                timezone: timezone,
+                                botNickname: settings.configuration?.botNickname || '',
+                              }
+                            });
+                          }
+                        }}
+                        className="px-4 py-2.5 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-medium transition-colors"
+                      >
+                        Auto
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Save Button */}
+                <div className="flex justify-end pt-4">
+                  <button
+                    onClick={handleSave}
+                    disabled={saving}
+                    className="px-6 py-2.5 bg-orange-600 hover:bg-orange-700 disabled:bg-orange-400 text-white rounded-lg font-medium transition-colors flex items-center gap-2"
+                  >
+                    {saving ? (
+                      <>
+                        <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Saving...
+                      </>
+                    ) : (
+                      <>
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        Save Changes
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* STATUS TAB CONTENT */}
+          {activeTab === 'status' && (
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm" data-tour="bot-status">
+                <h2 className="text-xl font-bold text-slate-900 mb-4">Server Status</h2>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-600">Automod</span>
+                    {settings?.configuration?.automod?.enabled ? (
+                      <span className="flex items-center gap-2 text-green-600 font-medium text-sm">
+                        <span className="w-2 h-2 bg-green-600 rounded-full"></span>
+                        Active
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-2 text-red-600 font-medium text-sm">
+                        <span className="w-2 h-2 bg-red-600 rounded-full"></span>
+                        Disabled
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-600">Logging</span>
+                    {settings?.configuration?.logging?.enabled ? (
+                      <span className="flex items-center gap-2 text-green-600 font-medium text-sm">
+                        <span className="w-2 h-2 bg-green-600 rounded-full"></span>
+                        Active
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-2 text-red-600 font-medium text-sm">
+                        <span className="w-2 h-2 bg-red-600 rounded-full"></span>
+                        Disabled
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-600">Anti-Raid</span>
+                    {settings?.configuration?.antiraid?.enabled ? (
+                      <span className="flex items-center gap-2 text-green-600 font-medium text-sm">
+                        <span className="w-2 h-2 bg-green-600 rounded-full"></span>
+                        Active
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-2 text-red-600 font-medium text-sm">
+                        <span className="w-2 h-2 bg-red-600 rounded-full"></span>
+                        Disabled
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+          )}
+
+          {/* Desktop: Two Column Layout for Bot Settings and Quick Actions */}
+          <div className="hidden lg:block">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Bot Settings - Takes 2 columns */}
             <div className="lg:col-span-2 bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
@@ -900,6 +1155,7 @@ export default function ServerSettings() {
                 </div>
               </div>
             </div>
+          </div>
           </div>
         </div>
       </main>
