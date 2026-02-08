@@ -441,49 +441,50 @@ export default function ServerSettingsDemo() {
 
           {/* Dashboard Header - Desktop */}
           <div className="mb-8 hidden lg:block">
-            <h1 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-2">{serverName}</h1>
-            <p className="text-slate-600">Manage your server settings and configurations</p>
+            <h1 className="text-3xl font-bold text-slate-900 mb-2">Dashboard - {serverName}</h1>
+            <p className="text-slate-500">Overview of your server's activity and statistics</p>
           </div>
 
           {/* HOME TAB CONTENT */}
           {activeTab === 'home' && (
             <>
           {/* Server Stats - Mobile Redesigned */}
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4" data-tour="server-stats">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6" data-tour="server-stats">
 
             {/* Total Members Card */}
-            <div className="bg-white rounded-2xl p-5 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex items-start justify-between mb-3">
-                <div className="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center">
-                  <svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="bg-white rounded-2xl p-5 lg:p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-start justify-between mb-3 lg:mb-4">
+                <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                   </svg>
                 </div>
               </div>
-              <div className="text-xs text-slate-500 mb-1 uppercase tracking-wide">Total Members</div>
-              <div className="text-2xl lg:text-3xl font-bold text-slate-900">
+              <div className="text-xs lg:text-sm text-slate-500 mb-1">Total Members</div>
+              <div className="text-2xl lg:text-4xl font-bold text-slate-900">
                 {stats?.members?.toLocaleString() ?? '—'}
               </div>
             </div>
 
             {/* Active Now Card */}
-            <div className="bg-white rounded-2xl p-5 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex items-start justify-between mb-3">
-                <div className="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center">
-                  <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="bg-white rounded-2xl p-5 lg:p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-start justify-between mb-3 lg:mb-4">
+                <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                   </svg>
                 </div>
               </div>
-              <div className="text-xs text-slate-500 mb-1 uppercase tracking-wide">Active Now</div>
-              <div className="text-2xl lg:text-3xl font-bold text-slate-900">
+              <div className="text-xs lg:text-sm text-slate-500 mb-1">Active Now</div>
+              <div className="text-2xl lg:text-4xl font-bold text-slate-900">
                 {stats?.presences ?? '—'}
               </div>
             </div>
 
-            {/* Premium Status Card - Full Width on Mobile */}
-            <div className="col-span-2 lg:col-span-1 bg-white rounded-2xl p-5 border border-gray-200 shadow-sm hover:shadow-md transition-shadow relative" data-tour="quick-actions">
-              <div className="flex items-center justify-between mb-3">
+            {/* Coming Soon Card - Desktop, Premium Status - Mobile */}
+            <div className="col-span-2 lg:col-span-1 bg-white rounded-2xl p-5 lg:p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow relative" data-tour="quick-actions">
+              {/* Mobile: Premium Status */}
+              <div className="lg:hidden flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center">
                     <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -502,6 +503,13 @@ export default function ServerSettingsDemo() {
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                 </div>
+              </div>
+              
+              {/* Desktop: Coming Soon */}
+              <div className="hidden lg:flex flex-col items-center justify-center text-center h-full py-4">
+                <div className="text-5xl mb-3">🚀</div>
+                <div className="text-2xl font-bold text-orange-600 mb-2">Coming Soon</div>
+                <div className="text-sm text-slate-600">Premium subscriptions will be available soon!</div>
               </div>
             </div>
           </div>
@@ -846,78 +854,88 @@ export default function ServerSettingsDemo() {
               <div className="space-y-6">
                 <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
                   <h2 className="text-xl font-bold text-slate-900 mb-4">Quick Actions</h2>
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     <Link 
-                      href="/devtest/001/configuration/automod"
-                      className="flex items-center gap-3 w-full bg-orange-100 hover:bg-orange-200 text-orange-700 px-4 py-3 rounded-lg font-medium transition-colors"
+                      href="/devtest/001/modules/moderation"
+                      className="flex items-center gap-3 w-full bg-orange-500 hover:bg-orange-600 text-white px-4 py-3 rounded-lg font-semibold transition-colors"
                     >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                       </svg>
-                      <span>Automod</span>
+                      <span>Moderation</span>
                     </Link>
+                    <button 
+                      onClick={() => alert('Demo mode: Manage Roles not available')}
+                      className="flex items-center gap-3 w-full bg-gray-100 hover:bg-gray-200 text-slate-700 px-4 py-3 rounded-lg font-semibold transition-colors"
+                    >
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
+                      </svg>
+                      <span>Manage Roles</span>
+                    </button>
                     <Link 
                       href="/devtest/001/configuration/logging"
-                      className="flex items-center gap-3 w-full bg-gray-100 hover:bg-gray-200 text-slate-700 px-4 py-3 rounded-lg font-medium transition-colors"
+                      className="flex items-center gap-3 w-full bg-gray-100 hover:bg-gray-200 text-slate-700 px-4 py-3 rounded-lg font-semibold transition-colors"
                     >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                        <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
                       </svg>
                       <span>Logging</span>
                     </Link>
-                    <Link 
-                      href="/devtest/001/modules/fun"
-                      className="flex items-center gap-3 w-full bg-gray-100 hover:bg-gray-200 text-slate-700 px-4 py-3 rounded-lg font-medium transition-colors"
+                    <button 
+                      onClick={() => setMobileMenuOpen(true)}
+                      className="flex items-center gap-3 w-full bg-gray-100 hover:bg-gray-200 text-slate-700 px-4 py-3 rounded-lg font-semibold transition-colors"
                     >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
                       </svg>
-                      <span>Fun Commands</span>
-                    </Link>
+                      <span>Setup</span>
+                    </button>
                   </div>
                 </div>
 
                 {/* Server Status */}
                 <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm" data-tour="bot-status">
                   <h2 className="text-xl font-bold text-slate-900 mb-4">Server Status</h2>
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <span className="text-slate-600">Automod</span>
+                      <span className="text-slate-700 font-medium">Automod</span>
                       {settings?.configuration?.automod?.enabled ? (
-                        <span className="flex items-center gap-2 text-green-600 font-medium text-sm">
+                        <span className="flex items-center gap-2 text-green-600 font-semibold text-sm">
                           <span className="w-2 h-2 bg-green-600 rounded-full"></span>
                           Active
                         </span>
                       ) : (
-                        <span className="flex items-center gap-2 text-red-600 font-medium text-sm">
+                        <span className="flex items-center gap-2 text-red-600 font-semibold text-sm">
                           <span className="w-2 h-2 bg-red-600 rounded-full"></span>
                           Disabled
                         </span>
                       )}
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-slate-600">Logging</span>
+                      <span className="text-slate-700 font-medium">Logging</span>
                       {settings?.configuration?.logging?.enabled ? (
-                        <span className="flex items-center gap-2 text-green-600 font-medium text-sm">
+                        <span className="flex items-center gap-2 text-green-600 font-semibold text-sm">
                           <span className="w-2 h-2 bg-green-600 rounded-full"></span>
                           Active
                         </span>
                       ) : (
-                        <span className="flex items-center gap-2 text-red-600 font-medium text-sm">
+                        <span className="flex items-center gap-2 text-red-600 font-semibold text-sm">
                           <span className="w-2 h-2 bg-red-600 rounded-full"></span>
                           Disabled
                         </span>
                       )}
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-slate-600">Anti-Raid</span>
+                      <span className="text-slate-700 font-medium">Anti-Raid</span>
                       {settings?.configuration?.antiraid?.enabled ? (
-                        <span className="flex items-center gap-2 text-green-600 font-medium text-sm">
+                        <span className="flex items-center gap-2 text-green-600 font-semibold text-sm">
                           <span className="w-2 h-2 bg-green-600 rounded-full"></span>
                           Active
                         </span>
                       ) : (
-                        <span className="flex items-center gap-2 text-red-600 font-medium text-sm">
+                        <span className="flex items-center gap-2 text-red-600 font-semibold text-sm">
                           <span className="w-2 h-2 bg-red-600 rounded-full"></span>
                           Disabled
                         </span>
