@@ -1,92 +1,188 @@
 'use client';
 
-import { useState } from 'react';
+import { useSession } from 'next-auth/react';
+import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
-import DebugInfoPopup from '@/components/DebugInfoPopup';
-import DeveloperTools from '@/components/DeveloperTools';
+import { useEffect, useState } from 'react';
 
-export default function LoggingDemo() {
-  const [enabled, setEnabled] = useState(true);
-  const [logChannel, setLogChannel] = useState('123456789');
+interface LoggingSettings {
+  enabled: boolean;
+  logChannel: string | null;
+  warns: boolean;
+  kicks: boolean;
+  bans: boolean;
+  unbans: boolean;
+  timeouts: boolean;
+  untimeouts: boolean;
+  softbans: boolean;
+  channelLocks: boolean;
+  lockdowns: boolean;
+  slowmode: boolean;
+  messagePurge: boolean;
+  automodActions: boolean;
+  memberJoin: boolean;
+  memberLeave: boolean;
+  roleUpdates: boolean;
+  nicknameChanges: boolean;
+  usernameChanges: boolean;
+  messageDelete: boolean;
+  messageEdit: boolean;
+  bulkDelete: boolean;
+  messageAttachments: boolean;
+  channelCreate: boolean;
+  channelDelete: boolean;
+  channelUpdate: boolean;
+  roleCreate: boolean;
+  roleDelete: boolean;
+  roleUpdate: boolean;
+  voiceJoin: boolean;
+  voiceLeave: boolean;
+  voiceMove: boolean;
+  voiceMuteDeafen: boolean;
+  voiceStreaming: boolean;
+  serverUpdate: boolean;
+  emoji: boolean;
+  sticker: boolean;
+  webhook: boolean;
+  invite: boolean;
+  integration: boolean;
+}
+
+interface Channel {
+  id: string;
+  name: string;
+}
+
+export default function LoggingPage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const { guildId } = useParams();
+  const gid = Array.isArray(guildId) ? guildId[0] : guildId;
+
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [configOpen, setConfigOpen] = useState(true);
   const [modulesOpen, setModulesOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [showDebugInfo, setShowDebugInfo] = useState(false);
-  const [showDeveloperTools, setShowDeveloperTools] = useState(false);
+  const [channels, setChannels] = useState<Channel[]>([]);
 
-  const [events, setEvents] = useState({
-    // Moderation Events
-    warns: true,
-    kicks: true,
-    bans: true,
-    unbans: true,
-    timeouts: true,
+  const [settings, setSettings] = useState<LoggingSettings>({
+    enabled: false,
+    logChannel: null,
+    warns: false,
+    kicks: false,
+    bans: false,
+    unbans: false,
+    timeouts: false,
     untimeouts: false,
     softbans: false,
     channelLocks: false,
     lockdowns: false,
     slowmode: false,
-    messagePurge: true,
-    automodActions: true,
-    
-    // Member Events
-    memberJoin: true,
-    memberLeave: true,
+    messagePurge: false,
+    automodActions: false,
+    memberJoin: false,
+    memberLeave: false,
     roleUpdates: false,
     nicknameChanges: false,
     usernameChanges: false,
-    
-    // Message Events
-    messageDelete: true,
-    messageEdit: true,
-    bulkDelete: true,
+    messageDelete: false,
+    messageEdit: false,
+    bulkDelete: false,
     messageAttachments: false,
-    
-    // Channel Events
     channelCreate: false,
     channelDelete: false,
     channelUpdate: false,
-    
-    // Role Events
     roleCreate: false,
     roleDelete: false,
     roleUpdate: false,
-    
-    // Voice Events
-    voiceJoin: true,
-    voiceLeave: true,
+    voiceJoin: false,
+    voiceLeave: false,
     voiceMove: false,
     voiceMuteDeafen: false,
     voiceStreaming: false,
-    
-    // Server Events
     serverUpdate: false,
     emoji: false,
     sticker: false,
     webhook: false,
-    invite: true,
+    invite: false,
     integration: false,
   });
 
-  const channels = [
-    { id: '123456789', name: 'logs' },
-    { id: '987654321', name: 'mod-logs' },
-    { id: '456789123', name: 'audit-log' },
-    { id: '789123456', name: 'bot-logs' }
-  ];
+  useEffect(() => {
+    if (status === 'loading') return;
+    if (!session) {
+      router.push('/');
+      return;
+    }
+
+    const fetchChannels = async () => {
+      try {
+        const res = await fetch(`/api/servers/${gid}/channels-and-roles`);
+        if (res.ok) {
+          const data = await res.json();
+          setChannels(data.channels || []);
+        }
+      } catch (error) {
+        console.error("Failed to fetch channels:", error);
+      }
+    };
+
+    const fetchSettings = async () => {
+      try {
+        const res = await fetch(`/api/servers/${gid}/general`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.configuration?.logging) {
+            setSettings({ ...settings, ...data.configuration.logging });
+          }
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchChannels();
+    fetchSettings();
+  }, [session, status, router, gid]);
 
   const handleSave = async () => {
     setSaving(true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setSaving(false);
-    alert('Settings saved (Demo mode)');
+    try {
+      const response = await fetch(`/api/servers/${gid}/general`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          'configuration.logging': settings,
+        }),
+      });
+
+      if (response.ok) {
+        // Settings saved successfully
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const toggleEvent = (key: keyof typeof events) => {
-    setEvents({ ...events, [key]: !events[key] });
+  const updateSetting = <K extends keyof LoggingSettings>(key: K, value: LoggingSettings[K]) => {
+    setSettings(prev => ({ ...prev, [key]: value }));
   };
+
+  const toggleEvent = (key: keyof LoggingSettings) => {
+    if (typeof settings[key] === 'boolean') {
+      setSettings({ ...settings, [key]: !settings[key] });
+    }
+  };
+
+  if (status === 'loading' || loading) {
+    return <div className="flex min-h-screen items-center justify-center text-[#0f172a]">Loading...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 text-[#0f172a] flex">
@@ -129,7 +225,7 @@ export default function LoggingDemo() {
           
           <nav className="px-4 space-y-2 text-sm font-semibold text-slate-700">
             <Link 
-              href="/devtest/001" 
+              href={`/servers/${gid}`}
               className="flex items-center gap-3 px-3 py-6 transition-colors rounded-lg hover:bg-gray-100 text-slate-700"
               onClick={() => setMobileMenuOpen(false)}
             >
@@ -146,20 +242,22 @@ export default function LoggingDemo() {
               </summary>
               {settingsOpen && (
                 <div className={`px-2 py-1 space-y-1 border-l-2 border-slate-200 ml-3 ${settingsOpen ? 'animate-dropdown-open' : 'animate-dropdown-close'}`}>
-                  <div 
-                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left cursor-pointer hover:bg-gray-100 ${settingsOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                  <Link 
+                    href={`/servers/${gid}/settings/general`}
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${settingsOpen ? 'animate-item-open' : 'animate-item-close'}`} 
                     style={{animationDelay: '0ms'}}
-                    onClick={() => {alert('Demo mode: Settings pages not available'); setMobileMenuOpen(false);}}
+                    onClick={() => setMobileMenuOpen(false)}
                   >
                     General
-                  </div>
-                  <div 
-                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left cursor-pointer hover:bg-gray-100 ${settingsOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                  </Link>
+                  <Link 
+                    href={`/servers/${gid}/settings/setup`}
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${settingsOpen ? 'animate-item-open' : 'animate-item-close'}`} 
                     style={{animationDelay: '50ms'}}
-                    onClick={() => {alert('Demo mode: Settings pages not available'); setMobileMenuOpen(false);}}
+                    onClick={() => setMobileMenuOpen(false)}
                   >
                     Setup
-                  </div>
+                  </Link>
                 </div>
               )}
             </details>
@@ -174,7 +272,7 @@ export default function LoggingDemo() {
               {configOpen && (
                 <div className={`px-2 py-1 space-y-1 border-l-2 border-slate-200 ml-3 ${configOpen ? 'animate-dropdown-open' : 'animate-dropdown-close'}`}>
                   <Link 
-                    href="/devtest/001/configuration/automod"
+                    href={`/servers/${gid}/configuration/automod`}
                     className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} 
                     style={{animationDelay: '0ms'}}
                     onClick={() => setMobileMenuOpen(false)}
@@ -182,7 +280,7 @@ export default function LoggingDemo() {
                     Automod
                   </Link>
                   <Link 
-                    href="/devtest/001/configuration/logging"
+                    href={`/servers/${gid}/configuration/logging`}
                     className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left bg-orange-50 text-orange-600 ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} 
                     style={{animationDelay: '50ms'}}
                     onClick={() => setMobileMenuOpen(false)}
@@ -190,7 +288,7 @@ export default function LoggingDemo() {
                     Logging
                   </Link>
                   <Link 
-                    href="/devtest/001/configuration/anti-raid"
+                    href={`/servers/${gid}/configuration/anti-raid`}
                     className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} 
                     style={{animationDelay: '100ms'}}
                     onClick={() => setMobileMenuOpen(false)}
@@ -198,7 +296,7 @@ export default function LoggingDemo() {
                     Anti-Raid
                   </Link>
                   <Link 
-                    href="/devtest/001/configuration/reaction-roles"
+                    href={`/servers/${gid}/configuration/reaction-roles`}
                     className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} 
                     style={{animationDelay: '150ms'}}
                     onClick={() => setMobileMenuOpen(false)}
@@ -206,7 +304,7 @@ export default function LoggingDemo() {
                     Reaction Roles
                   </Link>
                   <Link 
-                    href="/devtest/001/configuration/verification"
+                    href={`/servers/${gid}/configuration/verification`}
                     className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} 
                     style={{animationDelay: '200ms'}}
                     onClick={() => setMobileMenuOpen(false)}
@@ -227,86 +325,67 @@ export default function LoggingDemo() {
               {modulesOpen && (
                 <div className={`px-2 py-1 space-y-1 border-l-2 border-slate-200 ml-3 ${modulesOpen ? 'animate-dropdown-open' : 'animate-dropdown-close'}`}>
                   <Link 
-                    href="/devtest/001/modules/moderation"
+                    href={`/servers/${gid}/modules/moderation`}
                     className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} 
                     style={{animationDelay: '0ms'}}
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Moderation
                   </Link>
-                  <div 
-                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left cursor-pointer hover:bg-gray-100 ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                  <Link 
+                    href={`/servers/${gid}/modules/role-management`}
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} 
                     style={{animationDelay: '50ms'}}
-                    onClick={() => {alert('Demo mode: Role Management page not available yet'); setMobileMenuOpen(false);}}
+                    onClick={() => setMobileMenuOpen(false)}
                   >
                     Role Management
-                  </div>
-                  <div 
-                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left cursor-pointer hover:bg-gray-100 ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                  </Link>
+                  <Link 
+                    href={`/servers/${gid}/modules/member-management`}
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} 
                     style={{animationDelay: '100ms'}}
-                    onClick={() => {alert('Demo mode: Member Management page not available yet'); setMobileMenuOpen(false);}}
+                    onClick={() => setMobileMenuOpen(false)}
                   >
                     Member Management
-                  </div>
-                  <div 
-                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left cursor-pointer hover:bg-gray-100 ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                  </Link>
+                  <Link 
+                    href={`/servers/${gid}/modules/announcements`}
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} 
                     style={{animationDelay: '150ms'}}
-                    onClick={() => {alert('Demo mode: Announcements page not available yet'); setMobileMenuOpen(false);}}
+                    onClick={() => setMobileMenuOpen(false)}
                   >
                     Announcements
-                  </div>
-                  <div 
-                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left cursor-pointer hover:bg-gray-100 ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                  </Link>
+                  <Link 
+                    href={`/servers/${gid}/modules/welcome-messages`}
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} 
                     style={{animationDelay: '200ms'}}
-                    onClick={() => {alert('Demo mode: Welcome Messages page not available yet'); setMobileMenuOpen(false);}}
+                    onClick={() => setMobileMenuOpen(false)}
                   >
                     Welcome Messages
-                  </div>
+                  </Link>
                   <Link 
-                    href="/devtest/001/modules/fun"
+                    href={`/servers/${gid}/modules/fun`}
                     className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} 
                     style={{animationDelay: '250ms'}}
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Fun
                   </Link>
-                  <div 
-                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left cursor-pointer hover:bg-gray-100 ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                  <Link 
+                    href={`/servers/${gid}/modules/utilities`}
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} 
                     style={{animationDelay: '300ms'}}
-                    onClick={() => {alert('Demo mode: Utilities page not available yet'); setMobileMenuOpen(false);}}
+                    onClick={() => setMobileMenuOpen(false)}
                   >
                     Utilities
-                  </div>
+                  </Link>
                 </div>
               )}
             </details>
           </nav>
           
-          {/* Debug & Developer Tools - Desktop only */}
-          <div className="px-4 py-4 mt-auto space-y-3 hidden lg:block">
-            <button
-              onClick={() => setShowDebugInfo(true)}
-              className="w-full bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white font-bold py-3 px-4 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
-            >
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-              </svg>
-              🐛 Debug Info
-              <span className="text-xs bg-orange-900 px-2 py-1 rounded">DEMO</span>
-            </button>
-            <button
-              onClick={() => setShowDeveloperTools(true)}
-              className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-bold py-3 px-4 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
-            >
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
-              </svg>
-              ⚡ Developer Tools
-            </button>
-            <p className="text-center text-orange-600 text-xs font-semibold mt-2">
-              🚀 DEMO MODE ACTIVE
-            </p>
-          </div>
+
         </aside>
 
         {/* Mobile header */}
@@ -328,21 +407,6 @@ export default function LoggingDemo() {
         <div className="flex-1 lg:ml-0">
           <div className="pt-16 lg:pt-8 px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto">
-        <div className="bg-orange-100 border-l-4 border-orange-500 p-4 mb-6">
-          <div className="flex">
-            <div className="flex-shrink-0">
-              <svg className="h-5 w-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-              </svg>
-            </div>
-            <div className="ml-3">
-              <p className="text-sm text-orange-700">
-                🚀 <strong>Demo Mode:</strong> Changes are not saved to a real server
-              </p>
-            </div>
-          </div>
-        </div>
-
         {/* Enable/Disable Logging */}
         <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
           <div className="flex items-center justify-between">
@@ -351,14 +415,14 @@ export default function LoggingDemo() {
               <p className="text-sm text-slate-600 mt-1">Turn server event logging on or off</p>
             </div>
             <button
-              onClick={() => setEnabled(!enabled)}
+              onClick={() => updateSetting('enabled', !settings.enabled)}
               className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors ${
-                enabled ? 'bg-green-600' : 'bg-gray-300'
+                settings.enabled ? 'bg-green-600' : 'bg-gray-300'
               }`}
             >
               <span
                 className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${
-                  enabled ? 'translate-x-7' : 'translate-x-1'
+                  settings.enabled ? 'translate-x-7' : 'translate-x-1'
                 }`}
               />
             </button>
@@ -372,8 +436,8 @@ export default function LoggingDemo() {
             Select the channel where logs will be posted
           </label>
           <select
-            value={logChannel}
-            onChange={(e) => setLogChannel(e.target.value)}
+            value={settings.logChannel || ''}
+            onChange={(e) => updateSetting('logChannel', e.target.value || null)}
             className="w-full px-4 py-2.5 bg-white text-slate-900 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent appearance-none cursor-pointer"
           >
             <option value="">Select a channel...</option>
@@ -416,14 +480,14 @@ export default function LoggingDemo() {
                       <span className="text-slate-900">{event.label}</span>
                     </div>
                     <button
-                      onClick={() => toggleEvent(event.key as keyof typeof events)}
+                      onClick={() => toggleEvent(event.key as keyof LoggingSettings)}
                       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        events[event.key as keyof typeof events] ? 'bg-green-600' : 'bg-gray-300'
+                        settings[event.key as keyof LoggingSettings] ? 'bg-green-600' : 'bg-gray-300'
                       }`}
                     >
                       <span
                         className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                          events[event.key as keyof typeof events] ? 'translate-x-6' : 'translate-x-1'
+                          settings[event.key as keyof LoggingSettings] ? 'translate-x-6' : 'translate-x-1'
                         }`}
                       />
                     </button>
@@ -451,14 +515,14 @@ export default function LoggingDemo() {
                       <span className="text-slate-900">{event.label}</span>
                     </div>
                     <button
-                      onClick={() => toggleEvent(event.key as keyof typeof events)}
+                      onClick={() => toggleEvent(event.key as keyof LoggingSettings)}
                       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        events[event.key as keyof typeof events] ? 'bg-green-600' : 'bg-gray-300'
+                        settings[event.key as keyof LoggingSettings] ? 'bg-green-600' : 'bg-gray-300'
                       }`}
                     >
                       <span
                         className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                          events[event.key as keyof typeof events] ? 'translate-x-6' : 'translate-x-1'
+                          settings[event.key as keyof LoggingSettings] ? 'translate-x-6' : 'translate-x-1'
                         }`}
                       />
                     </button>
@@ -485,14 +549,14 @@ export default function LoggingDemo() {
                       <span className="text-slate-900">{event.label}</span>
                     </div>
                     <button
-                      onClick={() => toggleEvent(event.key as keyof typeof events)}
+                      onClick={() => toggleEvent(event.key as keyof LoggingSettings)}
                       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        events[event.key as keyof typeof events] ? 'bg-green-600' : 'bg-gray-300'
+                        settings[event.key as keyof LoggingSettings] ? 'bg-green-600' : 'bg-gray-300'
                       }`}
                     >
                       <span
                         className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                          events[event.key as keyof typeof events] ? 'translate-x-6' : 'translate-x-1'
+                          settings[event.key as keyof LoggingSettings] ? 'translate-x-6' : 'translate-x-1'
                         }`}
                       />
                     </button>
@@ -518,14 +582,14 @@ export default function LoggingDemo() {
                       <span className="text-slate-900">{event.label}</span>
                     </div>
                     <button
-                      onClick={() => toggleEvent(event.key as keyof typeof events)}
+                      onClick={() => toggleEvent(event.key as keyof LoggingSettings)}
                       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        events[event.key as keyof typeof events] ? 'bg-green-600' : 'bg-gray-300'
+                        settings[event.key as keyof LoggingSettings] ? 'bg-green-600' : 'bg-gray-300'
                       }`}
                     >
                       <span
                         className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                          events[event.key as keyof typeof events] ? 'translate-x-6' : 'translate-x-1'
+                          settings[event.key as keyof LoggingSettings] ? 'translate-x-6' : 'translate-x-1'
                         }`}
                       />
                     </button>
@@ -551,14 +615,14 @@ export default function LoggingDemo() {
                       <span className="text-slate-900">{event.label}</span>
                     </div>
                     <button
-                      onClick={() => toggleEvent(event.key as keyof typeof events)}
+                      onClick={() => toggleEvent(event.key as keyof LoggingSettings)}
                       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        events[event.key as keyof typeof events] ? 'bg-green-600' : 'bg-gray-300'
+                        settings[event.key as keyof LoggingSettings] ? 'bg-green-600' : 'bg-gray-300'
                       }`}
                     >
                       <span
                         className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                          events[event.key as keyof typeof events] ? 'translate-x-6' : 'translate-x-1'
+                          settings[event.key as keyof LoggingSettings] ? 'translate-x-6' : 'translate-x-1'
                         }`}
                       />
                     </button>
@@ -586,14 +650,14 @@ export default function LoggingDemo() {
                       <span className="text-slate-900">{event.label}</span>
                     </div>
                     <button
-                      onClick={() => toggleEvent(event.key as keyof typeof events)}
+                      onClick={() => toggleEvent(event.key as keyof LoggingSettings)}
                       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        events[event.key as keyof typeof events] ? 'bg-green-600' : 'bg-gray-300'
+                        settings[event.key as keyof LoggingSettings] ? 'bg-green-600' : 'bg-gray-300'
                       }`}
                     >
                       <span
                         className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                          events[event.key as keyof typeof events] ? 'translate-x-6' : 'translate-x-1'
+                          settings[event.key as keyof LoggingSettings] ? 'translate-x-6' : 'translate-x-1'
                         }`}
                       />
                     </button>
@@ -622,14 +686,14 @@ export default function LoggingDemo() {
                       <span className="text-slate-900">{event.label}</span>
                     </div>
                     <button
-                      onClick={() => toggleEvent(event.key as keyof typeof events)}
+                      onClick={() => toggleEvent(event.key as keyof LoggingSettings)}
                       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        events[event.key as keyof typeof events] ? 'bg-green-600' : 'bg-gray-300'
+                        settings[event.key as keyof LoggingSettings] ? 'bg-green-600' : 'bg-gray-300'
                       }`}
                     >
                       <span
                         className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                          events[event.key as keyof typeof events] ? 'translate-x-6' : 'translate-x-1'
+                          settings[event.key as keyof LoggingSettings] ? 'translate-x-6' : 'translate-x-1'
                         }`}
                       />
                     </button>
@@ -651,9 +715,7 @@ export default function LoggingDemo() {
           </button>
         </div>
 
-        {/* Debug Info Popup */}
-        <DebugInfoPopup isOpen={showDebugInfo} onClose={() => setShowDebugInfo(false)} />
-        <DeveloperTools isOpen={showDeveloperTools} onClose={() => setShowDeveloperTools(false)} />
+
             </div>
           </div>
         </div>
