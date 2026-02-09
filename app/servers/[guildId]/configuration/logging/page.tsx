@@ -66,8 +66,95 @@ export default function LoggingPage() {
   const [modulesOpen, setModulesOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [channels, setChannels] = useState<Channel[]>([]);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
   const [settings, setSettings] = useState<LoggingSettings>({
+    enabled: false,
+    logChannel: null,
+    warns: false,
+    kicks: false,
+    bans: false,
+    unbans: false,
+    timeouts: false,
+    untimeouts: false,
+    softbans: false,
+    channelLocks: false,
+    lockdowns: false,
+    slowmode: false,
+    messagePurge: false,
+    automodActions: false,
+    memberJoin: false,
+    memberLeave: false,
+    roleUpdates: false,
+    nicknameChanges: false,
+    usernameChanges: false,
+    messageDelete: false,
+    messageEdit: false,
+    bulkDelete: false,
+    messageAttachments: false,
+    channelCreate: false,
+    channelDelete: false,
+    channelUpdate: false,
+    roleCreate: false,
+    roleDelete: false,
+    roleUpdate: false,
+    voiceJoin: false,
+    voiceLeave: false,
+    voiceMove: false,
+    voiceMuteDeafen: false,
+    voiceStreaming: false,
+    serverUpdate: false,
+    emoji: false,
+    sticker: false,
+    webhook: false,
+    invite: false,
+    integration: false,
+  });
+
+  const [originalSettings, setOriginalSettings] = useState<LoggingSettings>({
+    enabled: false,
+    logChannel: null,
+    warns: false,
+    kicks: false,
+    bans: false,
+    unbans: false,
+    timeouts: false,
+    untimeouts: false,
+    softbans: false,
+    channelLocks: false,
+    lockdowns: false,
+    slowmode: false,
+    messagePurge: false,
+    automodActions: false,
+    memberJoin: false,
+    memberLeave: false,
+    roleUpdates: false,
+    nicknameChanges: false,
+    usernameChanges: false,
+    messageDelete: false,
+    messageEdit: false,
+    bulkDelete: false,
+    messageAttachments: false,
+    channelCreate: false,
+    channelDelete: false,
+    channelUpdate: false,
+    roleCreate: false,
+    roleDelete: false,
+    roleUpdate: false,
+    voiceJoin: false,
+    voiceLeave: false,
+    voiceMove: false,
+    voiceMuteDeafen: false,
+    voiceStreaming: false,
+    serverUpdate: false,
+    emoji: false,
+    sticker: false,
+    webhook: false,
+    invite: false,
+    integration: false,
+  });
+
+  const [originalSettings, setOriginalSettings] = useState<LoggingSettings>({
     enabled: false,
     logChannel: null,
     warns: false,
@@ -135,7 +222,9 @@ export default function LoggingPage() {
         if (res.ok) {
           const data = await res.json();
           if (data.configuration?.logging) {
-            setSettings({ ...settings, ...data.configuration.logging });
+            const loggingData = { ...settings, ...data.configuration.logging };
+            setSettings(loggingData);
+            setOriginalSettings(loggingData);
           }
         }
       } catch (err) {
@@ -161,7 +250,8 @@ export default function LoggingPage() {
       });
 
       if (response.ok) {
-        // Settings saved successfully
+        setOriginalSettings({ ...settings });
+        setHasUnsavedChanges(false);
       }
     } catch (err) {
       console.error(err);
@@ -170,13 +260,20 @@ export default function LoggingPage() {
     }
   };
 
+  const handleReset = () => {
+    setSettings({ ...originalSettings });
+    setHasUnsavedChanges(false);
+  };
+
   const updateSetting = <K extends keyof LoggingSettings>(key: K, value: LoggingSettings[K]) => {
     setSettings(prev => ({ ...prev, [key]: value }));
+    setHasUnsavedChanges(true);
   };
 
   const toggleEvent = (key: keyof LoggingSettings) => {
     if (typeof settings[key] === 'boolean') {
       setSettings({ ...settings, [key]: !settings[key] });
+      setHasUnsavedChanges(true);
     }
   };
 
@@ -704,21 +801,37 @@ export default function LoggingPage() {
           </div>
         </div>
 
-        {/* Save Button */}
-        <div className="flex justify-end">
-          <button
-            onClick={handleSave}
-            disabled={saving}
-            className="px-6 py-3 bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 text-white font-semibold rounded-lg transition"
-          >
-            {saving ? 'Saving...' : 'Save Configuration'}
-          </button>
-        </div>
-
-
             </div>
           </div>
         </div>
+
+      {/* Save Changes Overlay */}
+      <div 
+        className={`fixed bottom-0 left-0 right-0 bg-slate-900 text-white p-4 shadow-2xl transition-transform duration-300 ease-out z-50 ${
+          hasUnsavedChanges ? 'translate-y-0' : 'translate-y-full'
+        }`}
+      >
+        <div className="max-w-4xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <span className="text-sm">Careful — you have unsaved changes!</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleReset}
+              className="px-4 py-2 text-sm font-medium text-white hover:underline transition"
+            >
+              Reset
+            </button>
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded transition disabled:opacity-50"
+            >
+              {saving ? 'Saving...' : 'Save Changes'}
+            </button>
+          </div>
+        </div>
+      </div>
       </div>
     );
   }
