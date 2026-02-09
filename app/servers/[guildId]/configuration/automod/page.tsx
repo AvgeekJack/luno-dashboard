@@ -4,7 +4,6 @@ import { useSession } from 'next-auth/react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { Switch } from '@/components/ui/switch';
 import DebugInfoPopup from '@/components/DebugInfoPopup';
 import { useMaintenanceCheck } from '@/lib/hooks/useMaintenanceCheck';
 
@@ -376,24 +375,25 @@ export default function AutomodPage() {
 
       <main data-tour="page-content" className="flex-1 lg:ml-64 py-12 px-4 md:px-6 lg:px-8 pt-20 lg:pt-12 flex justify-center bg-[#f8f9fa]">
         <div className="w-full max-w-5xl space-y-6">
-          <div className="space-y-1">
-            <p className="text-xs uppercase tracking-[0.15em] text-orange-500 font-semibold">CONFIGURATION</p>
-            <h1 className="text-4xl font-bold text-[#0f172a]">Automod</h1>
-          </div>
-
           {/* Automod Configuration Card */}
-          <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8 space-y-6">
-            {/* Master Toggle */}
+          <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-lg font-semibold text-[#0f172a]">Automod Configuration</h2>
-                <p className="text-sm text-slate-500">Configure automatic moderation filters and rules for your server.</p>
+                <h2 className="text-xl font-bold text-slate-900">Automod Configuration</h2>
+                <p className="text-sm text-slate-600 mt-1">Configure automatic moderation filters and rules for your server</p>
               </div>
-              <Switch 
-                checked={settings.enabled} 
-                onCheckedChange={(checked) => updateSetting('enabled', checked)}
-                className="scale-125"
-              />
+              <button
+                onClick={() => updateSetting('enabled', !settings.enabled)}
+                className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors ${
+                  settings.enabled ? 'bg-green-600' : 'bg-gray-300'
+                }`}
+              >
+                <span
+                  className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${
+                    settings.enabled ? 'translate-x-7' : 'translate-x-1'
+                  }`}
+                />
+              </button>
             </div>
 
             {settings.enabled && (
@@ -418,10 +418,10 @@ export default function AutomodPage() {
 
           {/* Filter Features Card */}
           {settings.enabled && (
-            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
               <div className="mb-6">
-                <h2 className="text-lg font-semibold text-[#0f172a]">Filter Features</h2>
-                <p className="text-sm text-slate-500">Enable or disable specific filter types</p>
+                <h2 className="text-xl font-bold text-slate-900">Filter Features</h2>
+                <p className="text-sm text-slate-600">Enable or disable specific filter types</p>
               </div>
 
               <div className="grid md:grid-cols-2 gap-4">
@@ -430,10 +430,18 @@ export default function AutomodPage() {
                     <p className="font-semibold text-slate-900">Anti-Link</p>
                     <p className="text-sm text-slate-500">Block all external URLs</p>
                   </div>
-                  <Switch 
-                    checked={settings.antiLinkEnabled} 
-                    onCheckedChange={(checked) => updateSetting('antiLinkEnabled', checked)}
-                  />
+                  <button
+                    onClick={() => updateSetting('antiLinkEnabled', !settings.antiLinkEnabled)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      settings.antiLinkEnabled ? 'bg-green-600' : 'bg-gray-300'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        settings.antiLinkEnabled ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
                 </div>
 
                 <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
@@ -441,10 +449,18 @@ export default function AutomodPage() {
                     <p className="font-semibold text-slate-900">Anti-Invite</p>
                     <p className="text-sm text-slate-500">Block Discord invite links</p>
                   </div>
-                  <Switch 
-                    checked={settings.antiInviteEnabled} 
-                    onCheckedChange={(checked) => updateSetting('antiInviteEnabled', checked)}
-                  />
+                  <button
+                    onClick={() => updateSetting('antiInviteEnabled', !settings.antiInviteEnabled)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      settings.antiInviteEnabled ? 'bg-green-600' : 'bg-gray-300'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        settings.antiInviteEnabled ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
                 </div>
 
                 <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
@@ -452,10 +468,18 @@ export default function AutomodPage() {
                     <p className="font-semibold text-slate-900">Anti-Spam</p>
                     <p className="text-sm text-slate-500">Prevent rapid message sending</p>
                   </div>
-                  <Switch 
-                    checked={settings.antiSpamEnabled} 
-                    onCheckedChange={(checked) => updateSetting('antiSpamEnabled', checked)}
-                  />
+                  <button
+                    onClick={() => updateSetting('antiSpamEnabled', !settings.antiSpamEnabled)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      settings.antiSpamEnabled ? 'bg-green-600' : 'bg-gray-300'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        settings.antiSpamEnabled ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
                 </div>
 
                 <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
@@ -463,10 +487,18 @@ export default function AutomodPage() {
                     <p className="font-semibold text-slate-900">Anti-Mention</p>
                     <p className="text-sm text-slate-500">Block excessive mentions</p>
                   </div>
-                  <Switch 
-                    checked={settings.antiMentionEnabled} 
-                    onCheckedChange={(checked) => updateSetting('antiMentionEnabled', checked)}
-                  />
+                  <button
+                    onClick={() => updateSetting('antiMentionEnabled', !settings.antiMentionEnabled)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      settings.antiMentionEnabled ? 'bg-green-600' : 'bg-gray-300'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        settings.antiMentionEnabled ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
                 </div>
 
                 <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
@@ -474,10 +506,18 @@ export default function AutomodPage() {
                     <p className="font-semibold text-slate-900">Anti-Flood/Duplicate</p>
                     <p className="text-sm text-slate-500">Stop repeated messages</p>
                   </div>
-                  <Switch 
-                    checked={settings.antiFloodEnabled} 
-                    onCheckedChange={(checked) => updateSetting('antiFloodEnabled', checked)}
-                  />
+                  <button
+                    onClick={() => updateSetting('antiFloodEnabled', !settings.antiFloodEnabled)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      settings.antiFloodEnabled ? 'bg-green-600' : 'bg-gray-300'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        settings.antiFloodEnabled ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
                 </div>
 
                 <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
@@ -485,10 +525,18 @@ export default function AutomodPage() {
                     <p className="font-semibold text-slate-900">Anti-Zalgo</p>
                     <p className="text-sm text-slate-500">Block corrupted text</p>
                   </div>
-                  <Switch 
-                    checked={settings.antiZalgoEnabled} 
-                    onCheckedChange={(checked) => updateSetting('antiZalgoEnabled', checked)}
-                  />
+                  <button
+                    onClick={() => updateSetting('antiZalgoEnabled', !settings.antiZalgoEnabled)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      settings.antiZalgoEnabled ? 'bg-green-600' : 'bg-gray-300'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        settings.antiZalgoEnabled ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
                 </div>
 
                 <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
@@ -496,10 +544,18 @@ export default function AutomodPage() {
                     <p className="font-semibold text-slate-900">Anti-Swear/Profanity</p>
                     <p className="text-sm text-slate-500">Block bad words</p>
                   </div>
-                  <Switch 
-                    checked={settings.antiSwearEnabled} 
-                    onCheckedChange={(checked) => updateSetting('antiSwearEnabled', checked)}
-                  />
+                  <button
+                    onClick={() => updateSetting('antiSwearEnabled', !settings.antiSwearEnabled)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      settings.antiSwearEnabled ? 'bg-green-600' : 'bg-gray-300'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        settings.antiSwearEnabled ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
                 </div>
 
                 <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
@@ -507,10 +563,18 @@ export default function AutomodPage() {
                     <p className="font-semibold text-slate-900">Caps Filter</p>
                     <p className="text-sm text-slate-500">Block excessive capitals</p>
                   </div>
-                  <Switch 
-                    checked={settings.capsFilterEnabled} 
-                    onCheckedChange={(checked) => updateSetting('capsFilterEnabled', checked)}
-                  />
+                  <button
+                    onClick={() => updateSetting('capsFilterEnabled', !settings.capsFilterEnabled)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      settings.capsFilterEnabled ? 'bg-green-600' : 'bg-gray-300'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        settings.capsFilterEnabled ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
                 </div>
               </div>
             </div>
@@ -518,10 +582,10 @@ export default function AutomodPage() {
 
           {/* Thresholds & Limits Card */}
           {settings.enabled && (
-            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
               <div className="mb-6">
-                <h2 className="text-lg font-semibold text-[#0f172a]">Thresholds & Limits</h2>
-                <p className="text-sm text-slate-500">Configure detection sensitivity</p>
+                <h2 className="text-xl font-bold text-slate-900">Thresholds & Limits</h2>
+                <p className="text-sm text-slate-600">Configure detection sensitivity</p>
               </div>
 
               <div className="space-y-4">
@@ -625,10 +689,10 @@ export default function AutomodPage() {
 
           {/* Whitelist System Card */}
           {settings.enabled && (
-            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
               <div className="mb-6">
-              <h2 className="text-lg font-semibold text-[#0f172a]">Whitelist System</h2>
-              <p className="text-sm text-slate-500">Exempt channels, roles, or users</p>
+              <h2 className="text-xl font-bold text-slate-900">Whitelist System</h2>
+              <p className="text-sm text-slate-600">Exempt channels, roles, or users</p>
             </div>
 
               <div className="space-y-4">
@@ -703,10 +767,18 @@ export default function AutomodPage() {
                     <p className="font-semibold text-slate-900">Auto-whitelist Moderators</p>
                     <p className="text-sm text-slate-500">Automatically exempt users with Manage Messages/Admin</p>
                   </div>
-                  <Switch 
-                    checked={settings.autoWhitelistModerators} 
-                    onCheckedChange={(checked) => updateSetting('autoWhitelistModerators', checked)}
-                  />
+                  <button
+                    onClick={() => updateSetting('autoWhitelistModerators', !settings.autoWhitelistModerators)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      settings.autoWhitelistModerators ? 'bg-green-600' : 'bg-gray-300'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        settings.autoWhitelistModerators ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
                 </div>
               </div>
             </div>
@@ -714,10 +786,10 @@ export default function AutomodPage() {
 
           {/* Action Settings Card */}
           {settings.enabled && (
-            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
               <div className="mb-6">
-              <h2 className="text-lg font-semibold text-[#0f172a]">Action Settings</h2>
-              <p className="text-sm text-slate-500">Configure how AutoMod responds to violations</p>
+              <h2 className="text-xl font-bold text-slate-900">Action Settings</h2>
+              <p className="text-sm text-slate-600">Configure how AutoMod responds to violations</p>
             </div>
 
               <div className="space-y-4">
@@ -726,10 +798,18 @@ export default function AutomodPage() {
                     <p className="font-semibold text-slate-900">Delete Message</p>
                     <p className="text-sm text-slate-500">Automatically delete violating messages</p>
                   </div>
-                  <Switch 
-                    checked={settings.deleteMessage} 
-                    onCheckedChange={(checked) => updateSetting('deleteMessage', checked)}
-                  />
+                  <button
+                    onClick={() => updateSetting('deleteMessage', !settings.deleteMessage)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      settings.deleteMessage ? 'bg-green-600' : 'bg-gray-300'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        settings.deleteMessage ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
                 </div>
 
                 <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
@@ -737,10 +817,18 @@ export default function AutomodPage() {
                     <p className="font-semibold text-slate-900">Send Warning</p>
                     <p className="text-sm text-slate-500">Post warning message in channel</p>
                   </div>
-                  <Switch 
-                    checked={settings.sendWarning} 
-                    onCheckedChange={(checked) => updateSetting('sendWarning', checked)}
-                  />
+                  <button
+                    onClick={() => updateSetting('sendWarning', !settings.sendWarning)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      settings.sendWarning ? 'bg-green-600' : 'bg-gray-300'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        settings.sendWarning ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
                 </div>
 
                 <div>
@@ -761,10 +849,18 @@ export default function AutomodPage() {
                     <p className="font-semibold text-slate-900">DM User</p>
                     <p className="text-sm text-slate-500">Send DM notification to user</p>
                   </div>
-                  <Switch 
-                    checked={settings.dmUser} 
-                    onCheckedChange={(checked) => updateSetting('dmUser', checked)}
-                  />
+                  <button
+                    onClick={() => updateSetting('dmUser', !settings.dmUser)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      settings.dmUser ? 'bg-green-600' : 'bg-gray-300'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        settings.dmUser ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
                 </div>
 
                 <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
@@ -772,10 +868,18 @@ export default function AutomodPage() {
                     <p className="font-semibold text-slate-900">Auto-Timeout</p>
                     <p className="text-sm text-slate-500">Automatically timeout after violations</p>
                   </div>
-                  <Switch 
-                    checked={settings.autoTimeoutEnabled} 
-                    onCheckedChange={(checked) => updateSetting('autoTimeoutEnabled', checked)}
-                  />
+                  <button
+                    onClick={() => updateSetting('autoTimeoutEnabled', !settings.autoTimeoutEnabled)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      settings.autoTimeoutEnabled ? 'bg-green-600' : 'bg-gray-300'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        settings.autoTimeoutEnabled ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
                 </div>
 
                 {settings.autoTimeoutEnabled && (
@@ -849,10 +953,18 @@ export default function AutomodPage() {
                       <p className="font-semibold text-slate-900">Escalating Punishments</p>
                       <p className="text-sm text-slate-500">Warn → Timeout → Kick → Ban based on violations</p>
                     </div>
-                    <Switch 
-                      checked={settings.escalatingPunishments} 
-                      onCheckedChange={(checked) => updateSetting('escalatingPunishments', checked)}
-                    />
+                    <button
+                      onClick={() => updateSetting('escalatingPunishments', !settings.escalatingPunishments)}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        settings.escalatingPunishments ? 'bg-green-600' : 'bg-gray-300'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          settings.escalatingPunishments ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
                   </div>
                 )}
               </div>

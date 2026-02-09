@@ -4,7 +4,6 @@ import { useSession } from 'next-auth/react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { Switch } from '@/components/ui/switch';
 import DebugInfoPopup from '@/components/DebugInfoPopup';
 import { useMaintenanceCheck } from '@/lib/hooks/useMaintenanceCheck';
 
@@ -496,24 +495,25 @@ export default function LoggingPage() {
 
       <main className="flex-1 md:ml-64 py-12 px-4 md:px-6 lg:px-8 pt-20 md:pt-12 flex justify-center">
         <div className="w-full max-w-7xl space-y-6">
-          <div className="space-y-1">
-            <p className="text-xs uppercase tracking-[0.15em] text-orange-500 font-semibold">CONFIGURATION</p>
-            <h1 className="text-4xl font-bold text-[#0f172a]">Logging</h1>
-          </div>
-
           {/* Logging Configuration Card */}
-          <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8 space-y-6">
-            {/* Master Toggle */}
+          <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-lg font-semibold text-[#0f172a]">Logging Configuration</h2>
-                <p className="text-sm text-slate-500">Configure event logging for your server.</p>
+                <h2 className="text-xl font-bold text-slate-900">Logging Configuration</h2>
+                <p className="text-sm text-slate-600 mt-1">Configure event logging for your server</p>
               </div>
-              <Switch 
-                checked={settings.enabled} 
-                onCheckedChange={(checked) => updateSetting('enabled', checked)}
-                className="scale-125"
-              />
+              <button
+                onClick={() => updateSetting('enabled', !settings.enabled)}
+                className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors ${
+                  settings.enabled ? 'bg-green-600' : 'bg-gray-300'
+                }`}
+              >
+                <span
+                  className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${
+                    settings.enabled ? 'translate-x-7' : 'translate-x-1'
+                  }`}
+                />
+              </button>
             </div>
           </div>
 
@@ -521,10 +521,10 @@ export default function LoggingPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* AutoMod Log Channel Card */}
             {settings.enabled && (
-            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
               <div className="mb-6">
-                <h2 className="text-lg font-semibold text-[#0f172a]">AutoMod Logging Channel</h2>
-                <p className="text-sm text-slate-500">Configure where automod violations and actions are logged. Leave empty to disable logging for AutoMod.</p>
+                <h2 className="text-xl font-bold text-slate-900">AutoMod Logging Channel</h2>
+                <p className="text-sm text-slate-600">Configure where automod violations and actions are logged. Leave empty to disable logging for AutoMod.</p>
               </div>
 
               <div className="space-y-4">
@@ -583,10 +583,10 @@ export default function LoggingPage() {
 
           {/* Anti-Raid Alert Channel Card */}
           {settings.enabled && (
-            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
               <div className="mb-6">
-                <h2 className="text-lg font-semibold text-[#0f172a]">Anti-Raid Alert Channel</h2>
-                <p className="text-sm text-slate-500">Configure where anti-raid alerts and actions are logged. Leave empty to disable alerts for Anti-Raid.</p>
+                <h2 className="text-xl font-bold text-slate-900">Anti-Raid Alert Channel</h2>
+                <p className="text-sm text-slate-600">Configure where anti-raid alerts and actions are logged. Leave empty to disable alerts for Anti-Raid.</p>
               </div>
 
               <div className="space-y-4">
@@ -634,10 +634,10 @@ export default function LoggingPage() {
 
           {/* Moderation Logs Card */}
           {settings.enabled && (
-            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
               <div className="mb-6">
-                <h2 className="text-lg font-semibold text-[#0f172a]">Moderation Logs</h2>
-                <p className="text-sm text-slate-500">Actions by staff members</p>
+                <h2 className="text-xl font-bold text-slate-900">Moderation Logs</h2>
+                <p className="text-sm text-slate-600">Actions by staff members</p>
               </div>
 
               <div className="space-y-4">
@@ -689,10 +689,10 @@ export default function LoggingPage() {
       
           {/* Message Logs Card */}
           {settings.enabled && (
-            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
               <div className="mb-6">
-                <h2 className="text-lg font-semibold text-[#0f172a]">Message Logs</h2>
-                <p className="text-sm text-slate-500">Message activity</p>
+                <h2 className="text-xl font-bold text-slate-900">Message Logs</h2>
+                <p className="text-sm text-slate-600">Message activity</p>
               </div>
 
               <div className="space-y-4">
@@ -735,10 +735,10 @@ export default function LoggingPage() {
 
           {/* Channel Logs Card */}
           {settings.enabled && (
-            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
               <div className="mb-6">
-                <h2 className="text-lg font-semibold text-[#0f172a]">Channel Logs</h2>
-                <p className="text-sm text-slate-500">Server structure</p>
+                <h2 className="text-xl font-bold text-slate-900">Channel Logs</h2>
+                <p className="text-sm text-slate-600">Server structure</p>
               </div>
 
               <div className="space-y-4">
@@ -781,10 +781,10 @@ export default function LoggingPage() {
 
           {/* Role Logs Card */}
           {settings.enabled && (
-            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
               <div className="mb-6">
-                <h2 className="text-lg font-semibold text-[#0f172a]">Role Logs</h2>
-                <p className="text-sm text-slate-500">Role management</p>
+                <h2 className="text-xl font-bold text-slate-900">Role Logs</h2>
+                <p className="text-sm text-slate-600">Role management</p>
               </div>
 
               <div className="space-y-4">
@@ -827,10 +827,10 @@ export default function LoggingPage() {
 
           {/* Voice Logs Card */}
           {settings.enabled && (
-            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
               <div className="mb-6">
-                <h2 className="text-lg font-semibold text-[#0f172a]">Voice Logs</h2>
-                <p className="text-sm text-slate-500">Voice activity</p>
+                <h2 className="text-xl font-bold text-slate-900">Voice Logs</h2>
+                <p className="text-sm text-slate-600">Voice activity</p>
               </div>
 
               <div className="space-y-4">
@@ -875,10 +875,10 @@ export default function LoggingPage() {
 
           {/* Server Logs Card */}
           {settings.enabled && (
-            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
               <div className="mb-6">
-                <h2 className="text-lg font-semibold text-[#0f172a]">Server Logs</h2>
-                <p className="text-sm text-slate-500">Server changes</p>
+                <h2 className="text-xl font-bold text-slate-900">Server Logs</h2>
+                <p className="text-sm text-slate-600">Server changes</p>
               </div>
 
               <div className="space-y-4">
@@ -925,7 +925,7 @@ export default function LoggingPage() {
 
           {/* Advanced Options Card - Full Width */}
           {settings.enabled && (
-            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8 relative">
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6 relative">
               {!premium && (
                 <div className="absolute inset-0 bg-orange-50/95 backdrop-blur-[2px] rounded-xl z-10 flex items-center justify-center p-8">
                   <div className="max-w-lg text-center">
@@ -978,8 +978,8 @@ export default function LoggingPage() {
                 </div>
               )}
               <div className="mb-6">
-                <h2 className="text-lg font-semibold text-[#0f172a]">Advanced Logging Options</h2>
-                <p className="text-sm text-slate-500">Configure advanced logging behavior</p>
+                <h2 className="text-xl font-bold text-slate-900">Advanced Logging Options</h2>
+                <p className="text-sm text-slate-600">Configure advanced logging behavior</p>
               </div>
 
               <div className="space-y-4">

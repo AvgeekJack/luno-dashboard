@@ -4,7 +4,6 @@ import { useSession } from 'next-auth/react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { Switch } from '@/components/ui/switch';
 import DebugInfoPopup from '@/components/DebugInfoPopup';
 import { useMaintenanceCheck } from '@/lib/hooks/useMaintenanceCheck';
 
@@ -358,17 +357,24 @@ export default function AntiRaidPage() {
           </div>
 
           {/* Master Toggle Card */}
-          <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8 space-y-6">
+          <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-lg font-semibold text-[#0f172a]">Anti-Raid System</h2>
-                <p className="text-sm text-slate-500">Protect your server from raid attacks</p>
+                <h2 className="text-xl font-bold text-slate-900">Anti-Raid System</h2>
+                <p className="text-sm text-slate-600 mt-1">Protect your server from raid attacks</p>
               </div>
-              <Switch 
-                checked={settings.enabled} 
-                onCheckedChange={(checked) => updateSetting('enabled', checked)}
-                className="scale-125"
-              />
+              <button
+                onClick={() => updateSetting('enabled', !settings.enabled)}
+                className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors ${
+                  settings.enabled ? 'bg-green-600' : 'bg-gray-300'
+                }`}
+              >
+                <span
+                  className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${
+                    settings.enabled ? 'translate-x-7' : 'translate-x-1'
+                  }`}
+                />
+              </button>
             </div>
           </div>
 
@@ -391,10 +397,10 @@ export default function AntiRaidPage() {
 
           {/* Status Display Card */}
           {settings.enabled && (
-            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
               <div className="mb-6">
-                <h2 className="text-lg font-semibold text-[#0f172a]">Current Status</h2>
-                <p className="text-sm text-slate-500">Monitor your anti-raid system status</p>
+                <h2 className="text-xl font-bold text-slate-900">Current Status</h2>
+                <p className="text-sm text-slate-600">Monitor your anti-raid system status</p>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                 <div className="p-4 rounded-lg bg-slate-50 border border-slate-200">
@@ -428,10 +434,10 @@ export default function AntiRaidPage() {
 
           {/* Protection Level Selection Card */}
           {settings.enabled && (
-            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
               <div className="mb-6">
-                <h2 className="text-lg font-semibold text-[#0f172a]">Protection Level</h2>
-                <p className="text-sm text-slate-500">Choose a preset protection level or customize your own</p>
+                <h2 className="text-xl font-bold text-slate-900">Protection Level</h2>
+                <p className="text-sm text-slate-600">Choose a preset protection level or customize your own</p>
               </div>
               
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -455,10 +461,10 @@ export default function AntiRaidPage() {
 
           {/* Custom Settings Card */}
           {settings.enabled && (
-            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8 relative">
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6 relative">
               <div className="mb-6">
-                <h2 className="text-lg font-semibold text-[#0f172a]">Custom Settings</h2>
-                <p className="text-sm text-slate-500">Fine-tune protection parameters</p>
+                <h2 className="text-xl font-bold text-slate-900">Custom Settings</h2>
+                <p className="text-sm text-slate-600">Fine-tune protection parameters</p>
               </div>
 
               {/* Premium Overlay - Only show if premium is false */}
@@ -600,33 +606,49 @@ export default function AntiRaidPage() {
 
           {/* Action Settings Card */}
           {settings.enabled && (
-            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
               <div className="mb-6">
-                <h2 className="text-lg font-semibold text-[#0f172a]">Actions</h2>
-                <p className="text-sm text-slate-500">Configure automated responses to threats</p>
+                <h2 className="text-xl font-bold text-slate-900">Actions</h2>
+                <p className="text-sm text-slate-600">Configure automated responses to threats</p>
               </div>
               
               <div className="space-y-4">
-                <div className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                  <Switch 
-                    checked={settings.autoKickNewAccounts} 
-                    onCheckedChange={(checked) => updateSetting('autoKickNewAccounts', checked)}
-                  />
-                  <div className="flex-1">
+                <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
+                  <div>
                     <p className="font-semibold text-slate-900">Auto-kick New Accounts</p>
                     <p className="text-sm text-slate-500">Kick accounts below minimum age</p>
                   </div>
+                  <button
+                    onClick={() => updateSetting('autoKickNewAccounts', !settings.autoKickNewAccounts)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      settings.autoKickNewAccounts ? 'bg-green-600' : 'bg-gray-300'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        settings.autoKickNewAccounts ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
                 </div>
 
-                <div className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                  <Switch 
-                    checked={settings.kickOnRateExceeded} 
-                    onCheckedChange={(checked) => updateSetting('kickOnRateExceeded', checked)}
-                  />
-                  <div className="flex-1">
+                <div className="flex items-center justify-between p-5 rounded-lg bg-slate-50 border border-slate-200">
+                  <div>
                     <p className="font-semibold text-slate-900">Kick on Rate Exceeded</p>
                     <p className="text-sm text-slate-500">Kick when join rate limit is exceeded</p>
                   </div>
+                  <button
+                    onClick={() => updateSetting('kickOnRateExceeded', !settings.kickOnRateExceeded)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      settings.kickOnRateExceeded ? 'bg-green-600' : 'bg-gray-300'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        settings.kickOnRateExceeded ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
                 </div>
               </div>
             </div>
