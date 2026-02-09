@@ -1,394 +1,143 @@
 'use client';
 
-import { useSession } from 'next-auth/react';
-import { useRouter, useParams } from 'next/navigation';
+import { useState } from 'react';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 import DebugInfoPopup from '@/components/DebugInfoPopup';
-import { useMaintenanceCheck } from '@/lib/hooks/useMaintenanceCheck';
+import DeveloperTools from '@/components/DeveloperTools';
 
-interface LoggingSettings {
-  enabled: boolean;
-  automodLogChannel: string | null;
-  logAutomodViolations: boolean;
-  logAutomodActions: boolean;
-  logAutomodFilters: boolean;
-  antiRaidChannel: string | null;
-  logRaidDetections: boolean;
-  logRaidActions: boolean;
-  logJoinPatterns: boolean;
-  
-  // Verification Logs
-  verificationChannel: string | null;
-  trackVerificationMetrics: boolean;
-  logFailedVerificationAttempts: boolean;
-  
-  // Section Channels
-  moderationChannel: string | null;
-  memberChannel: string | null;
-  messageChannel: string | null;
-  channelLogsChannel: string | null;
-  roleLogsChannel: string | null;
-  voiceChannel: string | null;
-  serverChannel: string | null;
-  
-  // Moderation Logs (toggles only)
-  warnsEnabled: boolean;
-  kicksEnabled: boolean;
-  bansEnabled: boolean;
-  unbansEnabled: boolean;
-  timeoutsEnabled: boolean;
-  untimeoutsEnabled: boolean;
-  softbansEnabled: boolean;
-  channelLocksEnabled: boolean;
-  lockdownsEnabled: boolean;
-  slowmodeEnabled: boolean;
-  messagePurgeEnabled: boolean;
-  automodActionsEnabled: boolean;
-  
-  // Member Logs (toggles only)
-  memberJoinEnabled: boolean;
-  memberLeaveEnabled: boolean;
-  roleUpdatesEnabled: boolean;
-  nicknameChangesEnabled: boolean;
-  usernameChangesEnabled: boolean;
-  
-  // Message Logs (toggles only)
-  messageDeleteEnabled: boolean;
-  messageEditEnabled: boolean;
-  bulkDeleteEnabled: boolean;
-  messageAttachmentsEnabled: boolean;
-  
-  // Channel Logs (toggles only)
-  channelCreateEnabled: boolean;
-  channelDeleteEnabled: boolean;
-  channelUpdateEnabled: boolean;
-  
-  // Role Logs (toggles only)
-  roleCreateEnabled: boolean;
-  roleDeleteEnabled: boolean;
-  roleUpdateEnabled: boolean;
-  
-  // Voice Logs (toggles only)
-  voiceJoinEnabled: boolean;
-  voiceLeaveEnabled: boolean;
-  voiceMoveEnabled: boolean;
-  voiceMuteDeafenEnabled: boolean;
-  voiceStreamingEnabled: boolean;
-  
-  // Server Logs (toggles only)
-  serverUpdateEnabled: boolean;
-  emojiEnabled: boolean;
-  stickerEnabled: boolean;
-  webhookEnabled: boolean;
-  inviteEnabled: boolean;
-  integrationEnabled: boolean;
-  
-  // Advanced Settings
-  ignoredChannels: string[];
-  ignoredRoles: string[];
-  ignoredUsers: string[];
-  includeBotActions: boolean;
-  logMessageContent: boolean;
-  logEmbedUrls: boolean;
-  retentionPeriod: number;
-}
-
-interface Channel {
-  id: string;
-  name: string;
-}
-
-interface Role {
-  id: string;
-  name: string;
-}
-
-export default function LoggingPage() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
-  const { guildId } = useParams();
-  const gid = Array.isArray(guildId) ? guildId[0] : guildId;
-
-  const [loading, setLoading] = useState(true);
+export default function LoggingDemo() {
+  const [enabled, setEnabled] = useState(true);
+  const [logChannel, setLogChannel] = useState('123456789');
   const [saving, setSaving] = useState(false);
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  const [premium, setPremium] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [configOpen, setConfigOpen] = useState(true);
   const [modulesOpen, setModulesOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showDebugInfo, setShowDebugInfo] = useState(false);
-  const { bypassMaintenance } = useMaintenanceCheck();
-  const [channels, setChannels] = useState<Channel[]>([]);
-  const [roles, setRoles] = useState<Role[]>([]);
+  const [showDeveloperTools, setShowDeveloperTools] = useState(false);
 
-  const [settings, setSettings] = useState<LoggingSettings>({
-    enabled: false,
-    automodLogChannel: null,
-    logAutomodViolations: true,
-    logAutomodActions: true,
-    logAutomodFilters: false,
-    antiRaidChannel: null,
-    logRaidDetections: true,
-    logRaidActions: true,
-    logJoinPatterns: false,
-    verificationChannel: null,
-    trackVerificationMetrics: false,
-    logFailedVerificationAttempts: false,
-    moderationChannel: null,
-    memberChannel: null,
-    messageChannel: null,
-    channelLogsChannel: null,
-    roleLogsChannel: null,
-    voiceChannel: null,
-    serverChannel: null,
-    warnsEnabled: false,
-    kicksEnabled: false,
-    bansEnabled: false,
-    unbansEnabled: false,
-    timeoutsEnabled: false,
-    untimeoutsEnabled: false,
-    softbansEnabled: false,
-    channelLocksEnabled: false,
-    lockdownsEnabled: false,
-    slowmodeEnabled: false,
-    messagePurgeEnabled: false,
-    automodActionsEnabled: false,
-    memberJoinEnabled: false,
-    memberLeaveEnabled: false,
-    roleUpdatesEnabled: false,
-    nicknameChangesEnabled: false,
-    usernameChangesEnabled: false,
-    messageDeleteEnabled: false,
-    messageEditEnabled: false,
-    bulkDeleteEnabled: false,
-    messageAttachmentsEnabled: false,
-    channelCreateEnabled: false,
-    channelDeleteEnabled: false,
-    channelUpdateEnabled: false,
-    roleCreateEnabled: false,
-    roleDeleteEnabled: false,
-    roleUpdateEnabled: false,
-    voiceJoinEnabled: false,
-    voiceLeaveEnabled: false,
-    voiceMoveEnabled: false,
-    voiceMuteDeafenEnabled: false,
-    voiceStreamingEnabled: false,
-    serverUpdateEnabled: false,
-    emojiEnabled: false,
-    stickerEnabled: false,
-    webhookEnabled: false,
-    inviteEnabled: false,
-    integrationEnabled: false,
-    ignoredChannels: [],
-    ignoredRoles: [],
-    ignoredUsers: [],
-    includeBotActions: false,
-    logMessageContent: true,
-    logEmbedUrls: true,
-    retentionPeriod: 30,
+  const [events, setEvents] = useState({
+    // Moderation Events
+    warns: true,
+    kicks: true,
+    bans: true,
+    unbans: true,
+    timeouts: true,
+    untimeouts: false,
+    softbans: false,
+    channelLocks: false,
+    lockdowns: false,
+    slowmode: false,
+    messagePurge: true,
+    automodActions: true,
+    
+    // Member Events
+    memberJoin: true,
+    memberLeave: true,
+    roleUpdates: false,
+    nicknameChanges: false,
+    usernameChanges: false,
+    
+    // Message Events
+    messageDelete: true,
+    messageEdit: true,
+    bulkDelete: true,
+    messageAttachments: false,
+    
+    // Channel Events
+    channelCreate: false,
+    channelDelete: false,
+    channelUpdate: false,
+    
+    // Role Events
+    roleCreate: false,
+    roleDelete: false,
+    roleUpdate: false,
+    
+    // Voice Events
+    voiceJoin: true,
+    voiceLeave: true,
+    voiceMove: false,
+    voiceMuteDeafen: false,
+    voiceStreaming: false,
+    
+    // Server Events
+    serverUpdate: false,
+    emoji: false,
+    sticker: false,
+    webhook: false,
+    invite: true,
+    integration: false,
   });
 
-  const [originalSettings, setOriginalSettings] = useState<LoggingSettings>({
-    enabled: false,
-    automodLogChannel: null,
-    logAutomodViolations: true,
-    logAutomodActions: true,
-    logAutomodFilters: false,
-    antiRaidChannel: null,
-    logRaidDetections: true,
-    logRaidActions: true,
-    logJoinPatterns: false,
-    verificationChannel: null,
-    trackVerificationMetrics: false,
-    logFailedVerificationAttempts: false,
-    moderationChannel: null,
-    memberChannel: null,
-    messageChannel: null,
-    channelLogsChannel: null,
-    roleLogsChannel: null,
-    voiceChannel: null,
-    serverChannel: null,
-    warnsEnabled: false,
-    kicksEnabled: false,
-    bansEnabled: false,
-    unbansEnabled: false,
-    timeoutsEnabled: false,
-    untimeoutsEnabled: false,
-    softbansEnabled: false,
-    channelLocksEnabled: false,
-    lockdownsEnabled: false,
-    slowmodeEnabled: false,
-    messagePurgeEnabled: false,
-    automodActionsEnabled: false,
-    memberJoinEnabled: false,
-    memberLeaveEnabled: false,
-    roleUpdatesEnabled: false,
-    nicknameChangesEnabled: false,
-    usernameChangesEnabled: false,
-    messageDeleteEnabled: false,
-    messageEditEnabled: false,
-    bulkDeleteEnabled: false,
-    messageAttachmentsEnabled: false,
-    channelCreateEnabled: false,
-    channelDeleteEnabled: false,
-    channelUpdateEnabled: false,
-    roleCreateEnabled: false,
-    roleDeleteEnabled: false,
-    roleUpdateEnabled: false,
-    voiceJoinEnabled: false,
-    voiceLeaveEnabled: false,
-    voiceMoveEnabled: false,
-    voiceMuteDeafenEnabled: false,
-    voiceStreamingEnabled: false,
-    serverUpdateEnabled: false,
-    emojiEnabled: false,
-    stickerEnabled: false,
-    webhookEnabled: false,
-    inviteEnabled: false,
-    integrationEnabled: false,
-    ignoredChannels: [],
-    ignoredRoles: [],
-    ignoredUsers: [],
-    includeBotActions: false,
-    logMessageContent: true,
-    logEmbedUrls: true,
-    retentionPeriod: 30,
-  });
-
-  useEffect(() => {
-    if (status === 'loading') return;
-    if (!session) {
-      router.push('/');
-      return;
-    }
-
-    const fetchChannelsAndRoles = async () => {
-      try {
-        const res = await fetch(`/api/servers/${gid}/channels-and-roles`);
-        if (res.ok) {
-          const data = await res.json();
-          setChannels(data.channels || []);
-          setRoles(data.roles || []);
-        }
-      } catch (error) {
-        console.error("Failed to fetch channels and roles:", error);
-      }
-    };
-
-    const fetchSettings = async () => {
-      try {
-        const [settingsRes, serverSettingsRes] = await Promise.all([
-          fetch(`/api/servers/${gid}/general`),
-          fetch(`/api/servers/${gid}/settings`)
-        ]);
-        
-        if (settingsRes.ok) {
-          const data = await settingsRes.json();
-          if (data.configuration?.logging) {
-            const loadedSettings = { ...settings, ...data.configuration.logging };
-            setSettings(loadedSettings);
-            setOriginalSettings(loadedSettings);
-          }
-        }
-        
-        if (serverSettingsRes.ok) {
-          const serverData = await serverSettingsRes.json();
-          setPremium(serverData.premium || false);
-        }
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchChannelsAndRoles();
-    fetchSettings();
-  }, [session, status, router, gid]);
+  const channels = [
+    { id: '123456789', name: 'logs' },
+    { id: '987654321', name: 'mod-logs' },
+    { id: '456789123', name: 'audit-log' },
+    { id: '789123456', name: 'bot-logs' }
+  ];
 
   const handleSave = async () => {
     setSaving(true);
-    try {
-      const response = await fetch(`/api/servers/${gid}/general`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          'configuration.logging': settings,
-        }),
-      });
-
-      if (response.ok) {
-        setOriginalSettings({ ...settings });
-        setHasUnsavedChanges(false);
-      }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setSaving(false);
-    }
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    setSaving(false);
+    alert('Settings saved (Demo mode)');
   };
 
-  const handleReset = () => {
-    setSettings({ ...originalSettings });
-    setHasUnsavedChanges(false);
+  const toggleEvent = (key: keyof typeof events) => {
+    setEvents({ ...events, [key]: !events[key] });
   };
-
-  const updateSetting = <K extends keyof LoggingSettings>(key: K, value: LoggingSettings[K]) => {
-    setSettings(prev => ({ ...prev, [key]: value }));
-    setHasUnsavedChanges(true);
-  };
-
-  if (status === 'loading' || loading) {
-    return <div className="flex min-h-screen items-center justify-center text-[#0f172a]">Loading...</div>;
-  }
 
   return (
-    <div className="min-h-screen bg-[#f8f9fa] text-[#0f172a] flex overflow-x-hidden">
-      {/* Mobile Menu Button */}
-      <button 
-        className="lg:hidden fixed top-4 left-4 z-[60] bg-orange-500 hover:bg-orange-600 text-white p-2.5 rounded-lg shadow-lg transition-colors"
-        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        aria-label="Toggle menu"
-      >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          {mobileMenuOpen ? (
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          ) : (
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-          )}
-        </svg>
-      </button>
-
-      {/* Mobile Overlay */}
+    <div className="min-h-screen bg-gray-50 text-[#0f172a] flex">
+      {/* Mobile menu overlay */}
       {mobileMenuOpen && (
         <div 
-          className="lg:hidden fixed inset-0 bg-black/50 z-[45]"
+          className="fixed inset-0 bg-black bg-opacity-50 z-[40] lg:hidden" 
           onClick={() => setMobileMenuOpen(false)}
         />
       )}
-
+      
       {/* Sidebar */}
-      <aside className={`fixed left-0 top-0 h-screen w-64 bg-white border-r border-orange-100 shadow-sm overflow-y-auto flex flex-col z-[50] transition-transform duration-300 ease-in-out ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
+      <aside className={`fixed left-0 top-0 h-screen w-64 bg-white border-r border-orange-100 shadow-lg lg:shadow-sm overflow-y-auto flex flex-col z-[50] transition-transform duration-300 ease-in-out ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
           <div className="p-4 border-b border-orange-100 flex items-center justify-between">
+            <button
+              onClick={() => setMobileMenuOpen(false)}
+              className="lg:hidden w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors"
+              aria-label="Close menu"
+            >
+              <svg className="w-5 h-5 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
             <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-              <img src="/luno-logo.png" alt="Luno Bot" className="w-10 h-10 object-contain ml-12 lg:ml-0" />
+              <img src="/luno-logo.png" alt="Luno Bot" className="w-10 h-10 object-contain" />
               <span className="text-xl font-bold text-[#0f172a]">Luno</span>
             </Link>
+            <div className="w-8 lg:hidden"></div>
           </div>
           
           <div className="px-4 py-4">
-            <Link href="/servers" className="text-orange-600 font-semibold hover:text-orange-700 transition-colors text-sm px-3" onClick={() => setMobileMenuOpen(false)}>← Back to Servers</Link>
+            <Link 
+              href="/servers" 
+              className="text-orange-600 font-semibold hover:text-orange-700 transition-colors text-sm px-3"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              ← Back to Servers
+            </Link>
           </div>
           
           <nav className="px-4 space-y-2 text-sm font-semibold text-slate-700">
-            <Link href={`/servers/${gid}`} className="flex items-center gap-3 px-3 py-6 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+            <Link 
+              href="/devtest/001" 
+              className="flex items-center gap-3 px-3 py-6 transition-colors rounded-lg hover:bg-gray-100 text-slate-700"
+              onClick={() => setMobileMenuOpen(false)}
+            >
               <img src="/dashbaord.png" alt="" className="w-5 h-5" />
               Dashboard
             </Link>
             <details className="text-slate-800" open={settingsOpen}>
-              <summary className="flex items-center justify-between px-3 py-6 cursor-pointer select-none" onClick={(e) => { e.preventDefault(); setSettingsOpen(!settingsOpen); }}>
+              <summary className="flex items-center justify-between px-3 py-6 cursor-pointer select-none transition-colors rounded-lg" onClick={(e) => { e.preventDefault(); setSettingsOpen(!settingsOpen); }}>
                 <span className="flex items-center gap-3">
                   <img src="/settings.png" alt="" className="w-5 h-5" />
                   Settings
@@ -396,18 +145,26 @@ export default function LoggingPage() {
                 <span className="text-xs text-orange-600">▾</span>
               </summary>
               {settingsOpen && (
-                <div className={`px-2 py-1 space-y-1 border-l-2 border-orange-400 ml-3 ${settingsOpen ? 'animate-dropdown-open' : 'animate-dropdown-close'}`}>
-                  <Link href={`/servers/${gid}/general`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left ${settingsOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '0ms'}} onClick={() => setMobileMenuOpen(false)}>
+                <div className={`px-2 py-1 space-y-1 border-l-2 border-slate-200 ml-3 ${settingsOpen ? 'animate-dropdown-open' : 'animate-dropdown-close'}`}>
+                  <div 
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left cursor-pointer hover:bg-gray-100 ${settingsOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                    style={{animationDelay: '0ms'}}
+                    onClick={() => {alert('Demo mode: Settings pages not available'); setMobileMenuOpen(false);}}
+                  >
                     General
-                  </Link>
-                  <Link href={`/servers/${gid}/setup`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left ${settingsOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '50ms'}} onClick={() => setMobileMenuOpen(false)}>
+                  </div>
+                  <div 
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left cursor-pointer hover:bg-gray-100 ${settingsOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                    style={{animationDelay: '50ms'}}
+                    onClick={() => {alert('Demo mode: Settings pages not available'); setMobileMenuOpen(false);}}
+                  >
                     Setup
-                  </Link>
+                  </div>
                 </div>
               )}
             </details>
             <details className="text-slate-800" open={configOpen}>
-              <summary className="flex items-center justify-between px-3 py-6 cursor-pointer select-none" onClick={(e) => { e.preventDefault(); setConfigOpen(!configOpen); }}>
+              <summary className="flex items-center justify-between px-3 py-6 cursor-pointer select-none transition-colors rounded-lg" onClick={(e) => { e.preventDefault(); setConfigOpen(!configOpen); }}>
                 <span className="flex items-center gap-3">
                   <img src="/configuration.png" alt="" className="w-5 h-5" />
                   Configuration
@@ -415,27 +172,52 @@ export default function LoggingPage() {
                 <span className="text-xs text-orange-600">▾</span>
               </summary>
               {configOpen && (
-                <div className={`px-2 py-1 space-y-1 border-l-2 border-orange-400 ml-3 ${configOpen ? 'animate-dropdown-open' : 'animate-dropdown-close'}`}>
-                  <Link href={`/servers/${gid}/configuration/automod`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '0ms'}} onClick={() => setMobileMenuOpen(false)}>
+                <div className={`px-2 py-1 space-y-1 border-l-2 border-slate-200 ml-3 ${configOpen ? 'animate-dropdown-open' : 'animate-dropdown-close'}`}>
+                  <Link 
+                    href="/devtest/001/configuration/automod"
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                    style={{animationDelay: '0ms'}}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
                     Automod
                   </Link>
-                  <Link href={`/servers/${gid}/configuration/logging`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 bg-orange-100 text-orange-700 transition-colors text-left ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '50ms'}} onClick={() => setMobileMenuOpen(false)}>
+                  <Link 
+                    href="/devtest/001/configuration/logging"
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left bg-orange-50 text-orange-600 ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                    style={{animationDelay: '50ms'}}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
                     Logging
                   </Link>
-                  <Link href={`/servers/${gid}/configuration/anti-raid`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '100ms'}} onClick={() => setMobileMenuOpen(false)}>
+                  <Link 
+                    href="/devtest/001/configuration/anti-raid"
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                    style={{animationDelay: '100ms'}}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
                     Anti-Raid
                   </Link>
-                  <Link href={`/servers/${gid}/configuration/reaction-roles`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '150ms'}} onClick={() => setMobileMenuOpen(false)}>
+                  <Link 
+                    href="/devtest/001/configuration/reaction-roles"
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                    style={{animationDelay: '150ms'}}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
                     Reaction Roles
                   </Link>
-                  <Link href={`/servers/${gid}/configuration/verification`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '200ms'}} onClick={() => setMobileMenuOpen(false)}>
+                  <Link 
+                    href="/devtest/001/configuration/verification"
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                    style={{animationDelay: '200ms'}}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
                     Verification
                   </Link>
                 </div>
               )}
             </details>
             <details className="text-slate-800" open={modulesOpen}>
-              <summary className="flex items-center justify-between px-3 py-6 cursor-pointer select-none" onClick={(e) => { e.preventDefault(); setModulesOpen(!modulesOpen); }}>
+              <summary className="flex items-center justify-between px-3 py-6 cursor-pointer select-none transition-colors rounded-lg" onClick={(e) => { e.preventDefault(); setModulesOpen(!modulesOpen); }}>
                 <span className="flex items-center gap-3">
                   <img src="/modules.png" alt="" className="w-5 h-5" />
                   Modules
@@ -443,832 +225,423 @@ export default function LoggingPage() {
                 <span className="text-xs text-orange-600">▾</span>
               </summary>
               {modulesOpen && (
-                <div className={`px-2 py-1 space-y-1 border-l-2 border-orange-400 ml-3 ${modulesOpen ? 'animate-dropdown-open' : 'animate-dropdown-close'}`}>
-                  <Link href={`/servers/${gid}/modules/moderation`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '0ms'}} onClick={() => setMobileMenuOpen(false)}>
+                <div className={`px-2 py-1 space-y-1 border-l-2 border-slate-200 ml-3 ${modulesOpen ? 'animate-dropdown-open' : 'animate-dropdown-close'}`}>
+                  <Link 
+                    href="/devtest/001/modules/moderation"
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                    style={{animationDelay: '0ms'}}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
                     Moderation
                   </Link>
-                  <Link href={`/servers/${gid}/modules/role-management`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '50ms'}} onClick={() => setMobileMenuOpen(false)}>
+                  <div 
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left cursor-pointer hover:bg-gray-100 ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                    style={{animationDelay: '50ms'}}
+                    onClick={() => {alert('Demo mode: Role Management page not available yet'); setMobileMenuOpen(false);}}
+                  >
                     Role Management
-                  </Link>
-                  <Link href={`/servers/${gid}/modules/member-management`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '100ms'}} onClick={() => setMobileMenuOpen(false)}>
+                  </div>
+                  <div 
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left cursor-pointer hover:bg-gray-100 ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                    style={{animationDelay: '100ms'}}
+                    onClick={() => {alert('Demo mode: Member Management page not available yet'); setMobileMenuOpen(false);}}
+                  >
                     Member Management
-                  </Link>
-                  <Link href={`/servers/${gid}/modules/announcements`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '150ms'}} onClick={() => setMobileMenuOpen(false)}>
+                  </div>
+                  <div 
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left cursor-pointer hover:bg-gray-100 ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                    style={{animationDelay: '150ms'}}
+                    onClick={() => {alert('Demo mode: Announcements page not available yet'); setMobileMenuOpen(false);}}
+                  >
                     Announcements
-                  </Link>
-                  <Link href={`/servers/${gid}/modules/notifications`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '200ms'}} onClick={() => setMobileMenuOpen(false)}>
+                  </div>
+                  <div 
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left cursor-pointer hover:bg-gray-100 ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                    style={{animationDelay: '200ms'}}
+                    onClick={() => {alert('Demo mode: Welcome Messages page not available yet'); setMobileMenuOpen(false);}}
+                  >
                     Welcome Messages
-                  </Link>
-                  <Link href={`/servers/${gid}/modules/fun`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '250ms'}} onClick={() => setMobileMenuOpen(false)}>
+                  </div>
+                  <Link 
+                    href="/devtest/001/modules/fun"
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                    style={{animationDelay: '250ms'}}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
                     Fun
                   </Link>
-                  <Link href={`/servers/${gid}/modules/utilities`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '300ms'}} onClick={() => setMobileMenuOpen(false)}>
+                  <div 
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left cursor-pointer hover:bg-gray-100 ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                    style={{animationDelay: '300ms'}}
+                    onClick={() => {alert('Demo mode: Utilities page not available yet'); setMobileMenuOpen(false);}}
+                  >
                     Utilities
-                  </Link>
+                  </div>
                 </div>
               )}
             </details>
           </nav>
           
-          {/* Developer Debug Button - Only show when bypassed */}
-          {bypassMaintenance && (
-            <div className="mt-auto p-4 border-t-2 border-red-500">
-              <button
-                onClick={() => setShowDebugInfo(true)}
-                className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-3 px-4 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 animate-pulse"
-              >
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                </svg>
-                🐛 Debug Info
-                <span className="text-xs bg-red-900 px-2 py-1 rounded">DEV ONLY</span>
-              </button>
-              <p className="text-center text-red-600 text-xs font-semibold mt-2">
-                ⚠️ DEVELOPER MODE ACTIVE
+          {/* Debug & Developer Tools - Desktop only */}
+          <div className="px-4 py-4 mt-auto space-y-3 hidden lg:block">
+            <button
+              onClick={() => setShowDebugInfo(true)}
+              className="w-full bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white font-bold py-3 px-4 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+            >
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+              </svg>
+              🐛 Debug Info
+              <span className="text-xs bg-orange-900 px-2 py-1 rounded">DEMO</span>
+            </button>
+            <button
+              onClick={() => setShowDeveloperTools(true)}
+              className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-bold py-3 px-4 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+            >
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
+              </svg>
+              ⚡ Developer Tools
+            </button>
+            <p className="text-center text-orange-600 text-xs font-semibold mt-2">
+              🚀 DEMO MODE ACTIVE
+            </p>
+          </div>
+        </aside>
+
+        {/* Mobile header */}
+        <div className="lg:hidden fixed top-0 left-0 right-0 bg-white border-b border-orange-100 z-30 px-4 py-3 flex items-center justify-between">
+          <button
+            onClick={() => setMobileMenuOpen(true)}
+            className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors"
+            aria-label="Open menu"
+          >
+            <svg className="w-6 h-6 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+          <h1 className="text-lg font-bold text-slate-900">Logging Configuration</h1>
+          <div className="w-8"></div>
+        </div>
+
+        {/* Main Content */}
+        <div className="flex-1 lg:ml-0">
+          <div className="pt-16 lg:pt-8 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-4xl mx-auto">
+        <div className="bg-orange-100 border-l-4 border-orange-500 p-4 mb-6">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <svg className="h-5 w-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <p className="text-sm text-orange-700">
+                🚀 <strong>Demo Mode:</strong> Changes are not saved to a real server
               </p>
             </div>
-          )}
-      </aside>
+          </div>
+        </div>
 
-      {/* Debug Info Popup */}
-      <DebugInfoPopup isOpen={showDebugInfo} onClose={() => setShowDebugInfo(false)} />
-
-      <main className="flex-1 md:ml-64 py-12 px-4 md:px-6 lg:px-8 pt-20 md:pt-12 flex justify-center">
-        <div className="w-full max-w-7xl space-y-6">
-          {/* Logging Configuration Card */}
-          <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-xl font-bold text-slate-900">Logging Configuration</h2>
-                <p className="text-sm text-slate-600 mt-1">Configure event logging for your server</p>
-              </div>
-              <button
-                onClick={() => updateSetting('enabled', !settings.enabled)}
-                className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors ${
-                  settings.enabled ? 'bg-green-600' : 'bg-gray-300'
+        {/* Enable/Disable Logging */}
+        <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-bold text-slate-900">Enable Logging</h2>
+              <p className="text-sm text-slate-600 mt-1">Turn server event logging on or off</p>
+            </div>
+            <button
+              onClick={() => setEnabled(!enabled)}
+              className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors ${
+                enabled ? 'bg-green-600' : 'bg-gray-300'
+              }`}
+            >
+              <span
+                className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${
+                  enabled ? 'translate-x-7' : 'translate-x-1'
                 }`}
-              >
-                <span
-                  className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${
-                    settings.enabled ? 'translate-x-7' : 'translate-x-1'
-                  }`}
-                />
-              </button>
+              />
+            </button>
+          </div>
+        </div>
+
+        {/* Log Channel Selection */}
+        <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
+          <h2 className="text-xl font-bold text-slate-900 mb-4">Log Channel</h2>
+          <label className="block text-sm font-medium text-slate-700 mb-2">
+            Select the channel where logs will be posted
+          </label>
+          <select
+            value={logChannel}
+            onChange={(e) => setLogChannel(e.target.value)}
+            className="w-full px-4 py-2.5 bg-white text-slate-900 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent appearance-none cursor-pointer"
+          >
+            <option value="">Select a channel...</option>
+            {channels.map((channel) => (
+              <option key={channel.id} value={channel.id}>
+                #{channel.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Logged Events */}
+        <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
+          <h2 className="text-xl font-bold text-slate-900 mb-6">Logged Events</h2>
+          
+          <div className="space-y-4">
+            {/* Moderation Events */}
+            <div>
+              <h3 className="text-sm font-semibold text-slate-700 mb-3 uppercase tracking-wide">Moderation Events</h3>
+              <div className="space-y-3">
+                {[
+                  { key: 'warns', label: 'Warns', icon: 'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z' },
+                  { key: 'kicks', label: 'Kicks', icon: 'M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1' },
+                  { key: 'bans', label: 'Bans', icon: 'M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636' },
+                  { key: 'unbans', label: 'Unbans', icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' },
+                  { key: 'timeouts', label: 'Timeouts', icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' },
+                  { key: 'untimeouts', label: 'Untimeouts', icon: 'M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
+                  { key: 'softbans', label: 'Softbans', icon: 'M13 7a4 4 0 11-8 0 4 4 0 018 0zM9 14a6 6 0 00-6 6v1h12v-1a6 6 0 00-6-6zM21 12h-6' },
+                  { key: 'channelLocks', label: 'Channel Locks', icon: 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z' },
+                  { key: 'lockdowns', label: 'Server Lockdowns', icon: 'M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z' },
+                  { key: 'slowmode', label: 'Slowmode Changes', icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' },
+                  { key: 'messagePurge', label: 'Message Purges', icon: 'M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16' },
+                  { key: 'automodActions', label: 'Automod Actions', icon: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z' },
+                ].map(event => (
+                  <div key={event.key} className="flex items-center justify-between py-2">
+                    <div className="flex items-center gap-3">
+                      <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={event.icon} />
+                      </svg>
+                      <span className="text-slate-900">{event.label}</span>
+                    </div>
+                    <button
+                      onClick={() => toggleEvent(event.key as keyof typeof events)}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        events[event.key as keyof typeof events] ? 'bg-green-600' : 'bg-gray-300'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          events[event.key as keyof typeof events] ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Member Events */}
+            <div className="pt-4 border-t border-gray-100">
+              <h3 className="text-sm font-semibold text-slate-700 mb-3 uppercase tracking-wide">Member Events</h3>
+              <div className="space-y-3">
+                {[
+                  { key: 'memberJoin', label: 'Member Joins', icon: 'M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z' },
+                  { key: 'memberLeave', label: 'Member Leaves', icon: 'M13 7a4 4 0 11-8 0 4 4 0 018 0zM9 14a6 6 0 00-6 6v1h12v-1a6 6 0 00-6-6zM21 12h-6' },
+                  { key: 'roleUpdates', label: 'Role Updates', icon: 'M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z' },
+                  { key: 'nicknameChanges', label: 'Nickname Changes', icon: 'M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z' },
+                  { key: 'usernameChanges', label: 'Username Changes', icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' },
+                ].map(event => (
+                  <div key={event.key} className="flex items-center justify-between py-2">
+                    <div className="flex items-center gap-3">
+                      <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={event.icon} />
+                      </svg>
+                      <span className="text-slate-900">{event.label}</span>
+                    </div>
+                    <button
+                      onClick={() => toggleEvent(event.key as keyof typeof events)}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        events[event.key as keyof typeof events] ? 'bg-green-600' : 'bg-gray-300'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          events[event.key as keyof typeof events] ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Message Events */}
+            <div className="pt-4 border-t border-gray-100">
+              <h3 className="text-sm font-semibold text-slate-700 mb-3 uppercase tracking-wide">Message Events</h3>
+              <div className="space-y-3">
+                {[
+                  { key: 'messageDelete', label: 'Message Deletes', icon: 'M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16' },
+                  { key: 'messageEdit', label: 'Message Edits', icon: 'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z' },
+                  { key: 'bulkDelete', label: 'Bulk Deletes', icon: 'M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16' },
+                  { key: 'messageAttachments', label: 'Message Attachments', icon: 'M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13' },
+                ].map(event => (
+                  <div key={event.key} className="flex items-center justify-between py-2">
+                    <div className="flex items-center gap-3">
+                      <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={event.icon} />
+                      </svg>
+                      <span className="text-slate-900">{event.label}</span>
+                    </div>
+                    <button
+                      onClick={() => toggleEvent(event.key as keyof typeof events)}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        events[event.key as keyof typeof events] ? 'bg-green-600' : 'bg-gray-300'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          events[event.key as keyof typeof events] ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Channel Events */}
+            <div className="pt-4 border-t border-gray-100">
+              <h3 className="text-sm font-semibold text-slate-700 mb-3 uppercase tracking-wide">Channel Events</h3>
+              <div className="space-y-3">
+                {[
+                  { key: 'channelCreate', label: 'Channel Created', icon: 'M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z' },
+                  { key: 'channelDelete', label: 'Channel Deleted', icon: 'M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16' },
+                  { key: 'channelUpdate', label: 'Channel Updated', icon: 'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z' },
+                ].map(event => (
+                  <div key={event.key} className="flex items-center justify-between py-2">
+                    <div className="flex items-center gap-3">
+                      <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={event.icon} />
+                      </svg>
+                      <span className="text-slate-900">{event.label}</span>
+                    </div>
+                    <button
+                      onClick={() => toggleEvent(event.key as keyof typeof events)}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        events[event.key as keyof typeof events] ? 'bg-green-600' : 'bg-gray-300'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          events[event.key as keyof typeof events] ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Role Events */}
+            <div className="pt-4 border-t border-gray-100">
+              <h3 className="text-sm font-semibold text-slate-700 mb-3 uppercase tracking-wide">Role Events</h3>
+              <div className="space-y-3">
+                {[
+                  { key: 'roleCreate', label: 'Role Created', icon: 'M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z' },
+                  { key: 'roleDelete', label: 'Role Deleted', icon: 'M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16' },
+                  { key: 'roleUpdate', label: 'Role Updated', icon: 'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z' },
+                ].map(event => (
+                  <div key={event.key} className="flex items-center justify-between py-2">
+                    <div className="flex items-center gap-3">
+                      <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={event.icon} />
+                      </svg>
+                      <span className="text-slate-900">{event.label}</span>
+                    </div>
+                    <button
+                      onClick={() => toggleEvent(event.key as keyof typeof events)}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        events[event.key as keyof typeof events] ? 'bg-green-600' : 'bg-gray-300'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          events[event.key as keyof typeof events] ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Voice Events */}
+            <div className="pt-4 border-t border-gray-100">
+              <h3 className="text-sm font-semibold text-slate-700 mb-3 uppercase tracking-wide">Voice Events</h3>
+              <div className="space-y-3">
+                {[
+                  { key: 'voiceJoin', label: 'Voice Join', icon: 'M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z' },
+                  { key: 'voiceLeave', label: 'Voice Leave', icon: 'M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z' },
+                  { key: 'voiceMove', label: 'Voice Move', icon: 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4' },
+                  { key: 'voiceMuteDeafen', label: 'Mute/Deafen', icon: 'M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z' },
+                  { key: 'voiceStreaming', label: 'Voice Streaming', icon: 'M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z' },
+                ].map(event => (
+                  <div key={event.key} className="flex items-center justify-between py-2">
+                    <div className="flex items-center gap-3">
+                      <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={event.icon} />
+                      </svg>
+                      <span className="text-slate-900">{event.label}</span>
+                    </div>
+                    <button
+                      onClick={() => toggleEvent(event.key as keyof typeof events)}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        events[event.key as keyof typeof events] ? 'bg-green-600' : 'bg-gray-300'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          events[event.key as keyof typeof events] ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Server Events */}
+            <div className="pt-4 border-t border-gray-100">
+              <h3 className="text-sm font-semibold text-slate-700 mb-3 uppercase tracking-wide">Server Events</h3>
+              <div className="space-y-3">
+                {[
+                  { key: 'serverUpdate', label: 'Server Updates', icon: 'M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4' },
+                  { key: 'emoji', label: 'Emoji Changes', icon: 'M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
+                  { key: 'sticker', label: 'Sticker Changes', icon: 'M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01' },
+                  { key: 'webhook', label: 'Webhook Changes', icon: 'M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1' },
+                  { key: 'invite', label: 'Invite Tracking', icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z' },
+                  { key: 'integration', label: 'Integration Changes', icon: 'M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z' },
+                ].map(event => (
+                  <div key={event.key} className="flex items-center justify-between py-2">
+                    <div className="flex items-center gap-3">
+                      <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={event.icon} />
+                      </svg>
+                      <span className="text-slate-900">{event.label}</span>
+                    </div>
+                    <button
+                      onClick={() => toggleEvent(event.key as keyof typeof events)}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        events[event.key as keyof typeof events] ? 'bg-green-600' : 'bg-gray-300'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          events[event.key as keyof typeof events] ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
+        </div>
 
-          {/* Grid Container for Logging Sections */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* AutoMod Log Channel Card */}
-            {settings.enabled && (
-            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
-              <div className="mb-6">
-                <h2 className="text-xl font-bold text-slate-900">AutoMod Logging Channel</h2>
-                <p className="text-sm text-slate-600">Configure where automod violations and actions are logged. Leave empty to disable logging for AutoMod.</p>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                  <div className="flex-1">
-                    <p className="font-semibold text-slate-900">AutoMod Log Channel</p>
-                    <p className="text-sm text-slate-500">All automod actions and violations will be logged here</p>
-                  </div>
-                  <select 
-                    value={settings.automodLogChannel || ''} 
-                    onChange={(e) => updateSetting('automodLogChannel', e.target.value || null)}
-                    className="w-full sm:w-48 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  >
-                    <option value="">Select channel...</option>
-                    {channels.map(ch => (
-                      <option key={ch.id} value={ch.id}>#{ch.name}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                  <button
-                    onClick={() => updateSetting('logAutomodViolations', !settings.logAutomodViolations)}
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                      settings.logAutomodViolations ? 'bg-green-600' : 'bg-gray-300'
-                    }`}
-                  >
-                    <span
-                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                        settings.logAutomodViolations ? 'translate-x-6' : 'translate-x-1'
-                      }`}
-                    />
-                  </button>
-                  <div className="flex-1">
-                    <p className="font-semibold text-slate-900">Log AutoMod Violations</p>
-                    <p className="text-sm text-slate-500">Track when users trigger automod filters</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                  <button
-                    onClick={() => updateSetting('logAutomodActions', !settings.logAutomodActions)}
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                      settings.logAutomodActions ? 'bg-green-600' : 'bg-gray-300'
-                    }`}
-                  >
-                    <span
-                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                        settings.logAutomodActions ? 'translate-x-6' : 'translate-x-1'
-                      }`}
-                    />
-                  </button>
-                  <div className="flex-1">
-                    <p className="font-semibold text-slate-900">Log AutoMod Actions</p>
-                    <p className="text-sm text-slate-500">Track actions taken by automod (deletes, timeouts, etc.)</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                  <button
-                    onClick={() => updateSetting('logAutomodFilters', !settings.logAutomodFilters)}
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                      settings.logAutomodFilters ? 'bg-green-600' : 'bg-gray-300'
-                    }`}
-                  >
-                    <span
-                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                        settings.logAutomodFilters ? 'translate-x-6' : 'translate-x-1'
-                      }`}
-                    />
-                  </button>
-                  <div className="flex-1">
-                    <p className="font-semibold text-slate-900">Log Filter Triggers</p>
-                    <p className="text-sm text-slate-500">Log which specific filters were triggered</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Anti-Raid Alert Channel Card */}
-          {settings.enabled && (
-            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
-              <div className="mb-6">
-                <h2 className="text-xl font-bold text-slate-900">Anti-Raid Alert Channel</h2>
-                <p className="text-sm text-slate-600">Configure where anti-raid alerts and actions are logged. Leave empty to disable alerts for Anti-Raid.</p>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                  <div className="flex-1">
-                    <p className="font-semibold text-slate-900">Anti-Raid Alert Channel</p>
-                    <p className="text-sm text-slate-500">All anti-raid detections and actions will be logged here</p>
-                  </div>
-                  <select 
-                    value={settings.antiRaidChannel || ''} 
-                    onChange={(e) => updateSetting('antiRaidChannel', e.target.value || null)}
-                    className="w-full sm:w-48 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  >
-                    <option value="">Select channel...</option>
-                    {channels.map(ch => (
-                      <option key={ch.id} value={ch.id}>#{ch.name}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                  <button
-                    onClick={() => updateSetting('logRaidDetections', !settings.logRaidDetections)}
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                      settings.logRaidDetections ? 'bg-green-600' : 'bg-gray-300'
-                    }`}
-                  >
-                    <span
-                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                        settings.logRaidDetections ? 'translate-x-6' : 'translate-x-1'
-                      }`}
-                    />
-                  </button>
-                  <div className="flex-1">
-                    <p className="font-semibold text-slate-900">Log Raid Detections</p>
-                    <p className="text-sm text-slate-500">Record when potential raids are detected</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                  <button
-                    onClick={() => updateSetting('logRaidActions', !settings.logRaidActions)}
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                      settings.logRaidActions ? 'bg-green-600' : 'bg-gray-300'
-                    }`}
-                  >
-                    <span
-                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                        settings.logRaidActions ? 'translate-x-6' : 'translate-x-1'
-                      }`}
-                    />
-                  </button>
-                  <div className="flex-1">
-                    <p className="font-semibold text-slate-900">Log Raid Actions</p>
-                    <p className="text-sm text-slate-500">Log actions taken in response to raids</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Moderation Logs Card */}
-          {settings.enabled && (
-            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
-              <div className="mb-6">
-                <h2 className="text-xl font-bold text-slate-900">Moderation Logs</h2>
-                <p className="text-sm text-slate-600">Actions by staff members</p>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                  <div className="flex-1">
-                    <p className="font-semibold text-slate-900">Moderation Log Channel</p>
-                    <p className="text-sm text-slate-500">All moderation actions will be logged here</p>
-                  </div>
-                  <select 
-                    value={settings.moderationChannel || ''} 
-                    onChange={(e) => updateSetting('moderationChannel', e.target.value || null)}
-                    className="w-full sm:w-48 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  >
-                    <option value="">Select channel...</option>
-                    {channels.map(ch => (
-                      <option key={ch.id} value={ch.id}>#{ch.name}</option>
-                    ))}
-                  </select>
-                </div>
-
-                {[
-                  { key: 'warns', label: 'Warns', desc: 'User warnings issued' },
-                  { key: 'kicks', label: 'Kicks', desc: 'User kicks' },
-                  { key: 'bans', label: 'Bans', desc: 'User bans' },
-                  { key: 'unbans', label: 'Unbans', desc: 'User unbans' },
-                  { key: 'timeouts', label: 'Timeouts/Mutes', desc: 'Temporary mutes/timeouts' },
-                  { key: 'untimeouts', label: 'Untimeouts/Unmutes', desc: 'Mute removals' },
-                  { key: 'softbans', label: 'Softbans', desc: 'Softbans (kick + delete messages)' },
-                  { key: 'channelLocks', label: 'Channel Locks', desc: 'Channel lock/unlock actions' },
-                  { key: 'lockdowns', label: 'Lockdowns', desc: 'Server lockdown/unlockdown' },
-                  { key: 'slowmode', label: 'Slowmode', desc: 'Slowmode changes' },
-                  { key: 'messagePurge', label: 'Message Purge/Clear', desc: 'Bulk message deletions' },
-                ].map(item => (
-                  <div key={item.key} className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                    <button
-                      onClick={() => updateSetting(`${item.key}Enabled` as any, !settings[`${item.key}Enabled` as keyof LoggingSettings])}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'bg-green-600' : 'bg-gray-300'
-                      }`}
-                    >
-                      <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                          settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'translate-x-6' : 'translate-x-1'
-                        }`}
-                      />
-                    </button>
-                    <div className="flex-1">
-                      <p className="font-semibold text-slate-900">{item.label}</p>
-                      <p className="text-sm text-slate-500">{item.desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-      
-          {/* Message Logs Card */}
-          {settings.enabled && (
-            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
-              <div className="mb-6">
-                <h2 className="text-xl font-bold text-slate-900">Message Logs</h2>
-                <p className="text-sm text-slate-600">Message activity</p>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                  <div className="flex-1">
-                    <p className="font-semibold text-slate-900">Message Log Channel</p>
-                    <p className="text-sm text-slate-500">All message events will be logged here</p>
-                  </div>
-                  <select 
-                    value={settings.messageChannel || ''} 
-                    onChange={(e) => updateSetting('messageChannel', e.target.value || null)}
-                    className="w-full sm:w-48 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  >
-                    <option value="">Select channel...</option>
-                    {channels.map(ch => (
-                      <option key={ch.id} value={ch.id}>#{ch.name}</option>
-                    ))}
-                  </select>
-                </div>
-
-                {[
-                  { key: 'messageDelete', label: 'Message Delete', desc: 'Deleted messages (with content)' },
-                  { key: 'messageEdit', label: 'Message Edit', desc: 'Edited messages (before/after)' },
-                  { key: 'messageAttachments', label: 'Message Attachments', desc: 'Track image/file shares' },
-                ].map(item => (
-                  <div key={item.key} className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                    <button
-                      onClick={() => updateSetting(`${item.key}Enabled` as any, !settings[`${item.key}Enabled` as keyof LoggingSettings])}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'bg-green-600' : 'bg-gray-300'
-                      }`}
-                    >
-                      <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                          settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'translate-x-6' : 'translate-x-1'
-                        }`}
-                      />
-                    </button>
-                    <div className="flex-1">
-                      <p className="font-semibold text-slate-900">{item.label}</p>
-                      <p className="text-sm text-slate-500">{item.desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Channel Logs Card */}
-          {settings.enabled && (
-            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
-              <div className="mb-6">
-                <h2 className="text-xl font-bold text-slate-900">Channel Logs</h2>
-                <p className="text-sm text-slate-600">Server structure</p>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                  <div className="flex-1">
-                    <p className="font-semibold text-slate-900">Channel Log Channel</p>
-                    <p className="text-sm text-slate-500">All channel events will be logged here</p>
-                  </div>
-                  <select 
-                    value={settings.channelLogsChannel || ''} 
-                    onChange={(e) => updateSetting('channelLogsChannel', e.target.value || null)}
-                    className="w-full sm:w-48 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  >
-                    <option value="">Select channel...</option>
-                    {channels.map(ch => (
-                      <option key={ch.id} value={ch.id}>#{ch.name}</option>
-                    ))}
-                  </select>
-                </div>
-
-                {[
-                  { key: 'channelCreate', label: 'Channel Create', desc: 'New channels created' },
-                  { key: 'channelDelete', label: 'Channel Delete', desc: 'Channels deleted' },
-                  { key: 'channelUpdate', label: 'Channel Update', desc: 'Channel name, topic, permissions changed' },
-                ].map(item => (
-                  <div key={item.key} className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                    <button
-                      onClick={() => updateSetting(`${item.key}Enabled` as any, !settings[`${item.key}Enabled` as keyof LoggingSettings])}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'bg-green-600' : 'bg-gray-300'
-                      }`}
-                    >
-                      <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                          settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'translate-x-6' : 'translate-x-1'
-                        }`}
-                      />
-                    </button>
-                    <div className="flex-1">
-                      <p className="font-semibold text-slate-900">{item.label}</p>
-                      <p className="text-sm text-slate-500">{item.desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Role Logs Card */}
-          {settings.enabled && (
-            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
-              <div className="mb-6">
-                <h2 className="text-xl font-bold text-slate-900">Role Logs</h2>
-                <p className="text-sm text-slate-600">Role management</p>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                  <div className="flex-1">
-                    <p className="font-semibold text-slate-900">Role Log Channel</p>
-                    <p className="text-sm text-slate-500">All role events will be logged here</p>
-                  </div>
-                  <select 
-                    value={settings.roleLogsChannel || ''} 
-                    onChange={(e) => updateSetting('roleLogsChannel', e.target.value || null)}
-                    className="w-full sm:w-48 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  >
-                    <option value="">Select channel...</option>
-                    {channels.map(ch => (
-                      <option key={ch.id} value={ch.id}>#{ch.name}</option>
-                    ))}
-                  </select>
-                </div>
-
-                {[
-                  { key: 'roleCreate', label: 'Role Create', desc: 'New roles created' },
-                  { key: 'roleRemove', label: 'Role Remove', desc: 'Roles deleted' },
-                  { key: 'roleUpdate', label: 'Role Update', desc: 'Role permissions, color, name changed' },
-                ].map(item => (
-                  <div key={item.key} className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                    <button
-                      onClick={() => updateSetting(`${item.key}Enabled` as any, !settings[`${item.key}Enabled` as keyof LoggingSettings])}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'bg-green-600' : 'bg-gray-300'
-                      }`}
-                    >
-                      <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                          settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'translate-x-6' : 'translate-x-1'
-                        }`}
-                      />
-                    </button>
-                    <div className="flex-1">
-                      <p className="font-semibold text-slate-900">{item.label}</p>
-                      <p className="text-sm text-slate-500">{item.desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Voice Logs Card */}
-          {settings.enabled && (
-            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
-              <div className="mb-6">
-                <h2 className="text-xl font-bold text-slate-900">Voice Logs</h2>
-                <p className="text-sm text-slate-600">Voice activity</p>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                  <div className="flex-1">
-                    <p className="font-semibold text-slate-900">Voice Log Channel</p>
-                    <p className="text-sm text-slate-500">All voice events will be logged here</p>
-                  </div>
-                  <select 
-                    value={settings.voiceChannel || ''} 
-                    onChange={(e) => updateSetting('voiceChannel', e.target.value || null)}
-                    className="w-full sm:w-48 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  >
-                    <option value="">Select channel...</option>
-                    {channels.map(ch => (
-                      <option key={ch.id} value={ch.id}>#{ch.name}</option>
-                    ))}
-                  </select>
-                </div>
-
-                {[
-                  { key: 'voiceJoin', label: 'Voice Join', desc: 'User joins voice channel' },
-                  { key: 'voiceLeave', label: 'Voice Leave', desc: 'User leaves voice channel' },
-                  { key: 'voiceMove', label: 'Voice Move', desc: 'User moved between channels' },
-                  { key: 'voiceMuteDeafen', label: 'Voice Mute/Deafen', desc: 'Server mute/deafen changes' },
-                  { key: 'voiceStreaming', label: 'Voice Streaming/Video', desc: 'User starts streaming/video' },
-                ].map(item => (
-                  <div key={item.key} className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                    <button
-                      onClick={() => updateSetting(`${item.key}Enabled` as any, !settings[`${item.key}Enabled` as keyof LoggingSettings])}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'bg-green-600' : 'bg-gray-300'
-                      }`}
-                    >
-                      <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                          settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'translate-x-6' : 'translate-x-1'
-                        }`}
-                      />
-                    </button>
-                    <div className="flex-1">
-                      <p className="font-semibold text-slate-900">{item.label}</p>
-                      <p className="text-sm text-slate-500">{item.desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Server Logs Card */}
-          {settings.enabled && (
-            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
-              <div className="mb-6">
-                <h2 className="text-xl font-bold text-slate-900">Server Logs</h2>
-                <p className="text-sm text-slate-600">Server changes</p>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                  <div className="flex-1">
-                    <p className="font-semibold text-slate-900">Server Log Channel</p>
-                    <p className="text-sm text-slate-500">All server events will be logged here</p>
-                  </div>
-                  <select 
-                    value={settings.serverChannel || ''} 
-                    onChange={(e) => updateSetting('serverChannel', e.target.value || null)}
-                    className="w-full sm:w-48 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  >
-                    <option value="">Select channel...</option>
-                    {channels.map(ch => (
-                      <option key={ch.id} value={ch.id}>#{ch.name}</option>
-                    ))}
-                  </select>
-                </div>
-
-                {[
-                  { key: 'serverUpdate', label: 'Server Update', desc: 'Server name, icon, region changed' },
-                  { key: 'emoji', label: 'Emoji Create/Delete/Update', desc: 'Emoji changes' },
-                  { key: 'sticker', label: 'Sticker Create/Delete/Update', desc: 'Sticker changes' },
-                  { key: 'webhook', label: 'Webhook Create/Delete/Update', desc: 'Webhook changes' },
-                  { key: 'invite', label: 'Invite Create/Delete', desc: 'Invite link tracking' },
-                  { key: 'integration', label: 'Integration Updates', desc: 'Bot integrations added/removed' },
-                ].map(item => (
-                  <div key={item.key} className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                    <button
-                      onClick={() => updateSetting(`${item.key}Enabled` as any, !settings[`${item.key}Enabled` as keyof LoggingSettings])}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'bg-green-600' : 'bg-gray-300'
-                      }`}
-                    >
-                      <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                          settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'translate-x-6' : 'translate-x-1'
-                        }`}
-                      />
-                    </button>
-                    <div className="flex-1">
-                      <p className="font-semibold text-slate-900">{item.label}</p>
-                      <p className="text-sm text-slate-500">{item.desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-          </div>
-
-          {/* Advanced Options Card - Full Width */}
-          {settings.enabled && (
-            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6 relative">
-              {!premium && (
-                <div className="absolute inset-0 bg-orange-50/95 backdrop-blur-[2px] rounded-xl z-10 flex items-center justify-center p-8">
-                  <div className="max-w-lg text-center">
-                    <div className="w-16 h-16 bg-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                      <img src="/premium-icon.svg" alt="Premium" className="w-10 h-10" />
-                    </div>
-                    <h3 className="text-xl font-bold text-slate-900 mb-3">Advanced Logging Options</h3>
-                    <p className="text-slate-700 mb-6 text-sm">Unlock powerful logging controls including ignored channels, roles, and users, message content logging, and custom retention periods for comprehensive audit trails.</p>
-                    <div className="grid grid-cols-2 gap-x-8 gap-y-2 mb-6 text-left">
-                      <div className="flex items-center gap-2">
-                        <div className="w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
-                          <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                          </svg>
-                        </div>
-                        <span className="text-sm text-slate-800">Ignored channels & roles</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
-                          <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                          </svg>
-                        </div>
-                        <span className="text-sm text-slate-800">Message content logging</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
-                          <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                          </svg>
-                        </div>
-                        <span className="text-sm text-slate-800">Bot action filtering</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
-                          <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                          </svg>
-                        </div>
-                        <span className="text-sm text-slate-800">Custom retention periods</span>
-                      </div>
-                    </div>
-                    <button className="w-full px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition shadow-lg flex items-center justify-center gap-2">
-                      <img src="/premium-icon.svg" alt="" className="w-5 h-5" />
-                      Upgrade to Premium
-                      <span>→</span>
-                    </button>
-                    <p className="text-xs text-slate-600 mt-3">Starting at $4.99/month • Cancel anytime</p>
-                  </div>
-                </div>
-              )}
-              <div className="mb-6">
-                <h2 className="text-xl font-bold text-slate-900">Advanced Logging Options</h2>
-                <p className="text-sm text-slate-600">Configure advanced logging behavior</p>
-              </div>
-
-              <div className="space-y-4">
-                <div className="p-5 rounded-lg bg-slate-50 border border-slate-200 space-y-3">
-                  <label className="block font-semibold text-slate-900">Log Ignored Channels</label>
-                  <div className="space-y-2">
-                    {settings.ignoredChannels.map((channelId, idx) => (
-                      <div key={idx} className="flex items-center gap-2">
-                        <select 
-                          value={channelId} 
-                          onChange={(e) => {
-                            const newIgnored = [...settings.ignoredChannels];
-                            newIgnored[idx] = e.target.value;
-                            updateSetting('ignoredChannels', newIgnored);
-                          }}
-                          className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-                        >
-                          <option value="">Select channel...</option>
-                          {channels.map(ch => (
-                            <option key={ch.id} value={ch.id}>#{ch.name}</option>
-                          ))}
-                        </select>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const newIgnored = settings.ignoredChannels.filter((_, i) => i !== idx);
-                            updateSetting('ignoredChannels', newIgnored);
-                          }}
-                          className="px-3 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition text-sm font-medium"
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    ))}
-                    <button
-                      type="button"
-                      onClick={() => updateSetting('ignoredChannels', [...settings.ignoredChannels, ''])}
-                      className="w-full px-3 py-2 border-2 border-dashed border-slate-300 rounded-lg text-slate-600 hover:border-slate-400 hover:text-slate-700 transition text-sm font-medium"
-                    >
-                      + Add Channel
-                    </button>
-                  </div>
-                  <p className="text-sm text-slate-500">Channels to exclude from logging</p>
-                </div>
-
-                <div className="p-5 rounded-lg bg-slate-50 border border-slate-200 space-y-3">
-                  <label className="block font-semibold text-slate-900">Log Ignored Roles</label>
-                  <div className="space-y-2">
-                    {settings.ignoredRoles.map((roleId, idx) => (
-                      <div key={idx} className="flex items-center gap-2">
-                        <select 
-                          value={roleId} 
-                          onChange={(e) => {
-                            const newIgnored = [...settings.ignoredRoles];
-                            newIgnored[idx] = e.target.value;
-                            updateSetting('ignoredRoles', newIgnored);
-                          }}
-                          className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-                        >
-                          <option value="">Select role...</option>
-                          {roles.map(role => (
-                            <option key={role.id} value={role.id}>@{role.name}</option>
-                          ))}
-                        </select>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const newIgnored = settings.ignoredRoles.filter((_, i) => i !== idx);
-                            updateSetting('ignoredRoles', newIgnored);
-                          }}
-                          className="px-3 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition text-sm font-medium"
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    ))}
-                    <button
-                      type="button"
-                      onClick={() => updateSetting('ignoredRoles', [...settings.ignoredRoles, ''])}
-                      className="w-full px-3 py-2 border-2 border-dashed border-slate-300 rounded-lg text-slate-600 hover:border-slate-400 hover:text-slate-700 transition text-sm font-medium"
-                    >
-                      + Add Role
-                    </button>
-                  </div>
-                  <p className="text-sm text-slate-500">Roles to exclude from logging (e.g., bots)</p>
-                </div>
-
-                <div className="p-5 rounded-lg bg-slate-50 border border-slate-200 space-y-3">
-                  <label className="block font-semibold text-slate-900">Log Ignored Users</label>
-                  <div className="space-y-2">
-                    {settings.ignoredUsers.map((userId, idx) => (
-                      <div key={idx} className="flex items-center gap-2">
-                        <input 
-                          type="text"
-                          value={userId} 
-                          onChange={(e) => {
-                            const newIgnored = [...settings.ignoredUsers];
-                            newIgnored[idx] = e.target.value;
-                            updateSetting('ignoredUsers', newIgnored);
-                          }}
-                          placeholder="Enter user ID or search..."
-                          className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const newIgnored = settings.ignoredUsers.filter((_, i) => i !== idx);
-                            updateSetting('ignoredUsers', newIgnored);
-                          }}
-                          className="px-3 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition text-sm font-medium"
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    ))}
-                    <button
-                      type="button"
-                      onClick={() => updateSetting('ignoredUsers', [...settings.ignoredUsers, ''])}
-                      className="w-full px-3 py-2 border-2 border-dashed border-slate-300 rounded-lg text-slate-600 hover:border-slate-400 hover:text-slate-700 transition text-sm font-medium"
-                    >
-                      + Add User
-                    </button>
-                  </div>
-                  <p className="text-sm text-slate-500">Specific users to exclude (enter Discord user ID)</p>
-                </div>
-
-                <div className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                  <button
-                    onClick={() => updateSetting('includeBotActions', !settings.includeBotActions)}
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                      settings.includeBotActions ? 'bg-green-600' : 'bg-gray-300'
-                    }`}
-                  >
-                    <span
-                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                        settings.includeBotActions ? 'translate-x-6' : 'translate-x-1'
-                      }`}
-                    />
-                  </button>
-                  <div className="flex-1">
-                    <p className="font-semibold text-slate-900">Include Bot Actions</p>
-                    <p className="text-sm text-slate-500">Toggle logging bot actions</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                  <button
-                    onClick={() => updateSetting('logMessageContent', !settings.logMessageContent)}
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                      settings.logMessageContent ? 'bg-green-600' : 'bg-gray-300'
-                    }`}
-                  >
-                    <span
-                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                        settings.logMessageContent ? 'translate-x-6' : 'translate-x-1'
-                      }`}
-                    />
-                  </button>
-                  <div className="flex-1">
-                    <p className="font-semibold text-slate-900">Log Message Content</p>
-                    <p className="text-sm text-slate-500">Toggle storing message content (privacy)</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                  <button
-                    onClick={() => updateSetting('logEmbedUrls', !settings.logEmbedUrls)}
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                      settings.logEmbedUrls ? 'bg-green-600' : 'bg-gray-300'
-                    }`}
-                  >
-                    <span
-                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                        settings.logEmbedUrls ? 'translate-x-6' : 'translate-x-1'
-                      }`}
-                    />
-                  </button>
-                  <div className="flex-1">
-                    <p className="font-semibold text-slate-900">Log Embed/Attachment URLs</p>
-                    <p className="text-sm text-slate-500">Store links from deleted messages</p>
-                  </div>
-                </div>
-
-                <div className="p-5 rounded-lg bg-slate-50 border border-slate-200 space-y-3">
-                  <label className="block font-semibold text-slate-900">Retention Period</label>
-                  <input 
-                    type="number" 
-                    value={settings.retentionPeriod} 
-                    onChange={(e) => updateSetting('retentionPeriod', parseInt(e.target.value))}
-                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500" 
-                    min="1" 
-                    max="365" 
-                  />
-                  <p className="text-sm text-slate-500">How long to keep logs (days)</p>
-                </div>
-              </div>
-            </div>
-          )}
-
-        {/* Savebutton */}
-        <div className="flex justify-end mb-8">
+        {/* Save Button */}
+        <div className="flex justify-end">
           <button
             onClick={handleSave}
             disabled={saving}
@@ -1280,8 +653,10 @@ export default function LoggingPage() {
 
         {/* Debug Info Popup */}
         <DebugInfoPopup isOpen={showDebugInfo} onClose={() => setShowDebugInfo(false)} />
+        <DeveloperTools isOpen={showDeveloperTools} onClose={() => setShowDeveloperTools(false)} />
+            </div>
+          </div>
         </div>
-      </main>
-    </div>
-  );
-}
+      </div>
+    );
+  }
