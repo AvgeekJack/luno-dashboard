@@ -546,10 +546,18 @@ export default function LoggingPage() {
                 </div>
 
                 <div className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                  <Switch 
-                    checked={settings.logAutomodViolations} 
-                    onCheckedChange={(checked) => updateSetting('logAutomodViolations', checked)}
-                  />
+                  <button
+                    onClick={() => updateSetting('logAutomodViolations', !settings.logAutomodViolations)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      settings.logAutomodViolations ? 'bg-green-600' : 'bg-gray-300'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        settings.logAutomodViolations ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
                   <div className="flex-1">
                     <p className="font-semibold text-slate-900">Log AutoMod Violations</p>
                     <p className="text-sm text-slate-500">Track when users trigger automod filters</p>
@@ -557,10 +565,18 @@ export default function LoggingPage() {
                 </div>
 
                 <div className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                  <Switch 
-                    checked={settings.logAutomodActions} 
-                    onCheckedChange={(checked) => updateSetting('logAutomodActions', checked)}
-                  />
+                  <button
+                    onClick={() => updateSetting('logAutomodActions', !settings.logAutomodActions)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      settings.logAutomodActions ? 'bg-green-600' : 'bg-gray-300'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        settings.logAutomodActions ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
                   <div className="flex-1">
                     <p className="font-semibold text-slate-900">Log AutoMod Actions</p>
                     <p className="text-sm text-slate-500">Track actions taken by automod (deletes, timeouts, etc.)</p>
@@ -568,10 +584,18 @@ export default function LoggingPage() {
                 </div>
 
                 <div className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                  <Switch 
-                    checked={settings.logAutomodFilters} 
-                    onCheckedChange={(checked) => updateSetting('logAutomodFilters', checked)}
-                  />
+                  <button
+                    onClick={() => updateSetting('logAutomodFilters', !settings.logAutomodFilters)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      settings.logAutomodFilters ? 'bg-green-600' : 'bg-gray-300'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        settings.logAutomodFilters ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
                   <div className="flex-1">
                     <p className="font-semibold text-slate-900">Log Filter Triggers</p>
                     <p className="text-sm text-slate-500">Log which specific filters were triggered</p>
@@ -608,10 +632,18 @@ export default function LoggingPage() {
                 </div>
 
                 <div className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                  <Switch 
-                    checked={settings.logRaidDetections} 
-                    onCheckedChange={(checked) => updateSetting('logRaidDetections', checked)}
-                  />
+                  <button
+                    onClick={() => updateSetting('logRaidDetections', !settings.logRaidDetections)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      settings.logRaidDetections ? 'bg-green-600' : 'bg-gray-300'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        settings.logRaidDetections ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
                   <div className="flex-1">
                     <p className="font-semibold text-slate-900">Log Raid Detections</p>
                     <p className="text-sm text-slate-500">Record when potential raids are detected</p>
@@ -619,10 +651,18 @@ export default function LoggingPage() {
                 </div>
 
                 <div className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                  <Switch 
-                    checked={settings.logRaidActions} 
-                    onCheckedChange={(checked) => updateSetting('logRaidActions', checked)}
-                  />
+                  <button
+                    onClick={() => updateSetting('logRaidActions', !settings.logRaidActions)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      settings.logRaidActions ? 'bg-green-600' : 'bg-gray-300'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        settings.logRaidActions ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
                   <div className="flex-1">
                     <p className="font-semibold text-slate-900">Log Raid Actions</p>
                     <p className="text-sm text-slate-500">Log actions taken in response to raids</p>
@@ -672,10 +712,18 @@ export default function LoggingPage() {
                   { key: 'messagePurge', label: 'Message Purge/Clear', desc: 'Bulk message deletions' },
                 ].map(item => (
                   <div key={item.key} className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                    <Switch 
-                      checked={!!settings[`${item.key}Enabled` as keyof LoggingSettings]} 
-                      onCheckedChange={(checked) => updateSetting(`${item.key}Enabled` as any, checked)}
-                    />
+                    <button
+                      onClick={() => updateSetting(`${item.key}Enabled` as any, !settings[`${item.key}Enabled` as keyof LoggingSettings])}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'bg-green-600' : 'bg-gray-300'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
                     <div className="flex-1">
                       <p className="font-semibold text-slate-900">{item.label}</p>
                       <p className="text-sm text-slate-500">{item.desc}</p>
@@ -719,10 +767,18 @@ export default function LoggingPage() {
                   { key: 'messageAttachments', label: 'Message Attachments', desc: 'Track image/file shares' },
                 ].map(item => (
                   <div key={item.key} className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                    <Switch 
-                      checked={!!settings[`${item.key}Enabled` as keyof LoggingSettings]} 
-                      onCheckedChange={(checked) => updateSetting(`${item.key}Enabled` as any, checked)}
-                    />
+                    <button
+                      onClick={() => updateSetting(`${item.key}Enabled` as any, !settings[`${item.key}Enabled` as keyof LoggingSettings])}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'bg-green-600' : 'bg-gray-300'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
                     <div className="flex-1">
                       <p className="font-semibold text-slate-900">{item.label}</p>
                       <p className="text-sm text-slate-500">{item.desc}</p>
@@ -765,10 +821,18 @@ export default function LoggingPage() {
                   { key: 'channelUpdate', label: 'Channel Update', desc: 'Channel name, topic, permissions changed' },
                 ].map(item => (
                   <div key={item.key} className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                    <Switch 
-                      checked={!!settings[`${item.key}Enabled` as keyof LoggingSettings]} 
-                      onCheckedChange={(checked) => updateSetting(`${item.key}Enabled` as any, checked)}
-                    />
+                    <button
+                      onClick={() => updateSetting(`${item.key}Enabled` as any, !settings[`${item.key}Enabled` as keyof LoggingSettings])}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'bg-green-600' : 'bg-gray-300'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
                     <div className="flex-1">
                       <p className="font-semibold text-slate-900">{item.label}</p>
                       <p className="text-sm text-slate-500">{item.desc}</p>
@@ -811,10 +875,18 @@ export default function LoggingPage() {
                   { key: 'roleUpdate', label: 'Role Update', desc: 'Role permissions, color, name changed' },
                 ].map(item => (
                   <div key={item.key} className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                    <Switch 
-                      checked={!!settings[`${item.key}Enabled` as keyof LoggingSettings]} 
-                      onCheckedChange={(checked) => updateSetting(`${item.key}Enabled` as any, checked)}
-                    />
+                    <button
+                      onClick={() => updateSetting(`${item.key}Enabled` as any, !settings[`${item.key}Enabled` as keyof LoggingSettings])}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'bg-green-600' : 'bg-gray-300'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
                     <div className="flex-1">
                       <p className="font-semibold text-slate-900">{item.label}</p>
                       <p className="text-sm text-slate-500">{item.desc}</p>
@@ -859,10 +931,18 @@ export default function LoggingPage() {
                   { key: 'voiceStreaming', label: 'Voice Streaming/Video', desc: 'User starts streaming/video' },
                 ].map(item => (
                   <div key={item.key} className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                    <Switch 
-                      checked={!!settings[`${item.key}Enabled` as keyof LoggingSettings]} 
-                      onCheckedChange={(checked) => updateSetting(`${item.key}Enabled` as any, checked)}
-                    />
+                    <button
+                      onClick={() => updateSetting(`${item.key}Enabled` as any, !settings[`${item.key}Enabled` as keyof LoggingSettings])}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'bg-green-600' : 'bg-gray-300'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
                     <div className="flex-1">
                       <p className="font-semibold text-slate-900">{item.label}</p>
                       <p className="text-sm text-slate-500">{item.desc}</p>
@@ -908,10 +988,18 @@ export default function LoggingPage() {
                   { key: 'integration', label: 'Integration Updates', desc: 'Bot integrations added/removed' },
                 ].map(item => (
                   <div key={item.key} className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                    <Switch 
-                      checked={!!settings[`${item.key}Enabled` as keyof LoggingSettings]} 
-                      onCheckedChange={(checked) => updateSetting(`${item.key}Enabled` as any, checked)}
-                    />
+                    <button
+                      onClick={() => updateSetting(`${item.key}Enabled` as any, !settings[`${item.key}Enabled` as keyof LoggingSettings])}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'bg-green-600' : 'bg-gray-300'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          settings[`${item.key}Enabled` as keyof LoggingSettings] ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
                     <div className="flex-1">
                       <p className="font-semibold text-slate-900">{item.label}</p>
                       <p className="text-sm text-slate-500">{item.desc}</p>
@@ -1107,10 +1195,18 @@ export default function LoggingPage() {
                 </div>
 
                 <div className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                  <Switch 
-                    checked={settings.includeBotActions} 
-                    onCheckedChange={(checked) => updateSetting('includeBotActions', checked)}
-                  />
+                  <button
+                    onClick={() => updateSetting('includeBotActions', !settings.includeBotActions)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      settings.includeBotActions ? 'bg-green-600' : 'bg-gray-300'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        settings.includeBotActions ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
                   <div className="flex-1">
                     <p className="font-semibold text-slate-900">Include Bot Actions</p>
                     <p className="text-sm text-slate-500">Toggle logging bot actions</p>
@@ -1118,10 +1214,18 @@ export default function LoggingPage() {
                 </div>
 
                 <div className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                  <Switch 
-                    checked={settings.logMessageContent} 
-                    onCheckedChange={(checked) => updateSetting('logMessageContent', checked)}
-                  />
+                  <button
+                    onClick={() => updateSetting('logMessageContent', !settings.logMessageContent)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      settings.logMessageContent ? 'bg-green-600' : 'bg-gray-300'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        settings.logMessageContent ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
                   <div className="flex-1">
                     <p className="font-semibold text-slate-900">Log Message Content</p>
                     <p className="text-sm text-slate-500">Toggle storing message content (privacy)</p>
@@ -1129,10 +1233,18 @@ export default function LoggingPage() {
                 </div>
 
                 <div className="flex items-center gap-3 p-5 rounded-lg bg-slate-50 border border-slate-200">
-                  <Switch 
-                    checked={settings.logEmbedUrls} 
-                    onCheckedChange={(checked) => updateSetting('logEmbedUrls', checked)}
-                  />
+                  <button
+                    onClick={() => updateSetting('logEmbedUrls', !settings.logEmbedUrls)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      settings.logEmbedUrls ? 'bg-green-600' : 'bg-gray-300'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        settings.logEmbedUrls ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
                   <div className="flex-1">
                     <p className="font-semibold text-slate-900">Log Embed/Attachment URLs</p>
                     <p className="text-sm text-slate-500">Store links from deleted messages</p>
