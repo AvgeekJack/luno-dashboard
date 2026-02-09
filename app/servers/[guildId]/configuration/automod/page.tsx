@@ -225,50 +225,55 @@ export default function AutomodPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f8f9fa] text-[#0f172a] flex overflow-x-hidden">
-      {/* Mobile Menu Button */}
-      <button 
-        className="lg:hidden fixed top-4 left-4 z-[60] bg-orange-500 hover:bg-orange-600 text-white p-2.5 rounded-lg shadow-lg transition-colors"
-        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        aria-label="Toggle menu"
-      >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          {mobileMenuOpen ? (
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          ) : (
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-          )}
-        </svg>
-      </button>
-
-      {/* Mobile Overlay */}
+    <div className="min-h-screen bg-gray-50 text-[#0f172a] flex">
+      {/* Mobile menu overlay */}
       {mobileMenuOpen && (
         <div 
-          className="lg:hidden fixed inset-0 bg-black/50 z-[45]"
+          className="fixed inset-0 bg-black bg-opacity-50 z-[40] lg:hidden" 
           onClick={() => setMobileMenuOpen(false)}
         />
       )}
-
+      
       {/* Sidebar */}
-      <aside className={`fixed left-0 top-0 h-screen w-64 bg-white border-r border-orange-100 shadow-sm overflow-y-auto flex flex-col z-[50] transition-transform duration-300 ease-in-out ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
+      <aside className={`fixed left-0 top-0 h-screen w-64 bg-white border-r border-orange-100 shadow-lg lg:shadow-sm overflow-y-auto flex flex-col z-[50] transition-transform duration-300 ease-in-out ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
           <div className="p-4 border-b border-orange-100 flex items-center justify-between">
+            <button
+              onClick={() => setMobileMenuOpen(false)}
+              className="lg:hidden w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors"
+              aria-label="Close menu"
+            >
+              <svg className="w-5 h-5 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
             <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-              <img src="/luno-logo.png" alt="Luno Bot" className="w-10 h-10 object-contain ml-12 lg:ml-0" />
+              <img src="/luno-logo.png" alt="Luno Bot" className="w-10 h-10 object-contain" />
               <span className="text-xl font-bold text-[#0f172a]">Luno</span>
             </Link>
+            <div className="w-8 lg:hidden"></div>
           </div>
           
           <div className="px-4 py-4">
-            <Link href="/servers" className="text-orange-600 font-semibold hover:text-orange-700 transition-colors text-sm px-3" onClick={() => setMobileMenuOpen(false)}>← Back to Servers</Link>
+            <Link 
+              href="/servers" 
+              className="text-orange-600 font-semibold hover:text-orange-700 transition-colors text-sm px-3"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              ← Back to Servers
+            </Link>
           </div>
           
           <nav className="px-4 space-y-2 text-sm font-semibold text-slate-700">
-            <Link href={`/servers/${gid}`} className="flex items-center gap-3 px-3 py-6 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+            <Link 
+              href={`/servers/${gid}`}
+              className="flex items-center gap-3 px-3 py-6 transition-colors rounded-lg hover:bg-gray-100 text-slate-700"
+              onClick={() => setMobileMenuOpen(false)}
+            >
               <img src="/dashbaord.png" alt="" className="w-5 h-5" />
               Dashboard
             </Link>
             <details className="text-slate-800" open={settingsOpen}>
-              <summary data-tour="settings-link" className="flex items-center justify-between px-3 py-6 cursor-pointer select-none" onClick={(e) => { e.preventDefault(); setSettingsOpen(!settingsOpen); }}>
+              <summary className="flex items-center justify-between px-3 py-6 cursor-pointer select-none transition-colors rounded-lg" onClick={(e) => { e.preventDefault(); setSettingsOpen(!settingsOpen); }}>
                 <span className="flex items-center gap-3">
                   <img src="/settings.png" alt="" className="w-5 h-5" />
                   Settings
@@ -276,18 +281,28 @@ export default function AutomodPage() {
                 <span className="text-xs text-orange-600">▾</span>
               </summary>
               {settingsOpen && (
-                <div className={`px-2 py-1 space-y-1 border-l-2 border-orange-400 ml-3 ${settingsOpen ? 'animate-dropdown-open' : 'animate-dropdown-close'}`}>
-                  <Link href={`/servers/${gid}/general`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left ${settingsOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '0ms'}} onClick={() => setMobileMenuOpen(false)}>
+                <div className={`px-2 py-1 space-y-1 border-l-2 border-slate-200 ml-3 ${settingsOpen ? 'animate-dropdown-open' : 'animate-dropdown-close'}`}>
+                  <Link 
+                    href={`/servers/${gid}/general`}
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${settingsOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                    style={{animationDelay: '0ms'}}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
                     General
                   </Link>
-                  <Link href={`/servers/${gid}/setup`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left ${settingsOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '50ms'}} onClick={() => setMobileMenuOpen(false)}>
+                  <Link 
+                    href={`/servers/${gid}/setup`}
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${settingsOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                    style={{animationDelay: '50ms'}}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
                     Setup
                   </Link>
                 </div>
               )}
             </details>
             <details className="text-slate-800" open={configOpen}>
-              <summary data-tour="commands-link" className="flex items-center justify-between px-3 py-6 cursor-pointer select-none" onClick={(e) => { e.preventDefault(); setConfigOpen(!configOpen); }}>
+              <summary className="flex items-center justify-between px-3 py-6 cursor-pointer select-none transition-colors rounded-lg" onClick={(e) => { e.preventDefault(); setConfigOpen(!configOpen); }}>
                 <span className="flex items-center gap-3">
                   <img src="/configuration.png" alt="" className="w-5 h-5" />
                   Configuration
@@ -295,27 +310,52 @@ export default function AutomodPage() {
                 <span className="text-xs text-orange-600">▾</span>
               </summary>
               {configOpen && (
-                <div className={`px-2 py-1 space-y-1 border-l-2 border-orange-400 ml-3 ${configOpen ? 'animate-dropdown-open' : 'animate-dropdown-close'}`}>
-                  <Link href={`/servers/${gid}/configuration/automod`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 bg-orange-100 text-orange-700 transition-colors text-left ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '0ms'}} onClick={() => setMobileMenuOpen(false)}>
+                <div className={`px-2 py-1 space-y-1 border-l-2 border-slate-200 ml-3 ${configOpen ? 'animate-dropdown-open' : 'animate-dropdown-close'}`}>
+                  <Link 
+                    href={`/servers/${gid}/configuration/automod`}
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left bg-orange-50 text-orange-600 ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                    style={{animationDelay: '0ms'}}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
                     Automod
                   </Link>
-                  <Link href={`/servers/${gid}/configuration/logging`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '50ms'}} onClick={() => setMobileMenuOpen(false)}>
+                  <Link 
+                    href={`/servers/${gid}/configuration/logging`}
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                    style={{animationDelay: '50ms'}}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
                     Logging
                   </Link>
-                  <Link href={`/servers/${gid}/configuration/anti-raid`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '100ms'}} onClick={() => setMobileMenuOpen(false)}>
+                  <Link 
+                    href={`/servers/${gid}/configuration/anti-raid`}
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                    style={{animationDelay: '100ms'}}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
                     Anti-Raid
                   </Link>
-                  <Link href={`/servers/${gid}/configuration/reaction-roles`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '150ms'}} onClick={() => setMobileMenuOpen(false)}>
+                  <Link 
+                    href={`/servers/${gid}/configuration/reaction-roles`}
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                    style={{animationDelay: '150ms'}}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
                     Reaction Roles
                   </Link>
-                  <Link href={`/servers/${gid}/configuration/verification`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '200ms'}} onClick={() => setMobileMenuOpen(false)}>
+                  <Link 
+                    href={`/servers/${gid}/configuration/verification`}
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${configOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                    style={{animationDelay: '200ms'}}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
                     Verification
                   </Link>
                 </div>
               )}
             </details>
             <details className="text-slate-800" open={modulesOpen}>
-              <summary data-tour="modules-link" className="flex items-center justify-between px-3 py-6 cursor-pointer select-none" onClick={(e) => { e.preventDefault(); setModulesOpen(!modulesOpen); }}>
+              <summary className="flex items-center justify-between px-3 py-6 cursor-pointer select-none transition-colors rounded-lg" onClick={(e) => { e.preventDefault(); setModulesOpen(!modulesOpen); }}>
                 <span className="flex items-center gap-3">
                   <img src="/modules.png" alt="" className="w-5 h-5" />
                   Modules
@@ -323,58 +363,107 @@ export default function AutomodPage() {
                 <span className="text-xs text-orange-600">▾</span>
               </summary>
               {modulesOpen && (
-                <div className={`px-2 py-1 space-y-1 border-l-2 border-orange-400 ml-3 ${modulesOpen ? 'animate-dropdown-open' : 'animate-dropdown-close'}`}>
-                  <Link href={`/servers/${gid}/modules/moderation`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '0ms'}} onClick={() => setMobileMenuOpen(false)}>
+                <div className={`px-2 py-1 space-y-1 border-l-2 border-slate-200 ml-3 ${modulesOpen ? 'animate-dropdown-open' : 'animate-dropdown-close'}`}>
+                  <Link 
+                    href={`/servers/${gid}/modules/moderation`}
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                    style={{animationDelay: '0ms'}}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
                     Moderation
                   </Link>
-                  <Link href={`/servers/${gid}/modules/role-management`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '50ms'}} onClick={() => setMobileMenuOpen(false)}>
+                  <Link 
+                    href={`/servers/${gid}/modules/role-management`}
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                    style={{animationDelay: '50ms'}}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
                     Role Management
                   </Link>
-                  <Link href={`/servers/${gid}/modules/member-management`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '100ms'}} onClick={() => setMobileMenuOpen(false)}>
+                  <Link 
+                    href={`/servers/${gid}/modules/member-management`}
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                    style={{animationDelay: '100ms'}}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
                     Member Management
                   </Link>
-                  <Link href={`/servers/${gid}/modules/announcements`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '150ms'}} onClick={() => setMobileMenuOpen(false)}>
+                  <Link 
+                    href={`/servers/${gid}/modules/announcements`}
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                    style={{animationDelay: '150ms'}}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
                     Announcements
                   </Link>
-                  <Link href={`/servers/${gid}/modules/notifications`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '200ms'}} onClick={() => setMobileMenuOpen(false)}>
+                  <Link 
+                    href={`/servers/${gid}/modules/notifications`}
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                    style={{animationDelay: '200ms'}}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
                     Welcome Messages
                   </Link>
-                  <Link href={`/servers/${gid}/modules/fun`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '250ms'}} onClick={() => setMobileMenuOpen(false)}>
+                  <Link 
+                    href={`/servers/${gid}/modules/fun`}
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                    style={{animationDelay: '250ms'}}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
                     Fun
                   </Link>
-                  <Link href={`/servers/${gid}/modules/utilities`} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} style={{animationDelay: '300ms'}} onClick={() => setMobileMenuOpen(false)}>
+                  <Link 
+                    href={`/servers/${gid}/modules/utilities`}
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors text-left hover:bg-gray-100 ${modulesOpen ? 'animate-item-open' : 'animate-item-close'}`} 
+                    style={{animationDelay: '300ms'}}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
                     Utilities
                   </Link>
                 </div>
               )}
             </details>
           </nav>
-        
-        {/* Developer Debug Button - Only show when bypassed */}
-        {bypassMaintenance && (
-          <div className="mt-auto p-4 border-t-2 border-red-500">
-            <button
-              onClick={() => setShowDebugInfo(true)}
-              className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-3 px-4 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 animate-pulse"
-            >
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-              </svg>
-              🐛 Debug Info
-              <span className="text-xs bg-red-900 px-2 py-1 rounded">DEV ONLY</span>
-            </button>
-            <p className="text-center text-red-600 text-xs font-semibold mt-2">
-              ⚠️ DEVELOPER MODE ACTIVE
-            </p>
-          </div>
-        )}
-      </aside>
+          
+          {/* Developer Debug Button - Only show when bypassed */}
+          {bypassMaintenance && (
+            <div className="px-4 py-4 mt-auto space-y-3 hidden lg:block">
+              <button
+                onClick={() => setShowDebugInfo(true)}
+                className="w-full bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white font-bold py-3 px-4 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+              >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+                🐛 Debug Info
+                <span className="text-xs bg-orange-900 px-2 py-1 rounded">DEV</span>
+              </button>
+              <p className="text-center text-red-600 text-xs font-semibold mt-2">
+                ⚠️ DEVELOPER MODE ACTIVE
+              </p>
+            </div>
+          )}
+        </aside>
 
-      {/* Debug Info Popup */}
-      <DebugInfoPopup isOpen={showDebugInfo} onClose={() => setShowDebugInfo(false)} />
+        {/* Mobile header */}
+        <div className="lg:hidden fixed top-0 left-0 right-0 bg-white border-b border-orange-100 z-30 px-4 py-3 flex items-center justify-between">
+          <button
+            onClick={() => setMobileMenuOpen(true)}
+            className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors"
+            aria-label="Open menu"
+          >
+            <svg className="w-6 h-6 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+          <h1 className="text-lg font-bold text-slate-900">Automod Configuration</h1>
+          <div className="w-8"></div>
+        </div>
 
-      <main data-tour="page-content" className="flex-1 lg:ml-64 py-12 px-4 md:px-6 lg:px-8 pt-20 lg:pt-12 flex justify-center bg-[#f8f9fa]">
-        <div className="w-full max-w-5xl space-y-6">
+        {/* Main Content */}
+        <div className="flex-1 lg:ml-0">
+          <div className="pt-16 lg:pt-8 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-4xl mx-auto">
           {/* Automod Configuration Card */}
           <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
             <div className="flex items-center justify-between">
@@ -397,9 +486,7 @@ export default function AutomodPage() {
             </div>
 
             {settings.enabled && (
-              <>
-            {/* Info Box about Log Channel */}
-            <div className="p-4 rounded-lg bg-blue-50 border border-blue-200">
+            <div className="mt-4 p-4 rounded-lg bg-blue-50 border border-blue-200">
               <div className="flex items-start gap-3">
                 <svg className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
@@ -970,36 +1057,23 @@ export default function AutomodPage() {
               </div>
             </div>
           )}
-        </div>
-      </main>
 
-      {/* Save Changes Overlay */}
-      <div 
-        className={`fixed bottom-0 left-0 right-0 bg-slate-900 text-white p-4 shadow-2xl transition-transform duration-300 ease-out z-50 ${
-          hasUnsavedChanges ? 'translate-y-0' : 'translate-y-full'
-        }`}
-      >
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="text-sm">Careful — you have unsaved changes!</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={handleReset}
-              className="px-4 py-2 text-sm font-medium text-white hover:underline transition"
-            >
-              Reset
-            </button>
-            <button
-              onClick={handleSave}
-              disabled={saving}
-              className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition disabled:opacity-60"
-            >
-              {saving ? 'Saving...' : 'Save Changes'}
-            </button>
+        {/* Save Button */}
+        <div className="flex justify-end mb-8">
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="px-6 py-3 bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 text-white font-semibold rounded-lg transition"
+          >
+            {saving ? 'Saving...' : 'Save Configuration'}
+          </button>
+        </div>
+
+        {/* Debug Info Popup */}
+        <DebugInfoPopup isOpen={showDebugInfo} onClose={() => setShowDebugInfo(false)} />
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
-}
+    );
+  }

@@ -653,36 +653,23 @@ export default function AntiRaidPage() {
               </div>
             </div>
           )}
-        </div>
-      </main>
 
-      {/* Save Changes Overlay */}
-      <div 
-        className={`fixed bottom-0 left-0 right-0 bg-slate-900 text-white p-4 shadow-2xl transition-transform duration-300 ease-out z-50 ${
-          hasUnsavedChanges ? 'translate-y-0' : 'translate-y-full'
-        }`}
-      >
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="text-sm">Careful — you have unsaved changes!</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={handleReset}
-              className="px-4 py-2 text-sm font-medium text-white hover:underline transition"
-            >
-              Reset
-            </button>
-            <button
-              onClick={handleSave}
-              disabled={saving}
-              className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition disabled:opacity-60"
-            >
-              {saving ? 'Saving...' : 'Save Changes'}
-            </button>
+        {/* Save Button */}
+        <div className="flex justify-end mb-8">
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="px-6 py-3 bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 text-white font-semibold rounded-lg transition"
+          >
+            {saving ? 'Saving...' : 'Save Configuration'}
+          </button>
+        </div>
+
+        {/* Debug Info Popup */}
+        <DebugInfoPopup isOpen={showDebugInfo} onClose={() => setShowDebugInfo(false)} />
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
