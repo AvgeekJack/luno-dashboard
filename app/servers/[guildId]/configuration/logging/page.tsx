@@ -179,9 +179,52 @@ export default function LoggingPage() {
         if (res.ok) {
           const data = await res.json();
           if (data.configuration?.logging) {
-            const loggingData = { ...settings, ...data.configuration.logging };
-            setSettings(loggingData);
-            setOriginalSettings(loggingData);
+            const loggingData = data.configuration.logging;
+            // Merge with initial state to ensure all fields are present
+            const mergedSettings = {
+              enabled: loggingData.enabled ?? false,
+              logChannel: loggingData.logChannel ?? null,
+              warns: loggingData.warns ?? false,
+              kicks: loggingData.kicks ?? false,
+              bans: loggingData.bans ?? false,
+              unbans: loggingData.unbans ?? false,
+              timeouts: loggingData.timeouts ?? false,
+              untimeouts: loggingData.untimeouts ?? false,
+              softbans: loggingData.softbans ?? false,
+              channelLocks: loggingData.channelLocks ?? false,
+              lockdowns: loggingData.lockdowns ?? false,
+              slowmode: loggingData.slowmode ?? false,
+              messagePurge: loggingData.messagePurge ?? false,
+              automodActions: loggingData.automodActions ?? false,
+              memberJoin: loggingData.memberJoin ?? false,
+              memberLeave: loggingData.memberLeave ?? false,
+              roleUpdates: loggingData.roleUpdates ?? false,
+              nicknameChanges: loggingData.nicknameChanges ?? false,
+              usernameChanges: loggingData.usernameChanges ?? false,
+              messageDelete: loggingData.messageDelete ?? false,
+              messageEdit: loggingData.messageEdit ?? false,
+              bulkDelete: loggingData.bulkDelete ?? false,
+              messageAttachments: loggingData.messageAttachments ?? false,
+              channelCreate: loggingData.channelCreate ?? false,
+              channelDelete: loggingData.channelDelete ?? false,
+              channelUpdate: loggingData.channelUpdate ?? false,
+              roleCreate: loggingData.roleCreate ?? false,
+              roleDelete: loggingData.roleDelete ?? false,
+              roleUpdate: loggingData.roleUpdate ?? false,
+              voiceJoin: loggingData.voiceJoin ?? false,
+              voiceLeave: loggingData.voiceLeave ?? false,
+              voiceMove: loggingData.voiceMove ?? false,
+              voiceMuteDeafen: loggingData.voiceMuteDeafen ?? false,
+              voiceStreaming: loggingData.voiceStreaming ?? false,
+              serverUpdate: loggingData.serverUpdate ?? false,
+              emoji: loggingData.emoji ?? false,
+              sticker: loggingData.sticker ?? false,
+              webhook: loggingData.webhook ?? false,
+              invite: loggingData.invite ?? false,
+              integration: loggingData.integration ?? false,
+            };
+            setSettings(mergedSettings);
+            setOriginalSettings(mergedSettings);
           }
         }
       } catch (err) {
