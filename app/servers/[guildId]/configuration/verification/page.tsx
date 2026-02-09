@@ -834,7 +834,6 @@ export default function VerificationPage() {
                   </div>
                 </div>
               </div>
-            </>
           )}
 
         {/* Save Button */}
@@ -848,7 +847,7 @@ export default function VerificationPage() {
           </button>
         </div>
         </div>
-      </div>
+      </main>
     </div>
-    );
-  }
+  );
+}

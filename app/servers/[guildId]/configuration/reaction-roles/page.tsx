@@ -1003,7 +1003,7 @@ export default function ReactionRolesPage() {
           </button>
         </div>
         </div>
-      </div>
+      </main>
     </div>
-    );
-  }
+  );
+}

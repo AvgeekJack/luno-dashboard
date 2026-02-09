@@ -1281,7 +1281,7 @@ export default function LoggingPage() {
         {/* Debug Info Popup */}
         <DebugInfoPopup isOpen={showDebugInfo} onClose={() => setShowDebugInfo(false)} />
         </div>
-      </div>
+      </main>
     </div>
-    );
-  }
+  );
+}
