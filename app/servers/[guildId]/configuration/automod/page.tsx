@@ -499,7 +499,6 @@ export default function AutomodPage() {
                 </div>
               </div>
             </div>
-              </>
             )}
           </div>
 

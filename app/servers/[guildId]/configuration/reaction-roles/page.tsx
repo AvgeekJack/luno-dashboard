@@ -1002,9 +1002,8 @@ export default function ReactionRolesPage() {
             {saving ? 'Saving...' : 'Save Configuration'}
           </button>
         </div>
-            </div>
-          </div>
         </div>
       </div>
+    </div>
     );
   }

@@ -667,9 +667,8 @@ export default function AntiRaidPage() {
 
         {/* Debug Info Popup */}
         <DebugInfoPopup isOpen={showDebugInfo} onClose={() => setShowDebugInfo(false)} />
-            </div>
-          </div>
         </div>
       </div>
+    </div>
     );
   }

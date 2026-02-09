@@ -847,9 +847,8 @@ export default function VerificationPage() {
             {saving ? 'Saving...' : 'Save Configuration'}
           </button>
         </div>
-            </div>
-          </div>
         </div>
       </div>
+    </div>
     );
   }
