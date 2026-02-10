@@ -178,8 +178,6 @@ export default function LoggingPage() {
         const res = await fetch(`/api/servers/${gid}/general`);
         if (res.ok) {
           const data = await res.json();
-          console.log('Fetched data:', data);
-          console.log('Logging data:', data.configuration?.logging);
           if (data.configuration?.logging) {
             const loggingData = data.configuration.logging;
             // Map MongoDB schema fields to frontend state
@@ -225,7 +223,6 @@ export default function LoggingPage() {
               inviteEnabled: loggingData.inviteEnabled ?? false,
               integrationEnabled: loggingData.integrationEnabled ?? false,
             };
-            console.log('Merged settings:', mergedSettings);
             setSettings(mergedSettings);
             setOriginalSettings(mergedSettings);
           }
@@ -243,7 +240,6 @@ export default function LoggingPage() {
 
   const handleSave = async () => {
     setSaving(true);
-    console.log('Saving settings:', settings);
     try {
       const response = await fetch(`/api/servers/${gid}/general`, {
         method: 'PUT',
@@ -254,8 +250,6 @@ export default function LoggingPage() {
       });
 
       if (response.ok) {
-        const responseData = await response.json();
-        console.log('Save response:', responseData);
         setOriginalSettings({ ...settings });
         setHasUnsavedChanges(false);
       }
