@@ -14,10 +14,7 @@ interface ReactionRolePanel {
   channelId: string;
   messageId?: string;
   panelType: 'single' | 'multiple' | 'remove-on-unreact';
-  roleEmojiPairs: Array<{
-    roleId: string;
-    emoji: string;
-  }>;
+  roleEmojiPairs: Array<{ roleId: string; emoji: string; }>;
 }
 
 interface ReactionRolesSettings {
@@ -32,19 +29,17 @@ interface ReactionRolesSettings {
   dmMessage: string;
   rolePersistence: boolean;
   reactionCooldown: number;
-  premium?: boolean;
 }
 
 interface Channel {
   id: string;
   name: string;
-  type: number;
 }
 
 interface Role {
   id: string;
   name: string;
-  color: number;
+  color: string;
 }
 
 export default function ReactionRolesPage() {
