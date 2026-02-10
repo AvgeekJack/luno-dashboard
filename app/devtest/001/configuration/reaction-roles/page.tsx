@@ -434,17 +434,17 @@ export default function ReactionRolesDemo() {
             </div>
 
             {/* Page Header */}
-            <div className="space-y-1 mb-6">
+            <div className="space-y-1 mb-4 md:mb-6">
               <p className="text-xs uppercase tracking-[0.15em] text-orange-500 font-semibold">CONFIGURATION</p>
-              <h1 className="text-4xl font-bold text-[#0f172a]">Reaction Roles</h1>
+              <h1 className="text-2xl md:text-4xl font-bold text-[#0f172a]">Reaction Roles</h1>
             </div>
 
             {/* Master Toggle Card */}
-            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8 space-y-6 mb-6">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <h2 className="text-lg font-semibold text-[#0f172a]">Reaction Role System</h2>
-                  <p className="text-sm text-slate-500">Allow users to assign roles by reacting to messages</p>
+            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-4 md:p-8 space-y-4 md:space-y-6 mb-4 md:mb-6">
+              <div className="flex items-start justify-between gap-3 md:gap-4">
+                <div className="flex-1">
+                  <h2 className="text-base md:text-lg font-semibold text-[#0f172a]">Reaction Role System</h2>
+                  <p className="text-xs md:text-sm text-slate-500">Allow users to assign roles by reacting to messages</p>
                 </div>
                 <Switch 
                   checked={settings.enabled} 
@@ -457,13 +457,13 @@ export default function ReactionRolesDemo() {
             {settings.enabled && (
               <>
                 {/* Panels List */}
-                <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8 mb-6">
+                <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-4 md:p-8 mb-4 md:mb-6">
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-semibold text-[#0f172a]">Reaction Role Panels</h3>
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
+                      <h3 className="text-base md:text-lg font-semibold text-[#0f172a]">Reaction Role Panels</h3>
                       <button
                         onClick={() => setShowCreatePanel(true)}
-                        className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition text-sm"
+                        className="w-full sm:w-auto px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition text-sm whitespace-nowrap"
                       >
                         + Create Panel
                       </button>
@@ -476,39 +476,39 @@ export default function ReactionRolesDemo() {
                     ) : (
                       <div className="space-y-4">
                         {settings.panels.map((panel) => (
-                          <div key={panel.id} className="p-6 rounded-lg border-2 border-slate-200 hover:border-orange-300 transition">
-                            <div className="flex items-start justify-between mb-3">
+                          <div key={panel.id} className="p-4 md:p-6 rounded-lg border-2 border-slate-200 hover:border-orange-300 transition">
+                            <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-3">
                               <div className="flex-1">
-                                <div className="flex items-center gap-3 mb-2">
+                                <div className="flex items-center gap-2 md:gap-3 mb-2">
                                   <div 
-                                    className="w-4 h-4 rounded-full" 
+                                    className="w-3 h-3 md:w-4 md:h-4 rounded-full flex-shrink-0" 
                                     style={{ backgroundColor: panel.color }}
                                   ></div>
-                                  <h4 className="text-lg font-bold text-slate-900">{panel.title}</h4>
+                                  <h4 className="text-base md:text-lg font-bold text-slate-900 break-words">{panel.title}</h4>
                                 </div>
-                                <p className="text-sm text-slate-600 mb-3">{panel.description}</p>
-                                <div className="flex items-center gap-4 text-xs text-slate-500">
+                                <p className="text-xs md:text-sm text-slate-600 mb-3">{panel.description}</p>
+                                <div className="flex flex-wrap items-center gap-2 md:gap-4 text-xs text-slate-500">
                                   <span className="flex items-center gap-1">
-                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <svg className="w-3 h-3 md:w-4 md:h-4" fill="currentColor" viewBox="0 0 20 20">
                                       <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
                                     </svg>
-                                    # {getChannelName(panel.channelId)}
+                                    <span className="break-all"># {getChannelName(panel.channelId)}</span>
                                   </span>
                                   <span className="px-2 py-1 bg-slate-100 rounded text-xs font-semibold capitalize">
                                     {panel.panelType.replace(/-/g, ' ')}
                                   </span>
                                 </div>
                               </div>
-                              <div className="flex gap-2">
+                              <div className="flex gap-2 w-full md:w-auto">
                                 <button
                                   onClick={() => alert('Demo mode: Editing not available')}
-                                  className="px-3 py-1 text-sm text-blue-600 hover:bg-blue-50 rounded transition"
+                                  className="flex-1 md:flex-none px-3 py-1.5 md:py-1 text-xs md:text-sm text-blue-600 hover:bg-blue-50 rounded transition font-medium"
                                 >
                                   Edit
                                 </button>
                                 <button
                                   onClick={() => alert('Demo mode: Deletion not available')}
-                                  className="px-3 py-1 text-sm text-red-600 hover:bg-red-50 rounded transition"
+                                  className="flex-1 md:flex-none px-3 py-1.5 md:py-1 text-xs md:text-sm text-red-600 hover:bg-red-50 rounded transition font-medium"
                                 >
                                   Delete
                                 </button>
@@ -516,9 +516,9 @@ export default function ReactionRolesDemo() {
                             </div>
                             <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-slate-200">
                               {panel.roleEmojiPairs.map((pair, idx) => (
-                                <div key={idx} className="flex items-center gap-2 px-3 py-2 bg-slate-50 rounded-lg border border-slate-200">
-                                  <span className="text-lg">{pair.emoji}</span>
-                                  <span className="text-sm font-semibold text-slate-700">
+                                <div key={idx} className="flex items-center gap-1.5 md:gap-2 px-2 md:px-3 py-1.5 md:py-2 bg-slate-50 rounded-lg border border-slate-200">
+                                  <span className="text-base md:text-lg">{pair.emoji}</span>
+                                  <span className="text-xs md:text-sm font-semibold text-slate-700 break-words">
                                     {getRoleName(pair.roleId)}
                                   </span>
                                 </div>
@@ -532,41 +532,41 @@ export default function ReactionRolesDemo() {
                 </div>
 
                 {/* General Settings */}
-                <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-8 mb-6">
-                  <div className="mb-6">
-                    <h2 className="text-lg font-semibold text-[#0f172a]">General Settings</h2>
-                    <p className="text-sm text-slate-500">Configure global reaction role behavior</p>
+                <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-4 md:p-8 mb-4 md:mb-6">
+                  <div className="mb-4 md:mb-6">
+                    <h2 className="text-base md:text-lg font-semibold text-[#0f172a]">General Settings</h2>
+                    <p className="text-xs md:text-sm text-slate-500">Configure global reaction role behavior</p>
                   </div>
-                  <div className="space-y-6">
-                    <div className="grid md:grid-cols-2 gap-6">
-                      <div className="p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
-                        <label className="block text-sm font-semibold text-slate-800">Role Limit</label>
+                  <div className="space-y-4 md:space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                      <div className="p-3 md:p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
+                        <label className="block text-xs md:text-sm font-semibold text-slate-800">Role Limit</label>
                         <input
                           type="number"
                           value={settings.roleLimit}
                           onChange={(e) => updateSetting('roleLimit', parseInt(e.target.value))}
-                          className="w-full px-3 py-2 border border-slate-200 rounded-lg"
+                          className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg"
                         />
                         <p className="text-xs text-slate-500">Maximum roles per user (0 = unlimited)</p>
                       </div>
 
-                      <div className="p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
-                        <label className="block text-sm font-semibold text-slate-800">Reaction Cooldown</label>
+                      <div className="p-3 md:p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
+                        <label className="block text-xs md:text-sm font-semibold text-slate-800">Reaction Cooldown</label>
                         <input
                           type="number"
                           value={settings.reactionCooldown}
                           onChange={(e) => updateSetting('reactionCooldown', parseInt(e.target.value))}
-                          className="w-full px-3 py-2 border border-slate-200 rounded-lg"
+                          className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg"
                         />
                         <p className="text-xs text-slate-500">Seconds between role changes</p>
                       </div>
 
-                      <div className="p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
-                        <label className="block text-sm font-semibold text-slate-800">Required Role</label>
+                      <div className="p-3 md:p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
+                        <label className="block text-xs md:text-sm font-semibold text-slate-800">Required Role</label>
                         <select
                           value={settings.requiredRole || ''}
                           onChange={(e) => updateSetting('requiredRole', e.target.value || null)}
-                          className="w-full px-3 py-2 border border-slate-200 rounded-lg"
+                          className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg"
                         >
                           <option value="">None</option>
                           {demoRoles.map(role => (
@@ -576,9 +576,9 @@ export default function ReactionRolesDemo() {
                         <p className="text-xs text-slate-500">Role required to use reaction roles</p>
                       </div>
 
-                      <div className="p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
-                        <label className="block text-sm font-semibold text-slate-800">Blacklisted Roles</label>
-                        <div className="text-sm text-slate-700">
+                      <div className="p-3 md:p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
+                        <label className="block text-xs md:text-sm font-semibold text-slate-800">Blacklisted Roles</label>
+                        <div className="text-xs md:text-sm text-slate-700">
                           {settings.blacklistedRoles.length} role(s) blacklisted
                         </div>
                         <button
@@ -591,60 +591,64 @@ export default function ReactionRolesDemo() {
                       </div>
                     </div>
 
-                    <div className="grid md:grid-cols-2 gap-6">
-                      <div className="p-4 rounded-lg border border-slate-200 bg-slate-50 flex items-center justify-between">
-                        <div>
-                          <p className="text-sm font-semibold text-slate-800">Allow Role Stacking</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                      <div className="p-3 md:p-4 rounded-lg border border-slate-200 bg-slate-50 flex items-center justify-between gap-3">
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs md:text-sm font-semibold text-slate-800">Allow Role Stacking</p>
                           <p className="text-xs text-slate-500 mt-1">Allow multiple roles from the same panel</p>
                         </div>
                         <Switch
                           checked={settings.allowRoleStacking}
                           onCheckedChange={(checked) => updateSetting('allowRoleStacking', checked)}
+                          className="flex-shrink-0"
                         />
                       </div>
 
-                      <div className="p-4 rounded-lg border border-slate-200 bg-slate-50 flex items-center justify-between">
-                        <div>
-                          <p className="text-sm font-semibold text-slate-800">Auto Delete Reactions</p>
+                      <div className="p-3 md:p-4 rounded-lg border border-slate-200 bg-slate-50 flex items-center justify-between gap-3">
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs md:text-sm font-semibold text-slate-800">Auto Delete Reactions</p>
                           <p className="text-xs text-slate-500 mt-1">Remove reactions after user gets role</p>
                         </div>
                         <Switch
                           checked={settings.autoDeleteReactions}
                           onCheckedChange={(checked) => updateSetting('autoDeleteReactions', checked)}
+                          className="flex-shrink-0"
                         />
                       </div>
 
-                      <div className="p-4 rounded-lg border border-slate-200 bg-slate-50 flex items-center justify-between">
-                        <div>
-                          <p className="text-sm font-semibold text-slate-800">Role Persistence</p>
+                      <div className="p-3 md:p-4 rounded-lg border border-slate-200 bg-slate-50 flex items-center justify-between gap-3">
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs md:text-sm font-semibold text-slate-800">Role Persistence</p>
                           <p className="text-xs text-slate-500 mt-1">Restore roles if user leaves and rejoins</p>
                         </div>
                         <Switch
                           checked={settings.rolePersistence}
                           onCheckedChange={(checked) => updateSetting('rolePersistence', checked)}
+                          className="flex-shrink-0"
                         />
                       </div>
 
-                      <div className="p-4 rounded-lg border border-slate-200 bg-slate-50 flex items-center justify-between">
-                        <div>
-                          <p className="text-sm font-semibold text-slate-800">DM on Role Change</p>
+                      <div className="p-3 md:p-4 rounded-lg border border-slate-200 bg-slate-50 flex items-center justify-between gap-3">
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs md:text-sm font-semibold text-slate-800">DM on Role Change</p>
                           <p className="text-xs text-slate-500 mt-1">Send DM when user gets/loses a role</p>
                         </div>
                         <Switch
                           checked={settings.dmOnRoleChange}
                           onCheckedChange={(checked) => updateSetting('dmOnRoleChange', checked)}
+                          className="flex-shrink-0"
                         />
                       </div>
                     </div>
 
                     {settings.dmOnRoleChange && (
-                      <div className="p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
-                        <label className="block text-sm font-semibold text-slate-800">DM Message</label>
+                      <div className="p-3 md:p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-2">
+                        <label className="block text-xs md:text-sm font-semibold text-slate-800">DM Message</label>
                         <textarea
                           value={settings.dmMessage}
                           onChange={(e) => updateSetting('dmMessage', e.target.value)}
                           rows={3}
-                          className="w-full px-3 py-2 border border-slate-200 rounded-lg"
+                          className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg resize-none"
                           placeholder="Use {role} for role name, {user} for username"
                         />
                         <p className="text-xs text-slate-500">Message sent when role is assigned (use {'{role}'} for role name)</p>
@@ -656,11 +660,11 @@ export default function ReactionRolesDemo() {
             )}
 
             {/* Save Button */}
-            <div className="flex justify-end">
+            <div className="flex justify-end mt-6">
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className="px-6 py-3 bg-orange-600 hover:bg-orange-700 disabled:bg-slate-400 text-white font-bold rounded-lg transition-colors shadow-lg"
+                className="w-full md:w-auto px-6 py-3 bg-orange-600 hover:bg-orange-700 disabled:bg-slate-400 text-white font-bold rounded-lg transition-colors shadow-lg"
               >
                 {saving ? 'Saving...' : 'Save Settings'}
               </button>
@@ -697,10 +701,10 @@ export default function ReactionRolesDemo() {
 
       {/* Create Panel Modal */}
       {showCreatePanel && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4" style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
-          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col overflow-hidden">
-            <div className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between flex-shrink-0">
-              <h2 className="text-2xl font-bold text-slate-900">Create Panel</h2>
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-0 md:p-4" style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+          <div className="bg-white md:rounded-2xl shadow-2xl max-w-2xl w-full h-full md:h-auto md:max-h-[90vh] flex flex-col overflow-hidden">
+            <div className="bg-white border-b border-slate-200 px-4 md:px-6 py-4 flex items-center justify-between flex-shrink-0">
+              <h2 className="text-xl md:text-2xl font-bold text-slate-900">Create Panel</h2>
               <button
                 onClick={() => setShowCreatePanel(false)}
                 className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors"
@@ -711,7 +715,7 @@ export default function ReactionRolesDemo() {
               </button>
             </div>
 
-            <div className="p-6 space-y-6 overflow-y-auto flex-1">
+            <div className="p-4 md:p-6 space-y-4 md:space-y-6 overflow-y-auto flex-1">
               {/* Panel Title */}
               <div>
                 <label className="block text-sm font-semibold text-slate-800 mb-2">
@@ -741,37 +745,37 @@ export default function ReactionRolesDemo() {
               </div>
 
               {/* Color and Channel Row */}
-              <div className="grid md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Panel Color */}
                 <div>
-                  <label className="block text-sm font-semibold text-slate-800 mb-2">
+                  <label className="block text-xs md:text-sm font-semibold text-slate-800 mb-2">
                     Panel Color
                   </label>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 md:gap-3">
                     <input
                       type="color"
                       value={newPanel.color}
                       onChange={(e) => setNewPanel({ ...newPanel, color: e.target.value })}
-                      className="w-16 h-10 rounded border border-slate-300 cursor-pointer"
+                      className="w-12 md:w-16 h-10 rounded border border-slate-300 cursor-pointer flex-shrink-0"
                     />
                     <input
                       type="text"
                       value={newPanel.color}
                       onChange={(e) => setNewPanel({ ...newPanel, color: e.target.value })}
-                      className="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      className="flex-1 px-3 md:px-4 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     />
                   </div>
                 </div>
 
                 {/* Channel Selection */}
                 <div>
-                  <label className="block text-sm font-semibold text-slate-800 mb-2">
+                  <label className="block text-xs md:text-sm font-semibold text-slate-800 mb-2">
                     Channel <span className="text-red-500">*</span>
                   </label>
                   <select
                     value={newPanel.channelId}
                     onChange={(e) => setNewPanel({ ...newPanel, channelId: e.target.value })}
-                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full px-3 md:px-4 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   >
                     <option value="">Select a channel</option>
                     {demoChannels.map((channel) => (
@@ -785,13 +789,13 @@ export default function ReactionRolesDemo() {
 
               {/* Panel Type */}
               <div>
-                <label className="block text-sm font-semibold text-slate-800 mb-2">
+                <label className="block text-xs md:text-sm font-semibold text-slate-800 mb-2">
                   Panel Type
                 </label>
                 <select
                   value={newPanel.panelType}
                   onChange={(e) => setNewPanel({ ...newPanel, panelType: e.target.value as any })}
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  className="w-full px-3 md:px-4 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 >
                   <option value="multiple">Multiple - Users can select multiple roles</option>
                   <option value="single">Single - Users can only select one role</option>
@@ -801,13 +805,13 @@ export default function ReactionRolesDemo() {
 
               {/* Role-Emoji Pairs */}
               <div>
-                <div className="flex items-center justify-between mb-3">
-                  <label className="block text-sm font-semibold text-slate-800">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                  <label className="block text-xs md:text-sm font-semibold text-slate-800">
                     Role-Emoji Pairs <span className="text-red-500">*</span>
                   </label>
                   <button
                     onClick={addRoleEmojiPair}
-                    className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white text-sm font-semibold rounded-lg transition flex items-center gap-2"
+                    className="w-full sm:w-auto px-4 py-2 bg-green-500 hover:bg-green-600 text-white text-xs md:text-sm font-semibold rounded-lg transition flex items-center justify-center gap-2"
                   >
                     <span className="text-lg leading-none">+</span>
                     Add Pair
@@ -821,11 +825,11 @@ export default function ReactionRolesDemo() {
                 ) : (
                   <div className="space-y-3">
                     {newPanel.roleEmojiPairs.map((pair, index) => (
-                      <div key={index} className="flex items-center gap-3">
+                      <div key={index} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 md:gap-3">
                         <select
                           value={pair.roleId}
                           onChange={(e) => updateRoleEmojiPair(index, 'roleId', e.target.value)}
-                          className="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                          className="flex-1 px-3 md:px-4 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                         >
                           <option value="">Select role</option>
                           {demoRoles.map((role) => (
@@ -839,11 +843,11 @@ export default function ReactionRolesDemo() {
                           value={pair.emoji}
                           onChange={(e) => updateRoleEmojiPair(index, 'emoji', e.target.value)}
                           placeholder="🎮"
-                          className="w-20 px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-center text-lg"
+                          className="w-full sm:w-20 px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-center text-lg"
                         />
                         <button
                           onClick={() => removeRoleEmojiPair(index)}
-                          className="px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg transition font-semibold"
+                          className="px-3 py-2 text-xs md:text-sm text-red-600 hover:bg-red-50 rounded-lg transition font-semibold"
                         >
                           Remove
                         </button>
@@ -855,7 +859,7 @@ export default function ReactionRolesDemo() {
             </div>
 
             {/* Modal Footer */}
-            <div className="bg-slate-50 border-t border-slate-200 px-6 py-4 flex items-center justify-end gap-3 flex-shrink-0">
+            <div className="bg-slate-50 border-t border-slate-200 px-4 md:px-6 py-4 flex items-center justify-end gap-3 flex-shrink-0">
               <button
                 onClick={() => setShowCreatePanel(false)}
                 className="px-5 py-2 text-slate-700 hover:bg-slate-200 rounded-lg transition font-semibold"
