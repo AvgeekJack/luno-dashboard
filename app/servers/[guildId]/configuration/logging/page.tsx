@@ -527,27 +527,30 @@ export default function LoggingPage() {
         </div>
 
         {/* Log Channel Selection */}
-        <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
-          <h2 className="text-xl font-bold text-slate-900 mb-4">Log Channel</h2>
-          <label className="block text-sm font-medium text-slate-700 mb-2">
-            Select the channel where logs will be posted
-          </label>
-          <select
-            value={settings.moderationChannel || ''}
-            onChange={(e) => updateSetting('moderationChannel', e.target.value || null)}
-            className="w-full px-4 py-2.5 bg-white text-slate-900 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent appearance-none cursor-pointer"
-          >
-            <option value="">Select a channel...</option>
-            {channels.map((channel) => (
-              <option key={channel.id} value={channel.id}>
-                #{channel.name}
-              </option>
-            ))}
-          </select>
-        </div>
+        {settings.enabled && (
+          <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
+            <h2 className="text-xl font-bold text-slate-900 mb-4">Log Channel</h2>
+            <label className="block text-sm font-medium text-slate-700 mb-2">
+              Select the channel where logs will be posted
+            </label>
+            <select
+              value={settings.moderationChannel || ''}
+              onChange={(e) => updateSetting('moderationChannel', e.target.value || null)}
+              className="w-full px-4 py-2.5 bg-white text-slate-900 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent appearance-none cursor-pointer"
+            >
+              <option value="">Select a channel...</option>
+              {channels.map((channel) => (
+                <option key={channel.id} value={channel.id}>
+                  #{channel.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
 
         {/* Logged Events */}
-        <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
+        {settings.enabled && (
+          <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
           <h2 className="text-xl font-bold text-slate-900 mb-6">Logged Events</h2>
           
           <div className="space-y-4">
@@ -800,6 +803,7 @@ export default function LoggingPage() {
             </div>
           </div>
         </div>
+        )}
 
             </div>
           </div>
