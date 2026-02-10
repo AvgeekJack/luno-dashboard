@@ -152,26 +152,8 @@ const ServerSettingsSchema = new mongoose.Schema({
       // Master Toggle
       enabled: { type: Boolean, default: false },
       
-      // AutoMod Log Channel (from automod configuration)
-      automodLogChannel: { type: String, default: null },
-      logAutomodViolations: { type: Boolean, default: true },
-      logAutomodActions: { type: Boolean, default: true },
-      logAutomodFilters: { type: Boolean, default: false },
-      
-      // Anti-Raid Log Channel
-      antiRaidChannel: { type: String, default: null },
-      logRaidDetections: { type: Boolean, default: true },
-      logRaidActions: { type: Boolean, default: true },
-      logJoinPatterns: { type: Boolean, default: false },
-      
       // Section Channels
       moderationChannel: { type: String, default: null },
-      memberChannel: { type: String, default: null },
-      messageChannel: { type: String, default: null },
-      channelLogsChannel: { type: String, default: null },
-      roleLogsChannel: { type: String, default: null },
-      voiceChannel: { type: String, default: null },
-      serverChannel: { type: String, default: null },
       
       // Moderation Logs (toggles only)
       warnsEnabled: { type: Boolean, default: false },
@@ -224,20 +206,6 @@ const ServerSettingsSchema = new mongoose.Schema({
       webhookEnabled: { type: Boolean, default: false },
       inviteEnabled: { type: Boolean, default: false },
       integrationEnabled: { type: Boolean, default: false },
-      
-      // Verification Logs
-      verificationChannel: { type: String, default: null },
-      trackVerificationMetrics: { type: Boolean, default: false },
-      logFailedVerificationAttempts: { type: Boolean, default: false },
-      
-      // Advanced Options
-      ignoredChannels: { type: [String], default: [] },
-      ignoredRoles: { type: [String], default: [] },
-      ignoredUsers: { type: [String], default: [] },
-      includeBotActions: { type: Boolean, default: false },
-      logMessageContent: { type: Boolean, default: true },
-      logEmbedUrls: { type: Boolean, default: true },
-      retentionPeriod: { type: Number, default: 30 },
     },
     antiraid: {
       // Master Toggle
