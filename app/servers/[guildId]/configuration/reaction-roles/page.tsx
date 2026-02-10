@@ -95,24 +95,22 @@ export default function ReactionRolesPage() {
         const settingsRes = await fetch(`/api/servers/${gid}/general`);
         if (settingsRes.ok) {
           const data = await settingsRes.json();
-          if (data.configuration?.reactionRoles) {
-            const rrData = data.configuration.reactionRoles;
-            const mergedSettings: ReactionRolesSettings = {
-              enabled: rrData.enabled ?? false,
-              panels: rrData.panels ?? [],
-              roleLimit: rrData.roleLimit ?? 0,
-              requiredRole: rrData.requiredRole ?? null,
-              blacklistedRoles: rrData.blacklistedRoles ?? [],
-              allowRoleStacking: rrData.allowRoleStacking ?? true,
-              autoDeleteReactions: rrData.autoDeleteReactions ?? false,
-              dmOnRoleChange: rrData.dmOnRoleChange ?? false,
-              dmMessage: rrData.dmMessage ?? 'You have been given the {role} role!',
-              rolePersistence: rrData.rolePersistence ?? false,
-              reactionCooldown: rrData.reactionCooldown ?? 5,
-            };
-            setSettings(mergedSettings);
-            setOriginalSettings(mergedSettings);
-          }
+          const rrData = data.configuration?.reactionRoles;
+          const mergedSettings: ReactionRolesSettings = {
+            enabled: rrData?.enabled ?? false,
+            panels: rrData?.panels ?? [],
+            roleLimit: rrData?.roleLimit ?? 0,
+            requiredRole: rrData?.requiredRole ?? null,
+            blacklistedRoles: rrData?.blacklistedRoles ?? [],
+            allowRoleStacking: rrData?.allowRoleStacking ?? true,
+            autoDeleteReactions: rrData?.autoDeleteReactions ?? false,
+            dmOnRoleChange: rrData?.dmOnRoleChange ?? false,
+            dmMessage: rrData?.dmMessage ?? 'You have been given the {role} role!',
+            rolePersistence: rrData?.rolePersistence ?? false,
+            reactionCooldown: rrData?.reactionCooldown ?? 5,
+          };
+          setSettings(mergedSettings);
+          setOriginalSettings(mergedSettings);
         }
       } catch (err) {
         console.error(err);
