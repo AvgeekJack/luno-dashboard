@@ -698,8 +698,8 @@ export default function ReactionRolesDemo() {
       {/* Create Panel Modal */}
       {showCreatePanel && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-[60] flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+          <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col">
+            <div className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between flex-shrink-0">
               <h2 className="text-2xl font-bold text-slate-900">Create Panel</h2>
               <button
                 onClick={() => setShowCreatePanel(false)}
@@ -711,7 +711,7 @@ export default function ReactionRolesDemo() {
               </button>
             </div>
 
-            <div className="p-6 space-y-6">
+            <div className="p-6 space-y-6 overflow-y-auto flex-1">
               {/* Panel Title */}
               <div>
                 <label className="block text-sm font-semibold text-slate-800 mb-2">
@@ -736,7 +736,7 @@ export default function ReactionRolesDemo() {
                   onChange={(e) => setNewPanel({ ...newPanel, description: e.target.value })}
                   placeholder="Brief description of this panel"
                   rows={3}
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none"
                 />
               </div>
 
@@ -793,9 +793,9 @@ export default function ReactionRolesDemo() {
                   onChange={(e) => setNewPanel({ ...newPanel, panelType: e.target.value as any })}
                   className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 >
-                  <option value="single">Single - Users can only select one role</option>
                   <option value="multiple">Multiple - Users can select multiple roles</option>
-                  <option value="remove-on-unreact">Remove on Unreact - Role removed when reaction is removed</option>
+                  <option value="single">Single - Users can only select one role</option>
+                  <option value="remove-on-unreact">Unique - Only one user per role</option>
                 </select>
               </div>
 
@@ -807,9 +807,10 @@ export default function ReactionRolesDemo() {
                   </label>
                   <button
                     onClick={addRoleEmojiPair}
-                    className="px-3 py-1 bg-green-500 hover:bg-green-600 text-white text-sm font-semibold rounded transition"
+                    className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white text-sm font-semibold rounded-lg transition flex items-center gap-2"
                   >
-                    + Add Pair
+                    <span className="text-lg leading-none">+</span>
+                    Add Pair
                   </button>
                 </div>
 
@@ -820,31 +821,29 @@ export default function ReactionRolesDemo() {
                 ) : (
                   <div className="space-y-3">
                     {newPanel.roleEmojiPairs.map((pair, index) => (
-                      <div key={index} className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg border border-slate-200">
-                        <div className="flex-1 grid grid-cols-2 gap-3">
-                          <select
-                            value={pair.roleId}
-                            onChange={(e) => updateRoleEmojiPair(index, 'roleId', e.target.value)}
-                            className="px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm"
-                          >
-                            <option value="">Select role</option>
-                            {demoRoles.map((role) => (
-                              <option key={role.id} value={role.id}>
-                                {role.name}
-                              </option>
-                            ))}
-                          </select>
-                          <input
-                            type="text"
-                            value={pair.emoji}
-                            onChange={(e) => updateRoleEmojiPair(index, 'emoji', e.target.value)}
-                            placeholder="Emoji (e.g., 🎮)"
-                            className="px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm"
-                          />
-                        </div>
+                      <div key={index} className="flex items-center gap-3">
+                        <select
+                          value={pair.roleId}
+                          onChange={(e) => updateRoleEmojiPair(index, 'roleId', e.target.value)}
+                          className="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                        >
+                          <option value="">Select role</option>
+                          {demoRoles.map((role) => (
+                            <option key={role.id} value={role.id}>
+                              {role.name}
+                            </option>
+                          ))}
+                        </select>
+                        <input
+                          type="text"
+                          value={pair.emoji}
+                          onChange={(e) => updateRoleEmojiPair(index, 'emoji', e.target.value)}
+                          placeholder="🎮"
+                          className="w-20 px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-center text-lg"
+                        />
                         <button
                           onClick={() => removeRoleEmojiPair(index)}
-                          className="px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg transition text-sm font-semibold"
+                          className="px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg transition font-semibold"
                         >
                           Remove
                         </button>
@@ -853,32 +852,19 @@ export default function ReactionRolesDemo() {
                   </div>
                 )}
               </div>
-
-              {/* Info Banner */}
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <div className="flex gap-3">
-                  <svg className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                  </svg>
-                  <div className="text-sm text-blue-800">
-                    <p className="font-semibold mb-1">Demo Mode</p>
-                    <p>This panel will be created in demo mode only. In production, the panel would be sent to Discord and persisted to the database.</p>
-                  </div>
-                </div>
-              </div>
             </div>
 
             {/* Modal Footer */}
-            <div className="sticky bottom-0 bg-slate-50 border-t border-slate-200 px-6 py-4 flex items-center justify-end gap-3">
+            <div className="bg-slate-50 border-t border-slate-200 px-6 py-4 flex items-center justify-end gap-3 flex-shrink-0">
               <button
                 onClick={() => setShowCreatePanel(false)}
-                className="px-4 py-2 text-slate-700 hover:bg-slate-200 rounded-lg transition font-semibold"
+                className="px-5 py-2 text-slate-700 hover:bg-slate-200 rounded-lg transition font-semibold"
               >
                 Cancel
               </button>
               <button
                 onClick={handleCreatePanel}
-                className="px-6 py-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition"
+                className="px-6 py-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition shadow-sm"
               >
                 Create Panel
               </button>
