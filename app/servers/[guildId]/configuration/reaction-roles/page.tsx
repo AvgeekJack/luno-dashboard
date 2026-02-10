@@ -125,6 +125,7 @@ export default function ReactionRolesPage() {
   const handleSave = async () => {
     setSaving(true);
     try {
+      console.log('Saving settings:', settings);
       const response = await fetch(`/api/servers/${gid}/general`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -133,12 +134,21 @@ export default function ReactionRolesPage() {
         }),
       });
 
+      console.log('Response status:', response.status);
+      const responseData = await response.json();
+      console.log('Response data:', responseData);
+
       if (response.ok) {
         setOriginalSettings({ ...settings });
         setHasUnsavedChanges(false);
+        alert('Settings saved successfully!');
+      } else {
+        console.error('Save failed:', responseData);
+        alert(`Failed to save: ${responseData.error || 'Unknown error'}`);
       }
     } catch (err) {
-      console.error(err);
+      console.error('Save error:', err);
+      alert(`Error saving settings: ${err}`);
     } finally {
       setSaving(false);
     }
