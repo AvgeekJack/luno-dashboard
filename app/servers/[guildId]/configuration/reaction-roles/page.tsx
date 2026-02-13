@@ -486,7 +486,7 @@ export default function ReactionRolesPage() {
 
         {/* Main Content */}
         <div className="flex-1 lg:ml-0">
-          <div className="lg:ml-64 pt-20 lg:pt-12 px-4 md:px-6 lg:px-8 py-12 max-w-5xl mx-auto">
+          <div className="lg:ml-64 pt-20 lg:pt-12 px-6 md:px-8 lg:px-12 py-12 max-w-4xl mx-auto">
             {/* Page Header */}
             <div className="space-y-1 mb-6">
               <p className="text-xs uppercase tracking-[0.15em] text-orange-500 font-semibold">CONFIGURATION</p>
