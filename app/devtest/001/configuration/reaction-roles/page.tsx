@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Switch } from '@/components/ui/switch';
 import DebugInfoPopup from '@/components/DebugInfoPopup';
@@ -180,6 +180,20 @@ export default function ReactionRolesDemo() {
     const updated = newPanel.roleEmojiPairs.filter((_, i) => i !== index);
     setNewPanel({ ...newPanel, roleEmojiPairs: updated });
   };
+
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (showCreatePanel) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [showCreatePanel]);
 
   return (
     <div className="min-h-screen bg-gray-50 text-[#0f172a] flex">
