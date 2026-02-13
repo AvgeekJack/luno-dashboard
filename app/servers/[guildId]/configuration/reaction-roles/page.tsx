@@ -57,6 +57,17 @@ export default function ReactionRolesPage() {
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [channels, setChannels] = useState<Channel[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
+  const [showCreatePanel, setShowCreatePanel] = useState(false);
+  
+  // New panel form state
+  const [newPanel, setNewPanel] = useState({
+    title: '',
+    description: '',
+    color: '#5865F2',
+    channelId: '',
+    panelType: 'multiple' as 'single' | 'multiple' | 'remove-on-unreact',
+    roleEmojiPairs: [] as Array<{ roleId: string; emoji: string; }>,
+  });
 
   const [settings, setSettings] = useState<ReactionRolesSettings>({
     enabled: false,
@@ -171,6 +182,82 @@ export default function ReactionRolesPage() {
   const getRoleName = (roleId: string) => {
     return roles.find(r => r.id === roleId)?.name || 'Unknown';
   };
+
+  const handleCreatePanel = () => {
+    if (!newPanel.title.trim()) {
+      alert('Please enter a panel title');
+      return;
+    }
+    if (!newPanel.channelId) {
+      alert('Please select a channel');
+      return;
+    }
+    if (newPanel.roleEmojiPairs.length === 0) {
+      alert('Please add at least one role-emoji pair');
+      return;
+    }
+
+    const panel: ReactionRolePanel = {
+      id: Date.now().toString(),
+      title: newPanel.title,
+      description: newPanel.description,
+      color: newPanel.color,
+      channelId: newPanel.channelId,
+      panelType: newPanel.panelType,
+      roleEmojiPairs: newPanel.roleEmojiPairs,
+    };
+
+    setSettings({
+      ...settings,
+      panels: [...settings.panels, panel],
+    });
+    setHasUnsavedChanges(true);
+
+    // Reset form
+    setNewPanel({
+      title: '',
+      description: '',
+      color: '#5865F2',
+      channelId: '',
+      panelType: 'multiple',
+      roleEmojiPairs: [],
+    });
+
+    setShowCreatePanel(false);
+    alert('Panel created successfully! Remember to save your changes.');
+  };
+
+  const addRoleEmojiPair = () => {
+    setNewPanel({
+      ...newPanel,
+      roleEmojiPairs: [...newPanel.roleEmojiPairs, { roleId: '', emoji: '' }],
+    });
+  };
+
+  const updateRoleEmojiPair = (index: number, field: 'roleId' | 'emoji', value: string) => {
+    const updated = [...newPanel.roleEmojiPairs];
+    updated[index][field] = value;
+    setNewPanel({ ...newPanel, roleEmojiPairs: updated });
+  };
+
+  const removeRoleEmojiPair = (index: number) => {
+    const updated = newPanel.roleEmojiPairs.filter((_, i) => i !== index);
+    setNewPanel({ ...newPanel, roleEmojiPairs: updated });
+  };
+
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (showCreatePanel) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [showCreatePanel]);
 
   if (loading) {
     return (
@@ -429,7 +516,7 @@ export default function ReactionRolesPage() {
                     <div className="flex items-center justify-between mb-4">
                       <h3 className="text-lg font-semibold text-[#0f172a]">Reaction Role Panels</h3>
                       <button
-                        onClick={() => alert('Panel creation coming soon!')}
+                        onClick={() => setShowCreatePanel(true)}
                         className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition text-sm"
                       >
                         + Create Panel
@@ -651,6 +738,184 @@ export default function ReactionRolesPage() {
           </div>
         </div>
       </div>
+
+      {/* Create Panel Modal */}
+      {showCreatePanel && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-0 md:p-4" style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+          <div className="bg-white md:rounded-2xl shadow-2xl max-w-2xl w-full h-full md:h-auto md:max-h-[90vh] flex flex-col overflow-hidden">
+            <div className="bg-white border-b border-slate-200 px-4 md:px-6 py-4 flex items-center justify-between flex-shrink-0">
+              <h2 className="text-xl md:text-2xl font-bold text-slate-900">Create Panel</h2>
+              <button
+                onClick={() => setShowCreatePanel(false)}
+                className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="p-4 md:p-6 space-y-4 md:space-y-6 overflow-y-auto flex-1">
+              {/* Panel Title */}
+              <div>
+                <label className="block text-sm font-semibold text-slate-800 mb-2">
+                  Panel Title <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={newPanel.title}
+                  onChange={(e) => setNewPanel({ ...newPanel, title: e.target.value })}
+                  placeholder="e.g., Choose Your Roles"
+                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                />
+              </div>
+
+              {/* Panel Description */}
+              <div>
+                <label className="block text-sm font-semibold text-slate-800 mb-2">
+                  Description
+                </label>
+                <textarea
+                  value={newPanel.description}
+                  onChange={(e) => setNewPanel({ ...newPanel, description: e.target.value })}
+                  placeholder="Brief description of this panel"
+                  rows={3}
+                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none"
+                />
+              </div>
+
+              {/* Color and Channel Row */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Panel Color */}
+                <div>
+                  <label className="block text-xs md:text-sm font-semibold text-slate-800 mb-2">
+                    Panel Color
+                  </label>
+                  <div className="flex items-center gap-2 md:gap-3">
+                    <input
+                      type="color"
+                      value={newPanel.color}
+                      onChange={(e) => setNewPanel({ ...newPanel, color: e.target.value })}
+                      className="w-12 md:w-16 h-10 rounded border border-slate-300 cursor-pointer flex-shrink-0"
+                    />
+                    <input
+                      type="text"
+                      value={newPanel.color}
+                      onChange={(e) => setNewPanel({ ...newPanel, color: e.target.value })}
+                      className="flex-1 px-3 md:px-4 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    />
+                  </div>
+                </div>
+
+                {/* Channel Selection */}
+                <div>
+                  <label className="block text-xs md:text-sm font-semibold text-slate-800 mb-2">
+                    Channel <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    value={newPanel.channelId}
+                    onChange={(e) => setNewPanel({ ...newPanel, channelId: e.target.value })}
+                    className="w-full px-3 md:px-4 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  >
+                    <option value="">Select a channel</option>
+                    {channels.map((channel) => (
+                      <option key={channel.id} value={channel.id}>
+                        #{channel.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Panel Type */}
+              <div>
+                <label className="block text-xs md:text-sm font-semibold text-slate-800 mb-2">
+                  Panel Type
+                </label>
+                <select
+                  value={newPanel.panelType}
+                  onChange={(e) => setNewPanel({ ...newPanel, panelType: e.target.value as any })}
+                  className="w-full px-3 md:px-4 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                >
+                  <option value="multiple">Multiple - Users can select multiple roles</option>
+                  <option value="single">Single - Users can only select one role</option>
+                  <option value="remove-on-unreact">Unique - Only one user per role</option>
+                </select>
+              </div>
+
+              {/* Role-Emoji Pairs */}
+              <div>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                  <label className="block text-xs md:text-sm font-semibold text-slate-800">
+                    Role-Emoji Pairs <span className="text-red-500">*</span>
+                  </label>
+                  <button
+                    onClick={addRoleEmojiPair}
+                    className="w-full sm:w-auto px-4 py-2 bg-green-500 hover:bg-green-600 text-white text-xs md:text-sm font-semibold rounded-lg transition flex items-center justify-center gap-2"
+                  >
+                    <span className="text-lg leading-none">+</span>
+                    Add Pair
+                  </button>
+                </div>
+
+                {newPanel.roleEmojiPairs.length === 0 ? (
+                  <div className="text-center py-8 border-2 border-dashed border-slate-300 rounded-lg text-slate-500">
+                    No role-emoji pairs added yet. Click "Add Pair" to get started.
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {newPanel.roleEmojiPairs.map((pair, index) => (
+                      <div key={index} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 md:gap-3">
+                        <select
+                          value={pair.roleId}
+                          onChange={(e) => updateRoleEmojiPair(index, 'roleId', e.target.value)}
+                          className="flex-1 px-3 md:px-4 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                        >
+                          <option value="">Select role</option>
+                          {roles.map((role) => (
+                            <option key={role.id} value={role.id}>
+                              {role.name}
+                            </option>
+                          ))}
+                        </select>
+                        <input
+                          type="text"
+                          value={pair.emoji}
+                          onChange={(e) => updateRoleEmojiPair(index, 'emoji', e.target.value)}
+                          placeholder="🎮"
+                          className="w-full sm:w-20 px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-center text-lg"
+                        />
+                        <button
+                          onClick={() => removeRoleEmojiPair(index)}
+                          className="px-3 py-2 text-xs md:text-sm text-red-600 hover:bg-red-50 rounded-lg transition font-semibold"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="bg-slate-50 border-t border-slate-200 px-4 md:px-6 py-4 flex items-center justify-end gap-3 flex-shrink-0">
+              <button
+                onClick={() => setShowCreatePanel(false)}
+                className="px-5 py-2 text-slate-700 hover:bg-slate-200 rounded-lg transition font-semibold"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleCreatePanel}
+                className="px-6 py-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition shadow-sm"
+              >
+                Create Panel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
